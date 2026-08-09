@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail format fixer | A-tuls</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #090d16, #151c2c, #090d16);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: rgba(22, 28, 45, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, #38bdf8, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            height: 130px;
+            background: rgba(10, 15, 25, 0.9);
+            border: 1px solid #2a364f;
+            border-radius: 12px;
+            padding: 12px;
+            color: #fff;
+            font-size: 13px;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+        }
+
+        .btn-start {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 13px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .btn-start:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            background: rgba(10, 15, 25, 0.9);
+            border: 1px solid #2a364f;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .result-box-header {
+            background: #1e293b;
+            padding: 12px 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a364f;
+        }
+
+        .result-box-header span {
+            font-size: 12px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .result-content-area {
+            width: 100%;
+            height: 140px;
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            font-size: 12px;
+            font-family: monospace;
+            padding: 12px;
+            resize: none;
+            outline: none;
+            white-space: pre;
+        }
+
+        .btn-copy-box {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin-bottom: 12px;
+            border-radius: 10px;
+        }
+
+        .btn-copy-a { background: #10b981; }
+        .btn-copy-a:hover { background: #059669; }
+
+        .btn-copy-b { background: #e11d48; }
+        .btn-copy-b:hover { background: #be123c; }
+
+        .btn-copy-c { background: #f59e0b; color: #111; }
+        .btn-copy-c:hover { background: #d97706; }
+
+        .btn-delete {
+            width: 100%;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+  var r = localStorage.getItem('a_tuls_role');
+  if (r !== 'user' && r !== 'admin') {
+    location.replace('index.html');
+  }
+})();
+</script>
+
+
+    <div class="container">
+        <h2><i class="fa-solid fa-envelope-circle-check"></i> Gmail format fixer</h2>
+        <p style="text-align:center;margin-bottom:18px;font-size:13px;">
+            <a href="dashboard.html" style="color:#38bdf8;text-decoration:none;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </p>
+        
+        <!-- Input Box -->
+        <div class="input-group">
+            <label for="rawInput">মেইল এবং পাসওয়ার্ড একসাথে এখানে পেস্ট করুন:</label>
+            <textarea id="rawInput" placeholder="example@gmail.com&#10;password123&#10;or example@gmail.com:password123"></textarea>
+        </div>
+
+        <!-- Start Button -->
+        <button class="btn-start" onclick="formatData()">
+            <i class="fa-solid fa-play"></i> Start Finishing
+        </button>
+
+        <!-- Results Sections -->
+        <div class="results-container">
+            <!-- Group A -->
+            <div class="result-box">
+                <div class="result-box-header">
+                    Group A (Emails Only) <span id="countA">(0)</span>
+                </div>
+                <textarea id="groupA" class="result-content-area" readonly placeholder="মেইলগুলো এখানে আসবে..."></textarea>
+            </div>
+            <button class="btn-copy-box btn-copy-a" onclick="copyText('groupA', 'Group A')">
+                <i class="fa-solid fa-copy"></i> Copy Group A
+            </button>
+
+            <!-- Group B -->
+            <div class="result-box">
+                <div class="result-box-header">
+                    Group B (Passwords Only) <span id="countB">(0)</span>
+                </div>
+                <textarea id="groupB" class="result-content-area" readonly placeholder="পাসওয়ার্ডগুলো এখানে আসবে..."></textarea>
+            </div>
+            <button class="btn-copy-box btn-copy-b" onclick="copyText('groupB', 'Group B')">
+                <i class="fa-solid fa-copy"></i> Copy Group B
+            </button>
+
+            <!-- Group C -->
+            <div class="result-box">
+                <div class="result-box-header" style="background: #1e293b; color: #facc15;">
+                    Group C (Mail & Password Side-by-Side) <span id="countC" style="background: rgba(250, 204, 21, 0.15); color: #facc15;">(0)</span>
+                </div>
+                <textarea id="groupC" class="result-content-area" readonly placeholder="আপনার ছবির মতো পাশাপাশি সুন্দরভাবে এখানে সাজানো থাকবে..."></textarea>
+            </div>
+            <button class="btn-copy-box btn-copy-c" onclick="copyText('groupC', 'Group C')">
+                <i class="fa-solid fa-copy"></i> Copy Group C (Mail & Pass)
+            </button>
+        </div>
+
+        <!-- Delete Button -->
+        <button class="btn-delete" onclick="deleteAll()">
+            <i class="fa-solid fa-trash-can"></i> Delete All Data
+        </button>
+    </div>
+
+    <script>
+        function formatData() {
+            const rawText = document.getElementById('rawInput').value.trim();
+            if (!rawText) {
+                alert('দয়া করে ইনপুট বক্সে মেইল এবং পাসওয়ার্ড দিন!');
+                return;
+            }
+
+            const lines = rawText.split('\n');
+            let emails = [];
+            let passwords = [];
+            let combined = [];
+
+            let tempMails = [];
+            let tempPasses = [];
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+
+                if (line.includes(':') || line.includes('|') || line.includes('----') || line.includes('\t')) {
+                    let parts = line.split(/[:|,\t]+|----/);
+                    if (parts.length >= 2) {
+                        let mail = parts[0].trim();
+                        let pass = parts[1].trim();
+                        if (mail && pass) {
+                            tempMails.push(mail);
+                            tempPasses.push(pass);
+                        }
+                    }
+                } else {
+                    if (line.includes('@')) {
+                        tempMails.push(line);
+                    } else {
+                        tempPasses.push(line);
+                    }
+                }
+            });
+
+            if (tempMails.length === 0 && tempPasses.length === 0) {
+                for (let i = 0; i < lines.length; i += 2) {
+                    if (lines[i] && lines[i].trim()) tempMails.push(lines[i].trim());
+                    if (lines[i+1] && lines[i+1].trim()) tempPasses.push(lines[i+1].trim());
+                }
+            }
+
+            let minLen = Math.min(tempMails.length, tempPasses.length);
+            for (let i = 0; i < minLen; i++) {
+                emails.push(tempMails[i]);
+                passwords.push(tempPasses[i]);
+                
+                // আপনার দেওয়া ছবির মতো ইমেইল এবং তার পাশে পাসওয়ার্ড সুন্দরভাবে সমান দূরত্বে বসানো
+                let mailStr = tempMails[i];
+                let paddingSpaces = ' '.repeat(Math.max(2, 45 - mailStr.length));
+                combined.push(mailStr + paddingSpaces + tempPasses[i]);
+            }
+
+            document.getElementById('groupA').value = emails.join('\n');
+            document.getElementById('groupB').value = passwords.join('\n');
+            document.getElementById('groupC').value = combined.join('\n');
+
+            document.getElementById('countA').innerText = `(${emails.length})`;
+            document.getElementById('countB').innerText = `(${passwords.length})`;
+            document.getElementById('countC').innerText = `(${combined.length})`;
+        }
+
+        function copyText(elementId, groupName) {
+            const textarea = document.getElementById(elementId);
+            if (!textarea.value) {
+                alert(groupName + ' এ কপি করার মতো কোনো ডেটা নেই!');
+                return;
+            }
+
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            
+            try {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    alert(groupName + ' সফলভাবে এক ক্লিকে কপি হয়েছে!');
+                });
+            } catch (err) {
+                document.execCommand('copy');
+                alert(groupName + ' সফলভাবে কপি হয়েছে!');
+            }
+        }
+
+        function deleteAll() {
+            document.getElementById('rawInput').value = '';
+            document.getElementById('groupA').value = '';
+            document.getElementById('groupB').value = '';
+            document.getElementById('groupC').value = '';
+            document.getElementById('countA').innerText = '(0)';
+            document.getElementById('countB').innerText = '(0)';
+            document.getElementById('countC').innerText = '(0)';
+            alert('সব ডেটা সফলভাবে মুছে ফেলা হয়েছে!');
+        }
+    </script>
+</body>
+</html>

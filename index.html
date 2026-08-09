@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-tuls - √MASTER STYLES | Login</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #060a12;
+    --card: rgba(255,255,255,0.04);
+    --cyan: #00f0ff;
+    --purple: #7b2fff;
+    --green: #00ff9d;
+    --red: #ff3b5c;
+    --text: #e8f7ff;
+    --muted: #8b9cb3;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+body {
+    background: radial-gradient(ellipse at 30% 0%, #12182b 0%, var(--bg) 60%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.box {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    padding: 36px 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+}
+.logo {
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+}
+.sub { text-align:center; color:var(--muted); font-size:13px; margin-bottom:28px; }
+.tabs {
+    display: flex;
+    background: rgba(0,0,0,0.3);
+    border-radius: 14px;
+    padding: 4px;
+    margin-bottom: 24px;
+}
+.tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: 0.25s;
+}
+.tab.active {
+    background: linear-gradient(135deg, var(--cyan), #00b8d4);
+    color: #000;
+}
+input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+}
+input:focus { border-color: var(--cyan); }
+.btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 8px;
+    background: linear-gradient(135deg, var(--cyan), #00b8d4);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn:hover:not(:disabled) { transform: translateY(-2px); }
+.msg {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    text-align: center;
+    display: none;
+}
+.msg.error { background: rgba(255,59,92,0.15); color: var(--red); display:block; }
+.msg.success { background: rgba(0,255,157,0.15); color: var(--green); display:block; }
+.footer { text-align:center; margin-top:24px; font-size:12px; color:var(--muted); }
+#registerForm { display: none; }
+.loading { font-size: 13px; color: var(--muted); text-align: center; margin-top: 10px; display: none; }
+</style>
+</head>
+<body>
+<div class="box">
+    <div class="logo">A-tuls - √MASTER</div>
+    <div class="sub">Premium Tools Platform</div>
+
+    <div class="tabs">
+        <div class="tab active" id="loginTab" onclick="showLogin()">Login</div>
+        <div class="tab" id="regTab" onclick="showRegister()">Register</div>
+    </div>
+
+    <div id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email address">
+        <div style="position:relative;margin-bottom:12px;">
+            <input type="password" id="loginPass" placeholder="Password" style="margin-bottom:0;padding-right:48px;">
+            <button type="button" onclick="togglePass('loginPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8b9cb3;cursor:pointer;font-size:16px;"><i class="fas fa-eye"></i></button>
+        </div>
+        <div style="text-align:right;margin-bottom:10px;">
+            <a href="#" onclick="showForgot();return false;" style="color:#00f0ff;font-size:13px;font-weight:600;">Forgot Password?</a>
+        </div>
+        <button class="btn" id="loginBtn" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <div class="msg" id="loginMsg"></div>
+        <div class="loading" id="loginLoading">লোড হচ্ছে...</div>
+    </div>
+
+    <div id="forgotForm" style="display:none;">
+        <p style="font-size:13px;color:#8b9cb3;margin-bottom:12px;text-align:center;">পাসওয়ার্ড ভুলে গেলে নিচের তথ্য দিন। Admin কনফার্ম করলে নতুন পাসওয়ার্ড সেট করতে পারবেন।</p>
+        <input type="email" id="forgotEmail" placeholder="Your Gmail / Email">
+        <input type="text" id="forgotReason" placeholder="কেন পাসওয়ার্ড ভুলে গেছেন?">
+        <label style="font-size:12px;color:#8b9cb3;display:block;margin-bottom:6px;">Photo (optional proof)</label>
+        <input type="file" id="forgotPhoto" accept="image/*" style="margin-bottom:12px;color:#8b9cb3;font-size:13px;">
+        <button class="btn" onclick="submitForgot()"><i class="fas fa-paper-plane"></i> Send Request to Admin</button>
+        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;margin-top:8px;" onclick="showLogin()">Back to Login</button>
+        <div class="msg" id="forgotMsg"></div>
+    </div>
+
+    <div id="resetForm" style="display:none;">
+        <p style="font-size:13px;color:#00ff9d;margin-bottom:12px;text-align:center;">Admin approve করেছে! নতুন পাসওয়ার্ড সেট করুন।</p>
+        <input type="email" id="resetEmail" placeholder="Your Email" readonly>
+        <div style="position:relative;margin-bottom:12px;">
+            <input type="password" id="resetPass" placeholder="New Password" style="margin-bottom:0;padding-right:48px;">
+            <button type="button" onclick="togglePass('resetPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8b9cb3;cursor:pointer;font-size:16px;"><i class="fas fa-eye"></i></button>
+        </div>
+        <button class="btn" onclick="submitReset()"><i class="fas fa-key"></i> Set New Password</button>
+        <div class="msg" id="resetMsg"></div>
+    </div>
+
+    <div id="devicePendingBox" style="display:none;">
+        <p style="font-size:14px;color:#ffc800;text-align:center;margin-bottom:12px;line-height:1.5;">
+            🔒 নতুন ব্রাউজার/ডিভাইস থেকে লগইন!<br>
+            Admin-এর কনফার্মেশন অপেক্ষা করুন।
+        </p>
+        <p style="font-size:13px;color:#8b9cb3;text-align:center;margin-bottom:14px;" id="devicePendingText">স্ট্যাটাস চেক হচ্ছে...</p>
+        <a id="callAdminBtn" href="https://wa.me/8801944035239" target="_blank" class="btn" style="text-decoration:none;margin-bottom:10px;">
+            <i class="fas fa-phone"></i> Call / WhatsApp Admin
+        </a>
+        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;" onclick="location.reload()">Refresh Status</button>
+        <div class="msg" id="deviceMsg"></div>
+    </div>
+
+    <div id="siteBlockedBox" style="display:none;text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">🚫</div>
+        <h2 style="font-size:1.5rem;color:#ff3b5c;margin-bottom:12px;">SITE OFF / BLOCKED</h2>
+        <p style="font-size:15px;color:#8b9cb3;line-height:1.6;margin-bottom:8px;" id="siteBlockMsg">
+            এই সাইট বর্তমানে Admin কর্তৃক বন্ধ করা হয়েছে।
+        </p>
+        <p style="font-size:13px;color:#64748b;">পরে আবার চেষ্টা করুন।</p>
+        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;margin-top:14px;" onclick="location.reload()">Refresh</button>
+    </div>
+
+    <div id="wrongPassBox" style="display:none;text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">🔑</div>
+        <h2 style="font-size:1.35rem;color:#ff3b5c;margin-bottom:12px;">Wrong Password</h2>
+        <p style="font-size:15px;color:#8b9cb3;line-height:1.6;margin-bottom:8px;">
+            ভুল ইমেইল বা পাসওয়ার্ড দিয়েছেন। আবার চেষ্টা করুন।
+        </p>
+        <button class="btn" style="margin-top:14px;" onclick="backToLoginFromError()"><i class="fas fa-arrow-left"></i> Back to Login</button>
+        <div style="margin-top:12px;">
+            <a href="#" onclick="showForgot();return false;" style="color:#00f0ff;font-size:13px;font-weight:600;">Forgot Password?</a>
+        </div>
+    </div>
+
+    <div id="accountBlockedBox" style="display:none;text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">⛔</div>
+        <h2 style="font-size:1.35rem;color:#ff3b5c;margin-bottom:12px;">Account Blocked</h2>
+        <p style="font-size:15px;color:#8b9cb3;line-height:1.6;margin-bottom:8px;">
+            আপনার একাউন্ট Admin কর্তৃক ব্লক করা হয়েছে। লগইন সম্ভব নয়।
+        </p>
+        <a href="https://wa.me/8801944035239" target="_blank" class="btn" style="text-decoration:none;margin-top:14px;">
+            <i class="fas fa-phone"></i> Contact Admin
+        </a>
+        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;margin-top:10px;" onclick="backToLoginFromError()">Back</button>
+    </div>
+
+    <div id="registerForm">
+        <input type="text" id="regName" placeholder="Full Name">
+        <input type="email" id="regEmail" placeholder="Email address">
+        <div style="position:relative;margin-bottom:12px;">
+            <input type="password" id="regPass" placeholder="Password" style="margin-bottom:0;padding-right:48px;">
+            <button type="button" onclick="togglePass('regPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8b9cb3;cursor:pointer;font-size:16px;"><i class="fas fa-eye"></i></button>
+        </div>
+        <button class="btn" id="regBtn" onclick="doRegister()"><i class="fas fa-user-plus"></i> Create Account</button>
+        <div class="msg" id="regMsg"></div>
+        <div class="loading" id="regLoading">সেভ হচ্ছে...</div>
+    </div>
+
+    <div class="footer">Developed by Gourab • 01944035239</div>
+</div>
+
+<script>
+
+/* ========== SUPABASE CONFIG (Primary DB) ========== */
+const SUPABASE_URL = 'https://nzpomdjksdywndpyoubb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_R52qXaRZpRLdoRSlobdSxg_xyPAB9c4';
+const SB_HEADERS = {
+  'apikey': SUPABASE_ANON_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+const ADMIN_EMAIL = 'gourabmon112233@gmail.com';
+
+function rowToUser(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name || '',
+    password: row.password_hash || '',
+    status: row.status || 'Pending',
+    mode: row.mode || 'free',
+    tools: Array.isArray(row.tools) ? row.tools : [],
+    profile: row.profile && typeof row.profile === 'object' ? row.profile : {},
+    devices: Array.isArray(row.devices) ? row.devices : [],
+    approvedDevices: Array.isArray(row.approved_devices) ? row.approved_devices : [],
+    pendingDevices: Array.isArray(row.pending_devices) ? row.pending_devices : (row.profile && row.profile.pendingDevices) || [],
+    blockedDevices: Array.isArray(row.blocked_devices) ? row.blocked_devices : [],
+    loginHistory: Array.isArray(row.login_history) ? row.login_history : [],
+    toolUsage: row.tool_usage && typeof row.tool_usage === 'object' ? row.tool_usage : {},
+    totalSessions: row.total_sessions || 0,
+    lastLogin: row.last_login || null,
+    joined: row.joined || '',
+    created: row.created_at || null
+  };
+}
+
+function userToPatch(u) {
+  return {
+    email: (u.email || '').toLowerCase(),
+    password_hash: u.password || u.password_hash || '',
+    name: u.name || '',
+    status: u.status || 'Pending',
+    mode: u.mode || 'free',
+    tools: u.tools || [],
+    profile: Object.assign({}, u.profile || {}, { pendingDevices: u.pendingDevices || [] }),
+    devices: u.devices || [],
+    approved_devices: u.approvedDevices || [],
+    blocked_devices: u.blockedDevices || [],
+    login_history: u.loginHistory || [],
+    tool_usage: u.toolUsage || {},
+    total_sessions: u.totalSessions || 0,
+    last_login: u.lastLogin || null,
+    joined: u.joined || '',
+    updated_at: new Date().toISOString()
+  };
+}
+
+async function sbFetch(path, opts) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, Object.assign({ headers: SB_HEADERS }, opts || {}));
+  if (!res.ok) {
+    const t = await res.text().catch(() => '');
+    throw new Error('Supabase ' + res.status + ': ' + t.slice(0, 200));
+  }
+  if (res.status === 204) return null;
+  const text = await res.text();
+  if (!text) return null;
+  return JSON.parse(text);
+}
+
+async function sbGetAllUsers() {
+  const rows = await sbFetch('app_users?select=*&order=created_at.desc');
+  return (rows || []).map(rowToUser);
+}
+
+async function sbGetUserByEmail(email) {
+  const rows = await sbFetch('app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()) + '&select=*');
+  return rows && rows[0] ? rowToUser(rows[0]) : null;
+}
+
+async function sbInsertUser(user) {
+  const body = userToPatch(user);
+  const rows = await sbFetch('app_users', { method: 'POST', body: JSON.stringify(body) });
+  return rows && rows[0] ? rowToUser(rows[0]) : user;
+}
+
+async function sbUpdateUserByEmail(email, userOrPatch) {
+  const body = userToPatch(Object.assign({ email: email }, userOrPatch));
+  delete body.email; // don't change email key in patch path
+  const rows = await sbFetch(
+    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
+    { method: 'PATCH', body: JSON.stringify(body) }
+  );
+  return rows && rows[0] ? rowToUser(rows[0]) : null;
+}
+
+async function sbDeleteUserByEmail(email) {
+  await sbFetch(
+    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
+    { method: 'DELETE', headers: Object.assign({}, SB_HEADERS, { Prefer: 'return=minimal' }) }
+  );
+}
+
+async function sbGetSettings() {
+  const rows = await sbFetch('app_settings?id=eq.1&select=*');
+  const r = rows && rows[0];
+  if (!r) {
+    return {
+      theme: 'dark-ocean',
+      siteLive: true,
+      registrationOpen: true,
+      notice: '',
+      adminInfo: {},
+      globalTools: [],
+      adminInfoVisible: true,
+      adminDevices: [],
+      blockMessage: ''
+    };
+  }
+  const info = r.admin_info && typeof r.admin_info === 'object' ? r.admin_info : {};
+  return {
+    theme: r.theme || 'dark-ocean',
+    siteLive: r.site_live !== false,
+    registrationOpen: r.registration_open !== false,
+    notice: r.notice || '',
+    adminInfo: info,
+    globalTools: Array.isArray(r.global_tools) ? r.global_tools : [],
+    adminInfoVisible: info.adminInfoVisible !== false,
+    adminDevices: Array.isArray(info.adminDevices) ? info.adminDevices : [],
+    blockMessage: info.blockMessage || '',
+    passwordRequests: Array.isArray(info.passwordRequests) ? info.passwordRequests : [],
+    deviceRequests: Array.isArray(info.deviceRequests) ? info.deviceRequests : []
+  };
+}
+
+async function sbSaveSettings(settings) {
+  const prev = await sbGetSettings();
+  const admin_info = Object.assign({}, prev.adminInfo || {}, settings.adminInfo || {}, {
+    adminInfoVisible: settings.adminInfoVisible !== false,
+    adminDevices: settings.adminDevices || prev.adminDevices || [],
+    blockMessage: settings.blockMessage || prev.blockMessage || '',
+    passwordRequests: settings.passwordRequests || prev.passwordRequests || [],
+    deviceRequests: settings.deviceRequests || prev.deviceRequests || []
+  });
+  const body = {
+    theme: settings.theme || 'dark-ocean',
+    site_live: settings.siteLive !== false,
+    registration_open: settings.registrationOpen !== false,
+    notice: settings.notice || '',
+    admin_info,
+    global_tools: settings.globalTools || [],
+    updated_at: new Date().toISOString()
+  };
+  await sbFetch('app_settings?id=eq.1', { method: 'PATCH', body: JSON.stringify(body) });
+}
+
+/** Compatibility: load full DB shape from Supabase */
+async function fetchDB() {
+  const [users, settings] = await Promise.all([sbGetAllUsers(), sbGetSettings()]);
+  return {
+    users,
+    settings,
+    posts: settings.adminInfo && settings.adminInfo.posts || [],
+    messages: settings.adminInfo && settings.adminInfo.messages || [],
+    passwordRequests: settings.passwordRequests || [],
+    deviceRequests: settings.deviceRequests || []
+  };
+}
+
+/**
+ * Safe save: NEVER bulk-overwrite users.
+ * Only upsert users present in db.users (by email) + save settings.
+ * Does not delete users missing from local array (prevents wipe).
+ */
+async function saveDB(db) {
+  if (!db) throw new Error('No db');
+  // Settings
+  if (db.settings) {
+    const s = Object.assign({}, db.settings, {
+      passwordRequests: db.passwordRequests || db.settings.passwordRequests || [],
+      deviceRequests: db.deviceRequests || db.settings.deviceRequests || []
+    });
+    // stash posts/messages inside admin_info to avoid extra tables for now
+    s.adminInfo = Object.assign({}, s.adminInfo || {}, {
+      posts: db.posts || [],
+      messages: db.messages || []
+    });
+    await sbSaveSettings(s);
+  }
+  // Users: update/insert one by one — never delete others
+  const list = Array.isArray(db.users) ? db.users : [];
+  for (const u of list) {
+    if (!u || !u.email) continue;
+    const existing = await sbGetUserByEmail(u.email);
+    if (existing) {
+      await sbUpdateUserByEmail(u.email, u);
+    } else {
+      await sbInsertUser(u);
+    }
+  }
+  return true;
+}
+
+
+function togglePass(id, btn) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === 'password') {
+        el.type = 'text';
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        el.type = 'password';
+        btn.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+
+function showForgot() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('forgotForm').style.display = 'block';
+    document.getElementById('resetForm').style.display = 'none';
+    document.getElementById('devicePendingBox').style.display = 'none';
+}
+
+function hideAllForms() {
+    ['loginForm','registerForm','forgotForm','resetForm','devicePendingBox','siteBlockedBox','wrongPassBox','accountBlockedBox'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+}
+
+function backToLoginFromError() {
+    hideAllForms();
+    const tabs = document.querySelector('.tabs');
+    if (tabs) tabs.style.display = 'flex';
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('loginTab').classList.add('active');
+    document.getElementById('regTab').classList.remove('active');
+}
+
+async function submitForgot() {
+    const email = (document.getElementById('forgotEmail').value || '').trim().toLowerCase();
+    const reason = (document.getElementById('forgotReason').value || '').trim();
+    const msg = document.getElementById('forgotMsg');
+    if (!email || !reason) {
+        msg.className = 'msg error'; msg.textContent = 'ইমেইল ও কারণ দিন'; return;
+    }
+    let photo = '';
+    const file = document.getElementById('forgotPhoto').files[0];
+    if (file) {
+        photo = await compressImage(file, 400, 0.7);
+    }
+    try {
+        const db = await fetchDB();
+        if (!Array.isArray(db.passwordRequests)) db.passwordRequests = [];
+        const user = (db.users || []).find(u => (u.email || '').toLowerCase() === email);
+        if (!user) {
+            msg.className = 'msg error'; msg.textContent = 'এই ইমেইল রেজিস্টার্ড নয়'; return;
+        }
+        db.passwordRequests = db.passwordRequests.filter(r => r.email !== email || r.status !== 'pending');
+        db.passwordRequests.push({
+            id: Date.now().toString(36),
+            email, reason, photo,
+            name: user.name || '',
+            status: 'pending',
+            time: new Date().toISOString()
+        });
+        await saveDB(db);
+        msg.className = 'msg success';
+        msg.textContent = 'রিকোয়েস্ট পাঠানো হয়েছে! Admin approve করলে নতুন পাসওয়ার্ড সেট করতে পারবেন।';
+    } catch (e) {
+        msg.className = 'msg error'; msg.textContent = 'নেটওয়ার্ক এরর';
+    }
+}
+
+async function compressImage(file, maxW, quality) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+            const scale = Math.min(1, maxW / img.width);
+            const c = document.createElement('canvas');
+            c.width = Math.round(img.width * scale);
+            c.height = Math.round(img.height * scale);
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            URL.revokeObjectURL(url);
+            resolve(c.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve('');
+        img.src = url;
+    });
+}
+
+async function checkResetApproval(email) {
+    try {
+        const db = await fetchDB();
+        const req = (db.passwordRequests || []).find(r => r.email === email && r.status === 'approved');
+        if (req) {
+            hideAllForms();
+            document.getElementById('resetForm').style.display = 'block';
+            document.getElementById('resetEmail').value = email;
+            return true;
+        }
+    } catch(e) {}
+    return false;
+}
+
+async function submitReset() {
+    const email = (document.getElementById('resetEmail').value || '').trim().toLowerCase();
+    const pass = document.getElementById('resetPass').value;
+    const msg = document.getElementById('resetMsg');
+    if (!pass || pass.length < 4) {
+        msg.className = 'msg error'; msg.textContent = 'পাসওয়ার্ড কমপক্ষে ৪ অক্ষর'; return;
+    }
+    try {
+        const db = await fetchDB();
+        const idx = (db.users || []).findIndex(u => (u.email || '').toLowerCase() === email);
+        if (idx < 0) { msg.className = 'msg error'; msg.textContent = 'ইউজার পাওয়া যায়নি'; return; }
+        db.users[idx].password = pass;
+        if (Array.isArray(db.passwordRequests)) {
+            db.passwordRequests.forEach(r => {
+                if (r.email === email && r.status === 'approved') r.status = 'completed';
+            });
+        }
+        await saveDB(db);
+        msg.className = 'msg success'; msg.textContent = 'পাসওয়ার্ড আপডেট হয়েছে! লগইন করুন।';
+        setTimeout(() => { showLogin(); }, 1200);
+    } catch(e) {
+        msg.className = 'msg error'; msg.textContent = 'সেভ ব্যর্থ';
+    }
+}
+
+const MAX_DEVICES = 3;
+
+
+function showLogin() {
+    hideAllForms();
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('loginTab').classList.add('active');
+    document.getElementById('regTab').classList.remove('active');
+}
+function showRegister() {
+    hideAllForms();
+    document.getElementById('registerForm').style.display = 'block';
+    document.getElementById('regTab').classList.add('active');
+    document.getElementById('loginTab').classList.remove('active');
+}
+
+async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const pass  = document.getElementById('loginPass').value;
+    const msg   = document.getElementById('loginMsg');
+    const btn   = document.getElementById('loginBtn');
+    const loading = document.getElementById('loginLoading');
+
+    msg.className = 'msg';
+    msg.style.display = 'none';
+
+    if (!email || !pass) {
+        msg.className = 'msg error';
+        msg.textContent = 'ইমেইল ও পাসওয়ার্ড দিন';
+        return;
+    }
+
+    // Admin login — ডিভাইস ট্র্যাক + Dashboard (Admin Panel লিংক সেখানে)
+    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+        btn.disabled = true;
+        loading.style.display = 'block';
+        try {
+            const deviceInfo = await collectDeviceInfo();
+            try {
+                const db = await fetchDB();
+                if (!db.settings) db.settings = {};
+                if (!Array.isArray(db.settings.adminDevices)) db.settings.adminDevices = [];
+                const di = db.settings.adminDevices.findIndex(d => d.fingerprint === deviceInfo.fingerprint);
+                if (di >= 0) {
+                    db.settings.adminDevices[di] = { ...db.settings.adminDevices[di], ...deviceInfo };
+                } else {
+                    db.settings.adminDevices.push(deviceInfo);
+                    if (db.settings.adminDevices.length > 20) {
+                        db.settings.adminDevices = db.settings.adminDevices.slice(-20);
+                    }
+                }
+                await saveDB(db);
+            } catch (e) { console.error('Admin device track', e); }
+            localStorage.setItem('a_tuls_role', 'admin');
+            localStorage.setItem('a_tuls_user', JSON.stringify({
+                name: 'Admin Gourab', email: ADMIN_EMAIL, status: 'Approved', mode: 'premium'
+            }));
+            window.location.href = 'dashboard.html';
+        } finally {
+            btn.disabled = false;
+            loading.style.display = 'none';
+        }
+        return;
+    }
+
+    btn.disabled = true;
+    loading.style.display = 'block';
+
+    try {
+        const db = await fetchDB();
+
+        // Site live check - BIG page
+        if (db.settings && db.settings.siteLive === false) {
+            hideAllForms();
+            document.querySelector('.tabs').style.display = 'none';
+            document.getElementById('siteBlockedBox').style.display = 'block';
+            const bm = document.getElementById('siteBlockMsg');
+            if (bm) bm.textContent = db.settings.blockMessage || 'এই সাইট বর্তমানে Admin কর্তৃক বন্ধ / ব্লক করা হয়েছে।';
+            return;
+        }
+
+        const users = db.users || [];
+        const userIdx = users.findIndex(u => (u.email || '').toLowerCase() === email && u.password === pass);
+
+        if (userIdx === -1) {
+            hideAllForms();
+            document.querySelector('.tabs').style.display = 'none';
+            document.getElementById('wrongPassBox').style.display = 'block';
+            return;
+        }
+
+        let user = users[userIdx];
+
+        // Ensure tracking fields exist
+        if (!Array.isArray(user.devices)) user.devices = [];
+        if (!Array.isArray(user.loginHistory)) user.loginHistory = [];
+        if (!Array.isArray(user.blockedDevices)) user.blockedDevices = [];
+        if (!user.toolUsage || typeof user.toolUsage !== 'object') user.toolUsage = {};
+        if (!user.totalSessions) user.totalSessions = 0;
+
+        // Collect device & check block BEFORE allowing login
+        const deviceInfo = await collectDeviceInfo();
+
+        if (user.blockedDevices.includes(deviceInfo.fingerprint)) {
+            msg.className = 'msg error';
+            msg.textContent = '⛔ এই ডিভাইস/ব্রাউজার Admin কর্তৃক ব্লক করা হয়েছে। লগইন সম্ভব নয়।';
+            return;
+        }
+
+        if (user.status === 'Pending') {
+            localStorage.setItem('a_tuls_role', 'pending');
+            localStorage.setItem('a_tuls_user', JSON.stringify(user));
+            window.location.href = 'pending.html';
+            return;
+        }
+
+        if (user.status === 'Blocked') {
+            hideAllForms();
+            document.querySelector('.tabs').style.display = 'none';
+            document.getElementById('accountBlockedBox').style.display = 'block';
+            return;
+        }
+
+        // Check approved reset
+        await checkResetApproval(email);
+
+        // Device management: max 3 + new device needs admin approval
+        if (!Array.isArray(user.pendingDevices)) user.pendingDevices = [];
+        if (!Array.isArray(user.approvedDevices)) {
+            user.approvedDevices = (user.devices || []).map(d => d.fingerprint);
+        }
+
+        const existingDev = user.devices.findIndex(d => d.fingerprint === deviceInfo.fingerprint);
+        const isKnown = existingDev >= 0 || user.approvedDevices.includes(deviceInfo.fingerprint);
+
+        if (!isKnown) {
+            // New browser — request admin approval
+            const alreadyPending = user.pendingDevices.find(d => d.fingerprint === deviceInfo.fingerprint);
+            if (!alreadyPending) {
+                user.pendingDevices.push({ ...deviceInfo, status: 'pending', requestedAt: new Date().toISOString() });
+            }
+            // Also global list for admin
+            if (!Array.isArray(db.deviceRequests)) db.deviceRequests = [];
+            if (!db.deviceRequests.find(r => r.email === email && r.fingerprint === deviceInfo.fingerprint && r.status === 'pending')) {
+                db.deviceRequests.push({
+                    id: Date.now().toString(36),
+                    email, name: user.name || '',
+                    fingerprint: deviceInfo.fingerprint,
+                    browser: deviceInfo.browser, os: deviceInfo.os, ip: deviceInfo.ip,
+                    status: 'pending', time: new Date().toISOString()
+                });
+            }
+            db.users[userIdx] = user;
+            await saveDB(db);
+            hideAllForms();
+            document.querySelector('.tabs').style.display = 'none';
+            document.getElementById('devicePendingBox').style.display = 'block';
+            document.getElementById('devicePendingText').textContent = 'Admin-এর অনুমতির অপেক্ষায়... (' + (deviceInfo.browser || '') + ')';
+            // update call link from admin info
+            try {
+                const tg = (db.settings && db.settings.adminInfo && db.settings.adminInfo.telegram) || '8801944035239';
+                document.getElementById('callAdminBtn').href = 'https://wa.me/' + String(tg).replace(/[^0-9]/g,'');
+            } catch(e) {}
+            return;
+        }
+
+        // Max 3 approved devices — only allow if fingerprint is in first 3 approved or already known
+        if (user.approvedDevices.length >= MAX_DEVICES && !user.approvedDevices.includes(deviceInfo.fingerprint)) {
+            msg.className = 'msg error';
+            msg.textContent = '⛔ সর্বোচ্চ ৩টি ব্রাউজার/ডিভাইস অনুমোদিত। পুরনো ডিভাইস থেকে লগইন করুন বা Admin-কে যোগাযোগ করুন।';
+            return;
+        }
+
+        // Record login tracking
+        if (existingDev >= 0) {
+            user.devices[existingDev] = { ...user.devices[existingDev], ...deviceInfo };
+        } else {
+            user.devices.push(deviceInfo);
+            if (!user.approvedDevices.includes(deviceInfo.fingerprint)) {
+                user.approvedDevices.push(deviceInfo.fingerprint);
+            }
+            if (user.devices.length > 15) user.devices = user.devices.slice(-15);
+        }
+        // Keep only max 3 approved if somehow more
+        if (user.approvedDevices.length > MAX_DEVICES) {
+            user.approvedDevices = user.approvedDevices.slice(0, MAX_DEVICES);
+        }
+
+        user.loginHistory.push({
+            time: deviceInfo.lastSeen,
+            browser: deviceInfo.browser,
+            os: deviceInfo.os,
+            ip: deviceInfo.ip,
+            deviceType: deviceInfo.deviceType
+        });
+        if (user.loginHistory.length > 30) user.loginHistory = user.loginHistory.slice(-30);
+
+        user.lastLogin = deviceInfo.lastSeen;
+        user.totalSessions = (user.totalSessions || 0) + 1;
+
+        db.users[userIdx] = user;
+        await saveDB(db);
+
+        localStorage.setItem('a_tuls_role', 'user');
+        localStorage.setItem('a_tuls_user', JSON.stringify(user));
+        window.location.href = 'dashboard.html';
+    } catch (e) {
+        msg.className = 'msg error';
+        msg.textContent = 'নেটওয়ার্ক এরর! আবার চেষ্টা করুন।';
+        console.error(e);
+    } finally {
+        btn.disabled = false;
+        loading.style.display = 'none';
+    }
+}
+
+async function doRegister() {
+    const name  = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const pass  = document.getElementById('regPass').value;
+    const msg   = document.getElementById('regMsg');
+    const btn   = document.getElementById('regBtn');
+    const loading = document.getElementById('regLoading');
+
+    msg.className = 'msg';
+    msg.style.display = 'none';
+
+    if (!name || !email || !pass) {
+        msg.className = 'msg error';
+        msg.textContent = 'সব ফিল্ড পূরণ করুন';
+        return;
+    }
+
+    if (pass.length < 4) {
+        msg.className = 'msg error';
+        msg.textContent = 'পাসওয়ার্ড কমপক্ষে ৪ অক্ষর হতে হবে';
+        return;
+    }
+
+    btn.disabled = true;
+    loading.style.display = 'block';
+
+    try {
+        const db = await fetchDB();
+        if (!db.users) db.users = [];
+        if (!db.settings) {
+            db.settings = {
+                theme: 'dark-ocean',
+                adminInfoVisible: true,
+                registrationOpen: true,
+                siteLive: true,
+                notice: '',
+                globalTools: [
+                    'Duplicate Checker', 'Data Formatter', 'Report Generator',
+                    'Email Validator', 'Email Vault', 'Names & Recovery',
+                    'Password Generator', 'IP TimeZone Finder', 'Gmail format fixer'
+                ]
+            };
+        }
+
+        if (db.settings.siteLive === false) {
+            msg.className = 'msg error';
+            msg.textContent = 'সাইট সাময়িক বন্ধ আছে।';
+            return;
+        }
+
+        if (db.settings.registrationOpen === false) {
+            msg.className = 'msg error';
+            msg.textContent = 'রেজিস্ট্রেশন এখন বন্ধ আছে!';
+            return;
+        }
+
+        if (db.users.find(u => (u.email || '').toLowerCase() === email)) {
+            msg.className = 'msg error';
+            msg.textContent = 'এই ইমেইল ইতিমধ্যে রেজিস্টার্ড';
+            return;
+        }
+
+        // Collect device for new user
+        const deviceInfo = await collectDeviceInfo();
+
+        const newUser = {
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            name,
+            email,
+            password: pass,
+            status: 'Pending',
+            mode: 'free',
+            tools: [],
+            joined: new Date().toLocaleDateString('en-GB'),
+            created: new Date().toISOString(),
+            // Ultra Tracking fields
+            devices: [deviceInfo],
+            approvedDevices: [deviceInfo.fingerprint],
+            pendingDevices: [],
+            blockedDevices: [],
+            loginHistory: [{
+                time: deviceInfo.lastSeen,
+                browser: deviceInfo.browser,
+                os: deviceInfo.os,
+                ip: deviceInfo.ip,
+                deviceType: deviceInfo.deviceType
+            }],
+            toolUsage: {},
+            lastLogin: deviceInfo.lastSeen,
+            totalSessions: 1,
+            profile: {
+                photo: '',
+                bio: '',
+                phone: '',
+                publicMessage: '',
+                showOnHome: true
+            }
+        };
+
+        db.users.push(newUser);
+        await saveDB(db);
+
+        msg.className = 'msg success';
+        msg.textContent = 'রেজিস্ট্রেশন সফল! অ্যাডমিন অ্যাপ্রুভের জন্য অপেক্ষা করুন।';
+
+        setTimeout(() => {
+            localStorage.setItem('a_tuls_role', 'pending');
+            localStorage.setItem('a_tuls_user', JSON.stringify(newUser));
+            window.location.href = 'pending.html';
+        }, 1200);
+    } catch (e) {
+        msg.className = 'msg error';
+        msg.textContent = 'নেটওয়ার্ক এরর! আবার চেষ্টা করুন।';
+        console.error(e);
+    } finally {
+        btn.disabled = false;
+        loading.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>

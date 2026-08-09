@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duplicate Email Checker | Ultra Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --primary-light: #14b8a6;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(13, 148, 136, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+                linear-gradient(160deg, #f8fafc 0%, #f1f5f9 40%, #ecfdf5 100%);
+            min-height: 100vh;
+            color: var(--text);
+            padding: 24px 16px 60px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Floating decorative elements */
+        .glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-1 {
+            top: -100px;
+            left: -100px;
+            background: #14b8a6;
+        }
+        .glow-2 {
+            bottom: -150px;
+            right: -100px;
+            background: #f59e0b;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 36px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 7px 16px;
+            border-radius: 50px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .badge i {
+            font-size: 11px;
+        }
+
+        .header h1 {
+            font-size: clamp(1.9rem, 5vw, 2.6rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #134e4a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 15px;
+            font-weight: 500;
+            max-width: 420px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.6);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-body {
+            padding: 32px 28px;
+        }
+
+        @media (max-width: 600px) {
+            .card-body {
+                padding: 24px 18px;
+            }
+        }
+
+        /* Section Label */
+        .section-label {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .section-label i {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #ccfbf1, #99f6e4);
+            color: #0d9488;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        /* Textarea */
+        .textarea-container {
+            position: relative;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #f8fafc;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .textarea-container:focus-within {
+            border-color: #14b8a6;
+            box-shadow: 0 0 0 5px rgba(20, 184, 166, 0.15);
+            background: white;
+        }
+
+        textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            padding: 18px;
+            font-family: 'Plus Jakarta Sans', monospace;
+            font-size: 14.5px;
+            line-height: 1.7;
+            background: transparent;
+            color: var(--text);
+        }
+
+        #emailInput {
+            height: 240px;
+        }
+
+        .output-textarea {
+            height: 150px;
+            background: #f8fafc !important;
+        }
+
+        .line-info {
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-top: 8px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 22px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            letter-spacing: 0.2px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: white;
+            flex: 1;
+            min-width: 170px;
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.45);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 14px 30px -5px rgba(13, 148, 136, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1.5px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .btn-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1.5px solid #fecaca;
+        }
+
+        .btn-danger:hover {
+            background: #fee2e2;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            color: var(--muted);
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 10px;
+        }
+
+        .btn-outline:hover {
+            border-color: #14b8a6;
+            color: #0d9488;
+            background: #f0fdfa;
+        }
+
+        /* Message */
+        .message {
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.35s ease;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.info {
+            background: linear-gradient(135deg, #ecfeff, #cffafe);
+            color: #0e7490;
+            border: 1px solid #a5f3fc;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 28px;
+            animation: fadeUp 0.4s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-item {
+            background: white;
+            border-radius: 18px;
+            padding: 18px 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 1.85rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Results */
+        .results {
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            animation: fadeUp 0.45s ease 0.1s both;
+        }
+
+        @media (max-width: 700px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-box {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            transition: all 0.25s ease;
+        }
+
+        .result-box:hover {
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 18px;
+            background: linear-gradient(to right, #f8fafc, #ffffff);
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .result-title {
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-title i {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .icon-unique {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .icon-dup {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .count-badge {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 11px;
+            border-radius: 50px;
+            color: white;
+            margin-left: 4px;
+        }
+
+        .count-unique {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .count-duplicate {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .result-body {
+            padding: 14px;
+        }
+
+        /* Footer */
+        .footer-note {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-note i {
+            color: #14b8a6;
+        }
+
+        /* Scrollbar styling */
+        textarea::-webkit-scrollbar {
+            width: 6px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+  var r = localStorage.getItem('a_tuls_role');
+  if (r !== 'user' && r !== 'admin') {
+    location.replace('index.html');
+  }
+})();
+</script>
+
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="badge">
+                <i class="fas fa-crown"></i> PREMIUM VERSION
+            </div>
+            <h1>Duplicate Email Checker</h1>
+            <p>Instantly find & remove duplicate emails from your list with beautiful clarity</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="main-card">
+            <div class="card-body">
+                <!-- Input -->
+                <div class="section-label">
+                    <i class="fas fa-envelope-open-text"></i>
+                    Paste your email list here
+                </div>
+                <div class="textarea-container">
+                    <textarea id="emailInput" placeholder="example@gmail.com&#10;hello@domain.com&#10;example@gmail.com&#10;test@yahoo.com&#10;..."></textarea>
+                </div>
+                <div class="line-info" id="inputCount">0 lines</div>
+
+                <!-- Buttons -->
+                <div class="btn-row">
+                    <button class="btn btn-secondary" id="pasteBtn">
+                        <i class="fas fa-paste"></i> Paste
+                    </button>
+                    <button class="btn btn-primary" id="checkBtn">
+                        <i class="fas fa-magic"></i> Check Duplicates
+                    </button>
+                    <button class="btn btn-danger" id="clearBtn">
+                        <i class="fas fa-trash-alt"></i> Clear
+                    </button>
+                </div>
+
+                <!-- Message -->
+                <div class="message" id="messageBox"></div>
+
+                <!-- Stats -->
+                <div class="stats-bar" id="statsBar" style="display: none;">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalCount">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="uniqueCount">0</div>
+                        <div class="stat-label">Unique</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="dupCount">0</div>
+                        <div class="stat-label">Duplicates</div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div class="results" id="resultsSection" style="display: none;">
+                    <!-- Unique -->
+                    <div class="result-box">
+                        <div class="result-header">
+                            <div class="result-title">
+                                <i class="fas fa-check icon-unique"></i>
+                                Unique Emails
+                                <span class="count-badge count-unique" id="uniqueBadge">0</span>
+                            </div>
+                            <button class="btn btn-outline" id="copyUniqueBtn" title="Copy unique emails">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="result-body">
+                            <div class="textarea-container">
+                                <textarea class="output-textarea" id="uniqueList" readonly placeholder="Unique emails will appear here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Duplicates -->
+                    <div class="result-box">
+                        <div class="result-header">
+                            <div class="result-title">
+                                <i class="fas fa-clone icon-dup"></i>
+                                Duplicates
+                                <span class="count-badge count-duplicate" id="dupBadge">0</span>
+                            </div>
+                            <button class="btn btn-outline" id="copyDupBtn" title="Copy duplicate emails">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="result-body">
+                            <div class="textarea-container">
+                                <textarea class="output-textarea" id="dupList" readonly placeholder="Duplicate emails will appear here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <i class="fas fa-shield-halved"></i>
+            100% Private • All processing happens in your browser
+        </div>
+    </div>
+
+    <script>
+        const emailInput = document.getElementById('emailInput');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const checkBtn = document.getElementById('checkBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const messageBox = document.getElementById('messageBox');
+        const statsBar = document.getElementById('statsBar');
+        const resultsSection = document.getElementById('resultsSection');
+        const uniqueList = document.getElementById('uniqueList');
+        const dupList = document.getElementById('dupList');
+        const uniqueBadge = document.getElementById('uniqueBadge');
+        const dupBadge = document.getElementById('dupBadge');
+        const inputCount = document.getElementById('inputCount');
+        const copyUniqueBtn = document.getElementById('copyUniqueBtn');
+        const copyDupBtn = document.getElementById('copyDupBtn');
+
+        // Live line counter
+        emailInput.addEventListener('input', () => {
+            const lines = emailInput.value.split('\n').filter(l => l.trim() !== '').length;
+            inputCount.textContent = lines + (lines === 1 ? ' line' : ' lines');
+        });
+
+        // Paste
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                emailInput.value = text;
+                emailInput.dispatchEvent(new Event('input'));
+                showMessage('Successfully pasted from clipboard!', 'success');
+            } catch (err) {
+                showMessage('Could not access clipboard. Please paste manually (Ctrl+V).', 'error');
+            }
+        });
+
+        // Clear
+        clearBtn.addEventListener('click', () => {
+            emailInput.value = '';
+            uniqueList.value = '';
+            dupList.value = '';
+            uniqueBadge.textContent = '0';
+            dupBadge.textContent = '0';
+            statsBar.style.display = 'none';
+            resultsSection.style.display = 'none';
+            inputCount.textContent = '0 lines';
+            hideMessage();
+        });
+
+        // Main Check
+        checkBtn.addEventListener('click', () => {
+            const raw = emailInput.value.trim();
+            if (!raw) {
+                showMessage('Please enter some emails first.', 'error');
+                return;
+            }
+
+            let emails = raw.split(/\r?\n/)
+                .map(e => e.trim().toLowerCase())
+                .filter(e => e.length > 0);
+
+            if (emails.length === 0) {
+                showMessage('No valid emails found.', 'error');
+                return;
+            }
+
+            const countMap = {};
+            emails.forEach(email => {
+                countMap[email] = (countMap[email] || 0) + 1;
+            });
+
+            const unique = [];
+            const duplicates = [];
+
+            for (const [email, count] of Object.entries(countMap)) {
+                if (count === 1) {
+                    unique.push(email);
+                } else {
+                    duplicates.push(email + '  × ' + count);
+                }
+            }
+
+            unique.sort();
+            duplicates.sort();
+
+            uniqueList.value = unique.length ? unique.join('\n') : 'None';
+            dupList.value = duplicates.length ? duplicates.join('\n') : 'None';
+
+            uniqueBadge.textContent = unique.length;
+            dupBadge.textContent = duplicates.length;
+
+            document.getElementById('totalCount').textContent = emails.length;
+            document.getElementById('uniqueCount').textContent = unique.length;
+            document.getElementById('dupCount').textContent = duplicates.length;
+
+            statsBar.style.display = 'grid';
+            resultsSection.style.display = 'grid';
+
+            if (duplicates.length === 0) {
+                showMessage('Perfect! No duplicate emails found.', 'success');
+            } else {
+                showMessage(`Found ${duplicates.length} duplicate email(s).`, 'info');
+            }
+        });
+
+        // Copy
+        copyUniqueBtn.addEventListener('click', () => {
+            if (!uniqueList.value || uniqueList.value === 'None') {
+                showMessage('Nothing to copy.', 'error');
+                return;
+            }
+            navigator.clipboard.writeText(uniqueList.value).then(() => {
+                showMessage('Unique emails copied to clipboard!', 'success');
+            });
+        });
+
+        copyDupBtn.addEventListener('click', () => {
+            if (!dupList.value || dupList.value === 'None') {
+                showMessage('Nothing to copy.', 'error');
+                return;
+            }
+            navigator.clipboard.writeText(dupList.value).then(() => {
+                showMessage('Duplicate emails copied to clipboard!', 'success');
+            });
+        });
+
+        function showMessage(text, type = 'info') {
+            messageBox.className = `message show ${type}`;
+            const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+            messageBox.innerHTML = `<i class="fas fa-${icon}"></i> ${text}`;
+            
+            clearTimeout(window.msgTimeout);
+            window.msgTimeout = setTimeout(hideMessage, 4000);
+        }
+
+        function hideMessage() {
+            messageBox.classList.remove('show');
+        }
+
+        // Keyboard shortcut
+        emailInput.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                checkBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
