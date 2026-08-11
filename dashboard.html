@@ -198,10 +198,10 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 </div>
 
 <div class="row g-3 mb-3">
-<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold" style="color:var(--p)">9</div><div class="small text-muted">Tools</div></div></div>
-<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-success">Standard</div><div class="small text-muted">Membership</div></div></div>
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold" style="color:var(--p)" id="statTools">9</div><div class="small text-muted">Tools</div></div></div>
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-success" id="statPkg">Free</div><div class="small text-muted">Membership</div></div></div>
 <div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-primary" id="vc">0</div><div class="small text-muted">Vault Files</div></div></div>
-<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-warning">৳900</div><div class="small text-muted">Invested</div></div></div>
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-warning" id="statInvest">৳0</div><div class="small text-muted">Invested</div></div></div>
 </div>
 
 <div class="tgrid">
@@ -433,6 +433,13 @@ if(sess){
   if(roleEl) roleEl.textContent=(sess.role==='admin'?'Admin':'User')+' • '+(sess.package||'Free');
   const pkgLine=document.getElementById('pkgLine');
   if(pkgLine) pkgLine.textContent='Package: '+(sess.package||'Free')+(sess.role==='admin'?' • Full Access':'');
+  // Dynamic stats
+  const pkgMap={Free:'৳0',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
+  const sp=document.getElementById('statPkg');
+  const si=document.getElementById('statInvest');
+  if(sp) sp.textContent=sess.role==='admin'?'Lifetime':(sess.package||'Free');
+  if(si) si.textContent=sess.role==='admin'?'—':(pkgMap[sess.package]||'৳0');
+  if(sp) sp.className='fs-4 fw-bold '+(sess.package&&sess.package!=='Free'||sess.role==='admin'?'text-success':'text-secondary');
   const av=document.getElementById('dav');
   if(av && !av.querySelector('img')) av.textContent=un.charAt(0).toUpperCase();
   const pc=document.getElementById('pc');

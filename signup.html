@@ -130,40 +130,63 @@ body {
 </div>
 <div class="back-home"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></div>
 <script>
-document.getElementById('signupForm').onsubmit = function(e){
+const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
+
+document.getElementById('signupForm').onsubmit = async function(e){
   e.preventDefault();
   const username = document.getElementById('username').value.trim();
   const email = document.getElementById('email').value.trim();
   const pass = document.getElementById('password').value;
   const conf = document.getElementById('confirm').value;
-  const apiCode = document.getElementById('apiCode').value.trim();
+  const apiCode = document.getElementById('apiCode').value.trim().replace(/\s+/g,'');
   if(pass !== conf){ alert('Passwords do not match'); return; }
   if(pass.length < 6){ alert('Password min 6 characters'); return; }
   if(!apiCode){ alert('API Code required!'); return; }
 
-  // Validate API Code
-  const keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
-  const validKey = keys.find(k => k.key === apiCode && new Date(k.expires) > new Date());
+  // 1) Cloud API keys (সব ডিভাইস)
+  let validKey = null;
+  try{
+    const r = await fetch(SB_URL+'a_tuls_api_keys?key=eq.'+encodeURIComponent(apiCode)+'&select=*', {headers:SB_H});
+    if(r.ok){
+      const rows = await r.json();
+      if(rows && rows[0]){
+        const k = rows[0];
+        if(!k.expires || new Date(k.expires) > new Date()) validKey = {key:k.key,type:k.type||'free',userId:k.user_id,username:k.username,id:k.id};
+      }
+    }
+  }catch(err){}
+
+  // 2) Local fallback
   if(!validKey){
-    alert('Wrong API Code!\n\nসঠিক API Code দিন অথবা Membership থেকে প্যাকেজ কিনুন।');
+    const keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+    validKey = keys.find(k => (k.key||'').trim().replace(/\s+/g,'') === apiCode && (!k.expires || new Date(k.expires) > new Date())) || null;
+  }
+
+  if(!validKey){
+    alert('Wrong API Code!\n\nসঠিক API Code দিন অথবা Membership থেকে প্যাকেজ কিনুন।\n\n* Admin Panel থেকে Generate করা কোড Copy করে দিন।');
     return;
   }
 
+  // Check existing user (cloud + local)
   let users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+  try{
+    const r = await fetch(SB_URL+'a_tuls_users?or=(email.eq.'+encodeURIComponent(email)+',username.eq.'+encodeURIComponent(username)+')&select=id', {headers:SB_H});
+    if(r.ok){ const exist=await r.json(); if(exist&&exist.length){ alert('Username or email already exists'); return; } }
+  }catch(err){}
   if(users.find(u => u.email === email || u.username === username)){
     alert('Username or email already exists'); return;
   }
 
-  // Paid API → paid package, Free API → Free (view only)
   const apiType = validKey.type || 'free';
   const pkg = apiType === 'paid' ? 'Basic' : 'Free';
-
   const user = {
     id: Date.now().toString(),
     username, email,
     gender: document.getElementById('gender').value,
-    apiCode: apiCode,
-    apiType: apiType,
+    api_code: apiCode,
+    api_type: apiType,
     whatsapp: document.getElementById('whatsapp').value.trim(),
     telegram: document.getElementById('telegram').value.trim(),
     security_question: document.getElementById('sq').value,
@@ -174,10 +197,18 @@ document.getElementById('signupForm').onsubmit = function(e){
     fb: '',
     created: new Date().toISOString()
   };
-  // Link API key to this new user
-  validKey.userId = user.id;
-  validKey.username = username;
-  localStorage.setItem('a_tuls_api_keys', JSON.stringify(keys));
+
+  // Save user to cloud
+  try{
+    await fetch(SB_URL+'a_tuls_users', {method:'POST', headers:SB_H, body:JSON.stringify(user)});
+  }catch(err){}
+
+  // Link API key to user in cloud
+  if(validKey.id){
+    try{
+      await fetch(SB_URL+'a_tuls_api_keys?id=eq.'+validKey.id, {method:'PATCH', headers:SB_H, body:JSON.stringify({user_id:user.id,username:username})});
+    }catch(err){}
+  }
 
   users.push(user);
   localStorage.setItem('a_tuls_users', JSON.stringify(users));

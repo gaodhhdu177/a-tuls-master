@@ -171,7 +171,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
             <button class="btn btn-p w-100" onclick="genApi()"><i class="fas fa-key me-1"></i> Generate</button>
           </div>
         </div>
-        <p class="small text-muted mb-3"><strong>Free API</strong> = Dashboard-এ টুল দেখতে পারবে কিন্তু চালাতে পারবে না। <strong>Paid API</strong> = সব টুল পুরোপুরি ব্যবহার করতে পারবে।</p>
+        <p class="small text-muted mb-2"><strong>Free API</strong> = শুধু দেখা। <strong>Paid API</strong> = পুরো ব্যবহার।</p>
+        <p class="small text-success mb-3">✅ Supabase ক্লাউড চালু থাকলে API <strong>সব ব্রাউজার/ডিভাইসে</strong> কাজ করবে। প্রথমে <code>SUPABASE-SETUP.md</code> অনুসারে টেবিল তৈরি করুন।</p>
         <div class="table-responsive">
           <table class="table table-hover">
             <thead><tr><th>User</th><th>Type</th><th>API Key</th><th>Expires</th><th></th></tr></thead>
@@ -206,6 +207,38 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
 </div>
 
 <script>
+// ===== SUPABASE (সব ব্রাউজার/ডিভাইসে একই ডেটা) =====
+const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
+
+async function sbGet(table, qs){
+  try{
+    const r = await fetch(SB_URL+table+(qs||''), {headers:SB_H});
+    if(!r.ok) throw new Error(r.status);
+    return await r.json();
+  }catch(e){ console.warn('SB get',table,e); return null; }
+}
+async function sbPost(table, row){
+  try{
+    const r = await fetch(SB_URL+table, {method:'POST', headers:SB_H, body:JSON.stringify(row)});
+    if(!r.ok) throw new Error(await r.text());
+    return await r.json();
+  }catch(e){ console.warn('SB post',table,e); return null; }
+}
+async function sbPatch(table, filter, row){
+  try{
+    const r = await fetch(SB_URL+table+'?'+filter, {method:'PATCH', headers:SB_H, body:JSON.stringify(row)});
+    return r.ok;
+  }catch(e){ return false; }
+}
+async function sbDel(table, filter){
+  try{
+    const r = await fetch(SB_URL+table+'?'+filter, {method:'DELETE', headers:SB_H});
+    return r.ok;
+  }catch(e){ return false; }
+}
+
 // Auth check - only real admin
 (function(){
   const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
@@ -235,19 +268,29 @@ function tab(name){
   if(name==='dash') loadStats();
 }
 
-function getUsers(){return JSON.parse(localStorage.getItem('a_tuls_users')||'[]')}
-function saveUsers(u){localStorage.setItem('a_tuls_users',JSON.stringify(u))}
+async function getUsers(){
+  const cloud = await sbGet('a_tuls_users','?select=*&order=created.desc');
+  if(cloud && Array.isArray(cloud)){
+    localStorage.setItem('a_tuls_users', JSON.stringify(cloud));
+    return cloud;
+  }
+  return JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+}
+async function saveUsers(u){
+  localStorage.setItem('a_tuls_users', JSON.stringify(u));
+}
 
-function loadStats(){
-  const users=getUsers();
+async function loadStats(){
+  const users = await getUsers();
   document.getElementById('sUsers').textContent=users.length;
   document.getElementById('sPaid').textContent=users.filter(u=>u.package&&u.package!=='Free').length;
   document.getElementById('sFree').textContent=users.filter(u=>!u.package||u.package==='Free').length;
-  document.getElementById('sApi').textContent=(JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]')).length;
+  const keys = await sbGet('a_tuls_api_keys','?select=id');
+  document.getElementById('sApi').textContent = keys ? keys.length : (JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]')).length;
 }
 
-function loadUsers(){
-  const users=getUsers();
+async function loadUsers(){
+  const users=await getUsers();
   const body=document.getElementById('usersBody');
   if(!users.length){body.innerHTML='<tr><td colspan="6" class="text-center text-muted py-4">No users yet — they appear after Signup</td></tr>';return}
   body.innerHTML=users.map((u,i)=>{
@@ -270,11 +313,13 @@ function loadUsers(){
 
 function esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
 
-function fillUserSelects(){
-  const users=getUsers();
-  const opts='<option value="">Select user...</option>'+users.map(u=>`<option value="${u.id}">${esc(u.username)} (${esc(u.email)})</option>`).join('');
-  document.getElementById('upUser').innerHTML=opts;
-  document.getElementById('apiUser').innerHTML=opts;
+async function fillUserSelects(){
+  const users=await getUsers();
+  const opts='<option value="">Invite Code (Signup) / Select user</option>'+users.map(u=>`<option value="${u.id}">${esc(u.username)} (${esc(u.email)})</option>`).join('');
+  const up=document.getElementById('upUser');
+  const ap=document.getElementById('apiUser');
+  if(up) up.innerHTML=opts;
+  if(ap) ap.innerHTML=opts;
 }
 
 function upgradePkg(){
@@ -298,19 +343,21 @@ function quickUpgrade(id){
   alert('Updated');
 }
 
-function delUser(id){
+async function delUser(id){
   if(!confirm('Delete this user?'))return;
   const conf=prompt('নিশ্চিত করতে লিখুন: DELETE');
   if(conf!=='DELETE'){ alert('বাতিল করা হয়েছে'); return; }
-  saveUsers(getUsers().filter(u=>u.id!==id));
+  await sbDel('a_tuls_users','id=eq.'+encodeURIComponent(id));
+  const users=(await getUsers()).filter(u=>u.id!==id);
+  await saveUsers(users);
   loadUsers();loadStats();
 }
 
-function genApi(){
+async function genApi(){
   const id=document.getElementById('apiUser').value;
   const days=+document.getElementById('apiDays').value;
   const type=document.getElementById('apiType').value||'free';
-  const users=getUsers();
+  const users=await getUsers();
   let username='Invite Code (Signup)';
   let userId='invite_'+Date.now();
   if(id){
@@ -321,34 +368,50 @@ function genApi(){
   }
   const key='atuls_'+type+'_'+Math.random().toString(36).slice(2)+Date.now().toString(36);
   const exp=new Date();exp.setDate(exp.getDate()+days);
+  const row={user_id:userId,username:username,key:key,type:type,expires:exp.toISOString(),created:new Date().toISOString()};
+  const saved=await sbPost('a_tuls_api_keys', row);
+  // also local backup
   let keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
-  if(id) keys=keys.filter(k=>k.userId!==id);
-  keys.unshift({userId:userId,username:username,key,type,expires:exp.toISOString(),created:new Date().toISOString()});
+  keys.unshift({userId:userId,username:username,key,type,expires:exp.toISOString(),created:row.created});
   localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
   loadApis();loadStats();
-  alert((type==='paid'?'Paid':'Free')+' API Key:\n'+key+'\n\nএই কোড Signup পেজে API Code হিসেবে ব্যবহার করা যাবে।');
+  if(saved){
+    alert((type==='paid'?'Paid':'Free')+' API Key (Cloud):\n'+key+'\n\n✅ সব ডিভাইসে কাজ করবে!\nSignup পেজে এই কোড দিন।');
+  } else {
+    alert((type==='paid'?'Paid':'Free')+' API Key (Local only):\n'+key+'\n\n⚠️ Supabase টেবিল নেই — SUPABASE-SETUP.md দেখুন।\nএখন শুধু এই ব্রাউজারে কাজ করবে।');
+  }
 }
 
-function loadApis(){
-  const keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+async function loadApis(){
+  let keys=await sbGet('a_tuls_api_keys','?select=*&order=created.desc');
+  if(!keys||!Array.isArray(keys)) keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  else {
+    // normalize cloud → local shape
+    keys=keys.map(k=>({userId:k.user_id||k.userId,username:k.username,key:k.key,type:k.type,expires:k.expires,created:k.created,id:k.id}));
+    localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
+  }
   const body=document.getElementById('apiBody');
   if(!keys.length){body.innerHTML='<tr><td colspan="5" class="text-center text-muted py-3">No keys yet</td></tr>';return}
   body.innerHTML=keys.map((k,i)=>{
     const t=k.type||'free';
     const badge=t==='paid'?'<span class="badge bg-success">Paid</span>':'<span class="badge bg-secondary">Free</span>';
+    const kid=k.id!=null?k.id:i;
     return `<tr>
     <td>${esc(k.username)}</td>
     <td>${badge}</td>
-    <td><span class="api-key">${esc(k.key)}</span></td>
-    <td class="small">${new Date(k.expires).toLocaleDateString()}</td>
-    <td><button class="btn btn-sm btn-outline-danger" onclick="delApi(${i})">Del</button></td>
+    <td style="max-width:200px"><code style="font-size:11px;word-break:break-all;user-select:all">${esc(k.key)}</code>
+    <button class="btn btn-sm btn-outline-primary ms-1" onclick="navigator.clipboard.writeText('${String(k.key).replace(/'/g,"\\'")}').then(()=>alert('Copied!'))">Copy</button></td>
+    <td class="small">${k.expires?new Date(k.expires).toLocaleDateString():'-'}</td>
+    <td><button class="btn btn-sm btn-outline-danger" onclick="delApi(${kid},'${String(k.key).replace(/'/g,"\\'")}')">Del</button></td>
   </tr>`;
   }).join('');
 }
 
-function delApi(i){
+async function delApi(idOrIdx, keyStr){
+  if(typeof idOrIdx==='number' && idOrIdx>100) await sbDel('a_tuls_api_keys','id=eq.'+idOrIdx);
+  else if(keyStr) await sbDel('a_tuls_api_keys','key=eq.'+encodeURIComponent(keyStr));
   let keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
-  keys.splice(i,1);
+  keys=keys.filter(k=>k.key!==keyStr);
   localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
   loadApis();loadStats();
 }

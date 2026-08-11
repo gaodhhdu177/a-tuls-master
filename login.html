@@ -106,7 +106,11 @@ body {
 </div>
 
 <script>
-function handleLogin(e) {
+const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+
+async function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
@@ -118,8 +122,20 @@ function handleLogin(e) {
     window.location.href = 'admin.html';
     return;
   }
-  const users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
-  const u = users.find(x => (x.email === email || x.username === email) && x.password === pass);
+  // Cloud users (সব ডিভাইস)
+  let u = null;
+  try{
+    const r = await fetch(SB_URL+'a_tuls_users?or=(email.eq.'+encodeURIComponent(email)+',username.eq.'+encodeURIComponent(email)+')&select=*', {headers:SB_H});
+    if(r.ok){
+      const rows = await r.json();
+      u = (rows||[]).find(x => x.password === pass) || null;
+    }
+  }catch(err){}
+  // Local fallback
+  if(!u){
+    const users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+    u = users.find(x => (x.email === email || x.username === email) && x.password === pass);
+  }
   if(!u){ err.style.display = 'block'; return; }
   localStorage.setItem('a_tuls_session', JSON.stringify({id:u.id,username:u.username,email:u.email,role:u.role||'user',package:u.package||'Free'}));
   localStorage.setItem('a_tuls_role', u.role||'user');

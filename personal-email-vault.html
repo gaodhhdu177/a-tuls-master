@@ -332,35 +332,31 @@
 <body>
 <script>
 (function(){
-  var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
-  if(!s){ alert('Please login first!'); location.replace('login.html'); return; }
+  var s = null;
+  try { s = JSON.parse(localStorage.getItem('a_tuls_session')||'null'); } catch(e){ s=null; }
+  if(!s || !s.id){
+    alert('লগইন ছাড়া টুল ব্যবহার করা যাবে না।
+আগে Signup / Login করুন।');
+    location.replace('index.html');
+    return;
+  }
   if(s.role === 'admin') return;
   var pkg = s.package || 'Free';
-  if(pkg !== 'Free') return; // paid package OK
-  var keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
-  var myKeys = keys.filter(function(k){ return k.userId === s.id && new Date(k.expires) > new Date(); });
+  if(pkg !== 'Free') return;
+  var keys = [];
+  try { keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]'); } catch(e){}
+  var myKeys = keys.filter(function(k){ return k.userId === s.id && (!k.expires || new Date(k.expires) > new Date()); });
   var paidApi = myKeys.find(function(k){ return (k.type||'free') === 'paid'; });
   if(paidApi) return;
   var freeApi = myKeys.find(function(k){ return (k.type||'free') === 'free'; });
   if(freeApi){
     alert('Free API দিয়ে টুল চালানো যায় না।
-Paid Package কিনুন বা Admin থেকে Paid API নিন।');
+Paid Package কিনুন।');
     location.replace('membership.html');
     return;
   }
-  var apiIn = prompt('API Key দিন (Paid API প্রয়োজন):');
-  if(!apiIn){ alert('API Key required!'); location.replace('membership.html'); return; }
-  var valid = keys.find(function(k){ return k.key === apiIn.trim() && new Date(k.expires) > new Date(); });
-  if(!valid){
-    alert('Wrong API Key!');
-    location.replace('membership.html');
-    return;
-  }
-  if((valid.type||'free') === 'free'){
-    alert('Free API দিয়ে টুল চালানো যায় না। Paid API নিন।');
-    location.replace('membership.html');
-    return;
-  }
+  alert('এই টুল ব্যবহার করতে Paid Membership প্রয়োজন।');
+  location.replace('membership.html');
 })();
 </script>
 
