@@ -418,7 +418,9 @@ async function delApi(idOrIdx, keyStr){
 
 function logout(){
   localStorage.removeItem('a_tuls_session');
-  window.location.href='login.html';
+  localStorage.removeItem('a_tuls_role');
+  alert('Logged out');
+  window.location.replace('login.html');
 }
 
 loadStats();

@@ -154,7 +154,7 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 </ul></li>
 <li><a data-p="devices"><i class="fas fa-desktop"></i> Associated Devices</a></li>
 <hr class="divider">
-<li><a class="logout" onclick="if(confirm('Logout?'))alert('Logged out')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+<li><a class="logout" href="#" onclick="doLogout();return false"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
 </ul>
 </aside>
 
@@ -340,7 +340,7 @@ membership:{t:'Paid Membership',h:'<p>Current: <strong class="text-success">Stan
 badge:{t:'Apply for Badge',h:'<p class="text-muted">Apply for Trusted / Verified badge.</p><button class="btn btn-p btn-sm" onclick="alert(\'Submitted\')">Apply Now</button>'},
 profile:{t:'My Profile',h:'<div id="profileView"><div class="text-center mb-3"><div class="pc mx-auto mb-2" style="width:80px;height:80px;font-size:2rem" id="pvAv">U</div><h5 id="pvName">User</h5><span class="badge bg-success" id="pvPkg">Free</span></div><p class="mb-1"><strong>Gmail:</strong> <span id="pvGmail">-</span></p><p class="mb-1"><strong>WhatsApp:</strong> <span id="pvWa">-</span></p><p class="mb-1"><strong>Telegram:</strong> <span id="pvTg">-</span></p><p class="mb-1"><strong>Facebook:</strong> <span id="pvFb">-</span></p><p class="mb-0"><strong>Package:</strong> <span id="pvPackage">Free</span></p></div>'},
 'edit-profile':{t:'Edit Profile',h:'<div class="mb-3 text-center"><div class="pc mx-auto mb-2" style="width:80px;height:80px" onclick="document.getElementById(\'pi\').click()" id="epAv">T</div><small class="text-muted">Click photo to change</small></div><div class="mb-2"><label class="form-label">Name</label><input class="form-control" id="epName"></div><div class="mb-2"><label class="form-label">Gmail</label><input type="email" class="form-control" id="epGmail" placeholder="name@gmail.com"></div><div class="mb-2"><label class="form-label">WhatsApp</label><input class="form-control" id="epWa" placeholder="01XXXXXXXXX"></div><div class="mb-2"><label class="form-label">Telegram</label><input class="form-control" id="epTg" placeholder="@username"></div><div class="mb-3"><label class="form-label">Facebook URL</label><input class="form-control" id="epFb" placeholder="https://facebook.com/..."></div><button class="btn btn-p w-100" onclick="saveProfile()">Save Profile</button>'},
-stories:{t:'Manage Stories',h:'<p class="text-muted">Your posted stories appear here.</p>'},
+stories:{t:'Manage Stories',h:'<div id="storyManageList"><p class="text-muted small mb-2">নিজের story ডিলিট করতে পারেন। Admin সব ডিলিট করতে পারে।</p><div id="storyListBox">Loading...</div></div>'},
 transfer:{t:'Money Transfer',h:'<div class="mb-3"><label class="form-label">Receiver Email</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Amount (BDT)</label><input type="number" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Sent\')">Send Money</button>'},
 withdrawal:{t:'Withdrawal History',h:'<p class="text-muted">No withdrawal history yet.</p>'},
 security:{t:'Security',h:'<p><strong>Last Login:</strong> Today</p><p><strong>Devices:</strong> 2 active</p>'},
@@ -352,44 +352,25 @@ devices:{t:'Associated Devices',h:'<div class="li"><div><div class="fw-bold">Chr
 function openTool(page){
   const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
   if(!s){ alert('Please login first!'); window.location.href='login.html'; return; }
-  if(s.role === 'admin'){ window.open(page, '_blank'); return; }
+  // Same window so browser Back works
+  if(s.role === 'admin'){ window.location.href = page; return; }
 
   const isPaidPkg = s.package && s.package !== 'Free';
   const keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
-  const myKeys = keys.filter(k => k.userId === s.id && new Date(k.expires) > new Date());
+  const myKeys = keys.filter(k => (k.userId === s.id || k.user_id === s.id) && (!k.expires || new Date(k.expires) > new Date()));
   const paidApi = myKeys.find(k => (k.type||'free') === 'paid');
   const freeApi = myKeys.find(k => (k.type||'free') === 'free');
 
-  // Paid package or Paid API → full access
-  if(isPaidPkg || paidApi){ window.open(page, '_blank'); return; }
+  if(isPaidPkg || paidApi){ window.location.href = page; return; }
 
-  // Free API only → can see dashboard but cannot run tools
   if(freeApi){
     alert('আপনার Free API আছে।\nটুল দেখতে পারবেন কিন্তু চালাতে পারবেন না।\n\nসব ফিচার ব্যবহার করতে Paid Package কিনুন বা Admin থেকে Paid API নিন।');
     window.location.href = 'membership.html';
     return;
   }
 
-  // No API → ask for key
-  const apiIn = prompt('টুল ব্যবহার করতে API Key দিন (Admin থেকে নিন):\n\n• Free API = শুধু দেখা\n• Paid API = পুরো ব্যবহার');
-  if(!apiIn){
-    alert('API Key ছাড়া টুল চালানো যাবে না। প্যাকেজ কিনুন।');
-    window.location.href = 'membership.html';
-    return;
-  }
-  const valid = keys.find(k => k.key === apiIn.trim() && new Date(k.expires) > new Date());
-  if(!valid){
-    alert('Wrong API Key!\n\nসঠিক API নিন অথবা Membership থেকে প্যাকেজ কিনুন।');
-    window.location.href = 'membership.html';
-    return;
-  }
-  if((valid.type||'free') === 'free'){
-    alert('এটি Free API।\nটুল চালাতে Paid API বা Paid Package প্রয়োজন।');
-    window.location.href = 'membership.html';
-    return;
-  }
-  // valid paid key entered manually - allow
-  window.open(page, '_blank');
+  alert('টুল ব্যবহার করতে Paid Package বা Paid API প্রয়োজন।');
+  window.location.href = 'membership.html';
 }
 
 function go(p){
@@ -402,10 +383,39 @@ else if(p==='email-vault'){
   openTool('personal-email-vault.html');
   return;
 }
-else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h;document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);}
+else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h;document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);}
 closeD();window.scrollTo({top:0,behavior:'smooth'});
 }
+function loadStoryManage(){
+  const box=document.getElementById('storyListBox');
+  if(!box)return;
+  const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+  if(!stories.length){box.innerHTML='<p class="text-muted">কোনো story নেই</p>';return;}
+  box.innerHTML=stories.map((st,i)=>{
+    const canDel = s.role==='admin' || (st.name===s.username);
+    return '<div class="card mb-2 p-3 d-flex flex-row justify-content-between align-items-start gap-2"><div><div class="fw-bold">'+(st.name||'User')+'</div><div class="small text-muted">'+(st.time||st.created||'')+'</div><div class="mt-1">'+(st.text||'')+'</div></div>'+(canDel?'<button class="btn btn-sm btn-outline-danger" onclick="delStory('+i+')">Delete</button>':'')+'</div>';
+  }).join('');
+}
+function delStory(i){
+  if(!confirm('এই story ডিলিট করবেন?'))return;
+  let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+  stories.splice(i,1);
+  localStorage.setItem('a_tuls_stories',JSON.stringify(stories));
+  loadStoryManage();
+  try{renderStories()}catch(e){}
+  alert('Deleted!');
+}
 document.querySelectorAll('[data-p]').forEach(e=>{e.addEventListener('click',function(ev){ev.preventDefault();const p=this.getAttribute('data-p');if(p)go(p)})});
+
+function doLogout(){
+  try{
+    localStorage.removeItem('a_tuls_session');
+    localStorage.removeItem('a_tuls_role');
+  }catch(e){}
+  alert('Logged out');
+  window.location.replace('login.html');
+}
 
 // Force login - no access without session
 const sess=JSON.parse(localStorage.getItem('a_tuls_session')||'null');

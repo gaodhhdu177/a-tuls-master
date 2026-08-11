@@ -169,6 +169,13 @@ document.getElementById('signupForm').onsubmit = async function(e){
     return;
   }
 
+  // এক API = একটাই Signup
+  const linked = validKey.userId || validKey.user_id || '';
+  if(linked && !String(linked).startsWith('invite_')){
+    alert('এই API Code ইতিমধ্যে ব্যবহার করা হয়েছে।\n\nএক API দিয়ে শুধু একটা অ্যাকাউন্ট Signup করা যায়।\nAdmin থেকে নতুন API নিন।');
+    return;
+  }
+
   // Check existing user (cloud + local)
   let users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
   try{
