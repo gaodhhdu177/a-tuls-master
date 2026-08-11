@@ -1,0 +1,817 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, nocache, notranslate" />
+    <title>Timezone & IP Checker - Ultra Edition</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="dns-prefetch" href="https://ipwho.is">
+    <link rel="dns-prefetch" href="https://tibnmcjnuzkibkoaluwl.supabase.co">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <style>
+      body {
+        background-color: #05070c;
+        color: #e2e8f0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .ultra-card {
+        background: linear-gradient(145deg, #0f1319, #0a0d12);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      }
+      .neon-border-glow {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+      }
+      .divider {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .divider:last-child {
+        border-bottom: none;
+      }
+      .text-value {
+        color: #f8fafc;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      .label-text {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #94a3b8;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      #toast {
+        visibility: hidden;
+        min-width: 220px;
+        background-color: #0f172a;
+        color: #38bdf8;
+        text-align: center;
+        border: 1px solid #0284c7;
+        border-radius: 12px;
+        padding: 12px;
+        position: fixed;
+        z-index: 100;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        font-size: 14px;
+        box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3);
+        font-weight: 600;
+      }
+      #toast.show {
+        visibility: visible;
+        animation: fadein 0.3s, fadeout 0.3s 2.5s;
+      }
+      @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+      @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+      
+      .golden-wave-text {
+        background-image: linear-gradient(-45deg, #3b82f6 0%, #8b5cf6 25%, #ec4899 50%, #8b5cf6 75%, #3b82f6 100%);
+        background-size: 200% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        display: inline-block;
+        font-weight: 800;
+        animation: wave 3s linear infinite;
+      }
+      
+      /* প্রফেশনাল সিগনেচার ডিজাইন এবং হালকা বড় সাইজ */
+      .gourab-signature {
+        background-image: linear-gradient(45deg, #ff007f, #7f00ff, #00f0ff, #ff007f);
+        background-size: 300% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        filter: drop-shadow(0 0 8px rgba(127, 0, 255, 0.4));
+        animation: wave 4s linear infinite;
+      }
+
+      .sparkle-text {
+        color: #38bdf8;
+        text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+      }
+
+      @keyframes wave { 0% { background-position: 0% center; } 100% { background-position: 300% center; } }
+    </style>
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  </head>
+  <body class="p-3 md:p-8 flex flex-col items-center min-h-screen pt-4 pb-16 relative">
+<script>
+(function(){
+  var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+  if(!s){ alert('Please login first!'); location.replace('login.html'); return; }
+  if(s.role === 'admin') return;
+  var pkg = s.package || 'Free';
+  if(pkg !== 'Free') return; // paid package OK
+  var keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  var myKeys = keys.filter(function(k){ return k.userId === s.id && new Date(k.expires) > new Date(); });
+  var paidApi = myKeys.find(function(k){ return (k.type||'free') === 'paid'; });
+  if(paidApi) return;
+  var freeApi = myKeys.find(function(k){ return (k.type||'free') === 'free'; });
+  if(freeApi){
+    alert('Free API দিয়ে টুল চালানো যায় না।
+Paid Package কিনুন বা Admin থেকে Paid API নিন।');
+    location.replace('membership.html');
+    return;
+  }
+  var apiIn = prompt('API Key দিন (Paid API প্রয়োজন):');
+  if(!apiIn){ alert('API Key required!'); location.replace('membership.html'); return; }
+  var valid = keys.find(function(k){ return k.key === apiIn.trim() && new Date(k.expires) > new Date(); });
+  if(!valid){
+    alert('Wrong API Key!');
+    location.replace('membership.html');
+    return;
+  }
+  if((valid.type||'free') === 'free'){
+    alert('Free API দিয়ে টুল চালানো যায় না। Paid API নিন।');
+    location.replace('membership.html');
+    return;
+  }
+})();
+</script>
+
+
+    <!-- Cloudflare Turnstile Overlay -->
+    <div id="cf-overlay" class="fixed inset-0 bg-[#05070c] z-[9999] flex flex-col items-center justify-center font-sans text-gray-200 transition-opacity duration-300">
+      <div class="max-w-md w-full p-6 bg-[#0f1319] border border-gray-800 rounded-2xl shadow-2xl mx-4 flex flex-col items-center">
+        <h1 class="text-2xl font-bold mb-2 text-white text-center">Checking Security Connection</h1>
+        <p class="text-gray-400 mb-6 text-sm text-center">Please verify you are human to access the dashboard.</p>
+        <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-callback="cfCallback"></div>
+      </div>
+    </div>
+
+    <!-- Search Area -->
+    <div class="w-full max-w-[450px] mb-6 flex gap-2">
+      <form id="searchForm" onsubmit="event.preventDefault(); searchIP();" class="relative flex-grow">
+        <input type="text" id="ipSearchInput" placeholder="Enter IP address..." class="w-full bg-[#0f1319] border border-gray-800 text-sm text-gray-300 rounded-[1.25rem] px-4 py-3.5 focus:outline-none focus:border-blue-500 transition-all placeholder-gray-600 shadow-inner" />
+        <button type="submit" class="absolute right-3 top-3.5 p-1 text-gray-500 hover:text-blue-400 transition-colors">
+          <i data-lucide="search" class="w-4 h-4"></i>
+        </button>
+      </form>
+      <button onclick="fetchData(document.getElementById('ipSearchInput').value)" id="reloadBtn" class="flex flex-shrink-0 items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-[1.25rem] px-5 shadow-lg transition-all focus:outline-none group font-bold text-sm">
+        <i data-lucide="refresh-cw" class="w-4 h-4 group-active:scale-95 transition-transform"></i> Refresh
+      </button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-[450px] flex flex-col gap-4">
+      
+      <!-- Top Stats Bar -->
+      <div class="w-full bg-[#0f1319]/80 border border-gray-800/60 rounded-2xl p-4 flex justify-between items-center shadow-lg backdrop-blur-md">
+        <div class="flex flex-col min-w-0 flex-1">
+          <span class="text-[0.65rem] font-bold text-gray-500 tracking-widest uppercase">Database Tracking</span>
+          <div id="big-counter" class="text-xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400 tracking-tight transition-all duration-300">
+            CHECKING...
+          </div>
+        </div>
+        <div id="top-country-display" class="flex items-center gap-2 opacity-0 transition-opacity duration-500 bg-gray-800/40 px-3 py-1.5 rounded-xl border border-gray-700/30 ml-2">
+          <span id="country-flag" class="text-[1.3rem] leading-none filter drop-shadow">🏳️</span>
+          <span id="country-name" class="text-xs font-bold tracking-wide text-gray-300 cursor-pointer truncate max-w-[100px]" onclick="toggleCountry()">...</span>
+          <button onclick="openCountryModal()" class="text-gray-500 hover:text-white transition-colors focus:outline-none"><i data-lucide="chevron-down" class="w-3.5 h-3.5"></i></button>
+        </div>
+      </div>
+
+      <!-- IP Details Card -->
+      <div class="ultra-card w-full flex flex-col overflow-hidden neon-border-glow">
+        <div class="px-5 pt-4 pb-2">
+          <div class="flex items-start justify-between">
+            <div class="text-[3rem] font-black tracking-tighter leading-none flex items-baseline mt-1" id="score">
+              0<span class="text-[1.8rem] font-bold opacity-60 ml-0.5">%</span>
+            </div>
+            <!-- System Status + Last Checked -->
+            <div class="flex flex-col items-end text-right max-w-[200px]">
+              <span class="text-[0.6rem] font-black text-gray-500 tracking-widest uppercase">System Status</span>
+              <div class="flex items-center gap-1.5 mt-0.5">
+                <div class="w-2 h-2 rounded-full bg-gray-500 transition-all duration-500" id="sync-dot"></div>
+                <div class="text-[0.7rem] font-black text-gray-400 tracking-wider" id="sync-text">WAITING</div>
+              </div>
+              <div id="time-elapsed-display" class="text-[10px] font-bold mt-1 sparkle-text tracking-wide truncate w-full"></div>
+            </div>
+          </div>
+          <!-- Progress Bar -->
+          <div class="relative mt-4 mb-2">
+            <div class="h-2 w-full bg-gray-900 rounded-full overflow-hidden p-[1px] border border-gray-800/50">
+              <div id="score-bar" class="h-full bg-blue-500 w-0 rounded-full transition-all duration-1000 ease-out"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details List Dynamic Rows -->
+        <div id="details-list" class="flex flex-col bg-[#070a0e]/40 text-sm"></div>
+
+        <!-- Footer -->
+        <div class="p-3 px-5 flex justify-between items-center bg-[#0d1117]/60 border-t border-gray-800/40">
+          <div class="text-[0.65rem] font-bold text-gray-500 tracking-[0.1em]">SECURE CHECKER v1</div>
+          <div class="text-[0.8rem] font-mono font-bold text-gray-400 tracking-wider" id="current-time">--:--:--</div>
+        </div>
+      </div>
+
+      <!-- Ultra Fake Mail Generator -->
+      <div class="ultra-card p-5 flex flex-col gap-4">
+        <div class="flex justify-between items-center border-b border-gray-800/60 pb-2.5">
+          <div class="flex items-center gap-2">
+            <div class="p-1.5 bg-purple-500/10 rounded-lg border border-purple-500/20 text-purple-400"><i data-lucide="mail" class="w-4 h-4"></i></div>
+            <span class="text-xs font-black tracking-widest text-gray-300 uppercase">Fake Mail Generator</span>
+          </div>
+          <span class="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-0.5 font-bold rounded-full uppercase border border-purple-500/30">Ultra Tech</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="generateFakeMail('outlook')" class="py-2.5 bg-[#0078d4]/10 hover:bg-[#0078d4]/20 border border-[#0078d4]/30 text-[#47a1ec] rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 active:scale-95 shadow-sm">
+            <i data-lucide="box" class="w-4 h-4 text-[#0078d4]"></i> Outlook
+          </button>
+          <button onclick="generateFakeMail('yahoo')" class="py-2.5 bg-[#6001d2]/10 hover:bg-[#6001d2]/20 border border-[#6001d2]/30 text-[#a362fa] rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 active:scale-95 shadow-sm">
+            <i data-lucide="cloud" class="w-4 h-4 text-[#6001d2]"></i> Yahoo
+          </button>
+          <button onclick="generateFakeMail('apple')" class="py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 active:scale-95 shadow-sm">
+            <i data-lucide="apple" class="w-4 h-4 text-gray-400"></i> Apple Mail
+          </button>
+        </div>
+
+        <!-- Generated Mail Display Box -->
+        <div class="relative bg-gradient-to-r from-[#161224] to-[#0e1629] border border-purple-500/20 rounded-xl p-3.5 flex items-center justify-between group overflow-hidden min-h-[54px] shadow-inner">
+          <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-indigo-500"></div>
+          <div id="generated-email-display" class="font-mono text-sm font-semibold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-200 to-indigo-300 select-all truncate w-full pr-8">
+            Click a button above to generate...
+          </div>
+          <button onclick="copyGeneratedMail()" class="absolute right-3 p-1.5 bg-gray-800/80 hover:bg-purple-600/30 border border-gray-700/50 hover:border-purple-500/40 rounded-lg text-gray-400 hover:text-purple-300 transition-all opacity-0 group-hover:opacity-100 outline-none" title="Copy Email">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Digital Persona Card -->
+      <div class="ultra-card p-5 flex flex-col items-center justify-center relative overflow-hidden group min-h-[110px] bg-gradient-to-br from-[#0c0d14] via-[#0f1319] to-[#120e1a] border border-indigo-500/10">
+        <div class="absolute inset-0 bg-gradient-to-tr from-blue-600/5 via-purple-600/5 to-pink-600/5 opacity-100 pointer-events-none"></div>
+        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl"></div>
+
+        <!-- Setup State -->
+        <div id="persona-setup" class="hidden flex-col items-center w-full z-10 gap-3">
+          <div class="text-[0.65rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400 tracking-[0.2em] uppercase">Configure Digital Persona</div>
+          <div class="flex gap-2 w-full justify-center">
+            <select id="persona-gender" class="bg-gray-900/90 border border-gray-800 text-gray-300 text-xs rounded-xl px-2.5 py-2 outline-none cursor-pointer focus:border-indigo-500/50">
+              <option value="male">Male Identity</option>
+              <option value="female">Female Identity</option>
+            </select>
+            <input type="number" id="persona-age" placeholder="Age" min="10" max="100" class="w-16 bg-gray-900/90 border border-gray-800 text-gray-300 text-xs rounded-xl px-2.5 py-2 outline-none focus:border-indigo-500/50">
+          </div>
+          <button onclick="savePersonaPrefs()" class="px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white text-xs font-bold rounded-xl transition-all shadow-md">Generate Persona</button>
+        </div>
+
+        <!-- Display State -->
+        <div id="persona-display" class="hidden flex-col items-center w-full z-10">
+          <button onclick="showPersonaSetup()" class="absolute left-4 top-4 text-gray-600 hover:text-indigo-400 transition-colors z-20" title="Settings">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+          </button>
+          <span class="text-[0.6rem] font-black text-indigo-400/70 tracking-[0.25em] uppercase mb-1">Generated Identity</span>
+          <div class="flex items-center gap-2">
+            <div id="digital-persona" class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-center tracking-tight filter drop-shadow-md">
+              Loading Name...
+            </div>
+            <button onclick="copyText('digital-persona')" class="text-gray-500 hover:text-emerald-400 transition-all outline-none z-20" title="Copy Identity">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="flex gap-3 mt-3">
+            <button onclick="generateNewPersona()" class="px-3 py-1 bg-gray-950/80 hover:bg-gray-900 border border-gray-800 text-gray-400 hover:text-white rounded-lg text-[11px] font-bold transition-all flex items-center gap-1.5 shadow-md" title="Change Name">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> Change Name
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- স্ক্রিনের একদম নিচে ডানদিকের কোণায় হালকা বড় এবং গর্জিয়াস ডিজাইনের সিগনেচার -->
+    <div class="absolute bottom-4 right-4 text-right pointer-events-none select-none z-50">
+      <span class="text-[12px] sm:text-[13px] font-black uppercase tracking-wider gourab-signature">Created by Gourab bro</span>
+    </div>
+
+    <!-- Toast Component -->
+    <div id="toast">Copied to clipboard</div>
+
+    <!-- Country Modal -->
+    <div id="country-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
+      <div class="bg-[#0f1319] border border-gray-800 rounded-2xl w-full max-w-[380px] max-h-[80vh] flex flex-col shadow-2xl transform scale-95 transition-transform duration-300" id="country-modal-inner">
+        <div class="p-4 border-b border-gray-800/60 flex justify-between items-center bg-[#070a0e] rounded-t-2xl">
+          <h3 class="text-white font-bold text-xs tracking-wider uppercase">Countries & Territories</h3>
+          <button onclick="closeCountryModal()" class="text-gray-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-800"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div class="p-2 border-b border-gray-800/60 bg-[#070a0e]">
+          <input type="text" id="country-search" oninput="filterCountries()" placeholder="Search location..." class="w-full bg-[#161b22] text-white text-sm px-3 py-2 border border-gray-800 rounded-xl focus:outline-none focus:border-blue-500 placeholder-gray-600" />
+        </div>
+        <div id="country-list" class="overflow-y-auto flex-1 p-2 space-y-1" style="scrollbar-width: thin; scrollbar-color: #21262d transparent"></div>
+      </div>
+    </div>
+
+    <script>
+      const fieldsCfg = [
+        { id: "ip", label: "IP ADDRESS", icon: "wifi", mono: true },
+        { id: "ip_type", label: "TYPE", icon: "tag" },
+        { id: "asn", label: "ASN", icon: "shield", mono: true, copy: true },
+        { id: "timezone", label: "TIMEZONE", icon: "clock", copy: true },
+        { id: "city", label: "CITY", icon: "map-pin" },
+        { id: "region", label: "REGION", icon: "map" },
+        { id: "os", label: "OS", icon: "monitor" },
+        { id: "isp", label: "ISP", icon: "server" },
+      ];
+
+      const rowHTML = (f) => `
+        <div class="py-3 px-5 divider flex items-start justify-between gap-3 hover:bg-white/[0.01] transition-colors" id="row-${f.id}">
+          <div class="flex items-center gap-2.5 mt-0.5">
+            <i data-lucide="${f.icon}" class="text-gray-500 w-4 h-4 flex-shrink-0" id="${f.id}-icon"></i>
+            <div class="label-text" id="label-${f.id}">${f.label}</div>
+          </div>
+          <div class="flex items-start justify-end gap-2 min-w-0 w-full" id="val-container-${f.id}">
+            <div class="text-value text-right break-words ${f.mono ? "font-mono tracking-tight text-slate-300" : ""} w-full max-w-[240px]" id="${f.id}">...</div>
+            ${f.copy ? `<button onclick="copyText('${f.id}')" class="p-1 bg-gray-800 hover:bg-gray-700 border border-gray-700/60 rounded-lg transition-all text-gray-400 hover:text-white outline-none shadow-sm flex-shrink-0" title="Copy"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>` : ""}
+          </div>
+        </div>`;
+
+      const group1 = fieldsCfg.slice(0, 4);
+      const group2 = fieldsCfg.slice(4);
+      document.getElementById("details-list").innerHTML = `
+        <div class="border border-gray-800/40 bg-gray-950/20 rounded-xl mx-3 my-3 overflow-hidden">
+          ${group1.map(rowHTML).join("")}
+        </div>
+        <div class="flex flex-col pb-2">
+          ${group2.map(rowHTML).join("")}
+        </div>`;
+
+      function cfCallback(token) {
+        if (token) {
+          sessionStorage.setItem('cf_verified', 'true');
+          const overlay = document.getElementById('cf-overlay');
+          overlay.style.opacity = '0';
+          document.body.style.overflow = 'auto';
+          setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+      }
+
+      function initCloudflareCheck() {
+        const overlay = document.getElementById('cf-overlay');
+        if (sessionStorage.getItem('cf_verified')) {
+          overlay.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        } else {
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      lucide.createIcons();
+
+      let globalData = {};
+      const SUPABASE_URL = "https://tibnmcjnuzkibkoaluwl.supabase.co/rest/v1/";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpYm5tY2pudXpraWJrb2FsdXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDMyNzIsImV4cCI6MjA5MzI3OTI3Mn0.eRNIedq5wO3LcHnvCW7fFrqkVj07MxZ5oW-cERkmFXM";
+      const SUPABASE_TABLE = "ips";
+
+      const getOS = () => {
+        const p = navigator.platform, u = navigator.userAgent;
+        if (/Mac/.test(p)) return "Mac OS";
+        if (/Win/.test(p)) return "Windows";
+        if (/iPhone|iPad|iPod/.test(p)) return "iOS";
+        if (/Android/.test(u)) return "Android";
+        if (/Linux/.test(p)) return "Linux";
+        return "Unknown System";
+      };
+
+      const setupOS = () => {
+        const osName = getOS();
+        const osEl = document.getElementById("os");
+        if (osEl) osEl.innerText = osName;
+
+        const osIcon = document.getElementById("os-icon");
+        if (osIcon) {
+          if (osName === "Android" || osName === "iOS") osIcon.setAttribute("data-lucide", "smartphone");
+          else osIcon.setAttribute("data-lucide", "monitor");
+        }
+        lucide.createIcons();
+      };
+
+      setInterval(() => {
+        const now = new Date();
+        let options = { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" };
+        if (globalData && globalData.timezone && globalData.timezone !== "Unknown") {
+          try { options.timeZone = globalData.timezone; } catch (e) {}
+        }
+        document.getElementById("current-time").innerText = now.toLocaleTimeString("en-US", options);
+      }, 1000);
+
+      function searchIP() {
+        const val = document.getElementById("ipSearchInput").value.trim();
+        fetchData(val);
+      }
+
+      function formatRelativeTime(created_at) {
+        if (!created_at) return "First Check";
+        const diffMs = new Date() - new Date(created_at);
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMins / 60);
+        
+        if (diffMins < 1) return "Just now";
+        if (diffMins < 60) return `${diffMins}m ago`;
+        return `${diffHours}h ago`;
+      }
+
+      async function trackAndGetCount(ip) {
+        let checkCount = 1;
+        let lastCheckedTime = null;
+        try {
+          const getRes = await fetch(`${SUPABASE_URL}${SUPABASE_TABLE}?ip=eq.${ip}&order=created_at.desc&select=created_at`, {
+            headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+          });
+          if (getRes.ok) {
+            const records = await getRes.json();
+            if (records && records.length > 0) {
+              checkCount = records.length + 1;
+              lastCheckedTime = records[0].created_at;
+            }
+          }
+          
+          await fetch(`${SUPABASE_URL}${SUPABASE_TABLE}`, {
+            method: "POST",
+            headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ ip: ip }),
+          });
+        } catch (e) {
+          console.log("Supabase infrastructure failure", e);
+        }
+
+        const counterEl = document.getElementById("big-counter");
+        if (counterEl) {
+          counterEl.innerText = `CHECKED: ${checkCount} ${checkCount === 1 ? 'TIME' : 'TIMES'}`;
+          counterEl.className = "text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 tracking-tight transition-all duration-300 scale-105";
+          setTimeout(() => { counterEl.classList.remove("scale-105"); }, 300);
+        }
+
+        const elapsedEl = document.getElementById("time-elapsed-display");
+        if (elapsedEl) {
+          elapsedEl.innerText = `Last checked: ${formatRelativeTime(lastCheckedTime)}`;
+        }
+
+        return checkCount > 1;
+      }
+
+      window.currentIpData = null;
+      window.personaGenderPref = localStorage.getItem('personaGenderPref') || null;
+      window.personaAgePref = localStorage.getItem('personaAgePref') || null;
+
+      async function fetchData(targetIp = "") {
+        const btn = document.getElementById("reloadBtn");
+        const btnIcon = btn ? btn.querySelector("svg, i") : null;
+        if (btnIcon) btnIcon.classList.add("animate-spin");
+
+        const syncDot = document.getElementById("sync-dot");
+        syncDot.className = "w-2 h-2 rounded-full bg-gray-600 transition-all duration-500";
+        document.getElementById("sync-text").innerText = "CHECKING...";
+
+        const scoreEl = document.getElementById("score");
+        scoreEl.innerHTML = `0<span class="text-[1.8rem] font-bold opacity-60 ml-0.5">%</span>`;
+        scoreEl.style.color = "#475569";
+
+        const scoreBar = document.getElementById("score-bar");
+        scoreBar.style.width = "0%";
+        scoreBar.style.backgroundColor = "#475569";
+
+        document.getElementById("big-counter").innerText = "TRACKING...";
+        document.getElementById("time-elapsed-display").innerText = "Syncing time...";
+
+        const personaEl = document.getElementById("digital-persona");
+        if (personaEl) {
+          personaEl.classList.add("opacity-50");
+          personaEl.innerText = "Generating Identity...";
+        }
+
+        fieldsCfg.forEach((f) => {
+          const el = document.getElementById(f.id);
+          if (el) el.innerText = "Loading...";
+        });
+
+        const topCountryDisplay = document.getElementById("top-country-display");
+        if (topCountryDisplay) topCountryDisplay.classList.add("opacity-0");
+
+        let queryUrlAdd = targetIp ? `/${targetIp}` : "";
+
+        const guessIPType = (isp, security) => {
+          if (security?.vpn || security?.proxy || security?.tor) return "VPN/Proxy";
+          if (security?.hosting) return "Datacenter";
+          const lower = (isp || "").toLowerCase();
+          const dct = ["cloud", "host", "datacenter", "aws", "amazon", "google", "digitalocean", "azure", "linode", "ovh", "hetzner"];
+          const mob = ["mobile", "cell", "wireless", "vodafone", "t-mobile", "orange", "airtel", "jio", "banglalink", "grameenphone", "robi", "teletalk"];
+          for (let k of dct) if (lower.includes(k)) return "Datacenter";
+          for (let k of mob) if (lower.includes(k)) return "Mobile";
+          return "Residential";
+        };
+
+        try {
+          let data = null;
+          const providers = [
+            async () => fetch(`https://ipwho.is${queryUrlAdd}`).then((r) => r.json()).then((j) => {
+              if (!j.success) throw new Error();
+              const isp = j.connection?.isp || j.connection?.org;
+              return {
+                ip: j.ip, asn: String(j.connection?.asn || "Unknown").replace(/^AS/i, ""),
+                city: j.city, countryFull: j.country, countryShort: j.country_code, region: j.region,
+                isp: isp || "Unknown", timezone: j.timezone?.id, proxy: j.security?.proxy || false,
+                vpn: j.security?.vpn || false, tor: j.security?.tor || false, hosting: j.security?.hosting || false,
+                ip_type: guessIPType(isp, j.security),
+              };
+            }),
+            async () => fetch(`https://ipapi.co/${targetIp || ""}/json/`).then((r) => r.json()).then((j) => {
+              if (j.error) throw new Error();
+              return {
+                ip: j.ip, asn: String(j.asn || "Unknown").replace(/^AS/i, ""), city: j.city,
+                countryFull: j.country_name || j.country, countryShort: j.country_code, region: j.region,
+                isp: j.org || "Unknown", timezone: j.timezone, proxy: false, vpn: false, tor: false,
+                ip_type: guessIPType(j.org, null),
+              };
+            })
+          ];
+
+          for (const provider of providers) {
+            try { data = await provider(); if (data && data.ip) break; } catch (e) {}
+          }
+
+          if (!data || !data.ip) throw new Error("Connection failed");
+          globalData = data;
+
+          const isIPv6 = (data.ip || "").includes(":");
+          const ipVersion = isIPv6 ? "IPv6" : "IPv4";
+
+          const ipLabel = document.getElementById("label-ip");
+          const ipEl = document.getElementById("ip");
+          if (ipLabel) {
+            ipLabel.innerHTML = `IP ADDRESS <span class="bg-gray-800 border border-gray-700 px-1.5 py-0.5 rounded text-[10px] font-sans font-bold text-gray-300 ml-2 shadow-sm inline-block">${ipVersion}</span>`;
+          }
+
+          if (ipEl) {
+            ipEl.innerText = data.ip || "Unknown";
+            ipEl.className = isIPv6 ? "text-value text-[11px] sm:text-[13px] text-right font-mono tracking-tighter truncate w-full max-w-[240px]" : "text-value text-right font-mono tracking-tight break-words w-full max-w-[240px]";
+          }
+
+          let typeIcon = "tag";
+          switch (data.ip_type) {
+            case "Mobile": typeIcon = "smartphone"; break;
+            case "Datacenter": typeIcon = "server"; break;
+            case "VPN/Proxy": typeIcon = "shield-alert"; break;
+            case "Residential": typeIcon = "home"; break;
+          }
+          
+          const ipTypeEl = document.getElementById("ip_type");
+          if (ipTypeEl) {
+            ipTypeEl.innerHTML = `<span class="flex items-center justify-end gap-2"><span class="golden-wave-text">${data.ip_type || "Unknown"}</span> <i data-lucide="${typeIcon}" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i></span>`;
+          }
+
+          document.getElementById("asn").innerText = data.asn || "Unknown";
+          document.getElementById("city").innerText = data.city || "Unknown";
+
+          const countryNameEl = document.getElementById("country-name");
+          const countryFlagEl = document.getElementById("country-flag");
+          if (topCountryDisplay && countryNameEl && countryFlagEl) {
+            countryNameEl.innerText = data.countryFull || "Unknown";
+            countryNameEl.setAttribute("data-short", data.countryShort || "UN");
+            countryNameEl.setAttribute("data-full", data.countryFull || "Unknown");
+            countryFlagEl.innerHTML = getFlagEmojiLocal(data.countryShort);
+            topCountryDisplay.classList.remove("opacity-0");
+          }
+
+          document.getElementById("region").innerText = data.region || "Unknown";
+          document.getElementById("isp").innerText = data.isp || "Unknown";
+          document.getElementById("timezone").innerText = data.timezone || "Unknown";
+
+          setupOS();
+          const isUsed = await trackAndGetCount(data.ip);
+          calculateScore(data, isUsed);
+          window.currentIpData = data;
+          initPersonaUI();
+        } catch (error) {
+          fieldsCfg.forEach((f) => {
+            const el = document.getElementById(f.id);
+            if (el) el.innerText = "Error";
+          });
+          document.getElementById("sync-text").innerText = "ERROR";
+          document.getElementById("big-counter").innerText = "ERROR TRACKING";
+          document.getElementById("time-elapsed-display").innerText = "Failed";
+        } finally {
+          if (btnIcon) btnIcon.classList.remove("animate-spin");
+          lucide.createIcons();
+        }
+      }
+
+      function calculateScore(ipData, isUsed) {
+        const sysTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        let score = 100;
+        let colorHex = "#10b981";
+
+        if (sysTimezone !== ipData.timezone) score -= 20;
+        if (isUsed) score -= 10;
+        if (ipData.proxy || ipData.tor || ipData.vpn || ipData.hosting) score -= 40;
+
+        if (score === 100) colorHex = "#10b981";
+        else if (score >= 70) colorHex = "#f59e0b";
+        else colorHex = "#ef4444";
+
+        const scoreEl = document.getElementById("score");
+        const bar = document.getElementById("score-bar");
+        const syncDot = document.getElementById("sync-dot");
+        const syncText = document.getElementById("sync-text");
+
+        scoreEl.innerHTML = `${score}<span class="text-[1.8rem] font-bold opacity-60 ml-0.5">%</span>`;
+        scoreEl.style.color = colorHex;
+        bar.style.width = score + "%";
+        bar.style.backgroundColor = colorHex;
+        syncDot.style.backgroundColor = colorHex;
+        syncText.innerText = score >= 90 ? "SYNCED" : "FLAGGED";
+      }
+
+      window.generatedEmailRaw = "";
+      function generateFakeMail(type) {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let prefix = '';
+        for (let i = 0; i < 10; i++) {
+          prefix += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        
+        let domain = 'outlook.com';
+        if (type === 'yahoo') domain = 'yahoo.com';
+        else if (type === 'apple') domain = 'icloud.com';
+
+        const finalMail = `${prefix}@${domain}`;
+        window.generatedEmailRaw = finalMail;
+
+        const displayEl = document.getElementById("generated-email-display");
+        displayEl.innerText = finalMail;
+        showToast("Fake email generated successfully!");
+      }
+
+      function copyGeneratedMail() {
+        if (window.generatedEmailRaw) {
+          navigator.clipboard.writeText(window.generatedEmailRaw).then(() => {
+            showToast("Email copied to clipboard!");
+          });
+        }
+      }
+
+      function getRegionInfo(cc) {
+        const regions = { Bangladesh: ["BD"], India: ["IN"], Pakistan: ["PK"], Anglo: ["US", "CA", "AU", "NZ", "GB"] };
+        for (const [region, codes] of Object.entries(regions)) {
+          if (codes.includes(cc)) return region;
+        }
+        return "Global";
+      }
+
+      const namesByRegion = {
+        Bangladesh: {
+          firstM: ["Rakib","Sakib","Tamim","Mushfiq","Mahmud","Hasan","Kamal","Jamal","Imran","Arif","Mehedi","Fahim","Sagar","Rahim","Karim","Zayed","Salman","Akash","Gaurav","Farhan","Asif","Naim"],
+          firstF: ["Fatima","Khadija","Mariya","Sania","Nusrat","Tania","Riya","Ayesha","Nadia","Sumi","Sadia","Tasnia","Sabrina","Lamia","Farjana","Jannat","Nabila","Anika","Sumaiya"],
+          standardMatch: ["Hossain","Ali","Rahman","Miah","Islam","Uddin","Biswas","Saha","Ghosh","Roy","Sheikh","Mia","Sarkar","Bhuiyan","Talukder","Haque","Alam","Khan","Chowdhury"],
+          richMatch: ["Chowdhury","Mirza","Bhuiyan","Mazumder","Talukder","Khandaker","Pasha","Syed","Khan","Ispahani"]
+        },
+        Global: {
+          firstM: ["Zack","Ian","Adam","Leo","Felix","Noah","Kai","Ezra","Luca","Eli","Sam","Dan","Tom","Ben","Alex","Max","Victor"],
+          firstF: ["Zoe","Chloe","Ruby","Lucy","Lily","Rose","Ivy","Ella","Ava","Nora","Cara","Mia","Lia","Nova","Aria","Mila","Zara","Maya"],
+          standardMatch: ["Smith","Johnson","Williams","Brown","Jones","Miller","Davis","Wilson","Anderson","Taylor", "Ivanov", "Petrov"],
+          richMatch: ["Sterling","Sinclair","Beaumont","Lancaster","Carmichael","Medici","Rockefeller","Astor","Vanderbilt","Rothschild"]
+        }
+      };
+
+      function initPersonaUI() {
+        if (!window.currentIpData) return;
+        if (window.personaGenderPref) {
+          document.getElementById("persona-setup").classList.add("hidden");
+          document.getElementById("persona-display").classList.remove("hidden");
+          document.getElementById("persona-display").classList.add("flex");
+          generateNewPersona();
+        } else {
+          document.getElementById("persona-display").classList.add("hidden");
+          document.getElementById("persona-setup").classList.remove("hidden");
+          document.getElementById("persona-setup").classList.add("flex");
+        }
+      }
+
+      function showPersonaSetup() {
+        document.getElementById("persona-display").classList.add("hidden");
+        document.getElementById("persona-setup").classList.remove("hidden");
+        document.getElementById("persona-setup").classList.add("flex");
+      }
+
+      function savePersonaPrefs() {
+        const gender = document.getElementById("persona-gender").value;
+        const age = document.getElementById("persona-age").value;
+        window.personaGenderPref = gender;
+        window.personaAgePref = age;
+        localStorage.setItem("personaGenderPref", gender);
+        if (age) localStorage.setItem("personaAgePref", age);
+        initPersonaUI();
+      }
+
+      function generateNewPersona() {
+        if (!window.currentIpData) return;
+        const osName = getOS().toLowerCase();
+        let osVibe = osName.includes("mac") || osName.includes("ios") ? "rich" : "standard";
+
+        const cc = window.currentIpData.countryShort ? window.currentIpData.countryShort.toUpperCase() : "UNKNOWN";
+        const regionKey = namesByRegion[getRegionInfo(cc)] ? getRegionInfo(cc) : "Global";
+        const nameData = namesByRegion[regionKey];
+
+        const gender = window.personaGenderPref || "male";
+        const firstNamesList = gender === "female" ? nameData.firstF : nameData.firstM;
+        const lastNames = osVibe === "rich" ? nameData.richMatch : nameData.standardMatch;
+
+        const firstName = firstNamesList[Math.floor(Math.random() * firstNamesList.length)] || "John";
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)] || "Doe";
+
+        const personaEl = document.getElementById("digital-persona");
+        if (personaEl) {
+          personaEl.innerText = `${firstName} ${lastName}`;
+          personaEl.classList.remove("opacity-50");
+        }
+      }
+
+      function toggleCountry() {
+        const span = document.getElementById("country-name");
+        if (!span) return;
+        span.innerText = span.innerText === span.getAttribute("data-full") ? span.getAttribute("data-short") : span.getAttribute("data-full");
+      }
+
+      function getFlagEmojiLocal(cc) {
+        if (!cc || cc === "UN" || cc === "Unknown") return "🏳️";
+        return cc.toUpperCase().replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397));
+      }
+
+      const countryMap = { Bangladesh: "BD", India: "IN", Pakistan: "PK", "United States of America": "US", "United Kingdom": "GB", Canada: "CA", Australia: "AU" };
+      window.countryMap = countryMap;
+      let isCountryListRendered = false;
+
+      function openCountryModal() {
+        const modal = document.getElementById("country-modal");
+        const inner = document.getElementById("country-modal-inner");
+        if (!isCountryListRendered) {
+          const listEl = document.getElementById("country-list");
+          listEl.innerHTML = Object.entries(window.countryMap).map(([name, code]) => `
+            <div class="country-item flex items-center justify-between p-2.5 rounded-xl hover:bg-white/[0.03] cursor-pointer transition-colors group select-none" data-name="${name.toLowerCase()}">
+              <div class="flex items-center gap-3 w-full">
+                <div class="text-[1.4rem]">${getFlagEmojiLocal(code)}</div>
+                <div class="text-[0.9rem] text-slate-300 group-hover:text-white transition-colors">${name}</div>
+              </div>
+              <div class="bg-gray-800 px-2 py-0.5 rounded-lg text-[0.7rem] text-indigo-400 font-mono font-bold">${code}</div>
+            </div>`).join("");
+          isCountryListRendered = true;
+        }
+        modal.classList.remove("opacity-0", "pointer-events-none");
+        inner.classList.remove("scale-95");
+        inner.classList.add("scale-100");
+      }
+
+      function closeCountryModal() {
+        document.getElementById("country-modal").classList.add("opacity-0", "pointer-events-none");
+        document.getElementById("country-modal-inner").classList.replace("scale-100", "scale-95");
+      }
+
+      function filterCountries() {
+        const val = document.getElementById("country-search").value.toLowerCase();
+        document.querySelectorAll(".country-item").forEach((el) => {
+          el.style.display = el.getAttribute("data-name").includes(val) ? "flex" : "none";
+        });
+      }
+
+      function copyText(id) {
+        let text = "";
+        if (id === "digital-persona") {
+          text = document.getElementById("digital-persona").innerText;
+        } else {
+          text = globalData[id] || document.getElementById(id).innerText;
+        }
+        if (text && text !== "..." && text !== "Error") {
+          navigator.clipboard.writeText(text).then(() => { showToast("Copied to clipboard"); });
+        }
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        if(msg) toast.innerText = msg;
+        toast.className = "show";
+        setTimeout(() => { toast.className = ""; }, 2800);
+      }
+
+      initCloudflareCheck();
+      setupOS();
+      fetchData();
+    </script>
+  </body>
+</html>

@@ -1,2522 +1,569 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Dashboard | A-tuls - √MASTER</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>A-Tuls - Dashboard</title>
+<meta name="theme-color" content="#027478">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-/* =====================================================
-   THEME 1: DARK OCEAN — deep blue glass
-===================================================== */
-:root, [data-theme="dark-ocean"] {
-    --primary: #22d3ee;
-    --primary2: #6366f1;
-    --bg: #020617;
-    --bg2: #0f172a;
-    --card: rgba(34,211,238,0.06);
-    --border: rgba(34,211,238,0.18);
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --side1: #0f172a;
-    --side2: #020617;
-    --top: rgba(2,6,23,0.92);
-    --notice-bg: rgba(34,211,238,0.1);
-    --notice-bd: rgba(34,211,238,0.25);
-    --notice-tx: #67e8f9;
-    --danger-bg: rgba(248,113,113,0.12);
-    --danger-tx: #f87171;
-    --danger-bd: rgba(248,113,113,0.28);
-    --badge-bg: rgba(34,211,238,0.12);
-    --badge-tx: #67e8f9;
-    --shadow: 0 12px 40px rgba(0,0,0,0.55);
-    --radius: 20px;
-    --card-hover: translateY(-6px);
-    --side-w: 270px;
-    --font: 'Plus Jakarta Sans', sans-serif;
-}
+:root{--p:#2563eb;--pd:#1d4ed8;--blue:#2563eb;--teal:#0d9488}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-bottom:85px;color:#1e293b}
+.container{max-width:960px}
 
-/* =====================================================
-   THEME 2: NEON NIGHT — purple neon
-===================================================== */
-[data-theme="neon-night"] {
-    --primary: #c084fc;
-    --primary2: #f472b6;
-    --bg: #0c0118;
-    --bg2: #1a0b2e;
-    --card: rgba(192,132,252,0.08);
-    --border: rgba(192,132,252,0.28);
-    --text: #faf5ff;
-    --muted: #d8b4fe;
-    --side1: #1e0a3c;
-    --side2: #0c0118;
-    --top: rgba(12,1,24,0.94);
-    --notice-bg: rgba(192,132,252,0.12);
-    --notice-bd: rgba(244,114,182,0.3);
-    --notice-tx: #e9d5ff;
-    --danger-bg: rgba(248,113,113,0.15);
-    --danger-tx: #fb7185;
-    --danger-bd: rgba(248,113,113,0.3);
-    --badge-bg: rgba(244,114,182,0.12);
-    --badge-tx: #f9a8d4;
-    --shadow: 0 0 32px rgba(192,132,252,0.18);
-    --radius: 14px;
-    --card-hover: translateY(-5px) scale(1.02);
-    --side-w: 268px;
-    --font: 'Space Grotesk', sans-serif;
-}
+/* Header */
+.header{background:#fff;padding:12px 0;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.logo{font-weight:800;font-size:1.4rem;color:var(--p);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-logo{width:36px;height:36px;border-radius:50%;position:relative;display:inline-flex;justify-content:center;align-items:center;background:radial-gradient(circle,#10294b 0%,#06101f 45%,#010308 100%);border:2px solid #ffc62b;box-shadow:0 0 6px #00aaff;flex-shrink:0}
+.nav-logo:before{content:"";position:absolute;width:28px;height:28px;border-radius:50%;border:1.5px solid #00b7ff}
+.nav-logo .letter{font-family:Georgia,serif;font-size:18px;font-weight:bold;font-style:italic;color:white;text-shadow:1px 1px 0 #006cff;line-height:1;position:relative;top:-1px}
+.icon-btn{background:none;border:none;font-size:1.25rem;color:#64748b;padding:6px 10px;cursor:pointer}
 
-/* =====================================================
-   THEME 3: GOLD PREMIUM — warm luxury
-===================================================== */
-[data-theme="gold-premium"] {
-    --primary: #eab308;
-    --primary2: #f59e0b;
-    --bg: #0c0a06;
-    --bg2: #1c160a;
-    --card: rgba(234,179,8,0.07);
-    --border: rgba(234,179,8,0.25);
-    --text: #fefce8;
-    --muted: #d6c48a;
-    --side1: #1f1808;
-    --side2: #0c0a06;
-    --top: rgba(12,10,6,0.94);
-    --notice-bg: rgba(234,179,8,0.1);
-    --notice-bd: rgba(234,179,8,0.28);
-    --notice-tx: #fde047;
-    --danger-bg: rgba(248,113,113,0.12);
-    --danger-tx: #f87171;
-    --danger-bd: rgba(248,113,113,0.28);
-    --badge-bg: rgba(234,179,8,0.12);
-    --badge-tx: #fde047;
-    --shadow: 0 12px 36px rgba(234,179,8,0.08);
-    --radius: 26px;
-    --card-hover: translateY(-8px);
-    --side-w: 280px;
-    --font: 'Playfair Display', Georgia, serif;
-}
+/* Drawer */
+.drawer{position:fixed;top:0;left:-300px;width:300px;height:100%;background:#fff;z-index:200;transition:.3s;box-shadow:4px 0 24px rgba(0,0,0,.12);overflow-y:auto}
+.drawer.open{left:0}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;opacity:0;visibility:hidden;transition:.25s}
+.overlay.show{opacity:1;visibility:visible}
+.drawer-head{padding:24px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;display:flex;align-items:center;gap:14px}
+.avatar{width:56px;height:56px;border-radius:50%;background:#fff;color:var(--p);font-weight:800;font-size:1.4rem;display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid rgba(255,255,255,.35)}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.menu{list-style:none;padding:10px 0}
+.menu a{display:flex;align-items:center;gap:12px;padding:13px 20px;color:#334155;text-decoration:none;font-size:.95rem;cursor:pointer}
+.menu a:hover,.menu a.active{background:#e6f4f4;color:var(--p)}
+.menu .divider{margin:8px 16px;border-color:#e2e8f0}
+.logout{color:#ef4444!important}
+.dd .trig{display:flex;align-items:center;justify-content:space-between;width:100%}
+.dd .sub{list-style:none;padding:0;margin:0;display:none;background:#f8fafc}
+.dd.open .sub{display:block}
+.dd .sub a{padding-left:48px;font-size:.9rem}
+.dd .arrow{font-size:.7rem;transition:.2s}
+.dd.open .arrow{transform:rotate(180deg)}
+.role{font-size:.7rem;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:20px;margin-top:3px;display:inline-block}
 
-/* =====================================================
-   THEME 4: CYBER PUNK — magenta + cyan tech
-===================================================== */
-[data-theme="cyber-punk"] {
-    --primary: #f43f5e;
-    --primary2: #06b6d4;
-    --bg: #05010a;
-    --bg2: #12081f;
-    --card: rgba(6,182,212,0.06);
-    --border: rgba(6,182,212,0.28);
-    --text: #f0fdfa;
-    --muted: #a5b4fc;
-    --side1: #150828;
-    --side2: #05010a;
-    --top: rgba(5,1,10,0.95);
-    --notice-bg: rgba(244,63,94,0.1);
-    --notice-bd: rgba(6,182,212,0.35);
-    --notice-tx: #22d3ee;
-    --danger-bg: rgba(244,63,94,0.15);
-    --danger-tx: #fb7185;
-    --danger-bd: rgba(244,63,94,0.35);
-    --badge-bg: rgba(244,63,94,0.12);
-    --badge-tx: #fb7185;
-    --shadow: 4px 4px 0 rgba(6,182,212,0.2);
-    --radius: 4px;
-    --card-hover: translate(-2px, -2px);
-    --side-w: 255px;
-    --font: 'Orbitron', sans-serif;
-}
+/* Bottom */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;display:flex;justify-content:space-around;align-items:center;padding:6px 0 10px;z-index:90;box-shadow:0 -3px 16px rgba(0,0,0,.06)}
+.bi{display:flex;flex-direction:column;align-items:center;font-size:.68rem;color:#94a3b8;text-decoration:none;gap:2px;cursor:pointer}
+.bi.active{color:var(--p)}
+.bi i{font-size:1.2rem}
+.fab-c{position:relative;top:-18px}
+.fab{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 16px rgba(37,99,235,.45);cursor:pointer}
 
-/* =====================================================
-   THEME 5: EMERALD LIGHT — clean white (kept)
-===================================================== */
-[data-theme="emerald-light"] {
-    --primary: #0d9488;
-    --primary2: #14b8a6;
-    --bg: #f8fffc;
-    --bg2: #ecfdf5;
-    --card: #ffffff;
-    --border: #a7f3d0;
-    --text: #134e4a;
-    --muted: #0f766e;
-    --side1: #0f766e;
-    --side2: #0d9488;
-    --top: #ffffff;
-    --notice-bg: #ecfdf5;
-    --notice-bd: #6ee7b7;
-    --notice-tx: #047857;
-    --danger-bg: #fef2f2;
-    --danger-tx: #dc2626;
-    --danger-bd: #fecaca;
-    --badge-bg: #ccfbf1;
-    --badge-tx: #0f766e;
-    --shadow: 0 8px 28px rgba(13,148,136,0.08);
-    --radius: 20px;
-    --card-hover: translateY(-5px);
-    --side-w: 270px;
-    --font: 'Plus Jakarta Sans', sans-serif;
-}
+/* User bar */
+.ubar{background:linear-gradient(135deg,#2563eb,#3b82f6);padding:18px 0;box-shadow:0 4px 16px rgba(37,99,235,.25);margin-bottom:14px;color:#fff}
+.ubar .text-muted{color:rgba(255,255,255,.75)!important}
+.pc{width:58px;height:58px;border-radius:50%;background:#fff;color:var(--p);font-weight:700;font-size:1.5rem;display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,.5);overflow:hidden;cursor:pointer}
+.pc img{width:100%;height:100%;object-fit:cover}
 
+/* Cards */
+.card{background:#fff;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.05);padding:20px;margin-bottom:16px;border:1px solid #f1f5f9}
 
-/* ===== Base + deep theme differences ===== */
-.card { backdrop-filter: blur(14px); }
-.card:hover { box-shadow: 0 14px 44px rgba(0,0,0,0.28); }
-.sidebar { box-shadow: 8px 0 40px rgba(0,0,0,0.35); }
-.topbar { box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
-.page-title { letter-spacing: -0.5px; }
-.icon { box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+/* Story - modern blue style */
+.story-wrap{background:linear-gradient(160deg,#2563eb,#1d4ed8);border-radius:20px;padding:18px;margin-bottom:16px;color:#fff}
+.story-wrap h6{font-weight:700;margin-bottom:12px;font-size:1rem}
+.srow{display:flex;gap:12px;overflow-x:auto;padding:4px 0}
+.si{flex-shrink:0;width:110px}
+.sadd{width:100px;height:120px;border-radius:16px;background:rgba(255,255,255,.15);border:2px dashed rgba(255,255,255,.4);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:.2s}
+.sadd:hover{background:rgba(255,255,255,.25)}
+.story-card{width:160px;background:#fff;border-radius:16px;padding:12px;color:#1e293b;box-shadow:0 8px 24px rgba(0,0,0,.12);flex-shrink:0}
+.story-card .sc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.story-card .sc-av{width:36px;height:36px;border-radius:50%;background:#dbeafe;color:var(--p);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;overflow:hidden}
+.story-card .sc-av img{width:100%;height:100%;object-fit:cover}
+.story-card .sc-name{font-weight:700;font-size:.85rem}
+.story-card .sc-status{font-size:.7rem;color:#16a34a;font-weight:600}
+.story-card .sc-date{font-size:.65rem;color:#94a3b8;margin-top:2px}
+.story-card .sc-text{font-size:.78rem;color:#64748b;line-height:1.4;margin-top:6px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 
-/* --- DARK OCEAN: soft glass waves --- */
-[data-theme="dark-ocean"] body {
-    background:
-        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(56,189,248,0.15), transparent 50%),
-        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(129,140,248,0.12), transparent 45%),
-        var(--bg);
-}
-[data-theme="dark-ocean"] .card {
-    border-radius: 22px;
-    background: linear-gradient(145deg, rgba(56,189,248,0.1), rgba(15,25,45,0.5));
-}
-[data-theme="dark-ocean"] .sidebar {
-    border-right: 1px solid rgba(56,189,248,0.12);
-}
-[data-theme="dark-ocean"] .menu-item.active {
-    background: linear-gradient(90deg, rgba(56,189,248,0.25), transparent);
-    border-left: 3px solid #38bdf8;
-}
-[data-theme="dark-ocean"] .icon { border-radius: 16px; }
+/* Tool cards - G-Tools style */
+.tgrid{display:grid;gap:16px}
+.tcard{background:#fff;border-radius:18px;padding:28px 22px;text-align:center;border:1px solid #e2e8f0;box-shadow:0 4px 16px rgba(0,0,0,.04);transition:.25s}
+.tcard:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(2,116,120,.12);border-color:rgba(2,116,120,.25)}
+.ticon{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(2,116,120,.1),rgba(13,148,136,.15));display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.7rem;color:var(--p)}
+.tcard h5{font-weight:700;font-size:1.1rem;margin-bottom:6px;color:#0f172a}
+.tcard p{font-size:.88rem;color:#64748b;line-height:1.55;margin-bottom:16px}
+.obtn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:none;padding:10px 22px;border-radius:50px;font-weight:600;font-size:.88rem;cursor:pointer;text-decoration:none}
+.obtn:hover{background:#1d4ed8;color:#fff}
+.badge-new{background:#ef4444;color:#fff;font-size:.65rem;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:6px;vertical-align:middle}
 
-/* --- NEON NIGHT: glow everything --- */
-[data-theme="neon-night"] body {
-    background:
-        radial-gradient(circle at 20% 20%, rgba(232,121,249,0.18), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(34,211,238,0.12), transparent 40%),
-        var(--bg);
-}
-[data-theme="neon-night"] .card {
-    border-radius: 14px;
-    box-shadow: 0 0 20px rgba(232,121,249,0.12), inset 0 0 20px rgba(34,211,238,0.03);
-}
-[data-theme="neon-night"] .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary), var(--primary2), var(--primary));
-}
-[data-theme="neon-night"] .card:hover {
-    box-shadow: 0 0 32px rgba(232,121,249,0.35), 0 0 60px rgba(34,211,238,0.15);
-}
-[data-theme="neon-night"] .sidebar {
-    box-shadow: 0 0 40px rgba(176,38,255,0.2);
-}
-[data-theme="neon-night"] .menu-item.active {
-    background: linear-gradient(90deg, rgba(232,121,249,0.35), transparent);
-    border-left: 3px solid #e879f9;
-    text-shadow: 0 0 12px rgba(232,121,249,0.8);
-}
-[data-theme="neon-night"] .page-title {
-    text-shadow: 0 0 20px rgba(232,121,249,0.5);
-}
-[data-theme="neon-night"] .icon {
-    border-radius: 12px;
-    box-shadow: 0 0 16px rgba(232,121,249,0.3);
-}
-[data-theme="neon-night"] .grid { gap: 18px; }
-
-/* --- GOLD PREMIUM: luxury serif, large soft cards --- */
-[data-theme="gold-premium"] body {
-    background:
-        radial-gradient(ellipse at top, rgba(251,191,36,0.08), transparent 55%),
-        linear-gradient(180deg, #1a1408 0%, #0c0a04 100%);
-}
-[data-theme="gold-premium"] .card {
-    border-radius: 28px;
-    border: 1px solid rgba(251,191,36,0.28);
-    background: linear-gradient(160deg, rgba(251,191,36,0.12), rgba(20,14,6,0.7));
-    padding: 26px;
-}
-[data-theme="gold-premium"] .card:hover {
-    box-shadow: 0 16px 48px rgba(251,191,36,0.18);
-    border-color: rgba(251,191,36,0.55);
-}
-[data-theme="gold-premium"] .sidebar {
-    border-right: 1px solid rgba(251,191,36,0.2);
-}
-[data-theme="gold-premium"] .menu-item.active {
-    background: linear-gradient(90deg, rgba(251,191,36,0.28), transparent);
-    border-left: 3px solid #fbbf24;
-}
-[data-theme="gold-premium"] .page-title {
-    font-family: 'Playfair Display', serif;
-    letter-spacing: 0.5px;
-}
-[data-theme="gold-premium"] .icon {
-    border-radius: 50%;
-    box-shadow: 0 0 0 3px rgba(251,191,36,0.2);
-}
-[data-theme="gold-premium"] .grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 22px;
-}
-[data-theme="gold-premium"] .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-}
-[data-theme="gold-premium"] .card h3 {
-    font-family: 'Playfair Display', serif;
-}
-
-/* --- CYBER PUNK: hard edges, offset shadows, mono feel --- */
-[data-theme="cyber-punk"] body {
-    background:
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,240,255,0.015) 2px, rgba(0,240,255,0.015) 4px),
-        linear-gradient(135deg, #0a0014 0%, #1a0030 50%, #0a0014 100%);
-}
-[data-theme="cyber-punk"] .card {
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--primary);
-    box-shadow: 4px 4px 0 rgba(0,240,255,0.2);
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-}
-[data-theme="cyber-punk"] .card:hover {
-    border-left-color: var(--primary2);
-    box-shadow: 6px 6px 0 rgba(255,45,149,0.35);
-}
-[data-theme="cyber-punk"] .sidebar {
-    border-right: 2px solid rgba(0,240,255,0.25);
-}
-[data-theme="cyber-punk"] .sidebar-logo i {
-    border-radius: 4px;
-    border: 1px solid rgba(0,240,255,0.5);
-}
-[data-theme="cyber-punk"] .menu-item {
-    border-radius: 4px;
-}
-[data-theme="cyber-punk"] .menu-item.active {
-    background: linear-gradient(90deg, rgba(255,45,149,0.3), transparent);
-    border-left: 3px solid #00f0ff;
-    border-radius: 0;
-}
-[data-theme="cyber-punk"] .page-title {
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-size: 1rem;
-}
-[data-theme="cyber-punk"] .icon {
-    border-radius: 4px;
-    border: 1px solid rgba(0,240,255,0.3);
-}
-[data-theme="cyber-punk"] .grid {
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 14px;
-}
-[data-theme="cyber-punk"] .logout-btn,
-[data-theme="cyber-punk"] .user-badge {
-    border-radius: 4px;
-}
-[data-theme="cyber-punk"] .section-title {
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 0.95rem;
-}
-
-/* --- EMERALD LIGHT: airy, soft white cards --- */
-[data-theme="emerald-light"] body {
-    background:
-        radial-gradient(ellipse at 0% 0%, #ccfbf1 0%, transparent 50%),
-        radial-gradient(ellipse at 100% 100%, #d1fae5 0%, transparent 45%),
-        #f0fdfa;
-}
-[data-theme="emerald-light"] .card {
-    border-radius: 20px;
-    background: #fff;
-    border: 1px solid #99f6e4;
-    box-shadow: 0 4px 20px rgba(13,148,136,0.06);
-}
-[data-theme="emerald-light"] .card:hover {
-    box-shadow: 0 14px 36px rgba(13,148,136,0.14);
-    border-color: #2dd4bf;
-}
-[data-theme="emerald-light"] .sidebar {
-    box-shadow: 4px 0 24px rgba(13,148,136,0.15);
-}
-[data-theme="emerald-light"] .topbar {
-    border-bottom: 1px solid #99f6e4;
-    box-shadow: 0 2px 12px rgba(13,148,136,0.06);
-}
-[data-theme="emerald-light"] .menu-item.active {
-    background: rgba(255,255,255,0.2);
-}
-[data-theme="emerald-light"] .icon {
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(13,148,136,0.12);
-}
-[data-theme="emerald-light"] .admin-info-box {
-    background: #fff;
-    box-shadow: 0 4px 16px rgba(13,148,136,0.08);
-}
-
-* { margin:0; padding:0; box-sizing:border-box; font-family: var(--font, 'Plus Jakarta Sans', sans-serif); }
-
-body {
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    transition: background 0.4s ease, color 0.4s ease;
-}
-
-/* ========== SIDEBAR ========== */
-.sidebar {
-    width: var(--side-w);
-    background: linear-gradient(180deg, var(--side1) 0%, var(--side2) 100%);
-    color: #fff;
-    height: 100vh;
-    position: fixed;
-    left: 0; top: 0;
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-    box-shadow: 4px 0 28px rgba(0,0,0,0.25);
-    transition: transform 0.3s ease, width 0.35s ease, background 0.4s ease;
-}
-
-.sidebar-header {
-    padding: 22px 18px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-}
-
-.sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.2rem;
-    font-weight: 800;
-}
-
-.sidebar-logo i {
-    width: 42px; height: 42px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-}
-
-.sidebar-menu {
-    flex: 1;
-    padding: 14px 10px;
-    overflow-y: auto;
-}
-
-.menu-label {
-    font-size: 10.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    opacity: 0.5;
-    padding: 12px 12px 6px;
-}
-
-.menu-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
-    border-radius: 12px;
-    color: rgba(255,255,255,0.85);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 13.5px;
-    transition: 0.2s;
-    margin-bottom: 2px;
-    cursor: pointer;
-}
-
-.menu-item:hover, .menu-item.active {
-    background: rgba(255,255,255,0.15);
-    color: #fff;
-}
-
-.menu-item i { width: 20px; text-align: center; font-size: 14px; }
-
-.sidebar-footer {
-    padding: 12px 14px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    font-size: 11.5px;
-    opacity: 0.65;
-    text-align: center;
-}
-
-/* Theme-specific sidebar accents */
-[data-theme="neon-night"] .menu-item.active {
-    background: linear-gradient(90deg, rgba(176,38,255,0.35), transparent);
-    border-left: 3px solid #b026ff;
-}
-[data-theme="gold-premium"] .menu-item.active {
-    background: linear-gradient(90deg, rgba(255,200,0,0.25), transparent);
-    border-left: 3px solid #ffc800;
-}
-[data-theme="cyber-punk"] .menu-item.active {
-    background: linear-gradient(90deg, rgba(255,45,149,0.3), transparent);
-    border-left: 3px solid #00f0ff;
-    border-radius: 4px;
-}
-[data-theme="cyber-punk"] .sidebar-logo i {
-    border-radius: 4px;
-    border: 1px solid rgba(0,240,255,0.4);
-}
-
-/* ========== MAIN ========== */
-.main {
-    margin-left: var(--side-w);
-    flex: 1;
-    min-height: 100vh;
-    transition: margin-left 0.35s ease;
-}
-
-.topbar {
-    background: var(--top);
-    padding: 14px 22px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    backdrop-filter: blur(14px);
-    transition: background 0.4s ease;
-}
-
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-
-.menu-toggle {
-    display: none;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--border);
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    font-size: 17px;
-    cursor: pointer;
-    color: var(--text);
-}
-
-.page-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, var(--primary), var(--primary2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.topbar-right { display: flex; align-items: center; gap: 12px; }
-
-.user-badge {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    background: var(--badge-bg);
-    padding: 7px 13px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--badge-tx);
-    border: 1px solid var(--border);
-}
-
-.user-badge i {
-    width: 28px; height: 28px;
-    background: var(--primary);
-    color: #000;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-}
-
-[data-theme="emerald-light"] .user-badge i { color: #fff; }
-
-.logout-btn {
-    background: var(--danger-bg);
-    color: var(--danger-tx);
-    border: 1px solid var(--danger-bd);
-    padding: 8px 13px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 12.5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.logout-btn:hover { opacity: 0.85; }
-
-/* Notice */
-.notice {
-    background: var(--notice-bg);
-    border: 1px solid var(--notice-bd);
-    color: var(--notice-tx);
-    padding: 13px 18px;
-    margin: 18px 22px 0;
-    border-radius: 14px;
-    font-size: 13.5px;
-    display: none;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Admin Info */
-.admin-info-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    margin: 14px 22px 0;
-    font-size: 13px;
-    line-height: 1.7;
-    display: none;
-}
-.admin-info-box .title {
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 8px;
-    font-size: 14px;
-}
-.admin-info-box a { color: var(--primary); text-decoration: none; }
-
-/* Content */
-.content { padding: 22px; }
-
-.section-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.section-title i { color: var(--primary); }
-
-.theme-tag {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    background: var(--badge-bg);
-    color: var(--badge-tx);
-    border: 1px solid var(--border);
-    margin-left: 8px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 16px;
-}
-
-/* Different grid per theme */
-[data-theme="gold-premium"] .grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-}
-[data-theme="cyber-punk"] .grid {
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 12px;
-}
-[data-theme="neon-night"] .grid {
-    gap: 18px;
-}
-
-.card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 22px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    transition: all 0.28s ease;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    position: relative;
-    overflow: hidden;
-}
-
-.card:hover {
-    transform: var(--card-hover);
-    border-color: var(--primary);
-}
-
-/* Theme card accents */
-[data-theme="neon-night"] .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary), var(--primary2));
-}
-[data-theme="gold-premium"] .card {
-    border: 1px solid rgba(255,200,0,0.25);
-}
-[data-theme="gold-premium"] .card:hover {
-    box-shadow: 0 12px 40px rgba(255,200,0,0.15);
-}
-[data-theme="cyber-punk"] .card {
-    border-left: 3px solid var(--primary);
-}
-[data-theme="cyber-punk"] .card:hover {
-    border-left-color: var(--primary2);
-    box-shadow: 0 0 25px rgba(0,240,255,0.15);
-}
-[data-theme="emerald-light"] .card:hover {
-    box-shadow: 0 12px 28px rgba(13,148,136,0.12);
-}
-
-.icon {
-    width: 50px; height: 50px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    margin-bottom: 14px;
-}
-
-[data-theme="cyber-punk"] .icon { border-radius: 6px; }
-[data-theme="gold-premium"] .icon { border-radius: 50%; }
-
-.card h3 {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.card p {
-    font-size: 12.5px;
-    color: var(--muted);
-    line-height: 1.45;
-}
-
-/* Overlay mobile */
-.overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    z-index: 90;
-}
-
-@media (max-width: 900px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .main { margin-left: 0; }
-    .menu-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .overlay.show { display: block; }
-}
+/* Vault */
+.ta-wrap{display:flex;border:1px solid #cbd5e1;border-radius:10px;overflow:hidden}
+.ln{width:40px;background:#f8fafc;color:#94a3b8;padding:10px 6px;text-align:right;font-family:monospace;font-size:13px;line-height:1.5;user-select:none;border-right:1px solid #e2e8f0}
+.nta{flex:1;border:none!important;padding:10px;font-family:monospace;font-size:13px;line-height:1.5;resize:vertical;outline:none;min-height:140px}
+.bcard{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px;margin-bottom:12px}
+.bprev{background:#f8fafc;border-radius:8px;padding:10px;font-family:monospace;font-size:12px;max-height:68px;overflow:hidden;white-space:pre;color:#475569}
+.btn-p{background:var(--p);border:none;color:#fff;font-weight:600}
+.btn-p:hover{background:var(--pd);color:#fff}
+.li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9}
+.la{width:44px;height:44px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
 </style>
-<script>
-/* Early theme – no flash */
-(function(){
-  var t = localStorage.getItem('a_tuls_dash_color') || localStorage.getItem('a_tuls_theme') || 'dark-ocean';
-  var ok = ['dark-ocean','neon-night','gold-premium','cyber-punk','emerald-light'];
-  document.documentElement.setAttribute('data-theme', ok.indexOf(t) >= 0 ? t : 'dark-ocean');
-})();
-/* STRICT AUTH GUARD — যেকোনো লিংক দিয়ে সরাসরি Dashboard-এ ঢোকা বন্ধ। আগে লগইন লাগবে। */
-(function(){
-  try {
-    var role = localStorage.getItem('a_tuls_role');
-    var userRaw = localStorage.getItem('a_tuls_user');
-    var okRoles = { user: 1, admin: 1 };
-    if (!role || !okRoles[role] || !userRaw) {
-      localStorage.removeItem('a_tuls_role');
-      localStorage.removeItem('a_tuls_user');
-      location.replace('index.html');
-      return;
-    }
-    // Idle session (10 min)
-    var last = parseInt(localStorage.getItem('a_tuls_last_activity') || localStorage.getItem('a_tuls_last_active') || '0', 10);
-    var IDLE_MS = 10 * 60 * 1000;
-    if (last && (Date.now() - last > IDLE_MS)) {
-      localStorage.removeItem('a_tuls_role');
-      localStorage.removeItem('a_tuls_user');
-      localStorage.removeItem('a_tuls_last_activity');
-      localStorage.removeItem('a_tuls_last_active');
-      location.replace('index.html');
-      return;
-    }
-    try { localStorage.setItem('a_tuls_last_activity', String(Date.now())); } catch(e) {}
-  } catch (e) {
-    location.replace('index.html');
-  }
-})();
-</script>
 </head>
 <body>
 
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">
-            <i class="fas fa-cubes"></i>
-            <span>A-tuls √MASTER</span>
-        </div>
-    </div>
+<header class="header">
+<div class="container d-flex justify-content-between align-items-center">
+<div class="d-flex align-items-center gap-2">
+<button class="icon-btn" id="dt"><i class="fas fa-bars"></i></button>
+<a href="#" class="logo" onclick="go('dashboard')"><span class="nav-logo"><span class="letter">A</span></span>A-Tuls</a>
+</div>
+<button class="icon-btn"><i class="fas fa-bell"></i></button>
+</div>
+</header>
 
-    <div class="sidebar-menu">
-        <div class="menu-label">Main Menu</div>
-        <a class="menu-item active" href="dashboard.html">
-            <i class="fas fa-th-large"></i> <span data-i18n="Dashboard">Dashboard</span>
-        </a>
-        <a class="menu-item" id="adminPanelMenu" href="admin.html" style="display:none;">
-            <i class="fas fa-user-shield"></i> <span data-i18n="Admin Panel">Admin Panel</span>
-        </a>
-        <a class="menu-item" href="#myProfile" onclick="showProfileSection();return false;">
-            <i class="fas fa-user-circle"></i> <span data-i18n="My Profile">My Profile</span>
-        </a>
-        <a class="menu-item" href="#community" onclick="showCommunitySection();return false;">
-            <i class="fas fa-users"></i> <span data-i18n="Community">Community</span>
-        </a>
-
-        <div class="menu-label">Email Tools</div>
-        <a class="menu-item" href="Duplicate Email Checker .html" data-tool="Duplicate Checker">
-            <i class="fas fa-copy"></i> Duplicate Checker
-        </a>
-        <a class="menu-item" href="Email Data Formatter.html" data-tool="Data Formatter">
-            <i class="fas fa-align-left"></i> Data Formatter
-        </a>
-        <a class="menu-item" href="emaill report .html" data-tool="Report Generator">
-            <i class="fas fa-file-alt"></i> Report Generator
-        </a>
-        <a class="menu-item" href="esey emaill vawucer.html" data-tool="Email Validator">
-            <i class="fas fa-check-double"></i> Email Validator
-        </a>
-        <a class="menu-item" href="parshnol emaill vaault.html" data-tool="Email Vault">
-            <i class="fas fa-vault"></i> Email Vault
-        </a>
-        <a class="menu-item" href="gmail-format-fixer.html" data-tool="Gmail format fixer">
-            <i class="fas fa-envelope-circle-check"></i> Gmail format fixer
-        </a>
-
-        <div class="menu-label">Generators</div>
-        <a class="menu-item" href="name and recovery ganaretod.html" data-tool="Names & Recovery">
-            <i class="fas fa-users"></i> Names & Recovery
-        </a>
-        <a class="menu-item" href="pasword ganaratod.html" data-tool="Password Generator">
-            <i class="fas fa-key"></i> Password Generator
-        </a>
-
-        <div class="menu-label">Utility</div>
-        <a class="menu-item" href="ip time zoone farat.html" data-tool="IP TimeZone Finder">
-            <i class="fas fa-globe"></i> IP TimeZone Finder
-        </a>
-    </div>
-
-    <div class="sidebar-footer">
-        A-tuls - √MASTER STYLES<br>
-        Premium Tools Platform
-    </div>
+<div class="overlay" id="ov"></div>
+<aside class="drawer" id="dr">
+<div class="drawer-head">
+<div class="avatar" id="dav">T</div>
+<div>
+<div class="fw-bold fs-5">Torikul</div>
+<div class="role">User • Paid</div>
+<div class="small opacity-75 mt-1">www.a-tuls.com</div>
+</div>
+</div>
+<ul class="menu">
+<li><a class="active" data-p="dashboard"><i class="fas fa-th"></i> Dashboard</a></li>
+<li><a data-p="email-vault"><i class="fas fa-folder-open"></i> Email Vault</a></li>
+<li><a data-p="messages"><i class="fas fa-envelope"></i> Messages</a></li>
+<li><a data-p="addmoney"><i class="fas fa-plus-circle"></i> Add Money</a></li>
+<li class="dd"><a class="trig"><span><i class="fas fa-compass"></i> Explore</span><i class="fas fa-chevron-down arrow"></i></a>
+<ul class="sub">
+<li><a data-p="sellers"><i class="fas fa-users"></i> Explore Sellers</a></li>
+<li><a data-p="services"><i class="fas fa-search"></i> Explore Services</a></li>
+</ul></li>
+<li class="dd"><a class="trig"><span><i class="fas fa-blog"></i> Services</span><i class="fas fa-chevron-down arrow"></i></a>
+<ul class="sub">
+<li><a data-p="create-service"><i class="fas fa-plus"></i> Create Service</a></li>
+<li><a data-p="managed-services"><i class="fas fa-edit"></i> Managed Services</a></li>
+</ul></li>
+<li class="dd"><a class="trig"><span><i class="fas fa-user-check"></i> Membership</span><i class="fas fa-chevron-down arrow"></i></a>
+<ul class="sub">
+<li><a data-p="membership"><i class="fas fa-crown"></i> Paid Membership</a></li>
+<li><a data-p="membership-history"><i class="fas fa-history"></i> Membership History</a></li>
+</ul></li>
+<li><a data-p="badge"><i class="fas fa-ribbon"></i> Apply for Badge</a></li>
+<li class="dd"><a class="trig"><span><i class="fas fa-cog"></i> Settings</span><i class="fas fa-chevron-down arrow"></i></a>
+<ul class="sub">
+<li><a data-p="profile"><i class="fas fa-user"></i> My Profile</a></li>
+<li><a data-p="edit-profile"><i class="fas fa-edit"></i> Edit Profile</a></li>
+<li><a data-p="stories"><i class="fas fa-book"></i> Manage Stories</a></li>
+<li><a data-p="transfer"><i class="fas fa-exchange-alt"></i> Money Transfer</a></li>
+<li><a data-p="withdrawal"><i class="fas fa-coins"></i> Withdrawal</a></li>
+<li><a data-p="security"><i class="fas fa-shield-alt"></i> Security</a></li>
+<li><a data-p="change-password"><i class="fas fa-key"></i> Change Password</a></li>
+<li><a data-p="delete-account"><i class="fas fa-trash-alt"></i> Delete Account</a></li>
+</ul></li>
+<li><a data-p="devices"><i class="fas fa-desktop"></i> Associated Devices</a></li>
+<hr class="divider">
+<li><a class="logout" onclick="if(confirm('Logout?'))alert('Logged out')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+</ul>
 </aside>
 
-<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<nav class="bnav">
+<a class="bi active" data-p="dashboard"><i class="fas fa-home"></i><span>Home</span></a>
+<a class="bi" data-p="services"><i class="fas fa-search"></i><span>Search</span></a>
+<div class="fab-c"><a class="fab" data-bs-toggle="modal" data-bs-target="#sm"><i class="fas fa-plus"></i></a></div>
+<a class="bi" data-p="messages"><i class="fas fa-envelope"></i><span>Messages</span></a>
+<a class="bi" id="bm"><i class="fas fa-bars"></i><span>Menu</span></a>
+</nav>
 
-<!-- Main -->
-<main class="main">
-    <div class="topbar">
-        <div class="topbar-left">
-            <button class="menu-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="page-title" data-i18n="Dashboard">Dashboard</div>
-        </div>
-        <div class="topbar-right">
-            <a id="adminPanelBtn" href="admin.html" class="logout-btn" style="display:none;background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--border);text-decoration:none;">
-                <i class="fas fa-user-shield"></i> Admin Panel
-            </a>
-            <div class="user-badge">
-                <i class="fas fa-user"></i>
-                <span id="userName">User</span>
-            </div>
-            <button class="logout-btn" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> <span data-i18n="Logout">Logout</span>
-            </button>
-        </div>
-    </div>
+<div class="ubar">
+<div class="container">
+<div class="d-flex align-items-center justify-content-between">
+<div class="d-flex align-items-center gap-3">
+<div class="pc" id="pc" onclick="document.getElementById('pi').click()">T</div>
+<input type="file" id="pi" accept="image/*" style="display:none" onchange="chgPhoto(event)">
+<div>
+<div class="fw-bold fs-5" style="color:#fff">Welcome, User <span class="badge bg-light text-primary rounded-pill" style="font-size:.7rem">Free</span></div>
+<div class="text-muted small" id="pkgLine" style="color:rgba(255,255,255,.8)!important">Package: Free</div>
+</div>
+</div>
+<button class="btn btn-sm btn-light rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#sm"><i class="fas fa-plus-circle me-1"></i>Add Story</button>
+</div>
+</div>
+</div>
 
-    <div class="notice" id="adminNotice"></div>
+<div class="container">
 
-    <div class="admin-info-box" id="adminInfoBox">
-        <div class="title"><i class="fas fa-user-shield"></i> Admin Information</div>
-        <div><i class="fas fa-user"></i> Name: <strong>Admin Gourab</strong></div>
-        <div><i class="fas fa-id-badge"></i> Admin ID: <strong>gourabmon112233@gmail.com</strong></div>
-        <div><i class="fab fa-telegram"></i> Telegram: <strong>+8801944035239</strong></div>
-        <div><i class="fab fa-facebook"></i> Facebook: Gourab Official</div>
-        <div style="margin-top:4px;opacity:0.7;font-size:12px;">Developed by Gourab • 01944035239</div>
-    </div>
+<!-- DASHBOARD -->
+<div id="v-dash">
+<div class="story-wrap">
+<h6><i class="fas fa-book-open me-2"></i>Story</h6>
+<div class="srow">
+<div class="sadd" data-bs-toggle="modal" data-bs-target="#sm"><i class="fas fa-plus"></i></div>
+<div class="story-card" id="storyCards">
+<div class="sc-head"><div class="sc-av">R</div><div><div class="sc-name">Rezaul</div><div class="sc-status">● Status: Paid</div><div class="sc-date">Created: 08,06,2026</div></div></div>
+<div class="sc-text">Ip created iphone skip or otp gmail needs regularly. The price is good. Seller come to inbox.</div>
+</div>
+</div>
+</div>
 
-    
-    <div class="content">
+<div class="row g-3 mb-3">
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold" style="color:var(--p)">9</div><div class="small text-muted">Tools</div></div></div>
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-success">Standard</div><div class="small text-muted">Membership</div></div></div>
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-primary" id="vc">0</div><div class="small text-muted">Vault Files</div></div></div>
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-warning">৳900</div><div class="small text-muted">Invested</div></div></div>
+</div>
 
-        
-        <!-- ===== DASHBOARD: limited profiles (5-10) ===== -->
-        <div id="communityWall" style="margin-bottom:28px;">
-            <div class="section-title">
-                <i class="fas fa-users"></i> Members
-                <span class="theme-tag">Admin + Users</span>
-            </div>
-            <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">
-                Admin প্রথমে, তারপর সদস্যরা। Premium মেসেজ নামের উপরে। সম্পূর্ণ তালিকা ও সোশ্যাল ফিডের জন্য Community দেখুন।
-            </p>
-            <div id="communityList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:12px;"></div>
-            <button id="seeMoreBtn" class="logout-btn" style="background:var(--primary);color:#000;border:none;display:none;" onclick="showCommunitySection()">
-                <i class="fas fa-ellipsis-h"></i> See More — সব প্রোফাইল ও Community
-            </button>
-        </div>
+<div class="tgrid">
+<div class="tcard">
+<div class="ticon"><i class="fas fa-folder-open"></i></div>
+<h5>Personal Email Vault <span class="badge-new">New</span></h5>
+<p>Store your email files securely. They're private and linked to your account.</p>
+<button class="obtn" onclick="openTool('personal-email-vault.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-at"></i></div>
+<h5>Easy Email Validator</h5>
+<p>Easily check and separate valid and invalid email addresses instantly.</p>
+<button class="obtn" onclick="openTool('easy-email-validator.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-user-lock"></i></div>
+<h5>Multiple Password Generator</h5>
+<p>Generate multiple passwords at once with a single click using various formats.</p>
+<button class="obtn" onclick="openTool('password-generator.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-globe"></i></div>
+<h5>IP TimeZone Finder</h5>
+<p>Check exact location, timezone and country info of any IP address in real time.</p>
+<button class="obtn" onclick="openTool('ip-timezone.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-copy"></i></div>
+<h5>Duplicate Checker</h5>
+<p>Scan your lists, filter duplicates and get clean error-free datasets instantly.</p>
+<button class="obtn" onclick="openTool('duplicate-email-checker.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-user-edit"></i></div>
+<h5>Name Generator</h5>
+<p>Create unique random names and professional usernames with one click.</p>
+<button class="obtn" onclick="openTool('name-generator.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-file-alt"></i></div>
+<h5>Email Report</h5>
+<p>Track detailed reports and analytics for your email lists and campaigns.</p>
+<button class="obtn" onclick="openTool('email-report.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-align-left"></i></div>
+<h5>Data Formatter</h5>
+<p>Format and organize your email or data lists in a clear structured way.</p>
+<button class="obtn" onclick="openTool('email-data-formatter.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+<div class="tcard">
+<div class="ticon"><i class="fas fa-envelope-circle-check"></i></div>
+<h5>Gmail Format Fixer</h5>
+<p>Fix and clean Gmail format issues from your email lists automatically.</p>
+<button class="obtn" onclick="openTool('gmail-format-fixer.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
+</div>
+</div>
+</div>
 
-        <!-- ===== FULL COMMUNITY FEED (posts, like, comment, buy/sell) ===== -->
-        <div id="fullCommunitySection" style="display:none;margin-bottom:28px;">
-            <div class="section-title">
-                <i class="fas fa-globe"></i> Community Feed
-                <span class="theme-tag">Post · Like · Comment · Buy/Sell</span>
-            </div>
+<!-- EMAIL VAULT -->
+<div id="v-vault" style="display:none">
+<div class="card text-center mb-3">
+<span class="badge bg-success mb-2">Paid Version</span>
+<h4 class="fw-bold" style="color:var(--p)">Personal Email Vault</h4>
+<p class="text-muted small mb-0">Secure private storage for your email lists</p>
+</div>
+<div class="card">
+<form id="cf">
+<div class="mb-3"><label class="form-label fw-bold">File Name</label><input type="text" id="bt" class="form-control" placeholder="e.g. New Batch 01" required></div>
+<div class="mb-3"><label class="form-label fw-bold">Email List</label>
+<div class="ta-wrap"><div class="ln" id="mln">1</div><textarea id="ed" class="nta form-control" placeholder="email@gmail.com&#9;password" required></textarea></div></div>
+<div class="d-flex gap-2">
+<button type="button" class="btn btn-secondary" onclick="pMain()"><i class="fas fa-paste"></i></button>
+<button type="submit" class="btn btn-p flex-grow-1"><i class="fas fa-plus me-2"></i>Create File</button>
+<button type="button" class="btn btn-danger" onclick="cMain()">Clear</button>
+</div>
+</form>
+</div>
+<div id="bl"></div>
+</div>
 
-            <!-- Create Post -->
-            <div class="card" style="cursor:default;padding:16px;margin-bottom:18px;max-width:640px;">
-                <div style="font-weight:700;margin-bottom:10px;font-size:14px;"><i class="fas fa-pen"></i> Create Post</div>
-                <select id="postType" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);margin-bottom:10px;font-family:inherit;">
-                    <option value="general">General Post</option>
-                    <option value="sell">Sell / বিক্রি</option>
-                    <option value="buy">Buy / কিনতে চাই</option>
-                </select>
-                <textarea id="postText" rows="3" placeholder="কী লিখতে চান? অফার, আপডেট, প্রশ্ন..." style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);resize:vertical;font-family:inherit;margin-bottom:10px;"></textarea>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
-                    <label style="font-size:13px;font-weight:600;color:var(--primary);cursor:pointer;">
-                        <input type="file" id="postPhoto" accept="image/*,image/jpeg,image/png,image/webp,image/gif,image/bmp,.jpg,.jpeg,.png,.webp,.gif,.bmp" style="display:none;" onchange="onPostPhotoSelected(event)">
-                        <i class="fas fa-image"></i> Add Photo
-                    </label>
-                    <span id="postPhotoName" style="font-size:12px;color:var(--muted);"></span>
-                    <input type="text" id="postPrice" placeholder="Price (৳) — Buy/Sell এর জন্য" style="flex:1;min-width:140px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;display:none;">
-                </div>
-                <div id="postPhotoPreviewWrap" style="display:none;margin-bottom:10px;">
-                    <img id="postPhotoPreview" style="max-width:100%;max-height:180px;border-radius:12px;border:1px solid var(--border);">
-                </div>
-                <button class="logout-btn" style="background:var(--primary);color:#000;border:none;" onclick="createPost()">
-                    <i class="fas fa-paper-plane"></i> Post
-                </button>
-            </div>
+<!-- OTHER -->
+<div id="v-other" style="display:none">
+<div class="card">
+<h5 class="fw-bold mb-3" style="color:var(--p)" id="ot"></h5>
+<div id="oc"></div>
+</div>
+</div>
+</div>
 
-            <!-- All members (full list) -->
-            <div class="section-title" style="font-size:1rem;"><i class="fas fa-user-friends"></i> All Members</div>
-            <div id="fullMembersList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:22px;"></div>
+<!-- Story Modal -->
+<div class="modal fade" id="sm" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+<div class="modal-header"><h5 class="modal-title fw-bold" style="color:var(--p)">Post a Story</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body"><textarea class="form-control" id="st" rows="3" placeholder="What's on your mind..."></textarea></div>
+<div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button><button class="btn btn-p btn-sm" onclick="postS()">Post Story</button></div>
+</div></div></div>
 
-            <!-- Feed -->
-            <div class="section-title" style="font-size:1rem;"><i class="fas fa-stream"></i> Posts</div>
-            <div id="postsFeed" style="display:flex;flex-direction:column;gap:14px;max-width:640px;"></div>
-        </div>
+<!-- Vault modals -->
+<div class="modal fade" id="am" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+<div class="modal-header"><h5 class="modal-title fw-bold">Add New Emails</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body"><div class="ta-wrap"><div class="ln" id="aln">1</div><textarea id="ad" class="nta form-control" rows="8"></textarea></div></div>
+<div class="modal-footer"><button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button><button class="btn btn-p rounded-pill px-4" onclick="sApp()">Add</button></div>
+</div></div></div>
 
-<!-- ===== CHAT PANEL ===== -->
-        <div id="chatPanel" style="margin-bottom:28px;display:none;">
-            <div class="section-title"><i class="fas fa-comments"></i> Chat <span id="chatWithName" class="theme-tag"></span></div>
-            <div class="card" style="cursor:default;padding:16px;max-width:640px;">
-                <div id="chatMessages" style="height:320px;overflow-y:auto;background:var(--bg2);border-radius:12px;padding:12px;margin-bottom:12px;font-size:13.5px;border:1px solid var(--border);"></div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                    <input type="text" id="chatInput" placeholder="মেসেজ লিখুন..." style="flex:1;min-width:160px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;">
-                    <button class="logout-btn" style="background:var(--primary);color:#000;border:none;white-space:nowrap;" onclick="sendChat()">
-                        <i class="fas fa-paper-plane"></i> Send
-                    </button>
-                    <button class="logout-btn" style="border:1px solid var(--border);" onclick="loadChatMessages()"><i class="fas fa-sync"></i></button>
-                    <button class="logout-btn" style="border:1px solid var(--border);" onclick="closeChat()">Close</button>
-                </div>
-                <p style="font-size:11px;color:var(--muted);margin-top:8px;">মেসেজ অটো রিফ্রেশ হয় • অন্যজনের মেসেজ এখানে দেখা যাবে</p>
-            </div>
-        </div>
+<div class="modal fade" id="vm" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content">
+<div class="modal-header"><h5 class="modal-title fw-bold">View / Edit</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body"><input type="text" id="vt" class="form-control mb-3"><div class="ta-wrap"><div class="ln" id="vln">1</div><textarea id="vd" class="nta form-control" rows="12"></textarea></div></div>
+<div class="modal-footer"><button class="btn btn-danger rounded-pill" data-bs-dismiss="modal">Close</button><button class="btn btn-p rounded-pill px-4" onclick="sView()">Save</button></div>
+</div></div></div>
 
-        <!-- ===== MY PROFILE (toggle) ===== -->
-        <div id="profileSection" style="display:none;margin-bottom:28px;">
-            <div class="section-title"><i class="fas fa-user-circle"></i> My Profile</div>
-            <div class="card" style="cursor:default;max-width:560px;">
-                <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
-                    <div style="text-align:center;">
-                        <img id="profilePhotoPreview" src="" alt="Photo" style="width:90px;height:90px;border-radius:50%;object-fit:cover;background:var(--border);border:2px solid var(--primary);display:none;">
-                        <div id="profilePhotoPlaceholder" style="width:90px;height:90px;border-radius:50%;background:var(--badge-bg);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--primary);margin:0 auto;">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <label style="display:inline-block;margin-top:10px;font-size:12px;cursor:pointer;color:var(--primary);font-weight:600;">
-                            <input type="file" id="profilePhotoInput" accept="image/*,image/jpeg,image/png,image/webp,image/gif,image/bmp,image/heic,image/heif,image/avif,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif,.avif" style="display:none;" onchange="onPhotoSelected(event)">
-                            <i class="fas fa-camera"></i> Change Photo
-                        </label>
-                    </div>
-                    <div style="flex:1;min-width:220px;">
-                        <div style="margin-bottom:10px;">
-                            <label style="font-size:12px;color:var(--muted);font-weight:600;">Display Name</label>
-                            <input type="text" id="profileName" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);margin-top:4px;">
-                        </div>
-                        <div style="margin-bottom:10px;">
-                            <label style="font-size:12px;color:var(--muted);font-weight:600;">Phone / WhatsApp</label>
-                            <input type="text" id="profilePhone" placeholder="+8801XXXXXXXXX" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);margin-top:4px;">
-                        </div>
-                        <div style="margin-bottom:10px;">
-                            <label style="font-size:12px;color:var(--muted);font-weight:600;">Bio / Details</label>
-                            <textarea id="profileBio" rows="2" placeholder="Short bio..." style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);margin-top:4px;resize:vertical;"></textarea>
-                        </div>
-                        <div style="margin-bottom:10px;">
-                            <label style="font-size:12px;color:var(--muted);font-weight:600;">Public Note / Message (নাম ও ID-এর উপরে সবাই দেখবে)</label>
-                            <textarea id="profileMessage" rows="2" placeholder="নোট লিখুন — Members-এ আপনার নামের উপরে দেখাবে..." style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);margin-top:4px;resize:vertical;"></textarea>
-                        </div>
-                        <label style="font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:12px;cursor:pointer;">
-                            <input type="checkbox" id="profileShowOnHome" checked> Show my profile on Community
-                        </label>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                        <button class="logout-btn" style="background:var(--primary);color:#000;border:none;" onclick="saveMyProfile()">
-                            <i class="fas fa-save"></i> Save Profile
-                        </button>
-                        <button class="logout-btn" style="border:1px solid var(--danger-bd);color:var(--danger-tx);" onclick="clearMyNote()">
-                            <i class="fas fa-trash"></i> Delete Note
-                        </button>
-                        </div>
-                        <div id="profileSaveMsg" style="margin-top:10px;font-size:13px;display:none;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="modal fade" id="dm" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content text-center p-3">
+<div class="modal-body"><i class="fas fa-triangle-exclamation text-danger fa-3x mb-3"></i><h5 class="fw-bold">Are you sure?</h5><p class="text-muted">Cannot be recovered.</p></div>
+<div class="modal-footer justify-content-center border-0"><button class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">No</button><button class="btn btn-danger rounded-pill px-4" onclick="cDel()">Yes, Delete</button></div>
+</div></div></div>
 
-        <!-- ===== TOOLS (bottom, always like before) ===== -->
-        <div class="section-title" id="toolsSectionTitle">
-            <i class="fas fa-th"></i> <span data-i18n="Your Premium Tools">Your Premium Tools</span>
-            <span class="theme-tag" id="themeTag">Dark Ocean</span>
-        </div>
-
-        <div class="grid" id="toolsGrid">
-            <a class="card" href="Duplicate Email Checker .html" data-tool="Duplicate Checker">
-                <div class="icon" style="background:rgba(13,148,136,0.18);color:#0d9488;">
-                    <i class="fas fa-copy"></i>
-                </div>
-                <h3>Duplicate Checker</h3>
-                <p>Find & remove duplicate emails from your list instantly</p>
-            </a>
-
-            <a class="card" href="Email Data Formatter.html" data-tool="Data Formatter">
-                <div class="icon" style="background:rgba(37,99,235,0.18);color:#2563eb;">
-                    <i class="fas fa-align-left"></i>
-                </div>
-                <h3>Data Formatter</h3>
-                <p>Format email:password data in clean structure</p>
-            </a>
-
-            <a class="card" href="emaill report .html" data-tool="Report Generator">
-                <div class="icon" style="background:rgba(219,39,119,0.18);color:#db2777;">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <h3>Report Generator</h3>
-                <p>Generate Found / Good reports with price calculation</p>
-            </a>
-
-            <a class="card" href="esey emaill vawucer.html" data-tool="Email Validator">
-                <div class="icon" style="background:rgba(5,150,105,0.18);color:#059669;">
-                    <i class="fas fa-check-double"></i>
-                </div>
-                <h3>Email Validator</h3>
-                <p>Validate emails with password & recovery support</p>
-            </a>
-
-            <a class="card" href="parshnol emaill vaault.html" data-tool="Email Vault">
-                <div class="icon" style="background:rgba(217,119,6,0.18);color:#d97706;">
-                    <i class="fas fa-vault"></i>
-                </div>
-                <h3>Email Vault</h3>
-                <p>Securely store & manage your email lists privately</p>
-            </a>
-
-            <a class="card" href="name and recovery ganaretod.html" data-tool="Names & Recovery">
-                <div class="icon" style="background:rgba(79,70,229,0.18);color:#4f46e5;">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3>Names & Recovery</h3>
-                <p>Generate unique names with recovery emails</p>
-            </a>
-
-            <a class="card" href="pasword ganaratod.html" data-tool="Password Generator">
-                <div class="icon" style="background:rgba(220,38,38,0.18);color:#dc2626;">
-                    <i class="fas fa-key"></i>
-                </div>
-                <h3>Password Generator</h3>
-                <p>Generate up to 1000 strong passwords at once</p>
-            </a>
-
-            <a class="card" href="gmail-format-fixer.html" data-tool="Gmail format fixer">
-                <div class="icon" style="background:rgba(16,185,129,0.18);color:#10b981;">
-                    <i class="fas fa-envelope-circle-check"></i>
-                </div>
-                <h3>Gmail format fixer</h3>
-                <p>Email & password separate + side-by-side format</p>
-            </a>
-
-            <a class="card" href="ip time zoone farat.html" data-tool="IP TimeZone Finder">
-                <div class="icon" style="background:rgba(8,145,178,0.18);color:#0891b2;">
-                    <i class="fas fa-globe"></i>
-                </div>
-                <h3>IP TimeZone Finder</h3>
-                <p>Find IP, location, ISP and timezone instantly</p>
-            </a>
-        </div>
-    </div>
-
-</main>
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+const dr=document.getElementById('dr'),ov=document.getElementById('ov');
+function openD(){dr.classList.add('open');ov.classList.add('show');document.body.style.overflow='hidden'}
+function closeD(){dr.classList.remove('open');ov.classList.remove('show');document.body.style.overflow=''}
+document.getElementById('dt').onclick=openD;
+document.getElementById('bm').onclick=e=>{e.preventDefault();openD()};
+ov.onclick=closeD;
+document.querySelectorAll('.dd .trig').forEach(t=>{t.onclick=function(e){e.preventDefault();this.closest('.dd').classList.toggle('open')}});
 
-/* ========== SUPABASE CONFIG (Primary DB) ========== */
-const SUPABASE_URL = 'https://nzpomdjksdywndpyoubb.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_R52qXaRZpRLdoRSlobdSxg_xyPAB9c4';
-const SB_HEADERS = {
-  'apikey': SUPABASE_ANON_KEY,
-  'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-  'Content-Type': 'application/json',
-  'Prefer': 'return=representation'
+const P={
+messages:{t:'Messages',h:'<p class="text-muted">No new messages.</p>'},
+addmoney:{t:'Add Money / Packages',h:'<div class="row g-3"><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="fw-bold text-success fs-4">৳300</div><small>Basic • 1 Month</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801404542191?text=Buy+Basic+300\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center border-success"><div class="fw-bold text-success fs-4">৳900</div><small>Standard • 3 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801404542191?text=Buy+Standard+900\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="fw-bold text-success fs-4">৳1,800</div><small>Popular • 6 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801404542191?text=Buy+Popular+1800\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="fw-bold text-success fs-4">৳3,600</div><small>Premium • 12 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801404542191?text=Buy+Premium+3600\')">Buy Now</button></div></div></div>'},
+sellers:{t:'Explore Sellers',h:'<div id="sellersList"><div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p><p class="small mb-0">Users appear here after they register.</p></div></div>'},
+services:{t:'Explore Services',h:'<p class="text-muted">All services will be listed here with full details.</p>'},
+'create-service':{t:'Create Service',h:'<div class="mb-3"><label class="form-label">Title</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label">Price</label><input type="number" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Service created\')">Create</button>'},
+'managed-services':{t:'Managed Services',h:'<p class="text-muted">Your created services appear here. You can edit or delete them.</p>'},
+membership:{t:'Paid Membership',h:'<p>Current: <strong class="text-success">Standard (৳900 - 3 Months)</strong></p><p class="text-muted small">Expire: 10 Nov 2026</p><button class="btn btn-p btn-sm" onclick="go(\'addmoney\')">Upgrade</button>'},
+'membership-history':{t:'Membership History',h:'<div class="li"><div><div class="fw-bold">Standard Package</div><small class="text-muted">10 Aug 2026 • ৳900</small></div></div>'},
+badge:{t:'Apply for Badge',h:'<p class="text-muted">Apply for Trusted / Verified badge.</p><button class="btn btn-p btn-sm" onclick="alert(\'Submitted\')">Apply Now</button>'},
+profile:{t:'My Profile',h:'<div id="profileView"><div class="text-center mb-3"><div class="pc mx-auto mb-2" style="width:80px;height:80px;font-size:2rem" id="pvAv">U</div><h5 id="pvName">User</h5><span class="badge bg-success" id="pvPkg">Free</span></div><p class="mb-1"><strong>Gmail:</strong> <span id="pvGmail">-</span></p><p class="mb-1"><strong>WhatsApp:</strong> <span id="pvWa">-</span></p><p class="mb-1"><strong>Telegram:</strong> <span id="pvTg">-</span></p><p class="mb-1"><strong>Facebook:</strong> <span id="pvFb">-</span></p><p class="mb-0"><strong>Package:</strong> <span id="pvPackage">Free</span></p></div>'},
+'edit-profile':{t:'Edit Profile',h:'<div class="mb-3 text-center"><div class="pc mx-auto mb-2" style="width:80px;height:80px" onclick="document.getElementById(\'pi\').click()" id="epAv">T</div><small class="text-muted">Click photo to change</small></div><div class="mb-2"><label class="form-label">Name</label><input class="form-control" id="epName"></div><div class="mb-2"><label class="form-label">Gmail</label><input type="email" class="form-control" id="epGmail" placeholder="name@gmail.com"></div><div class="mb-2"><label class="form-label">WhatsApp</label><input class="form-control" id="epWa" placeholder="01XXXXXXXXX"></div><div class="mb-2"><label class="form-label">Telegram</label><input class="form-control" id="epTg" placeholder="@username"></div><div class="mb-3"><label class="form-label">Facebook URL</label><input class="form-control" id="epFb" placeholder="https://facebook.com/..."></div><button class="btn btn-p w-100" onclick="saveProfile()">Save Profile</button>'},
+stories:{t:'Manage Stories',h:'<p class="text-muted">Your posted stories appear here.</p>'},
+transfer:{t:'Money Transfer',h:'<div class="mb-3"><label class="form-label">Receiver Email</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Amount (BDT)</label><input type="number" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Sent\')">Send Money</button>'},
+withdrawal:{t:'Withdrawal History',h:'<p class="text-muted">No withdrawal history yet.</p>'},
+security:{t:'Security',h:'<p><strong>Last Login:</strong> Today</p><p><strong>Devices:</strong> 2 active</p>'},
+'change-password':{t:'Change Password',h:'<div class="mb-3"><label class="form-label">Current Password</label><input type="password" class="form-control"></div><div class="mb-3"><label class="form-label">New Password</label><input type="password" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Changed\')">Update</button>'},
+'delete-account':{t:'Delete Account',h:'<p class="text-danger fw-bold">⚠️ Account delete সুরক্ষিত</p><p class="small text-muted mb-3">আপনার অ্যাকাউন্ট ডিলিট করতে Admin-এর অনুমতি লাগবে। ইচ্ছামতো ডিলিট করা যাবে না।</p><p class="small">Delete request পাঠাতে WhatsApp করুন অথবা Admin-কে মেসেজ দিন।</p><button class="btn btn-outline-danger w-100" onclick="alert(\'Delete request Admin-এর কাছে পাঠানো হয়েছে। Admin approve করলেই ডিলিট হবে।\')">Request Account Delete</button>'},
+devices:{t:'Associated Devices',h:'<div class="li"><div><div class="fw-bold">Chrome Mobile</div><small class="text-muted">Infinix • Today</small></div></div><div class="li"><div><div class="fw-bold">Chrome Desktop</div><small class="text-muted">Windows • Yesterday</small></div></div>'}
 };
 
-const ADMIN_EMAIL = 'gourabmon112233@gmail.com';
-const ADMIN_PASS  = 'goUrab@2008';
+function openTool(page){
+  const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+  if(!s){ alert('Please login first!'); window.location.href='login.html'; return; }
+  if(s.role === 'admin'){ window.open(page, '_blank'); return; }
 
-function rowToUser(row) {
-  if (!row) return null;
-  return {
-    id: row.id,
-    email: row.email,
-    name: row.name || '',
-    password: row.password_hash || '',
-    status: row.status || 'Pending',
-    mode: row.mode || 'free',
-    tools: Array.isArray(row.tools) ? row.tools : [],
-    profile: row.profile && typeof row.profile === 'object' ? row.profile : {},
-    devices: Array.isArray(row.devices) ? row.devices : [],
-    approvedDevices: Array.isArray(row.approved_devices) ? row.approved_devices : [],
-    pendingDevices: Array.isArray(row.pending_devices) ? row.pending_devices : (row.profile && row.profile.pendingDevices) || [],
-    blockedDevices: Array.isArray(row.blocked_devices) ? row.blocked_devices : [],
-    loginHistory: Array.isArray(row.login_history) ? row.login_history : [],
-    toolUsage: row.tool_usage && typeof row.tool_usage === 'object' ? row.tool_usage : {},
-    totalSessions: row.total_sessions || 0,
-    lastLogin: row.last_login || null,
-    joined: row.joined || '',
-    created: row.created_at || null
-  };
-}
+  const isPaidPkg = s.package && s.package !== 'Free';
+  const keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  const myKeys = keys.filter(k => k.userId === s.id && new Date(k.expires) > new Date());
+  const paidApi = myKeys.find(k => (k.type||'free') === 'paid');
+  const freeApi = myKeys.find(k => (k.type||'free') === 'free');
 
-function userToPatch(u) {
-  return {
-    email: (u.email || '').toLowerCase(),
-    password_hash: u.password || u.password_hash || '',
-    name: u.name || '',
-    status: u.status || 'Pending',
-    mode: u.mode || 'free',
-    tools: u.tools || [],
-    profile: Object.assign({}, u.profile || {}, { pendingDevices: u.pendingDevices || [] }),
-    devices: u.devices || [],
-    approved_devices: u.approvedDevices || [],
-    blocked_devices: u.blockedDevices || [],
-    login_history: u.loginHistory || [],
-    tool_usage: u.toolUsage || {},
-    total_sessions: u.totalSessions || 0,
-    last_login: u.lastLogin || null,
-    joined: u.joined || '',
-    updated_at: new Date().toISOString()
-  };
-}
+  // Paid package or Paid API → full access
+  if(isPaidPkg || paidApi){ window.open(page, '_blank'); return; }
 
-async function sbFetch(path, opts) {
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, Object.assign({ headers: SB_HEADERS }, opts || {}));
-  if (!res.ok) {
-    const t = await res.text().catch(() => '');
-    throw new Error('Supabase ' + res.status + ': ' + t.slice(0, 200));
+  // Free API only → can see dashboard but cannot run tools
+  if(freeApi){
+    alert('আপনার Free API আছে।\nটুল দেখতে পারবেন কিন্তু চালাতে পারবেন না।\n\nসব ফিচার ব্যবহার করতে Paid Package কিনুন বা Admin থেকে Paid API নিন।');
+    window.location.href = 'membership.html';
+    return;
   }
-  if (res.status === 204) return null;
-  const text = await res.text();
-  if (!text) return null;
-  return JSON.parse(text);
-}
 
-async function sbGetAllUsers() {
-  const rows = await sbFetch('app_users?select=*&order=created_at.desc');
-  return (rows || []).map(rowToUser);
-}
-
-async function sbGetUserByEmail(email) {
-  const rows = await sbFetch('app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()) + '&select=*');
-  return rows && rows[0] ? rowToUser(rows[0]) : null;
-}
-
-async function sbInsertUser(user) {
-  const body = userToPatch(user);
-  const rows = await sbFetch('app_users', { method: 'POST', body: JSON.stringify(body) });
-  return rows && rows[0] ? rowToUser(rows[0]) : user;
-}
-
-async function sbUpdateUserByEmail(email, userOrPatch) {
-  const body = userToPatch(Object.assign({ email: email }, userOrPatch));
-  delete body.email; // don't change email key in patch path
-  const rows = await sbFetch(
-    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
-    { method: 'PATCH', body: JSON.stringify(body) }
-  );
-  return rows && rows[0] ? rowToUser(rows[0]) : null;
-}
-
-async function sbDeleteUserByEmail(email) {
-  await sbFetch(
-    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
-    { method: 'DELETE', headers: Object.assign({}, SB_HEADERS, { Prefer: 'return=minimal' }) }
-  );
-}
-
-async function sbGetSettings() {
-  const rows = await sbFetch('app_settings?id=eq.1&select=*');
-  const r = rows && rows[0];
-  if (!r) {
-    return {
-      theme: 'dark-ocean',
-      siteLive: true,
-      registrationOpen: true,
-      notice: '',
-      adminInfo: {},
-      globalTools: [],
-      adminInfoVisible: true,
-      adminDevices: [],
-      blockMessage: ''
-    };
+  // No API → ask for key
+  const apiIn = prompt('টুল ব্যবহার করতে API Key দিন (Admin থেকে নিন):\n\n• Free API = শুধু দেখা\n• Paid API = পুরো ব্যবহার');
+  if(!apiIn){
+    alert('API Key ছাড়া টুল চালানো যাবে না। প্যাকেজ কিনুন।');
+    window.location.href = 'membership.html';
+    return;
   }
-  const info = r.admin_info && typeof r.admin_info === 'object' ? r.admin_info : {};
-  return {
-    theme: r.theme || 'dark-ocean',
-    siteLive: r.site_live !== false,
-    registrationOpen: r.registration_open !== false,
-    notice: r.notice || '',
-    adminInfo: info,
-    globalTools: Array.isArray(r.global_tools) ? r.global_tools : [],
-    adminInfoVisible: info.adminInfoVisible !== false,
-    adminDevices: Array.isArray(info.adminDevices) ? info.adminDevices : [],
-    blockMessage: info.blockMessage || '',
-    passwordRequests: Array.isArray(info.passwordRequests) ? info.passwordRequests : [],
-    deviceRequests: Array.isArray(info.deviceRequests) ? info.deviceRequests : []
-  };
-}
-
-async function sbSaveSettings(settings) {
-  const prev = await sbGetSettings();
-  const admin_info = Object.assign({}, prev.adminInfo || {}, settings.adminInfo || {}, {
-    adminInfoVisible: settings.adminInfoVisible !== false,
-    adminDevices: settings.adminDevices || prev.adminDevices || [],
-    blockMessage: settings.blockMessage || prev.blockMessage || '',
-    passwordRequests: settings.passwordRequests || prev.passwordRequests || [],
-    deviceRequests: settings.deviceRequests || prev.deviceRequests || []
-  });
-  const body = {
-    theme: settings.theme || 'dark-ocean',
-    site_live: settings.siteLive !== false,
-    registration_open: settings.registrationOpen !== false,
-    notice: settings.notice || '',
-    admin_info,
-    global_tools: settings.globalTools || [],
-    updated_at: new Date().toISOString()
-  };
-  await sbFetch('app_settings?id=eq.1', { method: 'PATCH', body: JSON.stringify(body) });
-}
-
-/** Compatibility: load full DB shape from Supabase */
-async function fetchDB() {
-  const [users, settings] = await Promise.all([sbGetAllUsers(), sbGetSettings()]);
-  return {
-    users,
-    settings,
-    posts: settings.adminInfo && settings.adminInfo.posts || [],
-    messages: settings.adminInfo && settings.adminInfo.messages || [],
-    passwordRequests: settings.passwordRequests || [],
-    deviceRequests: settings.deviceRequests || []
-  };
-}
-
-/**
- * Safe save: NEVER bulk-overwrite users.
- * Only upsert users present in db.users (by email) + save settings.
- * Does not delete users missing from local array (prevents wipe).
- */
-async function saveDBCloud(db) {
-  if (!db) throw new Error('No db');
-  // Settings
-  if (db.settings) {
-    const s = Object.assign({}, db.settings, {
-      passwordRequests: db.passwordRequests || db.settings.passwordRequests || [],
-      deviceRequests: db.deviceRequests || db.settings.deviceRequests || []
-    });
-    // stash posts/messages inside admin_info to avoid extra tables for now
-    s.adminInfo = Object.assign({}, s.adminInfo || {}, {
-      posts: db.posts || [],
-      messages: db.messages || []
-    });
-    await sbSaveSettings(s);
+  const valid = keys.find(k => k.key === apiIn.trim() && new Date(k.expires) > new Date());
+  if(!valid){
+    alert('Wrong API Key!\n\nসঠিক API নিন অথবা Membership থেকে প্যাকেজ কিনুন।');
+    window.location.href = 'membership.html';
+    return;
   }
-  // Users: update/insert one by one — never delete others
-  const list = Array.isArray(db.users) ? db.users : [];
-  for (const u of list) {
-    if (!u || !u.email) continue;
-    const existing = await sbGetUserByEmail(u.email);
-    if (existing) {
-      await sbUpdateUserByEmail(u.email, u);
-    } else {
-      await sbInsertUser(u);
-    }
+  if((valid.type||'free') === 'free'){
+    alert('এটি Free API।\nটুল চালাতে Paid API বা Paid Package প্রয়োজন।');
+    window.location.href = 'membership.html';
+    return;
   }
-  return true;
+  // valid paid key entered manually - allow
+  window.open(page, '_blank');
 }
 
-
-
-async function saveDB(db) {
-  return saveDBCloud(db || DB);
+function go(p){
+document.getElementById('v-dash').style.display='none';
+document.getElementById('v-vault').style.display='none';
+document.getElementById('v-other').style.display='none';
+document.querySelectorAll('.bi,.menu a').forEach(e=>e.classList.remove('active'));
+if(p==='dashboard'){document.getElementById('v-dash').style.display='block';document.querySelector('.bi[data-p="dashboard"]')?.classList.add('active');document.querySelector('.menu a[data-p="dashboard"]')?.classList.add('active');}
+else if(p==='email-vault'){
+  openTool('personal-email-vault.html');
+  return;
 }
-
-const THEME_NAMES = {
-    'dark-ocean': 'Dark Ocean',
-    'neon-night': 'Neon Night',
-    'gold-premium': 'Gold Premium',
-    'cyber-punk': 'Cyber Punk',
-    'emerald-light': 'Emerald Light'
-};
-
-const role = localStorage.getItem('a_tuls_role');
-let user = JSON.parse(localStorage.getItem('a_tuls_user') || '{}');
-let DB = null;
-let saving = false;
-let deviceInfo = null;
-let trackingDone = false;
-
-/* Double-check auth (head guard + body) — pending/empty → login only */
-if (role !== 'user' && role !== 'admin') {
-    localStorage.removeItem('a_tuls_role');
-    localStorage.removeItem('a_tuls_user');
-    location.replace('index.html');
-} else if (!user || (!user.email && role !== 'admin')) {
-    localStorage.removeItem('a_tuls_role');
-    localStorage.removeItem('a_tuls_user');
-    location.replace('index.html');
+else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h;document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);}
+closeD();window.scrollTo({top:0,behavior:'smooth'});
 }
+document.querySelectorAll('[data-p]').forEach(e=>{e.addEventListener('click',function(ev){ev.preventDefault();const p=this.getAttribute('data-p');if(p)go(p)})});
 
-/* Activity touch for idle logout */
-(function(){
-  function touch(){ try { localStorage.setItem('a_tuls_last_activity', String(Date.now())); } catch(e){} }
-  ['click','keydown','mousemove','scroll','touchstart'].forEach(function(ev){
-    document.addEventListener(ev, touch, { passive: true });
-  });
-  setInterval(function(){
-    var last = parseInt(localStorage.getItem('a_tuls_last_activity') || '0', 10);
-    if (last && (Date.now() - last > 10 * 60 * 1000)) {
-      localStorage.removeItem('a_tuls_role');
-      localStorage.removeItem('a_tuls_user');
-      location.replace('index.html');
-    }
-  }, 30000);
-})();
-
-document.getElementById('userName').textContent = user.name || (role === 'admin' ? 'Admin' : 'User');
-
-// Admin হলে Dashboard + Admin Panel দুটো অপশন দেখাও
-if (role === 'admin') {
-    const apMenu = document.getElementById('adminPanelMenu');
-    const apBtn = document.getElementById('adminPanelBtn');
-    if (apMenu) apMenu.style.display = '';
-    if (apBtn) apBtn.style.display = 'inline-flex';
+// Force login - no access without session
+const sess=JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+if(!sess){
+  alert('Please login first!');
+  window.location.href = 'login.html';
 }
-
-/* ========== DEVICE FINGERPRINT ========== */
-function getBrowserName() {
-    const ua = navigator.userAgent;
-    if (ua.includes('Edg/')) return 'Edge ' + (ua.match(/Edg\/([\d.]+)/)?.[1] || '');
-    if (ua.includes('Chrome/') && !ua.includes('Edg/')) return 'Chrome ' + (ua.match(/Chrome\/([\d.]+)/)?.[1] || '');
-    if (ua.includes('Firefox/')) return 'Firefox ' + (ua.match(/Firefox\/([\d.]+)/)?.[1] || '');
-    if (ua.includes('Safari/') && !ua.includes('Chrome')) return 'Safari ' + (ua.match(/Version\/([\d.]+)/)?.[1] || '');
-    if (ua.includes('OPR/') || ua.includes('Opera')) return 'Opera';
-    return 'Unknown Browser';
+// Admin goes to admin panel
+if(sess && sess.role === 'admin' && sess.email === 'gourabmon112233@gmail.com'){
+  // allow stay or can go to admin
 }
-
-function getOS() {
-    const ua = navigator.userAgent;
-    if (ua.includes('Windows NT 10')) return 'Windows 10/11';
-    if (ua.includes('Windows')) return 'Windows';
-    if (ua.includes('Android')) return 'Android ' + (ua.match(/Android ([\d.]+)/)?.[1] || '');
-    if (ua.includes('iPhone') || ua.includes('iPad')) return 'iOS ' + (ua.match(/OS ([\d_]+)/)?.[1]?.replace(/_/g, '.') || '');
-    if (ua.includes('Mac OS X')) return 'macOS ' + (ua.match(/Mac OS X ([\d_]+)/)?.[1]?.replace(/_/g, '.') || '');
-    if (ua.includes('Linux')) return 'Linux';
-    return 'Unknown OS';
-}
-
-function getDeviceType() {
-    const ua = navigator.userAgent;
-    if (/Mobi|Android|iPhone|iPad|iPod/i.test(ua)) {
-        if (/iPad|Tablet/i.test(ua)) return 'Tablet';
-        return 'Mobile';
-    }
-    return 'Desktop';
-}
-
-function simpleHash(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-        h = ((h << 5) - h) + str.charCodeAt(i);
-        h |= 0;
-    }
-    return Math.abs(h).toString(36);
-}
-
-function getFingerprint() {
-    const parts = [
-        navigator.userAgent,
-        navigator.language,
-        screen.width + 'x' + screen.height,
-        screen.colorDepth,
-        new Date().getTimezoneOffset(),
-        navigator.hardwareConcurrency || 0,
-        navigator.platform || ''
-    ].join('|');
-    return simpleHash(parts);
-}
-
-async function getIP() {
-    try {
-        const r = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(4000) });
-        if (r.ok) {
-            const d = await r.json();
-            return d.ip || 'N/A';
-        }
-    } catch (e) {}
-    return 'N/A';
-}
-
-async function collectDeviceInfo() {
-    const ip = await getIP();
-    return {
-        fingerprint: getFingerprint(),
-        browser: getBrowserName(),
-        os: getOS(),
-        deviceType: getDeviceType(),
-        ip: ip,
-        lastSeen: new Date().toISOString()
-    };
-}
-
-/* DB via Supabase layer (fetchDB / saveDB above) */
-
-/* ========== ULTRA TRACKING ========== */
-async function recordTracking() {
-    if (role === 'admin' || trackingDone || !user || !user.email) return;
-    trackingDone = true;
-
-    try {
-        deviceInfo = await collectDeviceInfo();
-        if (!DB) DB = await fetchDB();
-        if (!DB.users) DB.users = [];
-
-        const idx = DB.users.findIndex(u =>
-            (u.email || '').toLowerCase() === (user.email || '').toLowerCase()
-        );
-        if (idx === -1) return;
-
-        const u = DB.users[idx];
-
-        // Ensure tracking fields
-        if (!Array.isArray(u.devices)) u.devices = [];
-        if (!Array.isArray(u.loginHistory)) u.loginHistory = [];
-        if (!Array.isArray(u.blockedDevices)) u.blockedDevices = [];
-        if (!u.toolUsage || typeof u.toolUsage !== 'object') u.toolUsage = {};
-        if (!u.totalSessions) u.totalSessions = 0;
-
-        // Blocked device check
-        if (u.blockedDevices.includes(deviceInfo.fingerprint)) {
-            alert('⛔ এই ডিভাইস/ব্রাউজার Admin কর্তৃক ব্লক করা হয়েছে।\nআপনি এই ডিভাইস থেকে লগইন করতে পারবেন না।');
-            localStorage.removeItem('a_tuls_role');
-            localStorage.removeItem('a_tuls_user');
-            location.href = 'index.html';
-            return;
-        }
-
-        // Update or add device
-        const existingDev = u.devices.findIndex(d => d.fingerprint === deviceInfo.fingerprint);
-        if (existingDev >= 0) {
-            u.devices[existingDev] = { ...u.devices[existingDev], ...deviceInfo };
-        } else {
-            u.devices.push(deviceInfo);
-            // Keep max 15 devices
-            if (u.devices.length > 15) u.devices = u.devices.slice(-15);
-        }
-
-        // Login history (max 30)
-        u.loginHistory.push({
-            time: deviceInfo.lastSeen,
-            browser: deviceInfo.browser,
-            os: deviceInfo.os,
-            ip: deviceInfo.ip,
-            deviceType: deviceInfo.deviceType
-        });
-        if (u.loginHistory.length > 30) u.loginHistory = u.loginHistory.slice(-30);
-
-        u.lastLogin = deviceInfo.lastSeen;
-        u.totalSessions = (u.totalSessions || 0) + 1;
-
-        DB.users[idx] = u;
-        user = u;
-        localStorage.setItem('a_tuls_user', JSON.stringify(u));
-
-        await saveDB();
-    } catch (e) {
-        console.error('Tracking error', e);
-    }
-}
-
-async function trackToolUse(toolName) {
-    if (role === 'admin' || !user || !user.email || !toolName) return;
-    try {
-        if (!DB) DB = await fetchDB();
-        const idx = DB.users.findIndex(u =>
-            (u.email || '').toLowerCase() === (user.email || '').toLowerCase()
-        );
-        if (idx === -1) return;
-
-        if (!DB.users[idx].toolUsage || typeof DB.users[idx].toolUsage !== 'object') {
-            DB.users[idx].toolUsage = {};
-        }
-        DB.users[idx].toolUsage[toolName] = (DB.users[idx].toolUsage[toolName] || 0) + 1;
-        if (!DB.users[idx].toolLastUsed || typeof DB.users[idx].toolLastUsed !== 'object') {
-            DB.users[idx].toolLastUsed = {};
-        }
-        DB.users[idx].toolLastUsed[toolName] = new Date().toISOString();
-        DB.users[idx].lastTool = toolName;
-        DB.users[idx].lastToolTime = new Date().toISOString();
-
-        // Also refresh lastSeen on current device
-        if (deviceInfo) {
-            if (!Array.isArray(DB.users[idx].devices)) DB.users[idx].devices = [];
-            const di = DB.users[idx].devices.findIndex(d => d.fingerprint === deviceInfo.fingerprint);
-            if (di >= 0) {
-                DB.users[idx].devices[di].lastSeen = new Date().toISOString();
-            }
-        }
-
-        user = DB.users[idx];
-        localStorage.setItem('a_tuls_user', JSON.stringify(user));
-        await saveDB();
-    } catch (e) {
-        console.error('Tool track error', e);
-    }
-}
-
-function applyTheme(theme) {
-    const valid = ['dark-ocean','neon-night','gold-premium','cyber-punk','emerald-light'];
-    const finalTheme = valid.includes(theme) ? theme : 'dark-ocean';
-    document.documentElement.setAttribute('data-theme', finalTheme);
-    document.body.setAttribute('data-theme', finalTheme);
-    const tag = document.getElementById('themeTag');
-    if (tag) tag.textContent = THEME_NAMES[finalTheme] || finalTheme;
-}
-
-function updateAdminInfo(visible) {
-    const box = document.getElementById('adminInfoBox');
-    if (!box) return;
-    // HIDE ON DASH → শুধু এই বক্স লুকানো; SHOW → সবাই দেখবে
-    box.style.display = visible !== false ? 'block' : 'none';
-    const info = (DB && DB.settings && DB.settings.adminInfo) ? DB.settings.adminInfo : {};
-    const tg = escapeHtmlLocal(info.telegram || '+8801944035239');
-    const fbRaw = (info.facebook || 'Gourab Official').trim();
-    const fb = escapeHtmlLocal(fbRaw);
-    const em = escapeHtmlLocal(info.email || 'gourabmon112233@gmail.com');
-    const extra = escapeHtmlLocal(info.extra || 'Developed by Gourab • 01944035239');
-    const an = escapeHtmlLocal(info.name || 'Admin Gourab');
-    const fbHtml = /^https?:\/\//i.test(fbRaw)
-        ? '<a href="' + escapeHtmlLocal(fbRaw) + '" target="_blank" rel="noopener">' + fb + '</a>'
-        : fb;
-    // Admin photo — সবাই দেখবে
-    const photo = info.photo || '';
-    const photoHtml = photo
-        ? '<img src="' + String(photo).replace(/"/g, '') + '" alt="Admin" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);margin-bottom:10px;display:block;">'
-        : '';
-    box.innerHTML = '<div class="title"><i class="fas fa-user-shield"></i> Admin Information</div>'
-        + photoHtml
-        + '<div><i class="fas fa-user"></i> Name: <strong>' + an + '</strong></div>'
-        + '<div><i class="fas fa-id-badge"></i> Admin ID: <strong>' + em + '</strong></div>'
-        + '<div><i class="fab fa-telegram"></i> Telegram: <strong>' + tg + '</strong></div>'
-        + '<div><i class="fab fa-facebook"></i> Facebook: ' + fbHtml + '</div>'
-        + (extra ? '<div style="margin-top:4px;opacity:0.7;font-size:12px;">' + extra + '</div>' : '');
-}
-
-function updateNotice(notice) {
-    const el = document.getElementById('adminNotice');
-    if (!el) return;
-    if (notice) {
-        el.style.display = 'flex';
-        el.innerHTML = '<i class="fas fa-bell"></i> <strong>Admin Notice:</strong> ' + notice;
-    } else {
-        el.style.display = 'none';
-        el.innerHTML = '';
-    }
-}
-
-async function syncFromCloud() {
-    try {
-        DB = await fetchDB();
-        const settings = DB.settings || {};
-
-        // Theme
-        applyTheme(settings.theme || 'dark-ocean');
-
-        // Admin info visibility
-        updateAdminInfo(settings.adminInfoVisible !== false);
-
-        // Notice
-        updateNotice(settings.notice || '');
-
-        // Refresh current user status from cloud
-        if (user && user.email && DB.users) {
-            const fresh = DB.users.find(u => (u.email || '').toLowerCase() === (user.email || '').toLowerCase());
-            if (fresh) {
-                // Device block check (live)
-                if (deviceInfo && Array.isArray(fresh.blockedDevices) &&
-                    fresh.blockedDevices.includes(deviceInfo.fingerprint)) {
-                    alert('⛔ এই ডিভাইস Admin কর্তৃক ব্লক করা হয়েছে।');
-                    localStorage.removeItem('a_tuls_role');
-                    localStorage.removeItem('a_tuls_user');
-                    location.href = 'index.html';
-                    return;
-                }
-
-                if (fresh.status === 'Blocked') {
-                    alert('আপনার একাউন্ট ব্লক করা হয়েছে।');
-                    localStorage.removeItem('a_tuls_role');
-                    localStorage.removeItem('a_tuls_user');
-                    location.href = 'index.html';
-                    return;
-                }
-                if (fresh.status === 'Pending') {
-                    localStorage.setItem('a_tuls_role', 'pending');
-                    localStorage.setItem('a_tuls_user', JSON.stringify(fresh));
-                    location.href = 'pending.html';
-                    return;
-                }
-                // প্রোফাইল/ফটো ক্লাউডে থাকলে সেটাই রাখো — খালি ডেটা দিয়ে মুছবে না
-                if (fresh.profile && user.profile) {
-                    if (!fresh.profile.photo && user.profile.photo) {
-                        fresh.profile.photo = user.profile.photo;
-                    }
-                }
-                user = fresh;
-                localStorage.setItem('a_tuls_user', JSON.stringify(fresh));
-                document.getElementById('userName').textContent = user.name || 'User';
-            }
-        }
-
-        // Tool permission filter (admin control)
-        filterToolsByPermission(user, settings);
-        try { renderCommunity(false); } catch(e) {}
-
-        // Site live check
-        if (settings.siteLive === false && role !== 'admin') {
-            alert('সাইট সাময়িক বন্ধ আছে।');
-            localStorage.removeItem('a_tuls_role');
-            localStorage.removeItem('a_tuls_user');
-            location.href = 'index.html';
-        }
-    } catch (e) {
-        console.error('Cloud sync error', e);
-        applyTheme('dark-ocean');
-    }
-}
-
-function filterToolsByPermission(userObj, settings) {
-    const cards = document.querySelectorAll('#toolsGrid .card[data-tool]');
-    const menuItems = document.querySelectorAll('.sidebar-menu .menu-item[data-tool]');
-
-    // Admin sees everything
-    if (role === 'admin') {
-        cards.forEach(c => c.style.display = '');
-        menuItems.forEach(m => m.style.display = '');
-        return;
-    }
-
-    const globalTools = (settings && Array.isArray(settings.globalTools) && settings.globalTools.length)
-        ? settings.globalTools
-        : null;
-
-    const userTools = (userObj && Array.isArray(userObj.tools)) ? userObj.tools : [];
-    const mode = (userObj && userObj.mode) || 'free';
-
-    cards.forEach(card => {
-        const toolName = card.getAttribute('data-tool');
-        let allowed = true;
-
-        if (globalTools && !globalTools.includes(toolName)) {
-            allowed = false;
-        }
-
-        if (userTools.length > 0) {
-            if (!userTools.includes(toolName)) allowed = false;
-        } else if (mode === 'free') {
-            allowed = false;
-        }
-
-        card.style.display = allowed ? '' : 'none';
-    });
-
-    menuItems.forEach(item => {
-        const toolName = item.getAttribute('data-tool');
-        const matchingCard = document.querySelector('#toolsGrid .card[data-tool="' + toolName + '"]');
-        if (matchingCard) {
-            item.style.display = matchingCard.style.display;
-        }
-    });
-}
-
-function logout() {
-    localStorage.removeItem('a_tuls_role');
-    localStorage.removeItem('a_tuls_user');
-    location.href = 'index.html';
-}
-
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('show');
-}
-
-function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('show');
-}
-
-/* Tool click tracking */
-document.addEventListener('click', function(e) {
-    const card = e.target.closest('[data-tool]');
-    if (card) {
-        const toolName = card.getAttribute('data-tool');
-        if (toolName) trackToolUse(toolName);
-    }
-}, true);
-
-// Initial + live sync every 5s
-syncFromCloud().then(() => {
-    recordTracking();
-    try { renderCommunity(false); } catch(e) {}
-});
-
-
-/* ========== PROFILE + COMMUNITY + CHAT ========== */
-let profilePhotoData = '';
-let chatPartnerEmail = null;
-let chatPartnerName = '';
-
-function showProfileSection() {
-    document.getElementById('profileSection').style.display = 'block';
-    document.getElementById('communityWall').style.display = 'none';
-    const fcs = document.getElementById('fullCommunitySection');
-    if (fcs) fcs.style.display = 'none';
-    document.getElementById('chatPanel').style.display = 'none';
-    document.getElementById('toolsGrid').style.display = 'none';
-    const title = document.getElementById('toolsSectionTitle');
-    if (title) title.style.display = 'none';
-    setActiveMenu('profile');
-    loadProfileForm();
-    closeSidebar();
-}
-
-/* Community = ফুল ফিড + সব মেম্বার, চেকার নেই */
-function showCommunitySection() {
-    document.getElementById('profileSection').style.display = 'none';
-    document.getElementById('communityWall').style.display = 'none';
-    document.getElementById('fullCommunitySection').style.display = 'block';
-    document.getElementById('toolsGrid').style.display = 'none';
-    const title = document.getElementById('toolsSectionTitle');
-    if (title) title.style.display = 'none';
-    setActiveMenu('community');
-    renderCommunity(true);
-    renderPostsFeed();
-    closeSidebar();
-}
-
-/* Dashboard = ৫-১০ প্রোফাইল + চেকার */
-function showToolsSection() {
-    document.getElementById('profileSection').style.display = 'none';
-    document.getElementById('fullCommunitySection').style.display = 'none';
-    document.getElementById('communityWall').style.display = 'block';
-    document.getElementById('toolsGrid').style.display = 'grid';
-    const title = document.getElementById('toolsSectionTitle');
-    if (title) title.style.display = 'flex';
-    setActiveMenu('dashboard');
-    renderCommunity(false);
-}
-
-function setActiveMenu(which) {
-    document.querySelectorAll('.sidebar-menu .menu-item').forEach(el => el.classList.remove('active'));
-    if (which === 'dashboard') {
-        const el = document.querySelector('.sidebar-menu .menu-item[href="dashboard.html"]');
-        if (el) el.classList.add('active');
-    } else if (which === 'community') {
-        const el = document.querySelector('.sidebar-menu .menu-item[href="#community"]');
-        if (el) el.classList.add('active');
-    } else if (which === 'profile') {
-        const el = document.querySelector('.sidebar-menu .menu-item[href="#myProfile"]');
-        if (el) el.classList.add('active');
-    }
-}
-
-function loadProfileForm() {
-    // Admin → settings.adminInfo থেকে লোড
-    if (role === 'admin') {
-        const info = (DB && DB.settings && DB.settings.adminInfo) ? DB.settings.adminInfo : {};
-        document.getElementById('profileName').value = info.name || 'Admin Gourab';
-        document.getElementById('profilePhone').value = info.telegram || '';
-        document.getElementById('profileBio').value = info.facebook || '';
-        document.getElementById('profileMessage').value = info.extra || '';
-        document.getElementById('profileShowOnHome').checked = true;
-        profilePhotoData = info.photo || '';
-        updatePhotoUI();
-        return;
-    }
-    const u = user || {};
-    const pr = u.profile || {};
-    document.getElementById('profileName').value = u.name || '';
-    document.getElementById('profilePhone').value = pr.phone || '';
-    document.getElementById('profileBio').value = pr.bio || '';
-    document.getElementById('profileMessage').value = pr.publicMessage || '';
-    document.getElementById('profileShowOnHome').checked = pr.showOnHome !== false;
-    profilePhotoData = pr.photo || '';
-    updatePhotoUI();
-}
-
-function updatePhotoUI() {
-    const img = document.getElementById('profilePhotoPreview');
-    const ph = document.getElementById('profilePhotoPlaceholder');
-    if (profilePhotoData) {
-        img.src = profilePhotoData;
-        img.style.display = 'block';
-        ph.style.display = 'none';
-    } else {
-        img.style.display = 'none';
-        ph.style.display = 'flex';
-    }
-}
-
-function onPhotoSelected(e) {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const name = (file.name || '').toLowerCase();
-    const type = (file.type || '').toLowerCase();
-    const looksImage = !type || type.startsWith('image/') || type === 'application/octet-stream'
-        || /\.(jpe?g|png|webp|gif|bmp|heic|heif|avif|tiff?|jfif)$/i.test(name);
-    if (!looksImage) {
-        alert('Please select a photo (JPG/PNG/WEBP/GIF/BMP/HEIC)');
-        return;
-    }
-    // Any size OK — auto compress + square crop center
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = function() {
-        const size = Math.min(img.width, img.height);
-        const sx = (img.width - size) / 2;
-        const sy = (img.height - size) / 2;
-        let out = 240; // smaller for JSONBin limit
-        const c = document.createElement('canvas');
-        const ctx = c.getContext('2d');
-        let q = 0.7;
-        function encode() {
-            c.width = out; c.height = out;
-            ctx.drawImage(img, sx, sy, size, size, 0, 0, out, out);
-            return c.toDataURL('image/jpeg', q);
-        }
-        profilePhotoData = encode();
-        while (profilePhotoData.length > 85000 && q > 0.35) {
-            q -= 0.08;
-            profilePhotoData = encode();
-        }
-        while (profilePhotoData.length > 85000 && out > 140) {
-            out -= 40;
-            profilePhotoData = encode();
-        }
-        URL.revokeObjectURL(url);
-        updatePhotoUI();
-    };
-    img.onerror = function() { alert('ছবি লোড ব্যর্থ'); };
-    img.src = url;
-}
-
-async function clearMyNote() {
-    if (!confirm('পাবলিক নোট/মেসেজ মুছে ফেলবেন?')) return;
-    document.getElementById('profileMessage').value = '';
-    await saveMyProfile();
-}
-
-async function saveMyProfile() {
-    try {
-        if (!DB) DB = await fetchDB();
-
-        // Admin → settings.adminInfo সেভ (সবার ড্যাশবোর্ডে দেখা যাবে)
-        if (role === 'admin') {
-            if (!DB.settings) DB.settings = {};
-            const prev = DB.settings.adminInfo || {};
-            DB.settings.adminInfo = {
-                name: document.getElementById('profileName').value.trim() || 'Admin Gourab',
-                telegram: document.getElementById('profilePhone').value.trim() || prev.telegram || '',
-                facebook: document.getElementById('profileBio').value.trim() || prev.facebook || '',
-                email: prev.email || 'gourabmon112233@gmail.com',
-                extra: document.getElementById('profileMessage').value.trim() || '',
-                // ফটো ডিলিট না করা পর্যন্ত থাকবে
-                photo: profilePhotoData || prev.photo || ''
-            };
-            document.getElementById('userName').textContent = DB.settings.adminInfo.name;
-            await saveDB();
-            updateAdminInfo(DB.settings.adminInfoVisible !== false);
-            const msg = document.getElementById('profileSaveMsg');
-            if (msg) {
-                msg.style.display = 'block';
-                msg.style.color = 'var(--primary)';
-                msg.textContent = '✅ Admin প্রোফাইল সেভ হয়েছে! সবাই দেখতে পারবে।';
-                setTimeout(() => { msg.style.display = 'none'; }, 3000);
-            }
-            try { renderCommunity(false); } catch (e) {}
-            return;
-        }
-
-        if (!user || !user.email) return;
-        const idx = DB.users.findIndex(u =>
-            (u.email || '').toLowerCase() === (user.email || '').toLowerCase()
-        );
-        if (idx === -1) return alert('ইউজার পাওয়া যায়নি');
-
-        const name = document.getElementById('profileName').value.trim();
-        if (name) DB.users[idx].name = name;
-
-        if (!DB.users[idx].profile) DB.users[idx].profile = {};
-        const prevPhoto = DB.users[idx].profile.photo || '';
-        DB.users[idx].profile.phone = document.getElementById('profilePhone').value.trim();
-        DB.users[idx].profile.bio = document.getElementById('profileBio').value.trim();
-        DB.users[idx].profile.publicMessage = document.getElementById('profileMessage').value.trim();
-        DB.users[idx].profile.showOnHome = document.getElementById('profileShowOnHome').checked;
-        // ফটো মুছে না দেওয়া পর্যন্ত আগের ফটো রাখো (রিফ্রেশে হারাবে না)
-        DB.users[idx].profile.photo = profilePhotoData || prevPhoto || '';
-
-        user = DB.users[idx];
-        localStorage.setItem('a_tuls_user', JSON.stringify(user));
-        document.getElementById('userName').textContent = user.name || 'User';
-
-        await saveDB();
-        // ক্লাউড থেকে আবার নিশ্চিত করে নাও — রিফ্রেশে একই থাকবে
-        try {
-            DB = await fetchDB();
-            const fresh = (DB.users || []).find(u => (u.email || '').toLowerCase() === (user.email || '').toLowerCase());
-            if (fresh) {
-                user = fresh;
-                localStorage.setItem('a_tuls_user', JSON.stringify(fresh));
-                profilePhotoData = (fresh.profile && fresh.profile.photo) || profilePhotoData || '';
-            }
-        } catch (e) {}
-        const msg = document.getElementById('profileSaveMsg');
-        msg.style.display = 'block';
-        msg.style.color = 'var(--primary)';
-        msg.textContent = '✅ প্রোফাইল সেভ হয়েছে!';
-        setTimeout(() => { msg.style.display = 'none'; }, 3000);
-        try { renderCommunity(false); } catch (e) { try { renderCommunity(); } catch (e2) {} }
-    } catch (e) {
-        alert('সেভ ব্যর্থ: ' + e.message);
-    }
-}
-
-function escapeHtmlLocal(str) {
-    return String(str || '')
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-
-
-let postPhotoData = '';
-const DASH_PROFILE_LIMIT = 8;
-
-async function renderCommunity(fullList) {
-    const listId = fullList ? 'fullMembersList' : 'communityList';
-    const list = document.getElementById(listId);
-    if (!list) return;
-
-    try {
-        if (!DB) DB = await fetchDB();
-        const settings = DB.settings || {};
-
-        function memberCard(u, isAdmin) {
-            if (isAdmin) {
-                const ai = (settings.adminInfo) ? settings.adminInfo : {};
-                const adminId = ai.email || 'gourabmon112233@gmail.com';
-                const adminName = ai.name || 'Admin Gourab';
-                const adminTg = ai.telegram || '+8801944035239';
-                const adminFb = ai.facebook || 'Gourab Official';
-                const adminExtra = ai.extra || '';
-                const adminPhoto = ai.photo || '';
-                // Admin photo — সবাই Members-এ দেখবে
-                const adminPhotoHtml = adminPhoto
-                    ? `<img src="${String(adminPhoto).replace(/"/g,'')}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);">`
-                    : `<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary2));display:flex;align-items:center;justify-content:center;color:#000;font-size:22px;"><i class="fas fa-user-shield"></i></div>`;
-                return `
-                <div class="card" style="cursor:default;padding:16px;border:1px solid var(--primary);">
-                    <div style="background:var(--notice-bg);border:1px solid var(--notice-bd);color:var(--notice-tx);padding:8px 10px;border-radius:10px;font-size:12.5px;margin-bottom:10px;font-weight:600;">
-                        👑 OFFICIAL ADMIN
-                    </div>
-                    <div style="display:flex;gap:12px;align-items:center;">
-                        ${adminPhotoHtml}
-                        <div>
-                            <div style="font-weight:700;font-size:15px;">${escapeHtmlLocal(adminName)}</div>
-                            <div style="font-size:11px;color:var(--muted);">ADMIN ID</div>
-                        </div>
-                    </div>
-                    <div style="margin-top:10px;font-size:12.5px;line-height:1.7;color:var(--muted);">
-                        <div><i class="fas fa-id-badge" style="color:var(--primary);width:16px;"></i> <strong style="color:var(--text);">ID:</strong> ${escapeHtmlLocal(adminId)}</div>
-                        <div><i class="fab fa-telegram" style="color:var(--primary);width:16px;"></i> ${escapeHtmlLocal(adminTg)}</div>
-                        <div><i class="fab fa-facebook" style="color:var(--primary);width:16px;"></i> ${escapeHtmlLocal(adminFb)}</div>
-                        ${adminExtra ? '<div style="margin-top:4px;">' + escapeHtmlLocal(adminExtra) + '</div>' : ''}
-                    </div>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-                        <button onclick="openChat('admin@atuls.local','${escapeHtmlLocal(adminName)}')" class="logout-btn" style="background:var(--primary);color:#000;border:none;font-size:12px;padding:7px 12px;">
-                            <i class="fas fa-comments"></i> Chat Admin
-                        </button>
-                        <a href="https://wa.me/${String(adminTg).replace(/[^0-9]/g,'')}" target="_blank" class="logout-btn" style="text-decoration:none;border:1px solid var(--border);font-size:12px;padding:7px 12px;">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </a>
-                    </div>
-                </div>`;
-            }
-            const pr = u.profile || {};
-            const msg = pr.publicMessage || '';
-            const photo = pr.photo || '';
-            const phone = pr.phone || '';
-            const bio = pr.bio || '';
-            const isPremium = u.mode === 'premium';
-            const mode = isPremium ? 'PREMIUM' : 'FREE';
-            const myEmail = (user && user.email || '').toLowerCase();
-            const isMe = (u.email || '').toLowerCase() === myEmail;
-            const photoHtml = photo
-                ? `<img src="${String(photo).replace(/"/g,'')}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);">`
-                : `<div style="width:56px;height:56px;border-radius:50%;background:var(--badge-bg);display:flex;align-items:center;justify-content:center;color:var(--primary);"><i class="fas fa-user"></i></div>`;
-            // নোট থাকলে নাম/ID-এর উপরে সবাই দেখবে (Free + Premium)
-            const msgHtml = msg
-                ? `<div style="background:var(--notice-bg);border:1px solid var(--notice-bd);color:var(--notice-tx);padding:8px 10px;border-radius:10px;font-size:12.5px;margin-bottom:10px;font-weight:600;word-break:break-word;">💬 ${escapeHtmlLocal(msg)}</div>`
-                : '';
-            const chatBtn = isMe ? '' : `<button onclick="openChat('${escapeHtmlLocal(u.email)}','${escapeHtmlLocal(u.name || 'User')}')" class="logout-btn" style="margin-top:8px;background:var(--primary);color:#000;border:none;font-size:12px;padding:7px 12px;"><i class="fas fa-comments"></i> Chat</button>`;
-            const waBtn = phone ? `<a href="https://wa.me/${phone.replace(/[^0-9+]/g,'')}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;margin-left:8px;font-size:12px;font-weight:700;color:var(--primary);text-decoration:none;"><i class="fab fa-whatsapp"></i> WA</a>` : '';
-            return `
-            <div class="card" style="cursor:default;padding:16px;">
-                ${msgHtml}
-                <div style="display:flex;gap:12px;align-items:center;">
-                    ${photoHtml}
-                    <div style="min-width:0;">
-                        <div style="font-weight:700;font-size:15px;">${escapeHtmlLocal(u.name || 'User')}${isMe ? ' (You)' : ''}</div>
-                        <div style="font-size:11px;color:var(--muted);">${mode}</div>
-                        <div style="font-size:10px;color:var(--muted);opacity:0.85;word-break:break-all;">ID: ${escapeHtmlLocal(u.email || '')}</div>
-                    </div>
-                </div>
-                ${bio ? `<div style="margin-top:10px;font-size:12.5px;color:var(--muted);">${escapeHtmlLocal(bio)}</div>` : ''}
-                <div style="display:flex;flex-wrap:wrap;align-items:center;">${chatBtn}${waBtn}</div>
-            </div>`;
-        }
-
-        let html = '';
-        // Members-এ Admin কার্ড সবসময় দেখাবে (HIDE শুধু উপরের Admin Information বক্সে)
-        html += memberCard(null, true);
-
-        let users = (DB.users || []).filter(u => {
-            const pr = u.profile || {};
-            return pr.showOnHome !== false && u.status === 'Approved';
-        });
-        users.sort((a, b) => {
-            if ((a.mode === 'premium') !== (b.mode === 'premium')) return a.mode === 'premium' ? -1 : 1;
-            return (a.name || '').localeCompare(b.name || '');
-        });
-
-        const seeBtn = document.getElementById('seeMoreBtn');
-        if (!fullList) {
-            const limited = users.slice(0, DASH_PROFILE_LIMIT);
-            limited.forEach(u => { html += memberCard(u, false); });
-            if (seeBtn) seeBtn.style.display = users.length > DASH_PROFILE_LIMIT ? 'inline-flex' : (users.length > 0 ? 'inline-flex' : 'none');
-        } else {
-            users.forEach(u => { html += memberCard(u, false); });
-        }
-
-        list.innerHTML = html || '<div style="color:var(--muted);padding:16px;">কোনো প্রোফাইল নেই।</div>';
-    } catch (e) {
-        console.error(e);
-        list.innerHTML = '<div style="color:var(--danger-tx);">লোড ব্যর্থ</div>';
-    }
-}
-
-/* ===== POSTS: create / like / comment / buy-sell ===== */
-document.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'postType') {
-        const price = document.getElementById('postPrice');
-        if (price) price.style.display = (e.target.value === 'sell' || e.target.value === 'buy') ? 'block' : 'none';
-    }
-});
-
-function onPostPhotoSelected(e) {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const name = (file.name || '').toLowerCase();
-    const type = (file.type || '').toLowerCase();
-    const looksImage = !type || type.startsWith('image/') || type === 'application/octet-stream'
-        || /\.(jpe?g|png|webp|gif|bmp|heic|heif|avif|tiff?|jfif)$/i.test(name);
-    if (!looksImage) { alert('Please select a photo'); return; }
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = function() {
-        let maxW = 640;
-        let scale = Math.min(1, maxW / img.width);
-        const c = document.createElement('canvas');
-        c.width = Math.round(img.width * scale);
-        c.height = Math.round(img.height * scale);
-        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-        let q = 0.65;
-        postPhotoData = c.toDataURL('image/jpeg', q);
-        while (postPhotoData.length > 120000 && q > 0.35) {
-            q -= 0.08;
-            postPhotoData = c.toDataURL('image/jpeg', q);
-        }
-        while (postPhotoData.length > 120000 && maxW > 320) {
-            maxW -= 80;
-            scale = Math.min(1, maxW / img.width);
-            c.width = Math.round(img.width * scale);
-            c.height = Math.round(img.height * scale);
-            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-            postPhotoData = c.toDataURL('image/jpeg', Math.max(0.4, q));
-        }
-        URL.revokeObjectURL(url);
-        document.getElementById('postPhotoName').textContent = file.name;
-        document.getElementById('postPhotoPreview').src = postPhotoData;
-        document.getElementById('postPhotoPreviewWrap').style.display = 'block';
-    };
-    img.src = url;
-}
-
-async function createPost() {
-    const text = (document.getElementById('postText').value || '').trim();
-    const type = document.getElementById('postType').value;
-    const price = (document.getElementById('postPrice').value || '').trim();
-    if (!text && !postPhotoData) return alert('টেক্সট বা ছবি দিন');
-
-    const me = (user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '');
-    const myName = (user && user.name) || (role === 'admin' ? 'Admin Gourab' : 'User');
-    if (!me) return alert('লগইন প্রয়োজন');
-
-    try {
-        if (!DB) DB = await fetchDB();
-        if (!Array.isArray(DB.posts)) DB.posts = [];
-        DB.posts.unshift({
-            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
-            authorEmail: me,
-            authorName: myName,
-            type: type,
-            text: text,
-            price: (type === 'sell' || type === 'buy') ? price : '',
-            photo: postPhotoData || '',
-            likes: [],
-            comments: [],
-            time: new Date().toISOString()
-        });
-        if (DB.posts.length > 200) DB.posts = DB.posts.slice(0, 200);
-        await saveDB();
-        document.getElementById('postText').value = '';
-        document.getElementById('postPrice').value = '';
-        postPhotoData = '';
-        document.getElementById('postPhotoName').textContent = '';
-        document.getElementById('postPhotoPreviewWrap').style.display = 'none';
-        const pi = document.getElementById('postPhoto');
-        if (pi) pi.value = '';
-        renderPostsFeed();
-    } catch (e) {
-        alert('পোস্ট ব্যর্থ: ' + e.message);
-    }
-}
-
-async function renderPostsFeed() {
-    const feed = document.getElementById('postsFeed');
-    if (!feed) return;
-    try {
-        if (!DB) DB = await fetchDB();
-        const posts = Array.isArray(DB.posts) ? DB.posts : [];
-        if (!posts.length) {
-            feed.innerHTML = '<div style="color:var(--muted);padding:24px;text-align:center;">এখনো কোনো পোস্ট নেই। প্রথম পোস্ট করুন!</div>';
-            return;
-        }
-        const me = ((user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '')).toLowerCase();
-
-        feed.innerHTML = posts.map(post => {
-            const typeBadge = post.type === 'sell'
-                ? '<span style="background:#10b981;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;">SELL</span>'
-                : post.type === 'buy'
-                ? '<span style="background:#3b82f6;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;">BUY</span>'
-                : '<span style="background:var(--badge-bg);color:var(--badge-tx);font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;">POST</span>';
-            const priceHtml = post.price ? `<div style="margin-top:8px;font-weight:800;color:var(--primary);font-size:15px;">৳ ${escapeHtmlLocal(post.price)}</div>` : '';
-            const photoHtml = post.photo ? `<img src="${String(post.photo).replace(/"/g,'')}" style="width:100%;max-height:280px;object-fit:cover;border-radius:12px;margin-top:10px;border:1px solid var(--border);">` : '';
-            const likes = Array.isArray(post.likes) ? post.likes : [];
-            const comments = Array.isArray(post.comments) ? post.comments : [];
-            const liked = likes.map(x => x.toLowerCase()).includes(me);
-            const time = post.time ? new Date(post.time).toLocaleString('bn-BD', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
-
-            const commentsHtml = comments.slice(-8).map((c, ci) => {
-                const realIdx = comments.length <= 8 ? ci : (comments.length - 8 + ci);
-                const canDel = ((c.email || '').toLowerCase() === me) || role === 'admin';
-                return `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
-                    <div><strong>${escapeHtmlLocal(c.name || 'User')}</strong>: ${escapeHtmlLocal(c.text)}</div>
-                    ${canDel ? `<button onclick="deleteComment('${post.id}',${realIdx})" style="background:none;border:none;color:var(--danger-tx);cursor:pointer;font-size:11px;flex-shrink:0;" title="Delete"><i class="fas fa-times"></i></button>` : ''}
-                </div>`;
-            }).join('');
-
-            return `
-            <div class="card" style="cursor:default;padding:16px;" id="post-${post.id}">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                    <div style="font-weight:700;font-size:14px;">${escapeHtmlLocal(post.authorName || 'User')}</div>
-                    ${typeBadge}
-                </div>
-                <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">${time}</div>
-                <div style="font-size:14px;line-height:1.55;white-space:pre-wrap;">${escapeHtmlLocal(post.text || '')}</div>
-                ${priceHtml}
-                ${photoHtml}
-                <div style="display:flex;gap:14px;margin-top:12px;align-items:center;flex-wrap:wrap;">
-                    <button onclick="toggleLike('${post.id}')" class="logout-btn" style="border:1px solid var(--border);font-size:12px;padding:6px 12px;${liked ? 'background:var(--primary);color:#000;border:none;' : ''}">
-                        <i class="fas fa-heart"></i> ${likes.length}
-                    </button>
-                    <span style="font-size:12px;color:var(--muted);"><i class="fas fa-comment"></i> ${comments.length}</span>
-                    <button onclick="openChat('${escapeHtmlLocal(post.authorEmail)}','${escapeHtmlLocal(post.authorName || 'User')}')" class="logout-btn" style="border:1px solid var(--border);font-size:12px;padding:6px 12px;margin-left:auto;">
-                        <i class="fas fa-comments"></i> Chat
-                    </button>
-                    ${(post.authorEmail || '').toLowerCase() === me || role === 'admin' ? `<button onclick="deletePost('${post.id}')" class="logout-btn" style="border:1px solid var(--danger-bd);color:var(--danger-tx);font-size:12px;padding:6px 12px;"><i class="fas fa-trash"></i> Delete</button>` : ''}
-                </div>
-                <div style="margin-top:10px;">
-                    ${commentsHtml}
-                    <div style="display:flex;gap:8px;margin-top:8px;">
-                        <input type="text" id="cmt-${post.id}" placeholder="কমেন্ট লিখুন..." style="flex:1;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;">
-                        <button onclick="addComment('${post.id}')" class="logout-btn" style="background:var(--primary);color:#000;border:none;font-size:12px;padding:6px 12px;">Send</button>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    } catch (e) {
-        feed.innerHTML = '<div style="color:var(--danger-tx);">ফিড লোড ব্যর্থ</div>';
-    }
-}
-
-
-async function deletePost(postId) {
-    if (!confirm('এই পোস্ট ডিলিট করবেন?')) return;
-    const me = ((user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '')).toLowerCase();
-    try {
-        if (!DB) DB = await fetchDB();
-        const post = (DB.posts || []).find(p => p.id === postId);
-        if (!post) return;
-        const author = (post.authorEmail || '').toLowerCase();
-        if (author !== me && role !== 'admin') {
-            alert('শুধু নিজের পোস্ট ডিলিট করতে পারবেন');
-            return;
-        }
-        DB.posts = DB.posts.filter(p => p.id !== postId);
-        await saveDB();
-        renderPostsFeed();
-    } catch (e) {
-        alert('ডিলিট ব্যর্থ');
-    }
-}
-
-async function deleteComment(postId, cmtIndex) {
-    if (!confirm('কমেন্ট ডিলিট করবেন?')) return;
-    const me = ((user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '')).toLowerCase();
-    try {
-        if (!DB) DB = await fetchDB();
-        const post = (DB.posts || []).find(p => p.id === postId);
-        if (!post || !Array.isArray(post.comments)) return;
-        const c = post.comments[cmtIndex];
-        if (!c) return;
-        if ((c.email || '').toLowerCase() !== me && role !== 'admin') {
-            alert('শুধু নিজের কমেন্ট ডিলিট করতে পারবেন');
-            return;
-        }
-        post.comments.splice(cmtIndex, 1);
-        await saveDB();
-        renderPostsFeed();
-    } catch (e) {
-        alert('ডিলিট ব্যর্থ');
-    }
-}
-
-
-async function toggleLike(postId) {
-    const me = ((user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '')).toLowerCase();
-    if (!me) return;
-    try {
-        if (!DB) DB = await fetchDB();
-        const post = (DB.posts || []).find(p => p.id === postId);
-        if (!post) return;
-        if (!Array.isArray(post.likes)) post.likes = [];
-        const i = post.likes.findIndex(x => (x || '').toLowerCase() === me);
-        if (i >= 0) post.likes.splice(i, 1);
-        else post.likes.push(me);
-        await saveDB();
-        renderPostsFeed();
-    } catch (e) { console.error(e); }
-}
-
-async function addComment(postId) {
-    const input = document.getElementById('cmt-' + postId);
-    const text = (input && input.value || '').trim();
-    if (!text) return;
-    const me = (user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '');
-    const myName = (user && user.name) || (role === 'admin' ? 'Admin' : 'User');
-    if (!me) return;
-    try {
-        if (!DB) DB = await fetchDB();
-        const post = (DB.posts || []).find(p => p.id === postId);
-        if (!post) return;
-        if (!Array.isArray(post.comments)) post.comments = [];
-        post.comments.push({ email: me, name: myName, text: text, time: new Date().toISOString() });
-        if (post.comments.length > 100) post.comments = post.comments.slice(-100);
-        await saveDB();
-        if (input) input.value = '';
-        renderPostsFeed();
-    } catch (e) { alert('কমেন্ট ব্যর্থ'); }
-}
-
-
-/* ===== CHAT (stored in JSONBin messages array) ===== */
-let chatPollTimer = null;
-
-function openChat(email, name) {
-    chatPartnerEmail = email;
-    chatPartnerName = name;
-    document.getElementById('chatPanel').style.display = 'block';
-    document.getElementById('chatWithName').textContent = name + ' • ' + email;
-    document.getElementById('chatPanel').scrollIntoView({ behavior: 'smooth' });
-    loadChatMessages();
-    // অন্যজনের মেসেজ দেখতে অটো রিফ্রেশ
-    if (chatPollTimer) clearInterval(chatPollTimer);
-    chatPollTimer = setInterval(function() {
-        if (chatPartnerEmail && document.getElementById('chatPanel').style.display !== 'none') {
-            loadChatMessages(true);
-        }
-    }, 3000);
-}
-
-function closeChat() {
-    document.getElementById('chatPanel').style.display = 'none';
-    chatPartnerEmail = null;
-    if (chatPollTimer) { clearInterval(chatPollTimer); chatPollTimer = null; }
-}
-
-async function loadChatMessages(silent) {
-    const box = document.getElementById('chatMessages');
-    if (!box || !chatPartnerEmail) return;
-    try {
-        // সবসময় ফ্রেশ ডেটা নাও যাতে অন্যজনের মেসেজ দেখা যায়
-        DB = await fetchDB();
-        if (!Array.isArray(DB.messages)) DB.messages = [];
-
-        const me = ((user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '')).toLowerCase();
-        const other = String(chatPartnerEmail || '').toLowerCase();
-        if (!me || !other) return;
-
-        const msgs = DB.messages.filter(m => {
-            const f = String(m.from || '').toLowerCase();
-            const t = String(m.to || '').toLowerCase();
-            return (f === me && t === other) || (f === other && t === me);
-        }).slice(-100);
-
-        if (!msgs.length) {
-            if (!silent) {
-                box.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px;">কোনো মেসেজ নেই। প্রথম মেসেজ পাঠান!</div>';
-            }
-            return;
-        }
-
-        const html = msgs.map(m => {
-            const mine = String(m.from || '').toLowerCase() === me;
-            const time = m.time ? new Date(m.time).toLocaleString('bn-BD', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' }) : '';
-            return `<div style="margin-bottom:10px;text-align:${mine ? 'right' : 'left'};">
-                <div style="display:inline-block;max-width:85%;padding:10px 14px;border-radius:14px;background:${mine ? 'var(--primary)' : 'var(--card)'};color:${mine ? '#000' : 'var(--text)'};border:1px solid var(--border);font-size:13.5px;line-height:1.45;word-break:break-word;text-align:left;">
-                    ${!mine ? '<div style="font-size:10px;opacity:0.7;margin-bottom:2px;">' + escapeHtmlLocal(chatPartnerName || 'User') + '</div>' : ''}
-                    ${escapeHtmlLocal(m.text)}
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-top:2px;">${time}</div>
-            </div>`;
-        }).join('');
-
-        const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
-        box.innerHTML = html;
-        if (!silent || nearBottom) box.scrollTop = box.scrollHeight;
-    } catch (e) {
-        if (!silent) box.innerHTML = '<div style="color:var(--danger-tx);">মেসেজ লোড ব্যর্থ</div>';
-    }
-}
-
-async function sendChat() {
-    const input = document.getElementById('chatInput');
-    const text = (input.value || '').trim();
-    if (!text || !chatPartnerEmail) return;
-
-    const me = (user && user.email) || (role === 'admin' ? 'admin@atuls.local' : '');
-    if (!me) return alert('লগইন প্রয়োজন');
-
-    try {
-        DB = await fetchDB();
-        if (!Array.isArray(DB.messages)) DB.messages = [];
-
-        DB.messages.push({
-            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
-            from: me,
-            to: chatPartnerEmail,
-            text: text,
-            time: new Date().toISOString()
-        });
-        if (DB.messages.length > 500) DB.messages = DB.messages.slice(-500);
-
-        await saveDB();
-        input.value = '';
-        await loadChatMessages();
-    } catch (e) {
-        alert('পাঠানো যায়নি: ' + e.message);
-    }
-}
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && document.activeElement && document.activeElement.id === 'chatInput') {
-        sendChat();
-    }
-});
-
-/* Restore tools when clicking Dashboard menu */
-document.querySelectorAll('.sidebar-menu .menu-item[href="dashboard.html"]').forEach(el => {
-    el.addEventListener('click', function() {
-        showToolsSection();
-    });
-});
-
-/* After sync, refresh community wall */
-const _origSync = typeof syncFromCloud === 'function' ? syncFromCloud : null;
-
-// আগে ৫ সেকেন্ড ছিল — রেস কমাতে ১২ সেকেন্ড
-setInterval(syncFromCloud, 12000);
-
-/* ========== LANGUAGE (EN default / BN) ========== */
-const I18N = {
-  en: {
-    'Dashboard': 'Dashboard',
-    'My Profile': 'My Profile',
-    'Community': 'Community',
-    'Members': 'Members',
-    'Admin Panel': 'Admin Panel',
-    'Logout': 'Logout',
-    'Your Premium Tools': 'Your Premium Tools',
-    'Admin Information': 'Admin Information',
-    'Save Profile': 'Save Profile',
-    'Chat': 'Chat',
-    'See More': 'See More',
-    'Duplicate Checker': 'Duplicate Checker',
-    'Data Formatter': 'Data Formatter',
-    'Report Generator': 'Report Generator',
-    'Email Validator': 'Email Validator',
-    'Email Vault': 'Email Vault',
-    'Gmail format fixer': 'Gmail format fixer',
-    'Names & Recovery': 'Names & Recovery',
-    'Password Generator': 'Password Generator',
-    'IP TimeZone Finder': 'IP TimeZone Finder',
-    'Tools': 'Tools',
-    'Other Tools': 'Other Tools'
-  },
-  bn: {
-    'Dashboard': 'ড্যাশবোর্ড',
-    'My Profile': 'আমার প্রোফাইল',
-    'Community': 'কমিউনিটি',
-    'Members': 'সদস্যরা',
-    'Admin Panel': 'অ্যাডমিন প্যানেল',
-    'Logout': 'লগআউট',
-    'Your Premium Tools': 'আপনার প্রিমিয়াম টুলস',
-    'Admin Information': 'অ্যাডমিন তথ্য',
-    'Save Profile': 'প্রোফাইল সেভ',
-    'Chat': 'চ্যাট',
-    'See More': 'আরও দেখুন',
-    'Duplicate Checker': 'ডুপ্লিকেট চেকার',
-    'Data Formatter': 'ডেটা ফরম্যাটার',
-    'Report Generator': 'রিপোর্ট জেনারেটর',
-    'Email Validator': 'ইমেইল ভ্যালিডেটর',
-    'Email Vault': 'ইমেইল ভল্ট',
-    'Gmail format fixer': 'জিমেইল ফরম্যাট ফিক্সার',
-    'Names & Recovery': 'নেমস অ্যান্ড রিকভারি',
-    'Password Generator': 'পাসওয়ার্ড জেনারেটর',
-    'IP TimeZone Finder': 'আইপি টাইমজোন ফাইন্ডার',
-    'Tools': 'টুলস',
-    'Other Tools': 'অন্যান্য টুলস'
-  }
-};
-let uiLang = localStorage.getItem('a_tuls_lang') || 'en';
-
-function applyLang() {
-  const dict = I18N[uiLang] || I18N.en;
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (dict[key]) el.textContent = dict[key];
-  });
-  // tool names in sidebar + cards (data-tool)
-  document.querySelectorAll('[data-tool]').forEach(el => {
-    const key = el.getAttribute('data-tool');
-    if (!dict[key]) return;
-    // keep icon, replace text nodes / last span / card h3
-    const h3 = el.querySelector('h3');
-    if (h3) { h3.textContent = dict[key]; return; }
-    const spans = el.querySelectorAll('span');
-    let done = false;
-    spans.forEach(s => {
-      if (s.hasAttribute('data-i18n')) return;
-      if (!s.querySelector('i') && s.childNodes.length && !done) {
-        // skip badge spans
-        if (s.className && s.className.indexOf('badge') >= 0) return;
+if(sess){
+  const un=sess.username||'User';
+  document.querySelectorAll('.drawer-head .fw-bold, .ubar .fw-bold').forEach(el=>{
+    if(el.textContent.includes('Torikul')||el.textContent.includes('Welcome')){
+      if(el.classList.contains('fs-5')&&el.closest('.ubar')){
+        const pkg=sess.package||'Free';
+        const isPaid=pkg!=='Free';
+        el.innerHTML='Welcome, '+un+' <span class="badge '+(isPaid?'bg-success':'bg-light text-primary')+' rounded-pill" style="font-size:.7rem">'+(sess.role==='admin'?'Admin':pkg)+'</span>';
       }
-    });
-    // sidebar menu-item: text after icon
-    if (el.classList.contains('menu-item')) {
-      el.childNodes.forEach(n => {
-        if (n.nodeType === 3 && n.textContent.trim()) {
-          n.textContent = ' ' + dict[key];
-        }
-      });
-      const textSpan = el.querySelector('span:not([data-i18n])');
-      if (textSpan && !textSpan.querySelector('i')) textSpan.textContent = dict[key];
+      else if(el.closest('.drawer-head')) el.textContent=un;
     }
   });
-  const lab = document.getElementById('langToggleLabel');
-  if (lab) lab.textContent = uiLang === 'en' ? 'EN' : 'বাং';
-  document.documentElement.lang = uiLang === 'bn' ? 'bn' : 'en';
+  const roleEl=document.querySelector('.drawer-head .role');
+  if(roleEl) roleEl.textContent=(sess.role==='admin'?'Admin':'User')+' • '+(sess.package||'Free');
+  const pkgLine=document.getElementById('pkgLine');
+  if(pkgLine) pkgLine.textContent='Package: '+(sess.package||'Free')+(sess.role==='admin'?' • Full Access':'');
+  const av=document.getElementById('dav');
+  if(av && !av.querySelector('img')) av.textContent=un.charAt(0).toUpperCase();
+  const pc=document.getElementById('pc');
+  if(pc && !pc.querySelector('img')) pc.textContent=un.charAt(0).toUpperCase();
+}
+const sp=localStorage.getItem('a_tuls_profile_pic');
+if(sp){document.getElementById('pc').innerHTML='<img src="'+sp+'">';document.getElementById('dav').innerHTML='<img src="'+sp+'">';}
+function chgPhoto(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{localStorage.setItem('a_tuls_profile_pic',ev.target.result);document.getElementById('pc').innerHTML='<img src="'+ev.target.result+'">';document.getElementById('dav').innerHTML='<img src="'+ev.target.result+'">';alert('Photo updated!');};r.readAsDataURL(f)}
+function postS(){
+  const t=document.getElementById('st').value.trim();
+  if(!t)return alert('Write something');
+  const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+  stories.unshift({text:t,name:s.username||'User',package:s.package||'Free',time:new Date().toLocaleString(),created:new Date().toISOString()});
+  localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,50)));
+  alert('Story posted! Everyone can see it.');
+  bootstrap.Modal.getInstance(document.getElementById('sm')).hide();
+  document.getElementById('st').value='';
+  renderStories();
+}
+function _esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
+function renderStories(){
+  const row=document.querySelector('.story-wrap .srow');
+  if(!row)return;
+  const stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+  let html='<div class="sadd" data-bs-toggle="modal" data-bs-target="#sm"><i class="fas fa-plus"></i></div>';
+  if(!stories.length){
+    html+='<div class="story-card"><div class="sc-head"><div class="sc-av">A</div><div><div class="sc-name">Admin</div><div class="sc-status">● Status: Paid</div><div class="sc-date">Welcome</div></div></div><div class="sc-text">Welcome to A-Tuls! Post your first story.</div></div>';
+  } else {
+    stories.slice(0,15).forEach(st=>{
+      const initial=(st.name||'U').charAt(0).toUpperCase();
+      const isPaid=(st.package&&st.package!=='Free');
+      const date=st.created?new Date(st.created).toLocaleDateString('en-GB'):(st.time||'');
+      html+='<div class="story-card"><div class="sc-head"><div class="sc-av">'+initial+'</div><div><div class="sc-name">'+_esc(st.name||'User')+'</div><div class="sc-status">'+(isPaid?'● Status: Paid':'○ Status: Free')+'</div><div class="sc-date">'+_esc(String(date))+'</div></div></div><div class="sc-text">'+_esc(st.text||'')+'</div></div>';
+    });
+  }
+  row.innerHTML=html;
+}
+try{renderStories()}catch(e){}
+
+const K='a_tuls_email_vault';
+function ls(){try{return JSON.parse(localStorage.getItem(K))||{};}catch(e){return{}}}
+function ss(s){localStorage.setItem(K,JSON.stringify(s))}
+let store=ls(),cid=null;
+function uln(ta,ln){if(!ta||!ln)return;const n=ta.value.split('\n').length||1;ln.innerHTML=Array.from({length:n},(_,i)=>i+1).join('<br>')}
+['ed','ad','vd'].forEach((id,i)=>{const ln=['mln','aln','vln'][i];const ta=document.getElementById(id);if(ta){ta.addEventListener('input',()=>uln(ta,document.getElementById(ln)));ta.addEventListener('scroll',()=>document.getElementById(ln).scrollTop=ta.scrollTop)}});
+async function pMain(){try{document.getElementById('ed').value=await navigator.clipboard.readText();uln(document.getElementById('ed'),document.getElementById('mln'))}catch(e){alert('Paste manually')}}
+function cMain(){document.getElementById('ed').value='';uln(document.getElementById('ed'),document.getElementById('mln'))}
+function now(){return new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}
+function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
+
+
+function saveProfile(){
+  const sess=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const data={
+    name:document.getElementById('epName')?.value||'',
+    gmail:document.getElementById('epGmail')?.value||'',
+    whatsapp:document.getElementById('epWa')?.value||'',
+    telegram:document.getElementById('epTg')?.value||'',
+    fb:document.getElementById('epFb')?.value||''
+  };
+  localStorage.setItem('a_tuls_profile',JSON.stringify(data));
+  // also update user in users list
+  let users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+  const i=users.findIndex(u=>u.id===sess.id || u.username===sess.username);
+  if(i>=0){
+    users[i].whatsapp=data.whatsapp;
+    users[i].fb=data.fb;
+    users[i].gmail=data.gmail;
+    users[i].telegram=data.telegram;
+    if(data.name) users[i].username=data.name;
+    localStorage.setItem('a_tuls_users',JSON.stringify(users));
+  }
+  alert('Profile saved!');
+}
+function loadProfileFields(){
+  const data=JSON.parse(localStorage.getItem('a_tuls_profile')||'{}');
+  const sess=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  if(document.getElementById('epName')){
+    document.getElementById('epName').value=data.name||sess.username||'';
+    document.getElementById('epGmail').value=data.gmail||sess.email||'';
+    document.getElementById('epWa').value=data.whatsapp||'';
+    document.getElementById('epTg').value=data.telegram||'';
+    document.getElementById('epFb').value=data.fb||'';
+  }
+  if(document.getElementById('pvName')){
+    document.getElementById('pvName').textContent=data.name||sess.username||'User';
+    document.getElementById('pvGmail').textContent=data.gmail||sess.email||'-';
+    document.getElementById('pvWa').textContent=data.whatsapp||'-';
+    document.getElementById('pvTg').textContent=data.telegram||'-';
+    document.getElementById('pvFb').innerHTML=data.fb?('<a href="'+data.fb+'" target="_blank">'+data.fb+'</a>'):'-';
+    document.getElementById('pvPkg').textContent=sess.package||'Free';
+    document.getElementById('pvPack').textContent=sess.package||'Free';
+    const av=document.getElementById('pvAv');
+    if(av) av.textContent=(data.name||sess.username||'U').charAt(0).toUpperCase();
+  }
 }
 
-function toggleLang() {
-  uiLang = uiLang === 'en' ? 'bn' : 'en';
-  localStorage.setItem('a_tuls_lang', uiLang);
-  applyLang();
+function renderSellers(){
+  const users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+  const box=document.getElementById('sellersList');
+  if(!box)return;
+  if(!users.length){
+    box.innerHTML='<div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p><p class="small mb-0">Users appear here after they register on your site.</p></div>';
+    return;
+  }
+  // Admin first if exists in session as admin concept - show registered users only
+  box.innerHTML=users.map(u=>{
+    const initial=(u.username||'U').charAt(0).toUpperCase();
+    const pkg=u.package||'Free';
+    const badge=pkg==='Free'?'bg-secondary':'bg-success';
+    return '<div class="card mb-3 p-3"><div class="d-flex align-items-center gap-3 mb-2"><div class="la" style="width:48px;height:48px">'+initial+'</div><div><div class="fw-bold">'+esc(u.username)+' <span class="badge '+badge+'" style="font-size:.65rem">'+esc(pkg)+'</span></div><small class="text-muted">Joined: '+(u.created?new Date(u.created).toLocaleDateString():'-')+'</small></div></div><div class="small mb-1"><i class="fas fa-envelope text-secondary me-2"></i>'+esc(u.email||'')+'</div>'+(u.whatsapp?'<div class="small mb-1"><i class="fab fa-whatsapp text-success me-2"></i><a href="https://wa.me/'+esc(u.whatsapp)+'" target="_blank">'+esc(u.whatsapp)+'</a></div>':'')+(u.fb?'<div class="small"><i class="fab fa-facebook text-primary me-2"></i><a href="'+esc(u.fb)+'" target="_blank">Facebook</a></div>':'')+'</div>';
+  }).join('');
 }
 
-document.addEventListener('DOMContentLoaded', applyLang);
-setTimeout(applyLang, 300);
-
+function render(){const list=document.getElementById('bl');const ids=Object.keys(store).sort((a,b)=>b-a);document.getElementById('vc').textContent=ids.length;if(!ids.length){list.innerHTML='<div class="card text-center text-muted py-5"><i class="far fa-folder-open fa-3x mb-3 opacity-50"></i><p class="mb-0">No files yet</p></div>';return}
+list.innerHTML=ids.map(id=>{const it=store[id];const lines=it.data.split('\n').filter(l=>l.trim());const prev=lines.slice(0,3).join('\n')+(lines.length>3?'\n...':'');return '<div class="bcard"><div class="d-flex justify-content-between align-items-start mb-2"><div class="d-flex align-items-center gap-2"><div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width:42px;height:42px"><i class="far fa-folder-open" style="color:var(--p)"></i></div><div><h6 class="mb-0 fw-bold">'+esc(it.title)+'</h6><small class="text-muted">Updated: '+(it.updated||it.created)+'</small></div></div><div class="dropdown"><button class="btn btn-light btn-sm" data-bs-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item text-success" href="#" onclick="oApp(\''+id+'\');return false"><i class="fas fa-plus me-2"></i>Add New</a></li><li><a class="dropdown-item text-primary" href="#" onclick="oView(\''+id+'\');return false"><i class="fas fa-eye me-2"></i>View / Edit</a></li><li><hr class="dropdown-divider"><li><a class="dropdown-item text-danger" href="#" onclick="oDel(\''+id+'\');return false"><i class="fas fa-trash me-2"></i>Delete</a></li></ul></div></div><span class="badge rounded-pill text-white mb-2" style="background:var(--p)">'+lines.length+' Emails</span><div class="bprev">'+esc(prev)+'</div></div>'}).join('')}
+document.getElementById('cf').onsubmit=e=>{e.preventDefault();const title=document.getElementById('bt').value.trim();const data=document.getElementById('ed').value.trim();if(!title||!data)return alert('Fill all');const id=Date.now().toString();store[id]={title,data,created:now(),updated:now()};ss(store);render();document.getElementById('bt').value='';cMain();alert('File created!')};
+function oApp(id){cid=id;document.getElementById('ad').value='';new bootstrap.Modal(document.getElementById('am')).show()}
+function sApp(){const extra=document.getElementById('ad').value.trim();if(!extra)return alert('Nothing');store[cid].data+='\n'+extra;store[cid].updated=now();ss(store);render();bootstrap.Modal.getInstance(document.getElementById('am')).hide();alert('Added!')}
+function oView(id){cid=id;const it=store[id];document.getElementById('vt').value=it.title;document.getElementById('vd').value=it.data;uln(document.getElementById('vd'),document.getElementById('vln'));new bootstrap.Modal(document.getElementById('vm')).show()}
+function sView(){store[cid].title=document.getElementById('vt').value.trim()||store[cid].title;store[cid].data=document.getElementById('vd').value;store[cid].updated=now();ss(store);render();bootstrap.Modal.getInstance(document.getElementById('vm')).hide();alert('Saved!')}
+function oDel(id){cid=id;new bootstrap.Modal(document.getElementById('dm')).show()}
+function cDel(){
+  const conf=prompt('ডিলিট নিশ্চিত করতে লিখুন: DELETE');
+  if(conf!=='DELETE'){ alert('ডিলিট বাতিল। সঠিকভাবে DELETE লিখুন।'); return; }
+  delete store[cid];ss(store);render();
+  bootstrap.Modal.getInstance(document.getElementById('dm')).hide();
+  alert('Deleted!');
+}
+render();
 </script>
-
-<!-- Language toggle (corner) -->
-<button id="langToggleBtn" onclick="toggleLang()" title="Language" style="position:fixed;right:14px;bottom:14px;z-index:9999;padding:10px 14px;border-radius:50px;border:1px solid var(--border);background:var(--card);color:var(--text);font-weight:700;font-size:12px;cursor:pointer;box-shadow:var(--shadow);backdrop-filter:blur(10px);">
-  🌐 <span id="langToggleLabel">EN</span>
-</button>
-
 </body>
 </html>

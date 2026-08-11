@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-tuls Logo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:100%;min-height:100vh;background:#02040a;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif}
+.logo{width:330px;height:330px;border-radius:50%;position:relative;display:flex;justify-content:center;align-items:center;background:radial-gradient(circle,#10294b 0%,#06101f 45%,#010308 100%);border:5px solid #ffc62b;box-shadow:0 0 15px #00aaff,0 0 35px #008cff,0 0 80px rgba(0,140,255,.5)}
+.logo:before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:3px solid #00b7ff;box-shadow:0 0 20px #009dff}
+.crown{position:absolute;top:18px;font-size:55px;color:#ffd329;text-shadow:0 0 10px #ff9d00,0 0 25px #ffb300}
+.letter{position:absolute;top:65px;font-family:Georgia,serif;font-size:185px;font-weight:bold;font-style:italic;color:white;text-shadow:4px 4px 0 #006cff,-3px -3px 0 #00c8ff,0 0 25px #00aaff}
+.orbit{position:absolute;width:275px;height:75px;border:7px solid #00baff;border-right-color:#ffc62b;border-radius:50%;transform:rotate(-15deg);box-shadow:0 0 15px #00aaff}
+.name{position:absolute;top:185px;font-family:Georgia,serif;font-size:62px;font-weight:bold;font-style:italic;color:#ffc62b;text-shadow:2px 3px 0 #714600,0 0 15px #ffb300}
+.tag{position:absolute;bottom:28px;width:235px;padding:9px;text-align:center;color:white;font-size:11px;font-weight:bold;letter-spacing:2px;background:#030914;border:2px solid #ffc62b;border-radius:25px;box-shadow:0 0 15px #008cff}
+.wing{position:absolute;top:105px;color:#00baff;font-size:45px;text-shadow:0 0 10px #008cff,0 0 20px #00baff}
+.left{left:-5px}.right{right:-5px;transform:scaleX(-1)}
+@media(max-width:400px){.logo{width:290px;height:290px}.logo:before{width:262px;height:262px}.letter{font-size:160px;top:60px}.name{font-size:54px;top:165px}.orbit{width:245px}}
+</style>
+</head>
+<body>
+<div class="logo">
+  <div class="crown">♛</div>
+  <div class="wing left">❮</div>
+  <div class="wing right">❮</div>
+  <div class="letter">A</div>
+  <div class="orbit"></div>
+  <div class="name">-tuls</div>
+  <div class="tag">⚡ TOOLS • FAST • TRUSTED ⚡</div>
+</div>
+</body>
+</html>

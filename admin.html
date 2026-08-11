@@ -1,1746 +1,364 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel | A-tuls - √MASTER</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Admin Panel | A-Tuls</title>
+<meta name="theme-color" content="#0f766e">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-    --bg: #060a12;
-    --card: rgba(255,255,255,0.04);
-    --cyan: #00f0ff;
-    --purple: #7b2fff;
-    --green: #00ff9d;
-    --red: #ff3b5c;
-    --gold: #ffc800;
-    --text: #e8f7ff;
-    --muted: #8b9cb3;
-}
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
-body {
-    background: radial-gradient(ellipse at 20% 0%, #12182b 0%, var(--bg) 60%);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 20px 16px 50px;
-}
-.container { max-width: 780px; margin: 0 auto; }
-
-.header {
-    text-align: center;
-    margin-bottom: 28px;
-    position: relative;
-}
-.header h1 {
-    font-size: 1.6rem;
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--cyan), var(--purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 1px;
-}
-.header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
-
-.logout-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: rgba(255,59,92,0.15);
-    color: var(--red);
-    border: 1px solid rgba(255,59,92,0.3);
-    padding: 8px 14px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.welcome {
-    background: linear-gradient(135deg, rgba(0,240,255,0.12), rgba(123,47,255,0.12));
-    border: 1px solid rgba(0,240,255,0.25);
-    border-radius: 18px;
-    padding: 18px;
-    text-align: center;
-    margin-bottom: 24px;
-}
-.welcome h2 { font-size: 1.15rem; margin-bottom: 4px; }
-.welcome p { color: var(--muted); font-size: 13.5px; }
-
-.stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 18px;
-}
-.stat-box {
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 14px 10px;
-    text-align: center;
-}
-.stat-box .num {
-    font-size: 1.3rem;
-    font-weight: 800;
-    color: var(--cyan);
-}
-.stat-box .label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 2px;
-}
-
-.card {
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 22px;
-    padding: 22px;
-    margin-bottom: 18px;
-    backdrop-filter: blur(16px);
-}
-.card-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--cyan);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-.btn-sm {
-    padding: 13px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 13.5px;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    transition: 0.2s;
-}
-.btn-green { background: var(--green); color: #000; }
-.btn-red { background: var(--red); color: white; }
-.btn-cyan { background: var(--cyan); color: #000; }
-.btn-gold { background: var(--gold); color: #000; }
-.btn-outline {
-    background: transparent;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-}
-.btn-outline-gold {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-}
-.btn-sm:active { transform: scale(0.96); }
-
-select, input[type="text"], input[type="search"] {
-    width: 100%;
-    padding: 13px 14px;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 12px;
-    color: white;
-    outline: none;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-.admin-info {
-    background: rgba(0,0,0,0.25);
-    border-radius: 16px;
-    padding: 16px;
-    font-size: 14px;
-    line-height: 1.7;
-}
-.admin-info a { color: var(--cyan); text-decoration: none; }
-
-.user-card {
-    background: rgba(0,0,0,0.25);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 14px;
-    border-left: 3px solid var(--cyan);
-}
-.user-card.blocked { border-left-color: var(--red); opacity: 0.85; }
-.user-card.pending { border-left-color: var(--gold); }
-
-.user-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px;
-}
-.user-name { font-weight: 700; font-size: 15px; }
-.user-email { font-size: 12px; color: var(--muted); }
-.user-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-.badge {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-}
-.badge-active { background: rgba(0,255,157,0.15); color: var(--green); }
-.badge-blocked { background: rgba(255,59,92,0.15); color: var(--red); }
-.badge-pending { background: rgba(255,200,0,0.15); color: #ffc800; }
-.badge-free { background: rgba(0,240,255,0.12); color: var(--cyan); }
-.badge-premium { background: rgba(255,200,0,0.15); color: var(--gold); }
-
-.mode-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-.mode-btn {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 12.5px;
-    font-weight: 700;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(0,0,0,0.3);
-    color: var(--muted);
-    cursor: pointer;
-    text-align: center;
-}
-.mode-btn.active-free {
-    background: rgba(0,240,255,0.15);
-    border-color: var(--cyan);
-    color: var(--cyan);
-}
-.mode-btn.active-premium {
-    background: rgba(255,200,0,0.15);
-    border-color: var(--gold);
-    color: var(--gold);
-}
-
-.tools-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-.tool-item {
-    background: rgba(255,255,255,0.04);
-    padding: 8px 10px;
-    border-radius: 10px;
-    font-size: 12.5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.tool-item.disabled {
-    opacity: 0.4;
-    pointer-events: none;
-}
-.toggle {
-    width: 36px; height: 20px;
-    appearance: none;
-    background: #333;
-    border-radius: 20px;
-    position: relative;
-    cursor: pointer;
-    transition: 0.25s;
-}
-.toggle:checked { background: var(--green); }
-.toggle::before {
-    content: '';
-    width: 16px; height: 16px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 2px; left: 2px;
-    transition: 0.25s;
-}
-.toggle:checked::before { left: 18px; }
-
-.free-hint {
-    font-size: 11.5px;
-    color: var(--gold);
-    background: rgba(255,200,0,0.08);
-    padding: 8px 12px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.search-bar {
-    margin-bottom: 14px;
-}
-
-.color-options {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-bottom: 12px;
-}
-.color-btn {
-    height: 42px;
-    border-radius: 12px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-}
-.color-btn.active {
-    border-color: #fff;
-    box-shadow: 0 0 0 2px var(--cyan);
-}
-.color-btn:active { transform: scale(0.96); }
-
-.footer {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.empty-msg {
-    text-align: center;
-    color: var(--muted);
-    padding: 24px 10px;
-    font-size: 14px;
-}
-
-/* ========== NEW: Ultra Tracking Styles ========== */
-.track-section {
-    background: rgba(0,0,0,0.35);
-    border-radius: 12px;
-    padding: 12px;
-    margin: 12px 0;
-    border: 1px solid rgba(0,240,255,0.12);
-}
-.track-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--cyan);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.track-item {
-    background: rgba(255,255,255,0.03);
-    border-radius: 8px;
-    padding: 8px 10px;
-    margin-bottom: 6px;
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-}
-.track-item.blocked-device {
-    opacity: 0.55;
-    border-left: 2px solid var(--red);
-}
-.track-meta {
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.4;
-}
-.track-actions {
-    display: flex;
-    gap: 6px;
-    flex-shrink: 0;
-}
-.btn-xs {
-    padding: 5px 9px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-}
-.btn-xs-red {
-    background: rgba(255,59,92,0.2);
-    color: var(--red);
-    border: 1px solid rgba(255,59,92,0.35);
-}
-.btn-xs-green {
-    background: rgba(0,255,157,0.15);
-    color: var(--green);
-    border: 1px solid rgba(0,255,157,0.3);
-}
-.usage-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
-}
-.usage-chip {
-    background: rgba(0,240,255,0.1);
-    border: 1px solid rgba(0,240,255,0.2);
-    color: var(--cyan);
-    font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 20px;
-    font-weight: 600;
-}
-.login-log {
-    font-size: 11.5px;
-    color: var(--muted);
-    max-height: 110px;
-    overflow-y: auto;
-    padding-right: 4px;
-}
-.login-log div {
-    padding: 4px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.details-toggle {
-    width: 100%;
-    margin-top: 10px;
-    padding: 9px;
-    border-radius: 10px;
-    background: rgba(0,240,255,0.08);
-    border: 1px solid rgba(0,240,255,0.2);
-    color: var(--cyan);
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-}
-.details-box {
-    display: none;
-    margin-top: 10px;
-}
-.details-box.open { display: block; }
-.full-details {
-    font-size: 12px;
-    line-height: 1.65;
-    color: var(--muted);
-    background: rgba(0,0,0,0.3);
-    border-radius: 10px;
-    padding: 12px;
-}
-.full-details strong { color: var(--text); }
-@media (max-width: 520px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* User category tabs */
-.user-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 14px;
-}
-.user-tab {
-    padding: 12px 8px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(0,0,0,0.3);
-    color: var(--muted);
-    font-weight: 700;
-    font-size: 12.5px;
-    cursor: pointer;
-    text-align: center;
-    transition: 0.2s;
-}
-.user-tab:hover { border-color: var(--cyan); color: var(--text); }
-.user-tab.active {
-    background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(123,47,255,0.15));
-    border-color: var(--cyan);
-    color: var(--cyan);
-}
-.user-tab .tab-count {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 800;
-    margin-top: 2px;
-    color: var(--text);
-}
-.user-tab.active .tab-count { color: var(--cyan); }
-.user-tab[data-filter="premium"].active { border-color: var(--gold); color: var(--gold); }
-.user-tab[data-filter="premium"].active .tab-count { color: var(--gold); }
-.user-tab[data-filter="pending"].active { border-color: var(--gold); color: #ffc800; }
-.user-tab[data-filter="blocked"].active { border-color: var(--red); color: var(--red); }
-.user-tab[data-filter="blocked"].active .tab-count { color: var(--red); }
-@media (max-width: 520px) {
-    .user-tabs { grid-template-columns: repeat(2, 1fr); }
+:root{--p:#0f766e;--p2:#14b8a6;--dark:#0f172a;--muted:#64748b;--side:#0f172a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dark);min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;width:260px;height:100%;background:var(--side);color:#fff;z-index:100;overflow-y:auto;transition:.3s}
+.sidebar .brand{padding:20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.brand-logo{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle,#10294b,#010308);border:2px solid #ffc62b;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:bold;font-style:italic;font-size:1.3rem;color:#fff;text-shadow:1px 1px 0 #006cff;flex-shrink:0}
+.brand-text{font-weight:800;font-size:1.15rem;background:linear-gradient(135deg,#14b8a6,#ffc62b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.side-menu{list-style:none;padding:12px 0}
+.side-menu a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:rgba(255,255,255,.7);text-decoration:none;font-size:.9rem;cursor:pointer;border-left:3px solid transparent}
+.side-menu a:hover,.side-menu a.active{background:rgba(20,184,166,.12);color:#fff;border-left-color:var(--p2)}
+.side-menu a i{width:20px;text-align:center}
+.main{margin-left:260px;min-height:100vh}
+.topbar{background:#fff;padding:14px 24px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.content{padding:24px}
+.stat{background:#fff;border-radius:16px;padding:20px;border:1px solid #e2e8f0;height:100%}
+.stat .num{font-size:1.75rem;font-weight:800;color:var(--p)}
+.stat .lbl{font-size:.8rem;color:var(--muted);font-weight:600}
+.card-box{background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:20px;margin-bottom:20px}
+.table{font-size:.88rem}
+.table th{font-weight:700;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.4px}
+.badge-p{background:rgba(15,118,110,.12);color:var(--p);font-weight:600}
+.badge-free{background:#f1f5f9;color:#64748b}
+.btn-p{background:linear-gradient(135deg,#0f766e,#14b8a6);border:none;color:#fff;font-weight:600;border-radius:10px}
+.btn-p:hover{filter:brightness(1.05);color:#fff}
+.api-key{font-family:monospace;background:#f8fafc;padding:8px 12px;border-radius:8px;border:1px solid #e2e8f0;word-break:break-all}
+@media(max-width:768px){
+  .sidebar{left:-260px}.sidebar.open{left:0}
+  .main{margin-left:0}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
+  .overlay.show{display:block}
 }
 </style>
 </head>
 <body>
-<script>
-/* STRICT AUTH — Admin page শুধু admin role + valid session */
-(function(){
-  try {
-    var r = localStorage.getItem('a_tuls_role');
-    var u = localStorage.getItem('a_tuls_user');
-    if (r !== 'admin' || !u) {
-      localStorage.removeItem('a_tuls_role');
-      localStorage.removeItem('a_tuls_user');
-      location.replace('index.html');
-      return;
-    }
-    var last = parseInt(localStorage.getItem('a_tuls_last_activity') || localStorage.getItem('a_tuls_last_active') || '0', 10);
-    if (last && (Date.now() - last > 10 * 60 * 1000)) {
-      localStorage.removeItem('a_tuls_role');
-      localStorage.removeItem('a_tuls_user');
-      location.replace('index.html');
-      return;
-    }
-    try { localStorage.setItem('a_tuls_last_activity', String(Date.now())); } catch(e) {}
-  } catch (e) {
-    location.replace('index.html');
-  }
-})();
-</script>
 
-<div class="container">
-    <div class="header">
-        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        <h1>A-TOOLS √MASTER</h1>
-        <p>Admin Master Control Panel • Ultra Tracking</p>
+<div class="overlay" id="ov" onclick="closeSide()"></div>
+
+<aside class="sidebar" id="side">
+  <div class="brand">
+    <div class="brand-logo">A</div>
+    <div>
+      <div class="brand-text">A-Tuls</div>
+      <div style="font-size:.7rem;opacity:.6">Admin Panel</div>
+    </div>
+  </div>
+  <ul class="side-menu">
+    <li><a class="active" data-tab="dash" onclick="tab('dash')"><i class="fas fa-th-large"></i> Dashboard</a></li>
+    <li><a data-tab="users" onclick="tab('users')"><i class="fas fa-users"></i> All Users</a></li>
+    <li><a data-tab="membership" onclick="tab('membership')"><i class="fas fa-crown"></i> Membership</a></li>
+    <li><a data-tab="api" onclick="tab('api')"><i class="fas fa-key"></i> API Keys</a></li>
+    <li><a data-tab="packages" onclick="tab('packages')"><i class="fas fa-box"></i> Packages</a></li>
+    <li><a data-tab="settings" onclick="tab('settings')"><i class="fas fa-cog"></i> Settings</a></li>
+    <li style="margin-top:20px;border-top:1px solid rgba(255,255,255,.08);padding-top:8px">
+      <a href="dashboard.html"><i class="fas fa-arrow-left"></i> User Dashboard</a>
+    </li>
+    <li><a href="index.html"><i class="fas fa-home"></i> Home Site</a></li>
+    <li><a onclick="logout()" style="color:#f87171"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-sm d-md-none" onclick="openSide()"><i class="fas fa-bars"></i></button>
+      <strong id="pageTitle">Dashboard</strong>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-success">Admin</span>
+      <span class="small text-muted" id="adminName">Admin</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="tab-dash">
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3"><div class="stat"><div class="num" id="sUsers">0</div><div class="lbl">Total Users</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num text-success" id="sPaid">0</div><div class="lbl">Paid Members</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num text-warning" id="sFree">0</div><div class="lbl">Free Users</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num text-primary" id="sApi">0</div><div class="lbl">API Keys</div></div></div>
+      </div>
+      <div class="card-box">
+        <h6 class="fw-bold mb-3"><i class="fas fa-info-circle me-2 text-success"></i>Admin Controls</h6>
+        <ul class="mb-0 text-muted small">
+          <li class="mb-2"><strong>All Users</strong> — দেখুন কে কে রেজিস্ট্রেশন করেছে, প্যাকেজ চেঞ্জ/ডিলিট করুন</li>
+          <li class="mb-2"><strong>Membership</strong> — ইউজারের প্যাকেজ Approve / Upgrade করুন</li>
+          <li class="mb-2"><strong>API Keys</strong> — ইউজারের জন্য API Key জেনারেট করুন</li>
+          <li class="mb-2"><strong>Packages</strong> — প্যাকেজ দাম দেখুন (৳150 / ৳450 / ৳900 / ৳1800)</li>
+          <li>নতুন ইউজার Signup করলেই <strong>All Users</strong>-এ দেখা যাবে</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="welcome">
-        <h2>স্বাগতম অ্যাডমিন 👑</h2>
-        <p>আপনি সফলভাবে লগইন করেছেন • Full Control + Device Tracking Active</p>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats-row">
-        <div class="stat-box">
-            <div class="num" id="totalUsers">0</div>
-            <div class="label">মোট ইউজার</div>
+    <!-- USERS -->
+    <div id="tab-users" style="display:none">
+      <div class="card-box">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold mb-0">All Registered Users</h6>
+          <button class="btn btn-sm btn-p" onclick="loadUsers()"><i class="fas fa-sync"></i></button>
         </div>
-        <div class="stat-box">
-            <div class="num" id="activeUsers">0</div>
-            <div class="label">অ্যাপ্রুভড</div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead><tr><th>#</th><th>User</th><th>Contact</th><th>Package</th><th>Joined</th><th>Action</th></tr></thead>
+            <tbody id="usersBody"><tr><td colspan="6" class="text-center text-muted py-4">No users yet</td></tr></tbody>
+          </table>
         </div>
-        <div class="stat-box">
-            <div class="num" id="pendingUsers">0</div>
-            <div class="label">পেন্ডিং</div>
+      </div>
+    </div>
+
+    <!-- MEMBERSHIP -->
+    <div id="tab-membership" style="display:none">
+      <div class="card-box">
+        <h6 class="fw-bold mb-3">Upgrade / Change Package</h6>
+        <div class="row g-2 mb-3">
+          <div class="col-md-5">
+            <select class="form-select" id="upUser"><option value="">Select user...</option></select>
+          </div>
+          <div class="col-md-4">
+            <select class="form-select" id="upPkg">
+              <option value="Free">Free</option>
+              <option value="Basic">Basic (৳150 - 1M)</option>
+              <option value="Standard">Standard (৳450 - 3M)</option>
+              <option value="Popular">Popular (৳900 - 6M)</option>
+              <option value="Premium">Premium (৳1800 - 12M)</option>
+              <option value="Lifetime">Lifetime</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-p w-100" onclick="upgradePkg()">Update Package</button>
+          </div>
         </div>
-        <div class="stat-box">
-            <div class="num" id="totalDevices">0</div>
-            <div class="label">মোট ডিভাইস</div>
+        <p class="small text-muted mb-0">Payment confirm হলে এখান থেকে ইউজারের প্যাকেজ অ্যাকটিভ করুন।</p>
+      </div>
+    </div>
+
+    <!-- API -->
+    <div id="tab-api" style="display:none">
+      <div class="card-box">
+        <h6 class="fw-bold mb-3">Generate API Key</h6>
+        <div class="row g-2 mb-3">
+          <div class="col-md-4">
+            <select class="form-select" id="apiUser"><option value="">Invite Code (Signup-এর জন্য) / Select user</option></select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="apiType">
+              <option value="free">Free API (শুধু দেখা)</option>
+              <option value="paid">Paid API (পুরো ব্যবহার)</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="apiDays">
+              <option value="30">30 Days</option>
+              <option value="90">90 Days</option>
+              <option value="180">180 Days</option>
+              <option value="365">365 Days</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-p w-100" onclick="genApi()"><i class="fas fa-key me-1"></i> Generate</button>
+          </div>
         </div>
-    </div>
-
-    <!-- Server Control -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-server"></i> Server Control</div>
-        <div class="grid-2">
-            <button class="btn-sm btn-green" onclick="setSiteStatus(true)"><i class="fas fa-play"></i> LIVE ON</button>
-            <button class="btn-sm btn-red" onclick="setSiteStatus(false)"><i class="fas fa-power-off"></i> KILL SITE</button>
+        <p class="small text-muted mb-3"><strong>Free API</strong> = Dashboard-এ টুল দেখতে পারবে কিন্তু চালাতে পারবে না। <strong>Paid API</strong> = সব টুল পুরোপুরি ব্যবহার করতে পারবে।</p>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead><tr><th>User</th><th>Type</th><th>API Key</th><th>Expires</th><th></th></tr></thead>
+            <tbody id="apiBody"><tr><td colspan="5" class="text-center text-muted py-3">No keys yet</td></tr></tbody>
+          </table>
         </div>
-        <input type="text" id="blockMsgInput" placeholder="Block page message (সাইট বন্ধ হলে বড় করে দেখাবে)" style="margin-top:10px;">
-        <button class="btn-sm btn-outline" style="width:100%;margin-top:8px;" onclick="saveBlockMessage()">SAVE BLOCK MESSAGE</button>
+      </div>
     </div>
 
-    <!-- Theme & Registration -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-paint-brush"></i> Theme & Registration</div>
-        <select id="themeSelect">
-            <option value="dark-ocean">Dark Ocean (Default)</option>
-            <option value="neon-night">Neon Night</option>
-            <option value="gold-premium">Gold Premium</option>
-            <option value="cyber-punk">Cyber Punk</option>
-            <option value="emerald-light">Emerald Light</option>
-        </select>
-        <div class="grid-2" style="margin-top:8px;">
-            <button class="btn-sm btn-cyan" onclick="setRegStatus(true)">REG OPEN</button>
-            <button class="btn-sm btn-outline" onclick="setRegStatus(false)">REG CLOSED</button>
-        </div>
-        <button class="btn-sm btn-cyan" style="width:100%;margin-top:10px;" onclick="applyTheme()">APPLY THEME</button>
+    <!-- PACKAGES -->
+    <div id="tab-packages" style="display:none">
+      <div class="row g-3">
+        <div class="col-6 col-md-3"><div class="card-box text-center"><h6>Basic</h6><div class="fs-3 fw-bold" style="color:var(--p)">৳150</div><small class="text-muted">1 Month</small></div></div>
+        <div class="col-6 col-md-3"><div class="card-box text-center border border-success"><h6>Standard</h6><div class="fs-3 fw-bold" style="color:var(--p)">৳450</div><small class="text-muted">3 Months</small></div></div>
+        <div class="col-6 col-md-3"><div class="card-box text-center"><h6>Popular</h6><div class="fs-3 fw-bold" style="color:var(--p)">৳900</div><small class="text-muted">6 Months</small></div></div>
+        <div class="col-6 col-md-3"><div class="card-box text-center"><h6>Premium</h6><div class="fs-3 fw-bold" style="color:var(--p)">৳1,800</div><small class="text-muted">12 Months</small></div></div>
+      </div>
     </div>
 
-    <!-- Dashboard Color Control -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-palette"></i> Full Dashboard Theme Control</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;">
-            ১ ক্লিকে পুরো ইউজার ড্যাশবোর্ডের থিম বদলান (সব ইউজারের জন্য)। Sidebar, Topbar, Cards, Colors — সব কিছু।
-        </p>
-        <div class="color-options">
-            <div class="color-btn" style="background:linear-gradient(135deg,#060a12,#12182b);" data-color="dark-ocean" onclick="pickAndApplyColor('dark-ocean')">Ocean</div>
-            <div class="color-btn" style="background:linear-gradient(135deg,#0a0a1a,#1a0033);" data-color="neon-night" onclick="pickAndApplyColor('neon-night')">Neon</div>
-            <div class="color-btn" style="background:linear-gradient(135deg,#1a1200,#3d2b00);" data-color="gold-premium" onclick="pickAndApplyColor('gold-premium')">Gold</div>
-            <div class="color-btn" style="background:linear-gradient(135deg,#0d001a,#2a0040);" data-color="cyber-punk" onclick="pickAndApplyColor('cyber-punk')">Cyber</div>
-            <div class="color-btn" style="background:linear-gradient(135deg,#0f766e,#134e4a);" data-color="emerald-light" onclick="pickAndApplyColor('emerald-light')">Emerald</div>
-        </div>
-        <button class="btn-sm btn-cyan" style="width:100%;" onclick="applyDashColor()">APPLY FULL DASHBOARD THEME</button>
+    <!-- SETTINGS -->
+    <div id="tab-settings" style="display:none">
+      <div class="card-box">
+        <h6 class="fw-bold mb-3">Admin Settings</h6>
+        <p class="small text-muted">Default admin login: <code>gourabmon112233@gmail.com</code> / <code>goUrab@2008</code></p>
+        <p class="small text-muted mb-0">Logo file: <a href="logo.html" target="_blank">logo.html</a> (Main site logo)</p>
+        <hr>
+        <button class="btn btn-outline-danger btn-sm" onclick="if(confirm('Clear ALL users & data?')){localStorage.removeItem('a_tuls_users');localStorage.removeItem('a_tuls_api_keys');loadUsers();loadStats();alert('Cleared')}">Clear All User Data</button>
+      </div>
     </div>
 
-    <!-- Double Database -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-database"></i> Double Database (Primary + Backup)</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px;">
-            ২টা JSONBin কানেক্ট। Admin যেকোনো একটা Active করতে পারবে। সাইটে ল্যাগ হলে নিচে নোটিশ আসবে — তখন Backup-এ সুইচ করতে পারবেন।
-        </p>
-        <p id="activeCloudLabel" style="text-align:center;font-size:13px;color:var(--cyan);margin-bottom:10px;">Active: PRIMARY</p>
-        <div class="grid-2">
-            <button class="btn-sm btn-cyan" onclick="switchDB('primary')"><i class="fas fa-database"></i> PRIMARY</button>
-            <button class="btn-sm btn-outline" onclick="switchDB('backup')"><i class="fas fa-copy"></i> BACKUP</button>
-        </div>
-        <input type="text" id="backupBinInput" placeholder="Backup JSONBin Bin ID (দ্বিতীয় bin)" style="margin-top:10px;">
-        <button class="btn-sm btn-outline" style="width:100%;margin-top:8px;" onclick="saveBackupBinId()">SAVE BACKUP BIN ID</button>
-        <button class="btn-sm btn-gold" style="width:100%;margin-top:8px;" onclick="copyPrimaryToBackup()">COPY PRIMARY → BACKUP</button>
-        <div id="lagNoticeBox" style="margin-top:14px;max-height:160px;overflow-y:auto;"></div>
-        <button class="btn-sm btn-cyan" style="width:100%;margin-top:8px;" onclick="loadLagNotices()">REFRESH LAG NOTICES</button>
-    </div>
-
-    <!-- Global Notice -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-bell"></i> Global Notice</div>
-        <input type="text" id="noticeInput" placeholder="ইউজারদের জন্য নোটিশ লিখুন...">
-        <button class="btn-sm btn-cyan" style="width:100%;" onclick="pushNotice()">PUSH NOTICE</button>
-    </div>
-
-    <!-- Global Default Tools -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-sliders-h"></i> Checker ON/OFF (Global Block)</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;">
-            OFF = সাইট থেকে সেই চেকার ব্লক (কেউ দেখবে না)। ON = গ্লোবাল অনুমতি (ইউজার-লেভেল পারমিশন আলাদা)।
-        </p>
-        <div class="tools-grid" id="globalToolsGrid"></div>
-        <button class="btn-sm btn-cyan" style="width:100%;" onclick="saveGlobalTools()">SAVE GLOBAL TOOLS</button>
-    </div>
-
-    <!-- Live Checker Activity -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-radar"></i> Live Checker Activity</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;">
-            কোন ইউজার কোন চেকার কখন চালাচ্ছে — লাইভ ট্র্যাকিং।
-        </p>
-        <div id="liveCheckerActivity" style="max-height:280px;overflow-y:auto;"></div>
-        <button class="btn-sm btn-cyan" style="width:100%;margin-top:10px;" onclick="loadLiveCheckerActivity()">REFRESH ACTIVITY</button>
-    </div>
-
-    <!-- Admin Information + Show/Hide + EDIT -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-user-shield"></i> Admin Information (Edit)</div>
-        
-        <div class="grid-2" style="margin-bottom:14px;">
-            <button class="btn-sm btn-cyan" id="btnShowInfo" onclick="setAdminInfoVisible(true)">
-                <i class="fas fa-eye"></i> SHOW ON DASH
-            </button>
-            <button class="btn-sm btn-outline" id="btnHideInfo" onclick="setAdminInfoVisible(false)">
-                <i class="fas fa-eye-slash"></i> HIDE ON DASH
-            </button>
-        </div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;text-align:center;" id="infoVisibilityStatus">
-            Status: Loading...
-        </p>
-
-        <input type="text" id="admName" placeholder="Admin display name" style="margin-bottom:8px;">
-        <input type="text" id="admTelegram" placeholder="Telegram number" style="margin-bottom:8px;">
-        <input type="text" id="admFacebook" placeholder="Facebook name / link" style="margin-bottom:8px;">
-        <input type="text" id="admEmail" placeholder="Public email" style="margin-bottom:8px;">
-        <input type="text" id="admExtra" placeholder="Extra line (e.g. Developed by ...)" style="margin-bottom:10px;">
-        <button class="btn-sm btn-cyan" style="width:100%;" onclick="saveAdminInfoEdit()">
-            <i class="fas fa-save"></i> SAVE ADMIN INFO
-        </button>
-    </div>
-
-
-    <!-- Community Profiles Preview -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-users"></i> Community Profiles & Public Messages</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;">
-            ইউজাররা যে পাবলিক মেসেজ দিয়েছে সেগুলো এখানে দেখা যাবে। নামের উপরে মেসেজ শো হয়।
-        </p>
-        <div id="adminCommunityList" style="max-height:320px;overflow-y:auto;"></div>
-        <button class="btn-sm btn-cyan" style="width:100%;margin-top:10px;" onclick="loadAdminCommunity()">REFRESH COMMUNITY</button>
-    </div>
-
-
-    <!-- Password Reset Requests -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-key"></i> Password Reset Requests</div>
-        <div id="passwordReqList" style="max-height:260px;overflow-y:auto;"></div>
-        <button class="btn-sm btn-cyan" style="width:100%;margin-top:10px;" onclick="loadPasswordRequests()">REFRESH</button>
-    </div>
-
-    <!-- New Device Login Requests -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-mobile-alt"></i> New Browser / Device Requests</div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">ইউজার নতুন ব্রাউজার থেকে লগইন করতে চাইলে এখানে approve করুন। Max 3 device/user.</p>
-        <div id="deviceReqList" style="max-height:260px;overflow-y:auto;"></div>
-        <button class="btn-sm btn-cyan" style="width:100%;margin-top:10px;" onclick="loadDeviceRequests()">REFRESH</button>
-    </div>
-
-    <!-- Admin Login Devices -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-laptop"></i> Admin Login Devices</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;">
-            Admin অ্যাকাউন্ট কয়টা ডিভাইস/ব্রাউজার থেকে লগইন করেছে — এখানে দেখা যাবে।
-        </p>
-        <div id="adminDevicesList" style="max-height:220px;overflow-y:auto;"></div>
-        <button class="btn-sm btn-cyan" style="width:100%;margin-top:10px;" onclick="loadAdminDevices()">REFRESH DEVICES</button>
-    </div>
-
-    <!-- Live User Management -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-users"></i> Live User Management + Ultra Tracking</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;">
-            ১ম ট্যাব: Premium • ২য়: Free • ৩য়: Pending • ৪র্থ: Blocked — ট্যাব বদলে লিস্ট দেখুন, সব কাজ (Approve / Block / Tools / Device) একইভাবে চলবে।
-        </p>
-
-        <div class="user-tabs" id="userTabs">
-            <button type="button" class="user-tab active" data-filter="premium" onclick="setUserFilter('premium')">
-                👑 Premium<span class="tab-count" id="tabCountPremium">0</span>
-            </button>
-            <button type="button" class="user-tab" data-filter="free" onclick="setUserFilter('free')">
-                Free<span class="tab-count" id="tabCountFree">0</span>
-            </button>
-            <button type="button" class="user-tab" data-filter="pending" onclick="setUserFilter('pending')">
-                Pending<span class="tab-count" id="tabCountPending">0</span>
-            </button>
-            <button type="button" class="user-tab" data-filter="blocked" onclick="setUserFilter('blocked')">
-                Blocked<span class="tab-count" id="tabCountBlocked">0</span>
-            </button>
-        </div>
-        
-        <div class="search-bar">
-            <input type="search" id="userSearch" placeholder="নাম বা ইমেইল দিয়ে সার্চ করুন..." oninput="loadUsers()">
-        </div>
-
-        <div id="userList">
-            <!-- Users will load here by category -->
-        </div>
-    </div>
-
-    <!-- Test All Pages -->
-    <div class="card">
-        <div class="card-title"><i class="fas fa-vial"></i> Test All Pages</div>
-        <div class="grid-2">
-            <button class="btn-sm btn-outline" onclick="window.open('index.html')">Index</button>
-            <button class="btn-sm btn-outline" onclick="window.open('dashboard.html')">User Dashboard</button>
-            <button class="btn-sm btn-outline" onclick="window.open('pending.html')">Pending Page</button>
-            <button class="btn-sm btn-outline" onclick="alert('Admin Panel OK ✓')">Admin Panel</button>
-        </div>
-    </div>
-
-    <div class="footer">
-        Developed by Gourab | 01944035239<br>
-        A-tuls - √MASTER STYLES • Admin Edition • Ultra Tracking
-    </div>
+  </div>
 </div>
 
-
 <script>
-
-/* ========== SUPABASE CONFIG (Primary DB) ========== */
-const SUPABASE_URL = 'https://nzpomdjksdywndpyoubb.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_R52qXaRZpRLdoRSlobdSxg_xyPAB9c4';
-const SB_HEADERS = {
-  'apikey': SUPABASE_ANON_KEY,
-  'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-  'Content-Type': 'application/json',
-  'Prefer': 'return=representation'
-};
-
-const ADMIN_EMAIL = 'gourabmon112233@gmail.com';
-const ADMIN_PASS  = 'goUrab@2008';
-
-function rowToUser(row) {
-  if (!row) return null;
-  return {
-    id: row.id,
-    email: row.email,
-    name: row.name || '',
-    password: row.password_hash || '',
-    status: row.status || 'Pending',
-    mode: row.mode || 'free',
-    tools: Array.isArray(row.tools) ? row.tools : [],
-    profile: row.profile && typeof row.profile === 'object' ? row.profile : {},
-    devices: Array.isArray(row.devices) ? row.devices : [],
-    approvedDevices: Array.isArray(row.approved_devices) ? row.approved_devices : [],
-    pendingDevices: Array.isArray(row.pending_devices) ? row.pending_devices : (row.profile && row.profile.pendingDevices) || [],
-    blockedDevices: Array.isArray(row.blocked_devices) ? row.blocked_devices : [],
-    loginHistory: Array.isArray(row.login_history) ? row.login_history : [],
-    toolUsage: row.tool_usage && typeof row.tool_usage === 'object' ? row.tool_usage : {},
-    totalSessions: row.total_sessions || 0,
-    lastLogin: row.last_login || null,
-    joined: row.joined || '',
-    created: row.created_at || null
-  };
-}
-
-function userToPatch(u) {
-  return {
-    email: (u.email || '').toLowerCase(),
-    password_hash: u.password || u.password_hash || '',
-    name: u.name || '',
-    status: u.status || 'Pending',
-    mode: u.mode || 'free',
-    tools: u.tools || [],
-    profile: Object.assign({}, u.profile || {}, { pendingDevices: u.pendingDevices || [] }),
-    devices: u.devices || [],
-    approved_devices: u.approvedDevices || [],
-    blocked_devices: u.blockedDevices || [],
-    login_history: u.loginHistory || [],
-    tool_usage: u.toolUsage || {},
-    total_sessions: u.totalSessions || 0,
-    last_login: u.lastLogin || null,
-    joined: u.joined || '',
-    updated_at: new Date().toISOString()
-  };
-}
-
-async function sbFetch(path, opts) {
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, Object.assign({ headers: SB_HEADERS }, opts || {}));
-  if (!res.ok) {
-    const t = await res.text().catch(() => '');
-    throw new Error('Supabase ' + res.status + ': ' + t.slice(0, 200));
+// Auth check - only real admin
+(function(){
+  const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+  if(!s || s.role !== 'admin' || s.email !== 'gourabmon112233@gmail.com'){
+    alert('Access Denied! Admin only.');
+    window.location.href = 'login.html';
+    return;
   }
-  if (res.status === 204) return null;
-  const text = await res.text();
-  if (!text) return null;
-  return JSON.parse(text);
-}
+  document.getElementById('adminName').textContent = s.username || 'Gourab';
+})();
 
-async function sbGetAllUsers() {
-  const rows = await sbFetch('app_users?select=*&order=created_at.desc');
-  return (rows || []).map(rowToUser);
-}
+function openSide(){document.getElementById('side').classList.add('open');document.getElementById('ov').classList.add('show')}
+function closeSide(){document.getElementById('side').classList.remove('open');document.getElementById('ov').classList.remove('show')}
 
-async function sbGetUserByEmail(email) {
-  const rows = await sbFetch('app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()) + '&select=*');
-  return rows && rows[0] ? rowToUser(rows[0]) : null;
-}
-
-async function sbInsertUser(user) {
-  const body = userToPatch(user);
-  const rows = await sbFetch('app_users', { method: 'POST', body: JSON.stringify(body) });
-  return rows && rows[0] ? rowToUser(rows[0]) : user;
-}
-
-async function sbUpdateUserByEmail(email, userOrPatch) {
-  const body = userToPatch(Object.assign({ email: email }, userOrPatch));
-  delete body.email; // don't change email key in patch path
-  const rows = await sbFetch(
-    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
-    { method: 'PATCH', body: JSON.stringify(body) }
-  );
-  return rows && rows[0] ? rowToUser(rows[0]) : null;
-}
-
-async function sbDeleteUserByEmail(email) {
-  await sbFetch(
-    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
-    { method: 'DELETE', headers: Object.assign({}, SB_HEADERS, { Prefer: 'return=minimal' }) }
-  );
-}
-
-async function sbGetSettings() {
-  const rows = await sbFetch('app_settings?id=eq.1&select=*');
-  const r = rows && rows[0];
-  if (!r) {
-    return {
-      theme: 'dark-ocean',
-      siteLive: true,
-      registrationOpen: true,
-      notice: '',
-      adminInfo: {},
-      globalTools: [],
-      adminInfoVisible: true,
-      adminDevices: [],
-      blockMessage: ''
-    };
-  }
-  const info = r.admin_info && typeof r.admin_info === 'object' ? r.admin_info : {};
-  return {
-    theme: r.theme || 'dark-ocean',
-    siteLive: r.site_live !== false,
-    registrationOpen: r.registration_open !== false,
-    notice: r.notice || '',
-    adminInfo: info,
-    globalTools: Array.isArray(r.global_tools) ? r.global_tools : [],
-    adminInfoVisible: info.adminInfoVisible !== false,
-    adminDevices: Array.isArray(info.adminDevices) ? info.adminDevices : [],
-    blockMessage: info.blockMessage || '',
-    passwordRequests: Array.isArray(info.passwordRequests) ? info.passwordRequests : [],
-    deviceRequests: Array.isArray(info.deviceRequests) ? info.deviceRequests : []
-  };
-}
-
-async function sbSaveSettings(settings) {
-  const prev = await sbGetSettings();
-  const admin_info = Object.assign({}, prev.adminInfo || {}, settings.adminInfo || {}, {
-    adminInfoVisible: settings.adminInfoVisible !== false,
-    adminDevices: settings.adminDevices || prev.adminDevices || [],
-    blockMessage: settings.blockMessage || prev.blockMessage || '',
-    passwordRequests: settings.passwordRequests || prev.passwordRequests || [],
-    deviceRequests: settings.deviceRequests || prev.deviceRequests || []
+function tab(name){
+  ['dash','users','membership','api','packages','settings'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===name?'block':'none';
   });
-  const body = {
-    theme: settings.theme || 'dark-ocean',
-    site_live: settings.siteLive !== false,
-    registration_open: settings.registrationOpen !== false,
-    notice: settings.notice || '',
-    admin_info,
-    global_tools: settings.globalTools || [],
-    updated_at: new Date().toISOString()
-  };
-  await sbFetch('app_settings?id=eq.1', { method: 'PATCH', body: JSON.stringify(body) });
+  document.querySelectorAll('.side-menu a').forEach(a=>a.classList.remove('active'));
+  document.querySelector('.side-menu a[data-tab="'+name+'"]')?.classList.add('active');
+  const titles={dash:'Dashboard',users:'All Users',membership:'Membership',api:'API Keys',packages:'Packages',settings:'Settings'};
+  document.getElementById('pageTitle').textContent = titles[name]||name;
+  closeSide();
+  if(name==='users') loadUsers();
+  if(name==='membership'||name==='api') fillUserSelects();
+  if(name==='api') loadApis();
+  if(name==='dash') loadStats();
 }
 
-/** Compatibility: load full DB shape from Supabase */
-async function fetchDB() {
-  const [users, settings] = await Promise.all([sbGetAllUsers(), sbGetSettings()]);
-  return {
-    users,
-    settings,
-    posts: settings.adminInfo && settings.adminInfo.posts || [],
-    messages: settings.adminInfo && settings.adminInfo.messages || [],
-    passwordRequests: settings.passwordRequests || [],
-    deviceRequests: settings.deviceRequests || []
-  };
+function getUsers(){return JSON.parse(localStorage.getItem('a_tuls_users')||'[]')}
+function saveUsers(u){localStorage.setItem('a_tuls_users',JSON.stringify(u))}
+
+function loadStats(){
+  const users=getUsers();
+  document.getElementById('sUsers').textContent=users.length;
+  document.getElementById('sPaid').textContent=users.filter(u=>u.package&&u.package!=='Free').length;
+  document.getElementById('sFree').textContent=users.filter(u=>!u.package||u.package==='Free').length;
+  document.getElementById('sApi').textContent=(JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]')).length;
 }
 
-/**
- * Safe save: NEVER bulk-overwrite users.
- * Only upsert users present in db.users (by email) + save settings.
- * Does not delete users missing from local array (prevents wipe).
- */
-async function saveDBCloud(db) {
-  if (!db) throw new Error('No db');
-  // Settings
-  if (db.settings) {
-    const s = Object.assign({}, db.settings, {
-      passwordRequests: db.passwordRequests || db.settings.passwordRequests || [],
-      deviceRequests: db.deviceRequests || db.settings.deviceRequests || []
-    });
-    // stash posts/messages inside admin_info to avoid extra tables for now
-    s.adminInfo = Object.assign({}, s.adminInfo || {}, {
-      posts: db.posts || [],
-      messages: db.messages || []
-    });
-    await sbSaveSettings(s);
+function loadUsers(){
+  const users=getUsers();
+  const body=document.getElementById('usersBody');
+  if(!users.length){body.innerHTML='<tr><td colspan="6" class="text-center text-muted py-4">No users yet — they appear after Signup</td></tr>';return}
+  body.innerHTML=users.map((u,i)=>{
+    const pkg=u.package||'Free';
+    const badge=pkg==='Free'?'badge-free':'badge-p';
+    const contact=[u.email,u.whatsapp,u.telegram].filter(Boolean).join('<br>');
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${esc(u.username)}</strong><br><small class="text-muted">${esc(u.gender||'')}</small></td>
+      <td class="small">${contact||'-'}</td>
+      <td><span class="badge ${badge}">${esc(pkg)}</span></td>
+      <td class="small">${u.created?new Date(u.created).toLocaleDateString():'-'}</td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary" onclick="quickUpgrade('${u.id}')">Pkg</button>
+        <button class="btn btn-sm btn-outline-danger" onclick="delUser('${u.id}')">Del</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
+
+function fillUserSelects(){
+  const users=getUsers();
+  const opts='<option value="">Select user...</option>'+users.map(u=>`<option value="${u.id}">${esc(u.username)} (${esc(u.email)})</option>`).join('');
+  document.getElementById('upUser').innerHTML=opts;
+  document.getElementById('apiUser').innerHTML=opts;
+}
+
+function upgradePkg(){
+  const id=document.getElementById('upUser').value;
+  const pkg=document.getElementById('upPkg').value;
+  if(!id)return alert('Select a user');
+  let users=getUsers();
+  users=users.map(u=>u.id===id?{...u,package:pkg}:u);
+  saveUsers(users);
+  alert('Package updated to '+pkg);
+  loadStats();
+}
+
+function quickUpgrade(id){
+  const pkg=prompt('Enter package: Free / Basic / Standard / Popular / Premium / Lifetime','Standard');
+  if(!pkg)return;
+  let users=getUsers();
+  users=users.map(u=>u.id===id?{...u,package:pkg}:u);
+  saveUsers(users);
+  loadUsers();loadStats();
+  alert('Updated');
+}
+
+function delUser(id){
+  if(!confirm('Delete this user?'))return;
+  const conf=prompt('নিশ্চিত করতে লিখুন: DELETE');
+  if(conf!=='DELETE'){ alert('বাতিল করা হয়েছে'); return; }
+  saveUsers(getUsers().filter(u=>u.id!==id));
+  loadUsers();loadStats();
+}
+
+function genApi(){
+  const id=document.getElementById('apiUser').value;
+  const days=+document.getElementById('apiDays').value;
+  const type=document.getElementById('apiType').value||'free';
+  const users=getUsers();
+  let username='Invite Code (Signup)';
+  let userId='invite_'+Date.now();
+  if(id){
+    const u=users.find(x=>x.id===id);
+    if(!u)return alert('User not found');
+    username=u.username;
+    userId=id;
   }
-  // Users: update/insert one by one — never delete others
-  const list = Array.isArray(db.users) ? db.users : [];
-  for (const u of list) {
-    if (!u || !u.email) continue;
-    const existing = await sbGetUserByEmail(u.email);
-    if (existing) {
-      await sbUpdateUserByEmail(u.email, u);
-    } else {
-      await sbInsertUser(u);
-    }
-  }
-  return true;
+  const key='atuls_'+type+'_'+Math.random().toString(36).slice(2)+Date.now().toString(36);
+  const exp=new Date();exp.setDate(exp.getDate()+days);
+  let keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  if(id) keys=keys.filter(k=>k.userId!==id);
+  keys.unshift({userId:userId,username:username,key,type,expires:exp.toISOString(),created:new Date().toISOString()});
+  localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
+  loadApis();loadStats();
+  alert((type==='paid'?'Paid':'Free')+' API Key:\n'+key+'\n\nএই কোড Signup পেজে API Code হিসেবে ব্যবহার করা যাবে।');
 }
 
-const ALL_TOOLS = [
-    'Duplicate Checker',
-    'Data Formatter',
-    'Report Generator',
-    'Email Validator',
-    'Email Vault',
-    'Names & Recovery',
-    'Password Generator',
-    'IP TimeZone Finder',
-    'Gmail format fixer'
-];
-
-let DB = { users: [], settings: {} };
-let selectedDashColor = 'dark-ocean';
-let saving = false;
-
-async function saveDB() {
-    if (saving) return;
-    saving = true;
-    try {
-        await window.saveDB ? null : null;
-        // use module-level saveDB from layer - rename conflict
-        await saveDBCloud(DB);
-    } catch (e) {
-        console.error(e);
-        alert('সেভ ব্যর্থ: ' + (e.message || e));
-    } finally {
-        saving = false;
-    }
+function loadApis(){
+  const keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  const body=document.getElementById('apiBody');
+  if(!keys.length){body.innerHTML='<tr><td colspan="5" class="text-center text-muted py-3">No keys yet</td></tr>';return}
+  body.innerHTML=keys.map((k,i)=>{
+    const t=k.type||'free';
+    const badge=t==='paid'?'<span class="badge bg-success">Paid</span>':'<span class="badge bg-secondary">Free</span>';
+    return `<tr>
+    <td>${esc(k.username)}</td>
+    <td>${badge}</td>
+    <td><span class="api-key">${esc(k.key)}</span></td>
+    <td class="small">${new Date(k.expires).toLocaleDateString()}</td>
+    <td><button class="btn btn-sm btn-outline-danger" onclick="delApi(${i})">Del</button></td>
+  </tr>`;
+  }).join('');
 }
 
-async function loadDB() {
-    try {
-        DB = await fetchDB();
-        if (!DB.users) DB.users = [];
-        if (!DB.settings) DB.settings = {};
-        if (!DB.settings.theme) DB.settings.theme = 'dark-ocean';
-        if (DB.settings.adminInfoVisible === undefined) DB.settings.adminInfoVisible = true;
-        if (DB.settings.registrationOpen === undefined) DB.settings.registrationOpen = true;
-        if (DB.settings.siteLive === undefined) DB.settings.siteLive = true;
-        if (!DB.settings.notice) DB.settings.notice = '';
-        if (!DB.settings.globalTools) DB.settings.globalTools = [...ALL_TOOLS];
-        if (!DB.settings.adminInfo) DB.settings.adminInfo = {
-            name: 'Admin Gourab',
-            telegram: '+8801944035239',
-            facebook: 'Gourab Official',
-            email: 'gourabmon112233@gmail.com',
-            extra: 'Developed by Gourab • 01944035239'
-        };
-
-        // Ensure every user has tracking fields
-        DB.users.forEach(u => {
-            if (!u.devices) u.devices = [];
-            if (!u.loginHistory) u.loginHistory = [];
-            if (!u.toolUsage) u.toolUsage = {};
-            if (!u.blockedDevices) u.blockedDevices = [];
-            if (!u.lastLogin) u.lastLogin = null;
-            if (!u.totalSessions) u.totalSessions = 0;
-        });
-
-        selectedDashColor = DB.settings.theme || 'dark-ocean';
-        applyUIFromDB();
-        loadUsers();
-        loadGlobalTools();
-        updateInfoVisibilityUI();
-        setDashColor(selectedDashColor);
-        const sel = document.getElementById('themeSelect');
-        if (sel) sel.value = selectedDashColor;
-        const noticeInput = document.getElementById('noticeInput');
-        if (noticeInput) noticeInput.value = DB.settings.notice || '';
-        try { loadAdminInfoFields(); loadLiveCheckerActivity(); loadPasswordRequests(); loadDeviceRequests(); loadAdminDevices(); } catch(e) {}
-    } catch (e) {
-        console.error(e);
-        alert('ক্লাউড ডেটা লোড ব্যর্থ! নেট চেক করুন।');
-    }
+function delApi(i){
+  let keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  keys.splice(i,1);
+  localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
+  loadApis();loadStats();
 }
 
-function applyUIFromDB() {
-    // nothing visual needed beyond stats/users
+function logout(){
+  localStorage.removeItem('a_tuls_session');
+  window.location.href='login.html';
 }
 
-/* ========== AUTH ========== */
-const role = localStorage.getItem('a_tuls_role');
-if (role !== 'admin') {
-    localStorage.removeItem('a_tuls_role');
-    localStorage.removeItem('a_tuls_user');
-    location.replace('index.html');
-}
-
-function logout() {
-    localStorage.removeItem('a_tuls_role');
-    localStorage.removeItem('a_tuls_user');
-    localStorage.removeItem('a_tuls_last_activity');
-    localStorage.removeItem('a_tuls_last_active');
-    location.replace('index.html');
-}
-
-/* ========== SITE / REG ========== */
-async function setSiteStatus(live) {
-    DB.settings.siteLive = !!live;
-    const bm = document.getElementById('blockMsgInput');
-    if (bm && bm.value.trim()) DB.settings.blockMessage = bm.value.trim();
-    await saveDB();
-    alert(live ? '✅ Site is now LIVE' : '⛔ Site Killed — ইউজাররা বড় BLOCK পেজ দেখবে');
-}
-async function saveBlockMessage() {
-    const bm = document.getElementById('blockMsgInput');
-    if (!DB.settings) DB.settings = {};
-    DB.settings.blockMessage = (bm && bm.value.trim()) || 'এই সাইট বর্তমানে Admin কর্তৃক বন্ধ / ব্লক করা হয়েছে।';
-    await saveDB();
-    alert('Block message saved');
-}
-
-async function setRegStatus(open) {
-    DB.settings.registrationOpen = !!open;
-    await saveDB();
-    alert(open ? '✅ Registration OPENED' : '⛔ Registration CLOSED');
-}
-
-/* ========== THEME ========== */
-async function applyTheme() {
-    const theme = document.getElementById('themeSelect').value;
-    DB.settings.theme = theme;
-    selectedDashColor = theme;
-    setDashColor(theme);
-    await saveDB();
-    alert('✅ Full Dashboard Theme Applied for ALL users!\nTheme: ' + theme);
-}
-
-function setDashColor(color) {
-    selectedDashColor = color;
-    document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.color === color);
-    });
-}
-
-async function applyDashColor() {
-    DB.settings.theme = selectedDashColor;
-    const sel = document.getElementById('themeSelect');
-    if (sel) sel.value = selectedDashColor;
-    await saveDB();
-    alert('✅ Dashboard Theme Applied for ALL users!\nTheme: ' + selectedDashColor);
-}
-
-async function pickAndApplyColor(color) {
-    setDashColor(color);
-    await applyDashColor();
-}
-
-function switchDB(type) {
-    alert(type === 'primary' ? '✅ PRIMARY Cloud (JSONBin) Active' : '✅ Backup mode (same cloud)');
-}
-
-async function pushNotice() {
-    const note = (document.getElementById('noticeInput').value || '').trim();
-    DB.settings.notice = note;
-    await saveDB();
-    alert(note ? '✅ Notice pushed to all users!' : 'Notice cleared');
-}
-
-async function setAdminInfoVisible(show) {
-    DB.settings.adminInfoVisible = !!show;
-    await saveDB();
-    updateInfoVisibilityUI();
-    alert(show
-        ? '✅ Admin Info এখন ইউজার ড্যাশবোর্ডে দেখা যাবে'
-        : '⛔ Admin Info এখন ইউজার ড্যাশবোর্ডে হাইড করা আছে');
-}
-
-function updateInfoVisibilityUI() {
-    const visible = DB.settings && DB.settings.adminInfoVisible !== false;
-    const statusEl = document.getElementById('infoVisibilityStatus');
-    if (statusEl) {
-        statusEl.innerHTML = visible
-            ? '<span style="color:var(--green);">● Status: SHOW (ড্যাশবোর্ডে দেখা যাচ্ছে)</span>'
-            : '<span style="color:var(--red);">● Status: HIDE (ড্যাশবোর্ডে লুকানো)</span>';
-    }
-}
-
-/* ========== GLOBAL TOOLS ========== */
-function loadGlobalTools() {
-    const globalTools = (DB.settings && DB.settings.globalTools) ? DB.settings.globalTools : [...ALL_TOOLS];
-    const grid = document.getElementById('globalToolsGrid');
-    if (!grid) return;
-    grid.innerHTML = ALL_TOOLS.map((t, i) => `
-        <div class="tool-item">
-            <span>${t}</span>
-            <input type="checkbox" class="toggle" id="gtool-${i}" ${globalTools.includes(t) ? 'checked' : ''}>
-        </div>
-    `).join('');
-}
-
-async function saveGlobalTools() {
-    const selected = [];
-    ALL_TOOLS.forEach((t, i) => {
-        const cb = document.getElementById('gtool-' + i);
-        if (cb && cb.checked) selected.push(t);
-    });
-    DB.settings.globalTools = selected;
-    await saveDB();
-    alert('✅ Global tools saved! ইউজার ড্যাশবোর্ডে শুধু এইগুলো দেখা যাবে।');
-}
-
-/* ========== STATS + USERS ========== */
-function updateStats(users) {
-    const t = document.getElementById('totalUsers');
-    const a = document.getElementById('activeUsers');
-    const p = document.getElementById('pendingUsers');
-    const d = document.getElementById('totalDevices');
-    if (t) t.textContent = users.length;
-    if (a) a.textContent = users.filter(u => u.status === 'Approved').length;
-    if (p) p.textContent = users.filter(u => u.status === 'Pending').length;
-    let deviceCount = 0;
-    users.forEach(u => {
-        if (Array.isArray(u.devices)) deviceCount += u.devices.length;
-    });
-    if (d) d.textContent = deviceCount;
-}
-
-function formatTime(ts) {
-    if (!ts) return 'N/A';
-    try {
-        const d = new Date(ts);
-        return d.toLocaleString('bn-BD', {
-            day: '2-digit', month: 'short', year: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        });
-    } catch (e) {
-        return String(ts);
-    }
-}
-
-/* Current tab: premium | free | pending | blocked */
-let currentUserFilter = 'premium';
-
-function setUserFilter(filter) {
-    currentUserFilter = filter || 'premium';
-    document.querySelectorAll('.user-tab').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-filter') === currentUserFilter);
-    });
-    loadUsers();
-}
-
-function matchUserCategory(u, filter) {
-    const status = u.status || 'Pending';
-    const mode = (u.mode || 'free').toLowerCase();
-    if (filter === 'premium') return status === 'Approved' && mode === 'premium';
-    if (filter === 'free') return status === 'Approved' && mode !== 'premium';
-    if (filter === 'pending') return status === 'Pending';
-    if (filter === 'blocked') return status === 'Blocked';
-    return true;
-}
-
-function updateTabCounts(allUsers) {
-    const list = allUsers || [];
-    const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
-    set('tabCountPremium', list.filter(u => matchUserCategory(u, 'premium')).length);
-    set('tabCountFree', list.filter(u => matchUserCategory(u, 'free')).length);
-    set('tabCountPending', list.filter(u => matchUserCategory(u, 'pending')).length);
-    set('tabCountBlocked', list.filter(u => matchUserCategory(u, 'blocked')).length);
-}
-
-function loadUsers() {
-    let users = DB.users || [];
-    const search = (document.getElementById('userSearch')?.value || '').toLowerCase().trim();
-
-    updateStats(DB.users || []);
-    updateTabCounts(DB.users || []);
-
-    // Category filter first (Premium / Free / Pending / Blocked)
-    users = users.filter(u => matchUserCategory(u, currentUserFilter));
-
-    if (search) {
-        users = users.filter(u =>
-            (u.name || '').toLowerCase().includes(search) ||
-            (u.email || '').toLowerCase().includes(search)
-        );
-    }
-
-    // Stable sort by name
-    users.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'bn'));
-
-    const list = document.getElementById('userList');
-    if (!list) return;
-
-    if (users.length === 0) {
-        const labels = { premium: 'Premium', free: 'Free', pending: 'Pending', blocked: 'Blocked' };
-        list.innerHTML = '<div class="empty-msg">এই ক্যাটাগরিতে (' + (labels[currentUserFilter] || '') + ') কোনো ইউজার নেই / সার্চ খালি</div>';
-        return;
-    }
-
-    list.innerHTML = users.map(user => {
-        const mode = user.mode || 'free';
-        const tools = Array.isArray(user.tools) ? user.tools : [];
-        const statusClass = user.status === 'Blocked' ? 'blocked' : (user.status === 'Pending' ? 'pending' : '');
-        const devices = Array.isArray(user.devices) ? user.devices : [];
-        const blockedDevices = Array.isArray(user.blockedDevices) ? user.blockedDevices : [];
-        const loginHistory = Array.isArray(user.loginHistory) ? user.loginHistory.slice().reverse().slice(0, 8) : [];
-        const toolUsage = user.toolUsage || {};
-        const totalUsage = Object.values(toolUsage).reduce((s, n) => s + (n || 0), 0);
-
-        // Device list HTML
-        let devicesHtml = '';
-        if (devices.length === 0) {
-            devicesHtml = '<div class="track-meta" style="padding:6px 0;">কোনো ডিভাইস ট্র্যাক হয়নি (Dashboard আপডেট প্রয়োজন)</div>';
-        } else {
-            devicesHtml = devices.map((dev, di) => {
-                const isBlocked = blockedDevices.includes(dev.fingerprint);
-                return `
-                <div class="track-item ${isBlocked ? 'blocked-device' : ''}">
-                    <div class="track-meta">
-                        <strong style="color:${isBlocked ? 'var(--red)' : 'var(--text)'}">${escapeHtml(dev.browser || 'Unknown')} • ${escapeHtml(dev.os || 'Unknown')}</strong><br>
-                        ${escapeHtml(dev.deviceType || 'Desktop')} • IP: ${escapeHtml(dev.ip || 'N/A')}<br>
-                        Last: ${formatTime(dev.lastSeen)} ${isBlocked ? '• <span style="color:var(--red)">BLOCKED</span>' : ''}
-                    </div>
-                    <div class="track-actions">
-                        ${isBlocked
-                            ? `<button class="btn-xs btn-xs-green" onclick="unblockDevice('${user.id}', '${escapeHtml(dev.fingerprint)}')"><i class="fas fa-unlock"></i></button>`
-                            : `<button class="btn-xs btn-xs-red" onclick="blockDevice('${user.id}', '${escapeHtml(dev.fingerprint)}')"><i class="fas fa-ban"></i></button>`
-                        }
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        // Tool usage chips
-        let usageHtml = '';
-        const usageEntries = Object.entries(toolUsage).filter(([_, c]) => c > 0);
-        if (usageEntries.length === 0) {
-            usageHtml = '<div class="track-meta">কোনো চেকার ব্যবহার হয়নি</div>';
-        } else {
-            usageHtml = '<div class="usage-bar">' + usageEntries
-                .sort((a, b) => b[1] - a[1])
-                .map(([name, count]) => `<span class="usage-chip">${escapeHtml(name)}: ${count}x</span>`)
-                .join('') + '</div>';
-        }
-
-        // Login history
-        let loginHtml = '';
-        if (loginHistory.length === 0) {
-            loginHtml = '<div class="track-meta">লগইন হিস্টরি নেই</div>';
-        } else {
-            loginHtml = '<div class="login-log">' + loginHistory.map(log => `
-                <div>
-                    <i class="fas fa-clock" style="color:var(--cyan);font-size:10px;"></i>
-                    ${formatTime(log.time)} • ${escapeHtml(log.browser || '?')} • ${escapeHtml(log.os || '?')}
-                    ${log.ip ? ' • IP: ' + escapeHtml(log.ip) : ''}
-                </div>
-            `).join('') + '</div>';
-        }
-
-        return `
-        <div class="user-card ${statusClass}" id="ucard-${user.id}">
-            <div class="user-top">
-                <div>
-                    <div class="user-name">${escapeHtml(user.name || 'Unknown')}</div>
-                    <div class="user-email">${escapeHtml(user.email || '')}</div>
-                    <div class="user-meta">ID: ${user.id} • Joined: ${user.joined || 'N/A'} • Devices: ${devices.length}</div>
-                </div>
-                <div style="text-align:right;">
-                    <span class="badge ${
-                        user.status === 'Approved' ? 'badge-active' :
-                        user.status === 'Blocked' ? 'badge-blocked' : 'badge-pending'
-                    }">${user.status || 'Pending'}</span>
-                    <div style="margin-top:6px;">
-                        <span class="badge ${mode === 'premium' ? 'badge-premium' : 'badge-free'}">
-                            ${mode === 'premium' ? 'PREMIUM' : 'FREE'}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mode-row">
-                <button class="mode-btn ${mode === 'free' ? 'active-free' : ''}"
-                    onclick="setUserMode('${user.id}', 'free')">
-                    <i class="fas fa-user"></i> FREE (1 Checker)
-                </button>
-                <button class="mode-btn ${mode === 'premium' ? 'active-premium' : ''}"
-                    onclick="setUserMode('${user.id}', 'premium')">
-                    <i class="fas fa-crown"></i> PREMIUM (All Tools)
-                </button>
-            </div>
-
-            ${mode === 'free' ? `
-                <div class="free-hint">
-                    ⚠ Free মোডে শুধুমাত্র <strong>১টি</strong> চেকার অন করতে পারবেন। অন্যগুলো অটো বন্ধ হবে।
-                </div>
-            ` : `
-                <div class="free-hint" style="color:var(--green);background:rgba(0,255,157,0.08);">
-                    ★ Premium মোডে সব টুল অন করতে পারবেন।
-                </div>
-            `}
-
-            <div class="tools-grid">
-                ${ALL_TOOLS.map((t, i) => {
-                    const checked = tools.includes(t);
-                    return `
-                    <div class="tool-item" id="toolwrap-${user.id}-${i}">
-                        <span>${t}</span>
-                        <input type="checkbox" class="toggle"
-                            id="tool-${user.id}-${i}"
-                            ${checked ? 'checked' : ''}
-                            onchange="onToolToggle('${user.id}', ${i}, this)">
-                    </div>`;
-                }).join('')}
-            </div>
-
-            <!-- Ultra Tracking Toggle -->
-            <button class="details-toggle" onclick="toggleDetails('${user.id}')">
-                <i class="fas fa-radar"></i> Ultra Tracking & Full Details
-                <span style="float:right;font-size:11px;opacity:0.7;">(${devices.length} device • ${totalUsage} uses)</span>
-            </button>
-
-            <div class="details-box" id="details-${user.id}">
-                <!-- Devices -->
-                <div class="track-section">
-                    <div class="track-title"><i class="fas fa-mobile-alt"></i> ডিভাইস ও ব্রাউজার (${devices.length})</div>
-                    ${devicesHtml}
-                </div>
-
-                <!-- Tool Usage -->
-                <div class="track-section">
-                    <div class="track-title"><i class="fas fa-chart-bar"></i> চেকার ব্যবহার (${totalUsage} বার)</div>
-                    ${usageHtml}
-                </div>
-
-                <!-- Login History -->
-                <div class="track-section">
-                    <div class="track-title"><i class="fas fa-history"></i> লগইন হিস্টরি (শেষ ৮টি)</div>
-                    ${loginHtml}
-                </div>
-
-                <!-- Full Details -->
-                <div class="track-section">
-                    <div class="track-title"><i class="fas fa-info-circle"></i> ফুল ইউজার ডিটেইলস</div>
-                    <div class="full-details">
-                        <div><strong>Name:</strong> ${escapeHtml(user.name || '—')}</div>
-                        <div><strong>Email:</strong> ${escapeHtml(user.email || '—')}</div>
-                        <div><strong>User ID:</strong> ${user.id}</div>
-                        <div><strong>Status:</strong> ${user.status || 'Pending'}</div>
-                        <div><strong>Mode:</strong> ${mode}</div>
-                        <div><strong>Joined:</strong> ${user.joined || 'N/A'}</div>
-                        <div><strong>Last Login:</strong> ${formatTime(user.lastLogin)}</div>
-                        <div><strong>Total Sessions:</strong> ${user.totalSessions || 0}</div>
-                        <div><strong>Active Devices:</strong> ${devices.filter(d => !blockedDevices.includes(d.fingerprint)).length}</div>
-                        <div><strong>Blocked Devices:</strong> ${blockedDevices.length}</div>
-                        <div><strong>Allowed Tools:</strong> ${(tools.length ? tools.join(', ') : 'None')}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid-2" style="margin-top:12px;">
-                <button class="btn-sm btn-cyan" onclick="updateUser('${user.id}', 'Approved')">
-                    <i class="fas fa-check"></i> APPROVE / SAVE
-                </button>
-                <button class="btn-sm btn-red" onclick="updateUser('${user.id}', 'Blocked')">
-                    <i class="fas fa-ban"></i> BLOCK
-                </button>
-            </div>
-            <div class="grid-2" style="margin-top:8px;">
-                <button class="btn-sm btn-outline" onclick="setPending('${user.id}')">
-                    SET PENDING
-                </button>
-                <button class="btn-sm btn-red" style="background:rgba(255,59,92,0.2);border:1px solid var(--red);color:var(--red);" onclick="deleteUser('${user.id}')">
-                    <i class="fas fa-trash-alt"></i> DELETE
-                </button>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-function toggleDetails(userId) {
-    const box = document.getElementById('details-' + userId);
-    if (box) box.classList.toggle('open');
-}
-
-function escapeHtml(str) {
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-}
-
-async function setUserMode(userId, mode) {
-    const idx = DB.users.findIndex(u => u.id === userId);
-    if (idx === -1) return;
-    DB.users[idx].mode = mode;
-    if (mode === 'free') {
-        const current = Array.isArray(DB.users[idx].tools) ? DB.users[idx].tools : [];
-        DB.users[idx].tools = current.length > 0 ? [current[0]] : [];
-    }
-    await saveDB();
-    loadUsers();
-}
-
-async function onToolToggle(userId, toolIndex, checkbox) {
-    const idx = DB.users.findIndex(u => u.id === userId);
-    if (idx === -1) return;
-
-    const mode = DB.users[idx].mode || 'free';
-    let tools = Array.isArray(DB.users[idx].tools) ? [...DB.users[idx].tools] : [];
-    const toolName = ALL_TOOLS[toolIndex];
-
-    if (checkbox.checked) {
-        if (mode === 'free') {
-            tools = [toolName];
-            ALL_TOOLS.forEach((_, i) => {
-                if (i !== toolIndex) {
-                    const other = document.getElementById('tool-' + userId + '-' + i);
-                    if (other) other.checked = false;
-                }
-            });
-        } else {
-            if (!tools.includes(toolName)) tools.push(toolName);
-        }
-    } else {
-        tools = tools.filter(t => t !== toolName);
-    }
-
-    DB.users[idx].tools = tools;
-    await saveDB();
-}
-
-async function updateUser(userId, status) {
-    const idx = DB.users.findIndex(u => u.id === userId);
-    if (idx === -1) return;
-
-    const mode = DB.users[idx].mode || 'free';
-    const selected = [];
-    ALL_TOOLS.forEach((t, i) => {
-        const cb = document.getElementById('tool-' + userId + '-' + i);
-        if (cb && cb.checked) selected.push(t);
-    });
-
-    if (mode === 'free' && selected.length > 1) {
-        DB.users[idx].tools = [selected[0]];
-    } else {
-        DB.users[idx].tools = selected;
-    }
-
-    DB.users[idx].status = status;
-    if (status === 'Blocked') DB.users[idx].tools = [];
-
-    await saveDB();
-    alert(status === 'Blocked'
-        ? '⛔ ইউজার ব্লক করা হয়েছে + সব চেকার বন্ধ!'
-        : '✅ ইউজার আপডেট সফল! Status: ' + status);
-    loadUsers();
-}
-
-async function setPending(userId) {
-    const idx = DB.users.findIndex(u => u.id === userId);
-    if (idx === -1) return;
-    DB.users[idx].status = 'Pending';
-    await saveDB();
-    alert('ইউজার Pending করা হয়েছে');
-    loadUsers();
-}
-
-async function deleteUser(userId) {
-    const user = DB.users.find(u => u.id === userId);
-    const userName = user ? (user.name || user.email || 'Unknown') : 'Unknown';
-
-    if (!confirm('⚠️ আপনি কি নিশ্চিত?\n\n"' + userName + '" কে সাইট থেকে সম্পূর্ণ ডিলিট করতে চান?\n\nএই কাজ আর ফিরে পাওয়া যাবে না!')) {
-        return;
-    }
-
-    try {
-        if (user && user.email) await sbDeleteUserByEmail(user.email);
-        DB.users = DB.users.filter(u => u.id !== userId && (u.email || '').toLowerCase() !== (user && user.email || '').toLowerCase());
-        alert('🗑️ ইউজার সম্পূর্ণ ডিলিট করা হয়েছে!');
-        loadUsers();
-    } catch (e) {
-        alert('ডিলিট ব্যর্থ: ' + (e.message || e));
-    }
-}
-
-/* ========== DEVICE BLOCK / UNBLOCK ========== */
-async function blockDevice(userId, fingerprint) {
-    const idx = DB.users.findIndex(u => u.id === userId);
-    if (idx === -1) return;
-    if (!Array.isArray(DB.users[idx].blockedDevices)) DB.users[idx].blockedDevices = [];
-    if (!DB.users[idx].blockedDevices.includes(fingerprint)) {
-        DB.users[idx].blockedDevices.push(fingerprint);
-    }
-    await saveDB();
-    alert('⛔ এই ডিভাইস/ব্রাউজার ব্লক করা হয়েছে!\nইউজার এই ডিভাইস থেকে আর লগইন করতে পারবে না।');
-    loadUsers();
-}
-
-async function unblockDevice(userId, fingerprint) {
-    const idx = DB.users.findIndex(u => u.id === userId);
-    if (idx === -1) return;
-    if (!Array.isArray(DB.users[idx].blockedDevices)) DB.users[idx].blockedDevices = [];
-    DB.users[idx].blockedDevices = DB.users[idx].blockedDevices.filter(f => f !== fingerprint);
-    await saveDB();
-    alert('✅ ডিভাইস আনব্লক করা হয়েছে!');
-    loadUsers();
-}
-
-/* ========== INIT ========== */
-
-function loadLiveCheckerActivity() {
-    const box = document.getElementById('liveCheckerActivity');
-    if (!box || !DB) return;
-    const rows = [];
-    (DB.users || []).forEach(u => {
-        if (u.status !== 'Approved') return;
-        const usage = u.toolUsage || {};
-        const lastMap = u.toolLastUsed || {};
-        const lastTool = u.lastTool || '';
-        const lastTime = u.lastToolTime || '';
-        Object.keys(usage).forEach(tool => {
-            rows.push({
-                name: u.name || u.email,
-                email: u.email,
-                tool: tool,
-                count: usage[tool] || 0,
-                time: lastMap[tool] || lastTime || u.lastLogin || ''
-            });
-        });
-        if (lastTool && !usage[lastTool]) {
-            rows.push({ name: u.name || u.email, email: u.email, tool: lastTool, count: 1, time: lastTime });
-        }
-    });
-    rows.sort((a, b) => String(b.time).localeCompare(String(a.time)));
-    if (!rows.length) {
-        box.innerHTML = '<div class="empty-msg">এখনো কোনো চেকার ব্যবহারের রেকর্ড নেই</div>';
-        return;
-    }
-    box.innerHTML = rows.slice(0, 40).map(r => `
-        <div class="track-item" style="flex-direction:column;align-items:flex-start;">
-            <div><strong style="color:var(--text)">${escapeHtml(r.name)}</strong>
-                <span style="color:var(--cyan);font-size:12px;"> → ${escapeHtml(r.tool)}</span>
-                <span class="usage-chip" style="margin-left:6px;">${r.count}x</span>
-            </div>
-            <div class="track-meta">${formatTime(r.time)} • ${escapeHtml(r.email || '')}</div>
-        </div>
-    `).join('');
-}
-
-function loadAdminInfoFields() {
-    const info = (DB.settings && DB.settings.adminInfo) ? DB.settings.adminInfo : {};
-    const tg = document.getElementById('admTelegram');
-    const fb = document.getElementById('admFacebook');
-    const em = document.getElementById('admEmail');
-    const ex = document.getElementById('admExtra');
-    const nm = document.getElementById('admName');
-    if (nm) nm.value = info.name || 'Admin Gourab';
-    if (tg) tg.value = info.telegram || '+8801944035239';
-    if (fb) fb.value = info.facebook || 'Gourab Official';
-    if (em) em.value = info.email || 'gourabmon112233@gmail.com';
-    if (ex) ex.value = info.extra || 'Developed by Gourab • 01944035239';
-}
-
-function loadAdminDevices() {
-    const box = document.getElementById('adminDevicesList');
-    if (!box || !DB) return;
-    const list = (DB.settings && Array.isArray(DB.settings.adminDevices)) ? DB.settings.adminDevices : [];
-    if (!list.length) {
-        box.innerHTML = '<div class="empty-msg">এখনো কোনো Admin ডিভাইস ট্র্যাক হয়নি (একবার Dashboard-এ লগইন করুন)</div>';
-        return;
-    }
-    const sorted = list.slice().sort((a, b) => String(b.lastSeen || '').localeCompare(String(a.lastSeen || '')));
-    box.innerHTML = '<div style="font-size:12px;color:var(--cyan);margin-bottom:8px;">মোট ডিভাইস: <strong>' + sorted.length + '</strong></div>' +
-        sorted.map(d => `
-        <div class="track-item" style="flex-direction:column;align-items:flex-start;">
-            <div><strong style="color:var(--text)">${escapeHtml(d.browser || 'Unknown')}</strong> • ${escapeHtml(d.os || '')}</div>
-            <div class="track-meta">${escapeHtml(d.deviceType || 'Desktop')} • IP: ${escapeHtml(d.ip || 'N/A')}</div>
-            <div class="track-meta">Last: ${formatTime(d.lastSeen)}</div>
-        </div>
-    `).join('');
-}
-
-async function saveAdminInfoEdit() {
-    if (!DB.settings) DB.settings = {};
-    DB.settings.adminInfo = {
-        name: (document.getElementById('admName') && document.getElementById('admName').value || 'Admin Gourab').trim(),
-        telegram: (document.getElementById('admTelegram').value || '').trim(),
-        facebook: (document.getElementById('admFacebook').value || '').trim(),
-        email: (document.getElementById('admEmail').value || '').trim(),
-        extra: (document.getElementById('admExtra').value || '').trim()
-    };
-    await saveDB();
-    alert('✅ Admin Information সেভ হয়েছে! ইউজার ড্যাশবোর্ডে দেখা যাবে।');
-}
-
-
-
-function loadPasswordRequests() {
-    const box = document.getElementById('passwordReqList');
-    if (!box || !DB) return;
-    const list = (DB.passwordRequests || []).filter(r => r.status === 'pending' || r.status === 'approved');
-    if (!list.length) {
-        box.innerHTML = '<div class="empty-msg">কোনো পাসওয়ার্ড রিকোয়েস্ট নেই</div>';
-        return;
-    }
-    box.innerHTML = list.slice().reverse().map(r => `
-        <div class="track-item" style="flex-direction:column;align-items:flex-start;">
-            <div><strong style="color:var(--text)">${escapeHtml(r.name || '')}</strong> — ${escapeHtml(r.email)}</div>
-            <div class="track-meta">কারণ: ${escapeHtml(r.reason || '')}</div>
-            <div class="track-meta">${formatTime(r.time)} • Status: ${r.status}</div>
-            ${r.photo ? '<img src="'+r.photo+'" style="max-width:100%;max-height:80px;border-radius:8px;margin-top:6px;">' : ''}
-            <div class="track-actions" style="margin-top:8px;">
-                ${r.status === 'pending' ? `<button class="btn-xs btn-xs-green" onclick="approvePasswordReq('${r.id}')">APPROVE</button>
-                <button class="btn-xs btn-xs-red" onclick="rejectPasswordReq('${r.id}')">REJECT</button>` : '<span style="color:var(--green);font-size:12px;">Approved — user can reset</span>'}
-            </div>
-        </div>
-    `).join('');
-}
-
-async function approvePasswordReq(id) {
-    const r = (DB.passwordRequests || []).find(x => x.id === id);
-    if (!r) return;
-    r.status = 'approved';
-    await saveDB();
-    alert('Approved! ইউজার এখন Forgot Password থেকে নতুন পাসওয়ার্ড সেট করতে পারবে।');
-    loadPasswordRequests();
-}
-
-async function rejectPasswordReq(id) {
-    const r = (DB.passwordRequests || []).find(x => x.id === id);
-    if (!r) return;
-    r.status = 'rejected';
-    await saveDB();
-    loadPasswordRequests();
-}
-
-function loadDeviceRequests() {
-    const box = document.getElementById('deviceReqList');
-    if (!box || !DB) return;
-    const list = (DB.deviceRequests || []).filter(r => r.status === 'pending');
-    if (!list.length) {
-        box.innerHTML = '<div class="empty-msg">কোনো নতুন ডিভাইস রিকোয়েস্ট নেই</div>';
-        return;
-    }
-    box.innerHTML = list.slice().reverse().map(r => `
-        <div class="track-item" style="flex-direction:column;align-items:flex-start;">
-            <div><strong style="color:var(--text)">${escapeHtml(r.name || '')}</strong> — ${escapeHtml(r.email)}</div>
-            <div class="track-meta">${escapeHtml(r.browser || '')} • ${escapeHtml(r.os || '')} • IP: ${escapeHtml(r.ip || '')}</div>
-            <div class="track-meta">${formatTime(r.time)}</div>
-            <div class="track-actions" style="margin-top:8px;">
-                <button class="btn-xs btn-xs-green" onclick="approveDeviceReq('${r.id}')">APPROVE DEVICE</button>
-                <button class="btn-xs btn-xs-red" onclick="rejectDeviceReq('${r.id}')">REJECT</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-async function approveDeviceReq(id) {
-    const r = (DB.deviceRequests || []).find(x => x.id === id);
-    if (!r) return;
-    const idx = DB.users.findIndex(u => (u.email || '').toLowerCase() === (r.email || '').toLowerCase());
-    if (idx >= 0) {
-        const u = DB.users[idx];
-        if (!Array.isArray(u.approvedDevices)) u.approvedDevices = [];
-        if (!Array.isArray(u.devices)) u.devices = [];
-        if (u.approvedDevices.length >= 3 && !u.approvedDevices.includes(r.fingerprint)) {
-            alert('এই ইউজারের ইতিমধ্যে ৩টি ডিভাইস আছে। আগে পুরনো ডিভাইস আনব্লক/রিমুভ করুন।');
-            return;
-        }
-        if (!u.approvedDevices.includes(r.fingerprint)) u.approvedDevices.push(r.fingerprint);
-        if (!u.devices.find(d => d.fingerprint === r.fingerprint)) {
-            u.devices.push({ fingerprint: r.fingerprint, browser: r.browser, os: r.os, ip: r.ip, lastSeen: new Date().toISOString(), deviceType: 'Desktop' });
-        }
-        if (Array.isArray(u.pendingDevices)) {
-            u.pendingDevices = u.pendingDevices.filter(d => d.fingerprint !== r.fingerprint);
-        }
-    }
-    r.status = 'approved';
-    await saveDB();
-    alert('ডিভাইস approve হয়েছে!');
-    loadDeviceRequests();
-    loadUsers();
-}
-
-async function rejectDeviceReq(id) {
-    const r = (DB.deviceRequests || []).find(x => x.id === id);
-    if (!r) return;
-    r.status = 'rejected';
-    const idx = DB.users.findIndex(u => (u.email || '').toLowerCase() === (r.email || '').toLowerCase());
-    if (idx >= 0 && Array.isArray(DB.users[idx].pendingDevices)) {
-        DB.users[idx].pendingDevices = DB.users[idx].pendingDevices.filter(d => d.fingerprint !== r.fingerprint);
-    }
-    await saveDB();
-    loadDeviceRequests();
-}
-
-
-loadDB();
-
-setInterval(function() {
-    const search = document.getElementById('userSearch');
-    if (search && search.value.trim() === '') {
-        loadDB();
-    }
-}, 8000);
+loadStats();
 </script>
 </body>
 </html>

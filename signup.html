@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up | A-Tuls Community</title>
+<meta name="theme-color" content="#0f766e">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --p: #0f766e; --p2: #14b8a6; --dark: #0f172a; --muted: #64748b; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: linear-gradient(135deg, #f0fdfa, #f8fafc);
+  color: var(--dark); min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 20px;
+}
+.auth-card {
+  background: #fff; border-radius: 20px; padding: 28px 22px;
+  width: 100%; max-width: 440px;
+  box-shadow: 0 10px 30px rgba(15,118,110,.08); border: 1px solid #e2e8f0;
+}
+.site-logo {
+  width: 90px; height: 90px; border-radius: 50%; position: relative;
+  display: flex; justify-content: center; align-items: center; margin: 0 auto 12px;
+  background: radial-gradient(circle,#10294b 0%,#06101f 45%,#010308 100%);
+  border: 3px solid #ffc62b;
+  box-shadow: 0 0 10px #00aaff, 0 0 20px rgba(0,140,255,.4);
+}
+.site-logo:before {
+  content: ""; position: absolute; width: 78px; height: 78px; border-radius: 50%;
+  border: 2px solid #00b7ff; box-shadow: 0 0 8px #009dff;
+}
+.site-logo .crown { position: absolute; top: 4px; font-size: 16px; color: #ffd329; text-shadow: 0 0 6px #ff9d00; }
+.site-logo .letter { position: absolute; top: 16px; font-family: Georgia,serif; font-size: 42px; font-weight: bold; font-style: italic; color: white; text-shadow: 2px 2px 0 #006cff, -1px -1px 0 #00c8ff; }
+.site-logo .name { position: absolute; top: 52px; font-family: Georgia,serif; font-size: 14px; font-weight: bold; font-style: italic; color: #ffc62b; text-shadow: 1px 1px 0 #714600; }
+.site-logo .orbit { position: absolute; width: 70px; height: 18px; border: 3px solid #00baff; border-right-color: #ffc62b; border-radius: 50%; transform: rotate(-15deg); }
+.form-label { font-weight: 600; font-size: 0.85rem; color: var(--dark); }
+.form-control, .form-select {
+  border-radius: 12px; padding: 11px 12px; font-size: 0.9rem; border: 1.5px solid #e2e8f0;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--p); box-shadow: 0 0 0 3px rgba(15,118,110,.12);
+}
+.btn-auth {
+  width: 100%; background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #fff; border: none; padding: 12px; border-radius: 12px;
+  font-weight: 700; font-size: 0.95rem; margin-top: 8px;
+  box-shadow: 0 4px 14px rgba(15,118,110,.3);
+}
+.btn-auth:hover { filter: brightness(1.05); color: #fff; }
+.auth-foot { text-align: center; margin-top: 18px; font-size: 0.85rem; color: var(--muted); }
+.auth-foot a { color: var(--p); font-weight: 650; }
+.back-home { text-align: center; margin-top: 14px; font-size: 0.85rem; }
+.back-home a { color: var(--muted); }
+.ref-note { font-size: 0.78rem; color: #ef4444; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="auth-card">
+  <a href="index.html" style="text-decoration:none">
+    <div class="site-logo">
+      <div class="crown">♛</div>
+      <div class="letter">A</div>
+      <div class="orbit"></div>
+      <div class="name">-tuls</div>
+    </div>
+  </a>
+  <h4 style="font-weight:800;font-size:1.2rem;text-align:center;margin-bottom:4px;">Create Account</h4>
+  <p style="text-align:center;color:var(--muted);font-size:0.85rem;margin-bottom:18px;">Join A-Tuls Community</p>
+  <form id="signupForm">
+    <div class="mb-2">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" placeholder="Choose username" required>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Email (Gmail)</label>
+      <input type="email" class="form-control" id="email" placeholder="name@gmail.com" required>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Gender</label>
+      <select class="form-select" id="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">API Code <span class="ref-note">* Required</span></label>
+      <input type="text" class="form-control" id="apiCode" placeholder="Admin থেকে পাওয়া API Key" required>
+      <div class="ref-note" style="margin-top:4px;font-weight:500">সঠিক API Code ছাড়া সাইনআপ হবে না</div>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">WhatsApp Number</label>
+      <input type="text" class="form-control" id="whatsapp" placeholder="01XXXXXXXXX">
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Telegram</label>
+      <input type="text" class="form-control" id="telegram" placeholder="@username">
+    </div>
+    <div class="row g-2 mb-2">
+      <div class="col-6">
+        <label class="form-label">Security Question</label>
+        <select class="form-select" id="sq" required>
+          <option value="" disabled selected>Select</option>
+          <option>What is your mother's maiden name?</option>
+          <option>What was the name of your first pet?</option>
+          <option>What was your first car?</option>
+          <option>What is your favorite movie?</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Answer</label>
+        <input type="text" class="form-control" id="sa" placeholder="Answer" required>
+      </div>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" placeholder="Min 6 characters" required>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Confirm Password</label>
+      <input type="password" class="form-control" id="confirm" placeholder="Re-enter password" required>
+    </div>
+    <button type="submit" class="btn-auth">Sign Up</button>
+  </form>
+  <div class="auth-foot">Already have an account? <a href="login.html">Login</a></div>
+</div>
+<div class="back-home"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></div>
+<script>
+document.getElementById('signupForm').onsubmit = function(e){
+  e.preventDefault();
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value;
+  const conf = document.getElementById('confirm').value;
+  const apiCode = document.getElementById('apiCode').value.trim();
+  if(pass !== conf){ alert('Passwords do not match'); return; }
+  if(pass.length < 6){ alert('Password min 6 characters'); return; }
+  if(!apiCode){ alert('API Code required!'); return; }
+
+  // Validate API Code
+  const keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  const validKey = keys.find(k => k.key === apiCode && new Date(k.expires) > new Date());
+  if(!validKey){
+    alert('Wrong API Code!\n\nসঠিক API Code দিন অথবা Membership থেকে প্যাকেজ কিনুন।');
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+  if(users.find(u => u.email === email || u.username === username)){
+    alert('Username or email already exists'); return;
+  }
+
+  // Paid API → paid package, Free API → Free (view only)
+  const apiType = validKey.type || 'free';
+  const pkg = apiType === 'paid' ? 'Basic' : 'Free';
+
+  const user = {
+    id: Date.now().toString(),
+    username, email,
+    gender: document.getElementById('gender').value,
+    apiCode: apiCode,
+    apiType: apiType,
+    whatsapp: document.getElementById('whatsapp').value.trim(),
+    telegram: document.getElementById('telegram').value.trim(),
+    security_question: document.getElementById('sq').value,
+    security_answer: document.getElementById('sa').value.trim(),
+    password: pass,
+    package: pkg,
+    role: 'user',
+    fb: '',
+    created: new Date().toISOString()
+  };
+  // Link API key to this new user
+  validKey.userId = user.id;
+  validKey.username = username;
+  localStorage.setItem('a_tuls_api_keys', JSON.stringify(keys));
+
+  users.push(user);
+  localStorage.setItem('a_tuls_users', JSON.stringify(users));
+  localStorage.setItem('a_tuls_session', JSON.stringify({id:user.id,username,email,role:'user',package:pkg}));
+  localStorage.setItem('a_tuls_role', 'user');
+  localStorage.setItem('a_tuls_profile', JSON.stringify({name:username,gmail:email,whatsapp:user.whatsapp,telegram:user.telegram,facebook:''}));
+  alert('Account created! Going to dashboard...');
+  window.location.href = 'dashboard.html';
+};
+</script>
+</body>
+</html>

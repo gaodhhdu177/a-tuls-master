@@ -1,895 +1,599 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A-tuls - √MASTER STYLES | Login</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>A-Tuls | Smart Email Tools Community</title>
+<meta name="theme-color" content="#0f766e">
+<meta name="description" content="A-Tuls - Powerful email tools, productivity apps and exclusive resources. Work smarter and faster.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-    --bg: #060a12;
-    --card: rgba(255,255,255,0.04);
-    --cyan: #00f0ff;
-    --purple: #7b2fff;
-    --green: #00ff9d;
-    --red: #ff3b5c;
-    --text: #e8f7ff;
-    --muted: #8b9cb3;
+  --p: #0f766e;
+  --p2: #14b8a6;
+  --dark: #0f172a;
+  --muted: #64748b;
 }
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    background: radial-gradient(ellipse at 30% 0%, #12182b 0%, var(--bg) 60%);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f8fafc;
+  color: var(--dark);
+  padding-bottom: 75px;
+  overflow-x: hidden;
 }
-.box {
-    width: 100%;
-    max-width: 420px;
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 28px;
-    padding: 36px 28px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+a { text-decoration: none; }
+
+/* ===== TOP NAV ===== */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(15,118,110,.08);
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px;
 }
 .logo {
-    text-align: center;
-    font-size: 1.7rem;
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--cyan), var(--purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 6px;
-    letter-spacing: 1px;
+  font-weight: 800; font-size: 1.4rem;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex; align-items: center; gap: 8px;
 }
-.sub { text-align:center; color:var(--muted); font-size:13px; margin-bottom:28px; }
-.tabs {
-    display: flex;
-    background: rgba(0,0,0,0.3);
-    border-radius: 14px;
-    padding: 4px;
-    margin-bottom: 24px;
+.nav-logo {
+  width: 42px; height: 42px; border-radius: 50%; position: relative;
+  display: inline-flex; justify-content: center; align-items: center;
+  background: radial-gradient(circle,#10294b 0%,#06101f 45%,#010308 100%);
+  border: 2px solid #ffc62b;
+  box-shadow: 0 0 8px #00aaff, 0 0 14px rgba(0,140,255,.35);
+  flex-shrink: 0;
 }
-.tab {
-    flex: 1;
-    padding: 12px;
-    text-align: center;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    color: var(--muted);
-    transition: 0.25s;
+.nav-logo:before {
+  content: ""; position: absolute; width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid #00b7ff;
 }
-.tab.active {
-    background: linear-gradient(135deg, var(--cyan), #00b8d4);
-    color: #000;
+.nav-logo .letter {
+  font-family: Georgia,serif; font-size: 22px; font-weight: bold; font-style: italic;
+  color: white; text-shadow: 1px 1px 0 #006cff, -1px -1px 0 #00c8ff; line-height: 1;
+  position: relative; top: -1px;
 }
-input {
-    width: 100%;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    color: white;
-    font-size: 15px;
-    outline: none;
+.nav-btns { display: flex; gap: 8px; align-items: center; }
+.btn-ghost {
+  border: 1.5px solid #e2e8f0; background: #fff; color: #475569;
+  padding: 7px 14px; border-radius: 50px; font-weight: 600; font-size: .85rem;
 }
-input:focus { border-color: var(--cyan); }
-.btn {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    margin-top: 8px;
-    background: linear-gradient(135deg, var(--cyan), #00b8d4);
-    color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+.btn-main {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #fff; border: none; padding: 8px 18px; border-radius: 50px;
+  font-weight: 600; font-size: .85rem;
+  box-shadow: 0 4px 14px rgba(15,118,110,.3);
 }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.btn:hover:not(:disabled) { transform: translateY(-2px); }
-.msg {
-    margin-top: 14px;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 13.5px;
-    text-align: center;
-    display: none;
+.btn-main:hover { color: #fff; filter: brightness(1.05); }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  padding: 50px 20px 60px;
+  text-align: center;
+  background: linear-gradient(165deg, #ecfdf5 0%, #f0fdfa 40%, #ffffff 100%);
+  overflow: hidden;
 }
-.msg.error { background: rgba(255,59,92,0.15); color: var(--red); display:block; }
-.msg.success { background: rgba(0,255,157,0.15); color: var(--green); display:block; }
-.footer { text-align:center; margin-top:24px; font-size:12px; color:var(--muted); }
-#registerForm { display: none; }
-.loading { font-size: 13px; color: var(--muted); text-align: center; margin-top: 10px; display: none; }
+.hero::before {
+  content: '';
+  position: absolute; top: -80px; right: -60px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(20,184,166,.18), transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(15,118,110,.12), transparent 70%);
+  border-radius: 50%;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(15,118,110,.1);
+  color: var(--p);
+  font-size: .78rem; font-weight: 700;
+  padding: 5px 14px; border-radius: 50px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(15,118,110,.15);
+}
+.hero h1 {
+  font-size: clamp(1.9rem, 5.5vw, 2.8rem);
+  font-weight: 800; line-height: 1.2;
+  color: var(--p);
+  margin-bottom: 12px;
+  position: relative;
+}
+.hero .sub {
+  font-size: 1.05rem; color: var(--muted); font-weight: 500;
+  margin-bottom: 14px;
+}
+.hero .desc {
+  font-size: .95rem; color: #94a3b8;
+  max-width: 440px; margin: 0 auto 28px; line-height: 1.65;
+  position: relative;
+}
+.hero-img {
+  max-width: 100%;
+  width: 340px;
+  margin: 28px auto 0;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(15,118,110,.15);
+  display: block;
+  position: relative;
+}
+
+/* ===== SECTION ===== */
+.sec { padding: 48px 18px; }
+.sec-label {
+  text-align: center; color: var(--p); font-weight: 700;
+  font-size: .85rem; letter-spacing: .3px; margin-bottom: 4px;
+}
+.sec-title {
+  text-align: center; font-weight: 800; font-size: 1.55rem;
+  color: var(--dark); margin-bottom: 28px;
+}
+
+/* How cards */
+.how-grid { display: grid; gap: 14px; max-width: 520px; margin: 0 auto; }
+.how-card {
+  background: #fff; border-radius: 16px; padding: 20px 18px;
+  display: flex; gap: 14px; align-items: flex-start;
+  box-shadow: 0 4px 18px rgba(0,0,0,.04);
+  border: 1px solid #f1f5f9;
+  transition: .25s;
+}
+.how-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(15,118,110,.1); }
+.how-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; flex-shrink: 0;
+}
+.how-card h6 { font-weight: 700; font-size: .95rem; margin-bottom: 4px; }
+.how-card p { font-size: .85rem; color: var(--muted); margin: 0; line-height: 1.5; }
+
+/* Tools Detailed Section */
+.tools-bg { background: linear-gradient(180deg, #f0fdfa, #ffffff); }
+.tool-detailed-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  max-width: 680px; 
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .tool-detailed-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.tool-detailed-card {
+  background: #fff; 
+  border-radius: 18px; 
+  padding: 22px; 
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0,0,0,.03);
+  transition: .25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.tool-detailed-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(15,118,110,.12);
+  border-color: rgba(15,118,110,.3);
+}
+.tool-card-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.tool-card-top .ti {
+  width: 50px; height: 50px; 
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(15,118,110,.1), rgba(20,184,166,.2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; color: var(--p);
+  flex-shrink: 0;
+}
+.tool-card-top h6 { 
+  font-weight: 850; 
+  font-size: 1.05rem; 
+  color: var(--dark); 
+  margin: 0; 
+}
+.tool-card-top span {
+  font-size: 0.72rem;
+  color: var(--p);
+  background: rgba(15,118,110,.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 3px;
+}
+.tool-detailed-card p {
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Packages */
+.pkg-grid {
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 640px; margin: 0 auto;
+}
+@media (min-width: 768px) { .pkg-grid { grid-template-columns: repeat(4, 1fr); } }
+.pkg-card {
+  background: #fff; border-radius: 18px; padding: 22px 14px;
+  text-align: center; border: 2px solid #f1f5f9;
+  transition: .25s; position: relative;
+}
+.pkg-card:hover { border-color: var(--p); box-shadow: 0 12px 30px rgba(15,118,110,.12); }
+.pkg-card.hot {
+  border-color: var(--p);
+  background: linear-gradient(180deg, #f0fdfa, #fff);
+}
+.pkg-card .tag {
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #fff; font-size: .65rem; font-weight: 700;
+  padding: 3px 12px; border-radius: 50px;
+}
+.pkg-name { font-size: .8rem; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.pkg-price { font-size: 1.7rem; font-weight: 800; color: var(--p); }
+.pkg-dur { font-size: .78rem; color: #94a3b8; margin-bottom: 12px; }
+.wa-btn {
+  display: block; width: 100%;
+  background: #25D366; color: #fff; border: none;
+  border-radius: 50px; padding: 10px; font-weight: 600; font-size: .85rem;
+  transition: .2s;
+}
+.wa-btn:hover { background: #1da851; color: #fff; }
+
+/* Showcase image section */
+.showcase {
+  padding: 40px 18px;
+  text-align: center;
+}
+.showcase img {
+  width: 100%; max-width: 480px;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(15,118,110,.18);
+}
+
+/* FAQ */
+.faq-item {
+  background: #fff; border-radius: 14px; padding: 16px 18px;
+  margin-bottom: 10px; border: 1px solid #f1f5f9;
+  max-width: 560px; margin-left: auto; margin-right: auto;
+}
+.faq-item h6 { font-weight: 700; color: var(--p); font-size: .9rem; margin-bottom: 4px; }
+.faq-item p { font-size: .85rem; color: var(--muted); margin: 0; }
+
+/* Footer */
+.foot {
+  text-align: center; padding: 28px 16px 20px;
+  color: #94a3b8; font-size: .8rem;
+}
+.foot strong { color: var(--p); }
+
+/* Bottom nav */
+.bnav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+  background: rgba(255,255,255,.95); backdrop-filter: blur(10px);
+  border-top: 1px solid #e2e8f0;
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 6px 0 8px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,.05);
+}
+.bn {
+  display: flex; flex-direction: column; align-items: center;
+  color: #94a3b8; font-size: .65rem; gap: 2px; min-width: 52px;
+}
+.bn i { font-size: 1.15rem; }
+.bn.on { color: var(--p); }
+.bn.l { color: #3b82f6; }
+.bn.s { color: #22c55e; }
+.fab-c { position: relative; top: -16px; }
+.fab {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 6px 18px rgba(15,118,110,.4);
+}
 </style>
 </head>
 <body>
-<div class="box">
-    <div class="logo">A-tuls - √MASTER</div>
-    <div class="sub">Premium Tools Platform</div>
 
-    <div class="tabs">
-        <div class="tab active" id="loginTab" onclick="showLogin()">Login</div>
-        <div class="tab" id="regTab" onclick="showRegister()">Register</div>
+<!-- Top Nav -->
+<header class="topnav">
+  <a href="index.html" class="logo"><span class="nav-logo"><span class="letter">A</span></span>A-Tuls</a>
+  <div class="nav-btns">
+    <a href="login.html" class="btn-ghost">Login</a>
+    <a href="signup.html" class="btn-main">Sign Up</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">✨ Better Email Management Services</div>
+  <h1>Welcome to A-Tuls<br>Community!</h1>
+  <p class="sub">Smart tools. Faster workflow. Real results.</p>
+  <p class="desc">Powerful email tools, productivity apps, and exclusive resources — all in one place to help you work smarter and faster.</p>
+  <a href="signup.html" class="btn-main" style="padding:14px 28px;font-size:1rem;display:inline-flex;align-items:center;gap:8px;">
+    <i class="fas fa-rocket"></i> Create A-Tuls Account
+  </a>
+  <img class="hero-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=85" alt="A-Tuls Dashboard" loading="lazy">
+</section>
+
+<!-- How It Works -->
+<section class="sec">
+  <div class="sec-label">A-Tuls Community</div>
+  <h2 class="sec-title">How It Works</h2>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-icon"><i class="fas fa-user-plus"></i></div>
+      <div>
+        <h6>Create Your Account</h6>
+        <p>Complete registration with your details. Once done, your account logs in automatically.</p>
+      </div>
     </div>
+    <div class="how-card">
+      <div class="how-icon"><i class="fas fa-th-large"></i></div>
+      <div>
+        <h6>Explore Applications</h6>
+        <p>All tools are built for email tasks — save time and get clean, organized results.</p>
+      </div>
+    </div>
+    <div class="how-card">
+      <div class="how-icon"><i class="fas fa-crown"></i></div>
+      <div>
+        <h6>Join Membership</h6>
+        <p>Unlock premium features, private group access and live support with a plan.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div id="loginForm">
-        <input type="email" id="loginEmail" placeholder="Email address">
-        <div style="position:relative;margin-bottom:12px;">
-            <input type="password" id="loginPass" placeholder="Password" style="margin-bottom:0;padding-right:48px;">
-            <button type="button" onclick="togglePass('loginPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8b9cb3;cursor:pointer;font-size:16px;"><i class="fas fa-eye"></i></button>
+<!-- Showcase image -->
+<section class="showcase">
+  <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=700&q=85" alt="Productivity" loading="lazy">
+</section>
+
+<!-- Tools with Full Description -->
+<section class="sec tools-bg">
+  <div class="sec-label">A-Tuls Community</div>
+  <h2 class="sec-title">The Tools We Provided & Full Details</h2>
+  <div class="tool-detailed-grid">
+    
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-folder-open"></i></div>
+          <div>
+            <h6>Email Vault</h6>
+            <span>Secure Storage</span>
+          </div>
         </div>
-        <div style="text-align:right;margin-bottom:10px;">
-            <a href="#" onclick="showForgot();return false;" style="color:#00f0ff;font-size:13px;font-weight:600;">Forgot Password?</a>
+        <p>A secure cloud vault system designed to safely store your critical email data. Encrypts and organizes your lists neatly for fast retrieval whenever needed.</p>
+      </div>
+    </div>
+
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-globe"></i></div>
+          <div>
+            <h6>IP TimeZone</h6>
+            <span>Location Tool</span>
+          </div>
         </div>
-        <button class="btn" id="loginBtn" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
-        <div class="msg" id="loginMsg"></div>
-        <div class="loading" id="loginLoading">লোড হচ্ছে...</div>
+        <p>A fast and highly reliable utility to check the exact geographical location, timezone, and detailed country information of any IP address in real time.</p>
+      </div>
     </div>
 
-    <div id="forgotForm" style="display:none;">
-        <p style="font-size:13px;color:#8b9cb3;margin-bottom:12px;text-align:center;">পাসওয়ার্ড ভুলে গেলে নিচের তথ্য দিন। Admin কনফার্ম করলে নতুন পাসওয়ার্ড সেট করতে পারবেন।</p>
-        <input type="email" id="forgotEmail" placeholder="Your Gmail / Email">
-        <input type="text" id="forgotReason" placeholder="কেন পাসওয়ার্ড ভুলে গেছেন?">
-        <label style="font-size:12px;color:#8b9cb3;display:block;margin-bottom:6px;">Photo (optional proof)</label>
-        <input type="file" id="forgotPhoto" accept="image/*" style="margin-bottom:12px;color:#8b9cb3;font-size:13px;">
-        <button class="btn" onclick="submitForgot()"><i class="fas fa-paper-plane"></i> Send Request to Admin</button>
-        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;margin-top:8px;" onclick="showLogin()">Back to Login</button>
-        <div class="msg" id="forgotMsg"></div>
-    </div>
-
-    <div id="resetForm" style="display:none;">
-        <p style="font-size:13px;color:#00ff9d;margin-bottom:12px;text-align:center;">Admin approve করেছে! নতুন পাসওয়ার্ড সেট করুন।</p>
-        <input type="email" id="resetEmail" placeholder="Your Email" readonly>
-        <div style="position:relative;margin-bottom:12px;">
-            <input type="password" id="resetPass" placeholder="New Password" style="margin-bottom:0;padding-right:48px;">
-            <button type="button" onclick="togglePass('resetPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8b9cb3;cursor:pointer;font-size:16px;"><i class="fas fa-eye"></i></button>
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-user-edit"></i></div>
+          <div>
+            <h6>Name Generator</h6>
+            <span>Profile Creator</span>
+          </div>
         </div>
-        <button class="btn" onclick="submitReset()"><i class="fas fa-key"></i> Set New Password</button>
-        <div class="msg" id="resetMsg"></div>
+        <p>An advanced generator tool to create unique random names and professional usernames for your projects or profiles instantly with a single click.</p>
+      </div>
     </div>
 
-    <div id="devicePendingBox" style="display:none;">
-        <p style="font-size:14px;color:#ffc800;text-align:center;margin-bottom:12px;line-height:1.5;">
-            🔒 নতুন ব্রাউজার/ডিভাইস থেকে লগইন!<br>
-            Admin-এর কনফার্মেশন অপেক্ষা করুন।
-        </p>
-        <p style="font-size:13px;color:#8b9cb3;text-align:center;margin-bottom:14px;" id="devicePendingText">স্ট্যাটাস চেক হচ্ছে...</p>
-        <a id="callAdminBtn" href="https://wa.me/8801944035239" target="_blank" class="btn" style="text-decoration:none;margin-bottom:10px;">
-            <i class="fas fa-phone"></i> Call / WhatsApp Admin
-        </a>
-        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;" onclick="location.reload()">Refresh Status</button>
-        <div class="msg" id="deviceMsg"></div>
-    </div>
-
-    <div id="siteBlockedBox" style="display:none;text-align:center;">
-        <div style="font-size:48px;margin-bottom:16px;">🚫</div>
-        <h2 style="font-size:1.5rem;color:#ff3b5c;margin-bottom:12px;">SITE OFF / BLOCKED</h2>
-        <p style="font-size:15px;color:#8b9cb3;line-height:1.6;margin-bottom:8px;" id="siteBlockMsg">
-            এই সাইট বর্তমানে Admin কর্তৃক বন্ধ করা হয়েছে।
-        </p>
-        <p style="font-size:13px;color:#64748b;">পরে আবার চেষ্টা করুন।</p>
-        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;margin-top:14px;" onclick="location.reload()">Refresh</button>
-    </div>
-
-    <div id="wrongPassBox" style="display:none;text-align:center;">
-        <div style="font-size:48px;margin-bottom:16px;">🔑</div>
-        <h2 style="font-size:1.35rem;color:#ff3b5c;margin-bottom:12px;">Wrong Password</h2>
-        <p style="font-size:15px;color:#8b9cb3;line-height:1.6;margin-bottom:8px;">
-            ভুল ইমেইল বা পাসওয়ার্ড দিয়েছেন। আবার চেষ্টা করুন।
-        </p>
-        <button class="btn" style="margin-top:14px;" onclick="backToLoginFromError()"><i class="fas fa-arrow-left"></i> Back to Login</button>
-        <div style="margin-top:12px;">
-            <a href="#" onclick="showForgot();return false;" style="color:#00f0ff;font-size:13px;font-weight:600;">Forgot Password?</a>
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-file-alt"></i></div>
+          <div>
+            <h6>Email Report</h6>
+            <span>Analytics App</span>
+          </div>
         </div>
+        <p>Track detailed reports and analytics for your email lists or marketing campaigns. Helps you accurately analyze deliverability and workflow progress.</p>
+      </div>
     </div>
 
-    <div id="accountBlockedBox" style="display:none;text-align:center;">
-        <div style="font-size:48px;margin-bottom:16px;">⛔</div>
-        <h2 style="font-size:1.35rem;color:#ff3b5c;margin-bottom:12px;">Account Blocked</h2>
-        <p style="font-size:15px;color:#8b9cb3;line-height:1.6;margin-bottom:8px;">
-            আপনার একাউন্ট Admin কর্তৃক ব্লক করা হয়েছে। লগইন সম্ভব নয়।
-        </p>
-        <a href="https://wa.me/8801944035239" target="_blank" class="btn" style="text-decoration:none;margin-top:14px;">
-            <i class="fas fa-phone"></i> Contact Admin
-        </a>
-        <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#8b9cb3;margin-top:10px;" onclick="backToLoginFromError()">Back</button>
-    </div>
-
-    <div id="registerForm">
-        <input type="text" id="regName" placeholder="Full Name">
-        <input type="email" id="regEmail" placeholder="Email address">
-        <div style="position:relative;margin-bottom:12px;">
-            <input type="password" id="regPass" placeholder="Password" style="margin-bottom:0;padding-right:48px;">
-            <button type="button" onclick="togglePass('regPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8b9cb3;cursor:pointer;font-size:16px;"><i class="fas fa-eye"></i></button>
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-copy"></i></div>
+          <div>
+            <h6>Duplicate Check</h6>
+            <span>Data Cleaner</span>
+          </div>
         </div>
-        <button class="btn" id="regBtn" onclick="doRegister()"><i class="fas fa-user-plus"></i> Create Account</button>
-        <div class="msg" id="regMsg"></div>
-        <div class="loading" id="regLoading">সেভ হচ্ছে...</div>
+        <p>Instantly scans your massive email lists, filters out duplicate entries, and provides you with clean, fresh, and error-free datasets.</p>
+      </div>
     </div>
 
-    <div class="footer">Developed by Gourab • 01944035239</div>
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-check-double"></i></div>
+          <div>
+            <h6>Email Validator</h6>
+            <span>Active Checker</span>
+          </div>
+        </div>
+        <p>Thoroughly checks whether your emails are active and valid. Automatically filters out dead or fake emails to make your list ready for production use.</p>
+      </div>
+    </div>
+
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-key"></i></div>
+          <div>
+            <h6>Password Gen</h6>
+            <span>Security Tool</span>
+          </div>
+        </div>
+        <p>Generates exceptionally strong, hack-proof secure passwords. Easily customize length and special characters to secure your accounts.</p>
+      </div>
+    </div>
+
+    <div class="tool-detailed-card">
+      <div>
+        <div class="tool-card-top">
+          <div class="ti"><i class="fas fa-random"></i></div>
+          <div>
+            <h6>Email Blender</h6>
+            <span>Mixer Tool</span>
+          </div>
+        </div>
+        <p>Seamlessly mixes or randomizes multiple different sources of email or data lists together, keeping your operational workflow smooth and consistent.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Packages -->
+<section class="sec" id="packages">
+  <div class="sec-label">Flexible Plans</div>
+  <h2 class="sec-title">Membership Packages</h2>
+  <p style="text-align:center;color:#64748b;font-size:.9rem;max-width:480px;margin:0 auto 24px;line-height:1.5;">Every package includes premium tools, private group access, setup guidance, and live support. Order via WhatsApp.</p>
+  <div class="pkg-grid">
+    <div class="pkg-card">
+      <div class="pkg-name">Basic</div>
+      <div style="font-size:.8rem;color:#94a3b8;text-decoration:line-through">৳300</div>
+      <div style="font-size:.7rem;color:#16a34a;font-weight:700">🔥 ৫০% ছাড়</div>
+      <div class="pkg-price">৳150</div>
+      <div class="pkg-dur">1 Month Subscription</div>
+      <ul style="list-style:none;padding:0;margin:0 0 12px;text-align:left;font-size:.78rem;color:#64748b;">
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>All Premium Tools</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Private Group Access</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Setup Guidance</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Live Support</li>
+        <li><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>API Access (1 month)</li>
+      </ul>
+      <button class="wa-btn" onclick="wa('Basic','150','1 Month')"><i class="fab fa-whatsapp"></i> Order Now</button>
+    </div>
+    <div class="pkg-card hot">
+      <span class="tag">Most Popular</span>
+      <div class="pkg-name">Standard</div>
+      <div style="font-size:.8rem;color:#94a3b8;text-decoration:line-through">৳900</div>
+      <div style="font-size:.7rem;color:#16a34a;font-weight:700">🔥 ৫০% ছাড়</div>
+      <div class="pkg-price">৳450</div>
+      <div class="pkg-dur">3 Month Subscription</div>
+      <ul style="list-style:none;padding:0;margin:0 0 12px;text-align:left;font-size:.78rem;color:#64748b;">
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>All Premium Tools</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Private Group Access</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Setup Guidance</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Live Support</li>
+        <li><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>API Access (3 months)</li>
+      </ul>
+      <button class="wa-btn" onclick="wa('Standard','450','3 Month')"><i class="fab fa-whatsapp"></i> Order Now</button>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">Popular</div>
+      <div style="font-size:.8rem;color:#94a3b8;text-decoration:line-through">৳1,800</div>
+      <div style="font-size:.7rem;color:#16a34a;font-weight:700">🔥 ৫০% ছাড়</div>
+      <div class="pkg-price">৳900</div>
+      <div class="pkg-dur">6 Month Subscription</div>
+      <ul style="list-style:none;padding:0;margin:0 0 12px;text-align:left;font-size:.78rem;color:#64748b;">
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>All Premium Tools</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Private Group Access</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Setup Guidance</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Live Support</li>
+        <li><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>API Access (6 months)</li>
+      </ul>
+      <button class="wa-btn" onclick="wa('Popular','900','6 Month')"><i class="fab fa-whatsapp"></i> Order Now</button>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">Premium</div>
+      <div style="font-size:.8rem;color:#94a3b8;text-decoration:line-through">৳3,600</div>
+      <div style="font-size:.7rem;color:#16a34a;font-weight:700">🔥 ৫০% ছাড়</div>
+      <div class="pkg-price">৳1800</div>
+      <div class="pkg-dur">12 Month Subscription</div>
+      <ul style="list-style:none;padding:0;margin:0 0 12px;text-align:left;font-size:.78rem;color:#64748b;">
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>All Premium Tools</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Private Group Access</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Setup Guidance</li>
+        <li style="margin-bottom:4px;"><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>Live Support</li>
+        <li><i class="fas fa-check" style="color:#22c55e;margin-right:6px;"></i>API Access (12 months)</li>
+      </ul>
+      <button class="wa-btn" onclick="wa('Premium','1800','12 Month')"><i class="fab fa-whatsapp"></i> Order Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" style="background:#f8fafc">
+  <div class="sec-label">Help</div>
+  <h2 class="sec-title">FAQ Questions</h2>
+  <div class="faq-item">
+    <h6>1. What is A-Tuls?</h6>
+    <p>A community platform with powerful tools for email management and digital productivity.</p>
+  </div>
+  <div class="faq-item">
+    <h6>2. How do I buy membership?</h6>
+    <p>Select a package and order via WhatsApp. Admin activates after payment confirmation.</p>
+  </div>
+  <div class="faq-item">
+    <h6>3. Are tools free?</h6>
+    <p>Some tools are free. Premium tools need an active membership plan.</p>
+  </div>
+  <div class="faq-item">
+    <h6>4. How to contact support?</h6>
+    <p>Message on WhatsApp or use the contact option after login.</p>
+  </div>
+</section>
+
+<div class="foot">
+  <strong>A-Tuls</strong> Community<br>
+  Developed by Gourab
 </div>
 
+<!-- Bottom Nav -->
+<nav class="bnav">
+  <a href="index.html" class="bn on"><i class="fas fa-home"></i>Home</a>
+  <a href="#packages" class="bn"><i class="fas fa-info-circle"></i>About</a>
+  <div class="fab-c"><a href="signup.html" class="fab"><i class="fas fa-users"></i></a></div>
+  <a href="login.html" class="bn l"><i class="fas fa-right-to-bracket"></i>Login</a>
+  <a href="signup.html" class="bn s"><i class="fas fa-user-plus"></i>Signup</a>
+</nav>
+
 <script>
-
-/* ========== SUPABASE CONFIG (Primary DB) ========== */
-const SUPABASE_URL = 'https://nzpomdjksdywndpyoubb.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_R52qXaRZpRLdoRSlobdSxg_xyPAB9c4';
-const SB_HEADERS = {
-  'apikey': SUPABASE_ANON_KEY,
-  'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-  'Content-Type': 'application/json',
-  'Prefer': 'return=representation'
-};
-
-const ADMIN_EMAIL = 'gourabmon112233@gmail.com';
-
-function rowToUser(row) {
-  if (!row) return null;
-  return {
-    id: row.id,
-    email: row.email,
-    name: row.name || '',
-    password: row.password_hash || '',
-    status: row.status || 'Pending',
-    mode: row.mode || 'free',
-    tools: Array.isArray(row.tools) ? row.tools : [],
-    profile: row.profile && typeof row.profile === 'object' ? row.profile : {},
-    devices: Array.isArray(row.devices) ? row.devices : [],
-    approvedDevices: Array.isArray(row.approved_devices) ? row.approved_devices : [],
-    pendingDevices: Array.isArray(row.pending_devices) ? row.pending_devices : (row.profile && row.profile.pendingDevices) || [],
-    blockedDevices: Array.isArray(row.blocked_devices) ? row.blocked_devices : [],
-    loginHistory: Array.isArray(row.login_history) ? row.login_history : [],
-    toolUsage: row.tool_usage && typeof row.tool_usage === 'object' ? row.tool_usage : {},
-    totalSessions: row.total_sessions || 0,
-    lastLogin: row.last_login || null,
-    joined: row.joined || '',
-    created: row.created_at || null
-  };
-}
-
-function userToPatch(u) {
-  return {
-    email: (u.email || '').toLowerCase(),
-    password_hash: u.password || u.password_hash || '',
-    name: u.name || '',
-    status: u.status || 'Pending',
-    mode: u.mode || 'free',
-    tools: u.tools || [],
-    profile: Object.assign({}, u.profile || {}, { pendingDevices: u.pendingDevices || [] }),
-    devices: u.devices || [],
-    approved_devices: u.approvedDevices || [],
-    blocked_devices: u.blockedDevices || [],
-    login_history: u.loginHistory || [],
-    tool_usage: u.toolUsage || {},
-    total_sessions: u.totalSessions || 0,
-    last_login: u.lastLogin || null,
-    joined: u.joined || '',
-    updated_at: new Date().toISOString()
-  };
-}
-
-async function sbFetch(path, opts) {
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, Object.assign({ headers: SB_HEADERS }, opts || {}));
-  if (!res.ok) {
-    const t = await res.text().catch(() => '');
-    throw new Error('Supabase ' + res.status + ': ' + t.slice(0, 200));
-  }
-  if (res.status === 204) return null;
-  const text = await res.text();
-  if (!text) return null;
-  return JSON.parse(text);
-}
-
-async function sbGetAllUsers() {
-  const rows = await sbFetch('app_users?select=*&order=created_at.desc');
-  return (rows || []).map(rowToUser);
-}
-
-async function sbGetUserByEmail(email) {
-  const rows = await sbFetch('app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()) + '&select=*');
-  return rows && rows[0] ? rowToUser(rows[0]) : null;
-}
-
-async function sbInsertUser(user) {
-  const body = userToPatch(user);
-  const rows = await sbFetch('app_users', { method: 'POST', body: JSON.stringify(body) });
-  return rows && rows[0] ? rowToUser(rows[0]) : user;
-}
-
-async function sbUpdateUserByEmail(email, userOrPatch) {
-  const body = userToPatch(Object.assign({ email: email }, userOrPatch));
-  delete body.email; // don't change email key in patch path
-  const rows = await sbFetch(
-    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
-    { method: 'PATCH', body: JSON.stringify(body) }
-  );
-  return rows && rows[0] ? rowToUser(rows[0]) : null;
-}
-
-async function sbDeleteUserByEmail(email) {
-  await sbFetch(
-    'app_users?email=eq.' + encodeURIComponent(String(email).toLowerCase()),
-    { method: 'DELETE', headers: Object.assign({}, SB_HEADERS, { Prefer: 'return=minimal' }) }
-  );
-}
-
-async function sbGetSettings() {
-  const rows = await sbFetch('app_settings?id=eq.1&select=*');
-  const r = rows && rows[0];
-  if (!r) {
-    return {
-      theme: 'dark-ocean',
-      siteLive: true,
-      registrationOpen: true,
-      notice: '',
-      adminInfo: {},
-      globalTools: [],
-      adminInfoVisible: true,
-      adminDevices: [],
-      blockMessage: ''
-    };
-  }
-  const info = r.admin_info && typeof r.admin_info === 'object' ? r.admin_info : {};
-  return {
-    theme: r.theme || 'dark-ocean',
-    siteLive: r.site_live !== false,
-    registrationOpen: r.registration_open !== false,
-    notice: r.notice || '',
-    adminInfo: info,
-    globalTools: Array.isArray(r.global_tools) ? r.global_tools : [],
-    adminInfoVisible: info.adminInfoVisible !== false,
-    adminDevices: Array.isArray(info.adminDevices) ? info.adminDevices : [],
-    blockMessage: info.blockMessage || '',
-    passwordRequests: Array.isArray(info.passwordRequests) ? info.passwordRequests : [],
-    deviceRequests: Array.isArray(info.deviceRequests) ? info.deviceRequests : []
-  };
-}
-
-async function sbSaveSettings(settings) {
-  const prev = await sbGetSettings();
-  const admin_info = Object.assign({}, prev.adminInfo || {}, settings.adminInfo || {}, {
-    adminInfoVisible: settings.adminInfoVisible !== false,
-    adminDevices: settings.adminDevices || prev.adminDevices || [],
-    blockMessage: settings.blockMessage || prev.blockMessage || '',
-    passwordRequests: settings.passwordRequests || prev.passwordRequests || [],
-    deviceRequests: settings.deviceRequests || prev.deviceRequests || []
-  });
-  const body = {
-    theme: settings.theme || 'dark-ocean',
-    site_live: settings.siteLive !== false,
-    registration_open: settings.registrationOpen !== false,
-    notice: settings.notice || '',
-    admin_info,
-    global_tools: settings.globalTools || [],
-    updated_at: new Date().toISOString()
-  };
-  await sbFetch('app_settings?id=eq.1', { method: 'PATCH', body: JSON.stringify(body) });
-}
-
-/** Compatibility: load full DB shape from Supabase */
-async function fetchDB() {
-  const [users, settings] = await Promise.all([sbGetAllUsers(), sbGetSettings()]);
-  return {
-    users,
-    settings,
-    posts: settings.adminInfo && settings.adminInfo.posts || [],
-    messages: settings.adminInfo && settings.adminInfo.messages || [],
-    passwordRequests: settings.passwordRequests || [],
-    deviceRequests: settings.deviceRequests || []
-  };
-}
-
-/**
- * Safe save: NEVER bulk-overwrite users.
- * Only upsert users present in db.users (by email) + save settings.
- * Does not delete users missing from local array (prevents wipe).
- */
-async function saveDB(db) {
-  if (!db) throw new Error('No db');
-  // Settings
-  if (db.settings) {
-    const s = Object.assign({}, db.settings, {
-      passwordRequests: db.passwordRequests || db.settings.passwordRequests || [],
-      deviceRequests: db.deviceRequests || db.settings.deviceRequests || []
-    });
-    // stash posts/messages inside admin_info to avoid extra tables for now
-    s.adminInfo = Object.assign({}, s.adminInfo || {}, {
-      posts: db.posts || [],
-      messages: db.messages || []
-    });
-    await sbSaveSettings(s);
-  }
-  // Users: update/insert one by one — never delete others
-  const list = Array.isArray(db.users) ? db.users : [];
-  for (const u of list) {
-    if (!u || !u.email) continue;
-    const existing = await sbGetUserByEmail(u.email);
-    if (existing) {
-      await sbUpdateUserByEmail(u.email, u);
-    } else {
-      await sbInsertUser(u);
-    }
-  }
-  return true;
-}
-
-
-function togglePass(id, btn) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (el.type === 'password') {
-        el.type = 'text';
-        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
-    } else {
-        el.type = 'password';
-        btn.innerHTML = '<i class="fas fa-eye"></i>';
-    }
-}
-
-function showForgot() {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('registerForm').style.display = 'none';
-    document.getElementById('forgotForm').style.display = 'block';
-    document.getElementById('resetForm').style.display = 'none';
-    document.getElementById('devicePendingBox').style.display = 'none';
-}
-
-function hideAllForms() {
-    ['loginForm','registerForm','forgotForm','resetForm','devicePendingBox','siteBlockedBox','wrongPassBox','accountBlockedBox'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-    });
-}
-
-function backToLoginFromError() {
-    hideAllForms();
-    const tabs = document.querySelector('.tabs');
-    if (tabs) tabs.style.display = 'flex';
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('loginTab').classList.add('active');
-    document.getElementById('regTab').classList.remove('active');
-}
-
-async function submitForgot() {
-    const email = (document.getElementById('forgotEmail').value || '').trim().toLowerCase();
-    const reason = (document.getElementById('forgotReason').value || '').trim();
-    const msg = document.getElementById('forgotMsg');
-    if (!email || !reason) {
-        msg.className = 'msg error'; msg.textContent = 'ইমেইল ও কারণ দিন'; return;
-    }
-    let photo = '';
-    const file = document.getElementById('forgotPhoto').files[0];
-    if (file) {
-        photo = await compressImage(file, 400, 0.7);
-    }
-    try {
-        const db = await fetchDB();
-        if (!Array.isArray(db.passwordRequests)) db.passwordRequests = [];
-        const user = (db.users || []).find(u => (u.email || '').toLowerCase() === email);
-        if (!user) {
-            msg.className = 'msg error'; msg.textContent = 'এই ইমেইল রেজিস্টার্ড নয়'; return;
-        }
-        db.passwordRequests = db.passwordRequests.filter(r => r.email !== email || r.status !== 'pending');
-        db.passwordRequests.push({
-            id: Date.now().toString(36),
-            email, reason, photo,
-            name: user.name || '',
-            status: 'pending',
-            time: new Date().toISOString()
-        });
-        await saveDB(db);
-        msg.className = 'msg success';
-        msg.textContent = 'রিকোয়েস্ট পাঠানো হয়েছে! Admin approve করলে নতুন পাসওয়ার্ড সেট করতে পারবেন।';
-    } catch (e) {
-        msg.className = 'msg error'; msg.textContent = 'নেটওয়ার্ক এরর';
-    }
-}
-
-async function compressImage(file, maxW, quality) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        const url = URL.createObjectURL(file);
-        img.onload = () => {
-            const scale = Math.min(1, maxW / img.width);
-            const c = document.createElement('canvas');
-            c.width = Math.round(img.width * scale);
-            c.height = Math.round(img.height * scale);
-            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-            URL.revokeObjectURL(url);
-            resolve(c.toDataURL('image/jpeg', quality));
-        };
-        img.onerror = () => resolve('');
-        img.src = url;
-    });
-}
-
-async function checkResetApproval(email) {
-    try {
-        const db = await fetchDB();
-        const req = (db.passwordRequests || []).find(r => r.email === email && r.status === 'approved');
-        if (req) {
-            hideAllForms();
-            document.getElementById('resetForm').style.display = 'block';
-            document.getElementById('resetEmail').value = email;
-            return true;
-        }
-    } catch(e) {}
-    return false;
-}
-
-async function submitReset() {
-    const email = (document.getElementById('resetEmail').value || '').trim().toLowerCase();
-    const pass = document.getElementById('resetPass').value;
-    const msg = document.getElementById('resetMsg');
-    if (!pass || pass.length < 4) {
-        msg.className = 'msg error'; msg.textContent = 'পাসওয়ার্ড কমপক্ষে ৪ অক্ষর'; return;
-    }
-    try {
-        const db = await fetchDB();
-        const idx = (db.users || []).findIndex(u => (u.email || '').toLowerCase() === email);
-        if (idx < 0) { msg.className = 'msg error'; msg.textContent = 'ইউজার পাওয়া যায়নি'; return; }
-        db.users[idx].password = pass;
-        if (Array.isArray(db.passwordRequests)) {
-            db.passwordRequests.forEach(r => {
-                if (r.email === email && r.status === 'approved') r.status = 'completed';
-            });
-        }
-        await saveDB(db);
-        msg.className = 'msg success'; msg.textContent = 'পাসওয়ার্ড আপডেট হয়েছে! লগইন করুন।';
-        setTimeout(() => { showLogin(); }, 1200);
-    } catch(e) {
-        msg.className = 'msg error'; msg.textContent = 'সেভ ব্যর্থ';
-    }
-}
-
-const MAX_DEVICES = 3;
-
-
-function showLogin() {
-    hideAllForms();
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('loginTab').classList.add('active');
-    document.getElementById('regTab').classList.remove('active');
-}
-function showRegister() {
-    hideAllForms();
-    document.getElementById('registerForm').style.display = 'block';
-    document.getElementById('regTab').classList.add('active');
-    document.getElementById('loginTab').classList.remove('active');
-}
-
-async function doLogin() {
-    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-    const pass  = document.getElementById('loginPass').value;
-    const msg   = document.getElementById('loginMsg');
-    const btn   = document.getElementById('loginBtn');
-    const loading = document.getElementById('loginLoading');
-
-    msg.className = 'msg';
-    msg.style.display = 'none';
-
-    if (!email || !pass) {
-        msg.className = 'msg error';
-        msg.textContent = 'ইমেইল ও পাসওয়ার্ড দিন';
-        return;
-    }
-
-    // Admin login — ডিভাইস ট্র্যাক + Dashboard (Admin Panel লিংক সেখানে)
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-        btn.disabled = true;
-        loading.style.display = 'block';
-        try {
-            const deviceInfo = await collectDeviceInfo();
-            try {
-                const db = await fetchDB();
-                if (!db.settings) db.settings = {};
-                if (!Array.isArray(db.settings.adminDevices)) db.settings.adminDevices = [];
-                const di = db.settings.adminDevices.findIndex(d => d.fingerprint === deviceInfo.fingerprint);
-                if (di >= 0) {
-                    db.settings.adminDevices[di] = { ...db.settings.adminDevices[di], ...deviceInfo };
-                } else {
-                    db.settings.adminDevices.push(deviceInfo);
-                    if (db.settings.adminDevices.length > 20) {
-                        db.settings.adminDevices = db.settings.adminDevices.slice(-20);
-                    }
-                }
-                await saveDB(db);
-            } catch (e) { console.error('Admin device track', e); }
-            localStorage.setItem('a_tuls_role', 'admin');
-            localStorage.setItem('a_tuls_user', JSON.stringify({
-                name: 'Admin Gourab', email: ADMIN_EMAIL, status: 'Approved', mode: 'premium'
-            }));
-            window.location.href = 'dashboard.html';
-        } finally {
-            btn.disabled = false;
-            loading.style.display = 'none';
-        }
-        return;
-    }
-
-    btn.disabled = true;
-    loading.style.display = 'block';
-
-    try {
-        const db = await fetchDB();
-
-        // Site live check - BIG page
-        if (db.settings && db.settings.siteLive === false) {
-            hideAllForms();
-            document.querySelector('.tabs').style.display = 'none';
-            document.getElementById('siteBlockedBox').style.display = 'block';
-            const bm = document.getElementById('siteBlockMsg');
-            if (bm) bm.textContent = db.settings.blockMessage || 'এই সাইট বর্তমানে Admin কর্তৃক বন্ধ / ব্লক করা হয়েছে।';
-            return;
-        }
-
-        const users = db.users || [];
-        const userIdx = users.findIndex(u => (u.email || '').toLowerCase() === email && u.password === pass);
-
-        if (userIdx === -1) {
-            hideAllForms();
-            document.querySelector('.tabs').style.display = 'none';
-            document.getElementById('wrongPassBox').style.display = 'block';
-            return;
-        }
-
-        let user = users[userIdx];
-
-        // Ensure tracking fields exist
-        if (!Array.isArray(user.devices)) user.devices = [];
-        if (!Array.isArray(user.loginHistory)) user.loginHistory = [];
-        if (!Array.isArray(user.blockedDevices)) user.blockedDevices = [];
-        if (!user.toolUsage || typeof user.toolUsage !== 'object') user.toolUsage = {};
-        if (!user.totalSessions) user.totalSessions = 0;
-
-        // Collect device & check block BEFORE allowing login
-        const deviceInfo = await collectDeviceInfo();
-
-        if (user.blockedDevices.includes(deviceInfo.fingerprint)) {
-            msg.className = 'msg error';
-            msg.textContent = '⛔ এই ডিভাইস/ব্রাউজার Admin কর্তৃক ব্লক করা হয়েছে। লগইন সম্ভব নয়।';
-            return;
-        }
-
-        if (user.status === 'Pending') {
-            localStorage.setItem('a_tuls_role', 'pending');
-            localStorage.setItem('a_tuls_user', JSON.stringify(user));
-            window.location.href = 'pending.html';
-            return;
-        }
-
-        if (user.status === 'Blocked') {
-            hideAllForms();
-            document.querySelector('.tabs').style.display = 'none';
-            document.getElementById('accountBlockedBox').style.display = 'block';
-            return;
-        }
-
-        // Check approved reset
-        await checkResetApproval(email);
-
-        // Device management: max 3 + new device needs admin approval
-        if (!Array.isArray(user.pendingDevices)) user.pendingDevices = [];
-        if (!Array.isArray(user.approvedDevices)) {
-            user.approvedDevices = (user.devices || []).map(d => d.fingerprint);
-        }
-
-        const existingDev = user.devices.findIndex(d => d.fingerprint === deviceInfo.fingerprint);
-        const isKnown = existingDev >= 0 || user.approvedDevices.includes(deviceInfo.fingerprint);
-
-        if (!isKnown) {
-            // New browser — request admin approval
-            const alreadyPending = user.pendingDevices.find(d => d.fingerprint === deviceInfo.fingerprint);
-            if (!alreadyPending) {
-                user.pendingDevices.push({ ...deviceInfo, status: 'pending', requestedAt: new Date().toISOString() });
-            }
-            // Also global list for admin
-            if (!Array.isArray(db.deviceRequests)) db.deviceRequests = [];
-            if (!db.deviceRequests.find(r => r.email === email && r.fingerprint === deviceInfo.fingerprint && r.status === 'pending')) {
-                db.deviceRequests.push({
-                    id: Date.now().toString(36),
-                    email, name: user.name || '',
-                    fingerprint: deviceInfo.fingerprint,
-                    browser: deviceInfo.browser, os: deviceInfo.os, ip: deviceInfo.ip,
-                    status: 'pending', time: new Date().toISOString()
-                });
-            }
-            db.users[userIdx] = user;
-            await saveDB(db);
-            hideAllForms();
-            document.querySelector('.tabs').style.display = 'none';
-            document.getElementById('devicePendingBox').style.display = 'block';
-            document.getElementById('devicePendingText').textContent = 'Admin-এর অনুমতির অপেক্ষায়... (' + (deviceInfo.browser || '') + ')';
-            // update call link from admin info
-            try {
-                const tg = (db.settings && db.settings.adminInfo && db.settings.adminInfo.telegram) || '8801944035239';
-                document.getElementById('callAdminBtn').href = 'https://wa.me/' + String(tg).replace(/[^0-9]/g,'');
-            } catch(e) {}
-            return;
-        }
-
-        // Max 3 approved devices — only allow if fingerprint is in first 3 approved or already known
-        if (user.approvedDevices.length >= MAX_DEVICES && !user.approvedDevices.includes(deviceInfo.fingerprint)) {
-            msg.className = 'msg error';
-            msg.textContent = '⛔ সর্বোচ্চ ৩টি ব্রাউজার/ডিভাইস অনুমোদিত। পুরনো ডিভাইস থেকে লগইন করুন বা Admin-কে যোগাযোগ করুন।';
-            return;
-        }
-
-        // Record login tracking
-        if (existingDev >= 0) {
-            user.devices[existingDev] = { ...user.devices[existingDev], ...deviceInfo };
-        } else {
-            user.devices.push(deviceInfo);
-            if (!user.approvedDevices.includes(deviceInfo.fingerprint)) {
-                user.approvedDevices.push(deviceInfo.fingerprint);
-            }
-            if (user.devices.length > 15) user.devices = user.devices.slice(-15);
-        }
-        // Keep only max 3 approved if somehow more
-        if (user.approvedDevices.length > MAX_DEVICES) {
-            user.approvedDevices = user.approvedDevices.slice(0, MAX_DEVICES);
-        }
-
-        user.loginHistory.push({
-            time: deviceInfo.lastSeen,
-            browser: deviceInfo.browser,
-            os: deviceInfo.os,
-            ip: deviceInfo.ip,
-            deviceType: deviceInfo.deviceType
-        });
-        if (user.loginHistory.length > 30) user.loginHistory = user.loginHistory.slice(-30);
-
-        user.lastLogin = deviceInfo.lastSeen;
-        user.totalSessions = (user.totalSessions || 0) + 1;
-
-        db.users[userIdx] = user;
-        await saveDB(db);
-
-        localStorage.setItem('a_tuls_role', 'user');
-        localStorage.setItem('a_tuls_user', JSON.stringify(user));
-        window.location.href = 'dashboard.html';
-    } catch (e) {
-        msg.className = 'msg error';
-        msg.textContent = 'নেটওয়ার্ক এরর! আবার চেষ্টা করুন।';
-        console.error(e);
-    } finally {
-        btn.disabled = false;
-        loading.style.display = 'none';
-    }
-}
-
-async function doRegister() {
-    const name  = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim().toLowerCase();
-    const pass  = document.getElementById('regPass').value;
-    const msg   = document.getElementById('regMsg');
-    const btn   = document.getElementById('regBtn');
-    const loading = document.getElementById('regLoading');
-
-    msg.className = 'msg';
-    msg.style.display = 'none';
-
-    if (!name || !email || !pass) {
-        msg.className = 'msg error';
-        msg.textContent = 'সব ফিল্ড পূরণ করুন';
-        return;
-    }
-
-    if (pass.length < 4) {
-        msg.className = 'msg error';
-        msg.textContent = 'পাসওয়ার্ড কমপক্ষে ৪ অক্ষর হতে হবে';
-        return;
-    }
-
-    btn.disabled = true;
-    loading.style.display = 'block';
-
-    try {
-        const db = await fetchDB();
-        if (!db.users) db.users = [];
-        if (!db.settings) {
-            db.settings = {
-                theme: 'dark-ocean',
-                adminInfoVisible: true,
-                registrationOpen: true,
-                siteLive: true,
-                notice: '',
-                globalTools: [
-                    'Duplicate Checker', 'Data Formatter', 'Report Generator',
-                    'Email Validator', 'Email Vault', 'Names & Recovery',
-                    'Password Generator', 'IP TimeZone Finder', 'Gmail format fixer'
-                ]
-            };
-        }
-
-        if (db.settings.siteLive === false) {
-            msg.className = 'msg error';
-            msg.textContent = 'সাইট সাময়িক বন্ধ আছে।';
-            return;
-        }
-
-        if (db.settings.registrationOpen === false) {
-            msg.className = 'msg error';
-            msg.textContent = 'রেজিস্ট্রেশন এখন বন্ধ আছে!';
-            return;
-        }
-
-        if (db.users.find(u => (u.email || '').toLowerCase() === email)) {
-            msg.className = 'msg error';
-            msg.textContent = 'এই ইমেইল ইতিমধ্যে রেজিস্টার্ড';
-            return;
-        }
-
-        // Collect device for new user
-        const deviceInfo = await collectDeviceInfo();
-
-        const newUser = {
-            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-            name,
-            email,
-            password: pass,
-            status: 'Pending',
-            mode: 'free',
-            tools: [],
-            joined: new Date().toLocaleDateString('en-GB'),
-            created: new Date().toISOString(),
-            // Ultra Tracking fields
-            devices: [deviceInfo],
-            approvedDevices: [deviceInfo.fingerprint],
-            pendingDevices: [],
-            blockedDevices: [],
-            loginHistory: [{
-                time: deviceInfo.lastSeen,
-                browser: deviceInfo.browser,
-                os: deviceInfo.os,
-                ip: deviceInfo.ip,
-                deviceType: deviceInfo.deviceType
-            }],
-            toolUsage: {},
-            lastLogin: deviceInfo.lastSeen,
-            totalSessions: 1,
-            profile: {
-                photo: '',
-                bio: '',
-                phone: '',
-                publicMessage: '',
-                showOnHome: true
-            }
-        };
-
-        db.users.push(newUser);
-        await saveDB(db);
-
-        msg.className = 'msg success';
-        msg.textContent = 'রেজিস্ট্রেশন সফল! অ্যাডমিন অ্যাপ্রুভের জন্য অপেক্ষা করুন।';
-
-        setTimeout(() => {
-            localStorage.setItem('a_tuls_role', 'pending');
-            localStorage.setItem('a_tuls_user', JSON.stringify(newUser));
-            window.location.href = 'pending.html';
-        }, 1200);
-    } catch (e) {
-        msg.className = 'msg error';
-        msg.textContent = 'নেটওয়ার্ক এরর! আবার চেষ্টা করুন।';
-        console.error(e);
-    } finally {
-        btn.disabled = false;
-        loading.style.display = 'none';
-    }
+const WA = '8801336489062';
+function wa(n,p,d) {
+  const m = encodeURIComponent(`Hello,\nI want to buy the *${n}* package (${d}) on A-Tuls.\nPrice: ৳${p}\nPlease activate it.`);
+  window.open(`https://wa.me/${WA}?text=${m}`,'_blank');
 }
 </script>
 </body>

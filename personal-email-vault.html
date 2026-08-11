@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Email Vault | Ultra Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --danger: #ef4444;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: 
+                radial-gradient(ellipse at 15% 20%, rgba(13, 148, 136, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+                linear-gradient(160deg, #f8fafc 0%, #f1f5f9 40%, #ecfdf5 100%);
+            min-height: 100vh;
+            color: var(--text);
+            padding: 24px 16px 50px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.3);
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.3rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header p { color: var(--muted); font-size: 15px; }
+
+        .main-card {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            padding: 28px;
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            width: 28px;
+            height: 28px;
+            background: #ccfbf1;
+            color: #0d9488;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 14.5px;
+            background: #f8fafc;
+            transition: all 0.25s ease;
+            resize: none;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #14b8a6;
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+            background: white;
+        }
+
+        textarea {
+            font-family: 'Courier New', monospace;
+            height: 160px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 20px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: white;
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(13, 148, 136, 0.45);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1.5px solid #e2e8f0;
+        }
+
+        .btn-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1.5px solid #fecaca;
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 10px;
+        }
+
+        /* Vault List */
+        .vault-list {
+            margin-top: 32px;
+        }
+
+        .vault-item {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 14px;
+            transition: all 0.25s ease;
+        }
+
+        .vault-item:hover {
+            border-color: #14b8a6;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .vault-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .vault-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text);
+        }
+
+        .vault-meta {
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .vault-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .vault-preview {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12.5px;
+            color: #475569;
+            max-height: 80px;
+            overflow: hidden;
+            white-space: pre-wrap;
+            margin-top: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #fef2f2;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal-body { padding: 24px; }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .message {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .message.show { display: flex; }
+        .message.success {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .message.error {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+  var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+  if(!s){ alert('Please login first!'); location.replace('login.html'); return; }
+  if(s.role === 'admin') return;
+  var pkg = s.package || 'Free';
+  if(pkg !== 'Free') return; // paid package OK
+  var keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  var myKeys = keys.filter(function(k){ return k.userId === s.id && new Date(k.expires) > new Date(); });
+  var paidApi = myKeys.find(function(k){ return (k.type||'free') === 'paid'; });
+  if(paidApi) return;
+  var freeApi = myKeys.find(function(k){ return (k.type||'free') === 'free'; });
+  if(freeApi){
+    alert('Free API দিয়ে টুল চালানো যায় না।
+Paid Package কিনুন বা Admin থেকে Paid API নিন।');
+    location.replace('membership.html');
+    return;
+  }
+  var apiIn = prompt('API Key দিন (Paid API প্রয়োজন):');
+  if(!apiIn){ alert('API Key required!'); location.replace('membership.html'); return; }
+  var valid = keys.find(function(k){ return k.key === apiIn.trim() && new Date(k.expires) > new Date(); });
+  if(!valid){
+    alert('Wrong API Key!');
+    location.replace('membership.html');
+    return;
+  }
+  if((valid.type||'free') === 'free'){
+    alert('Free API দিয়ে টুল চালানো যায় না। Paid API নিন।');
+    location.replace('membership.html');
+    return;
+  }
+})();
+</script>
+
+    <div class="container">
+        <div class="header">
+            <div class="badge"><i class="fas fa-crown"></i> PREMIUM VERSION</div>
+            <h1>Personal Email Vault</h1>
+            <p>Secure private storage for your email lists • Saved in your browser</p>
+        </div>
+
+        <div class="main-card">
+            <!-- Create New -->
+            <div class="section-title"><i class="fas fa-plus-circle"></i> Create New Vault File</div>
+            
+            <input type="text" id="fileTitle" placeholder="File Name / Title (e.g. USA Emails Batch 1)" style="margin-bottom: 14px;">
+            
+            <textarea id="fileData" placeholder="Paste your email list here (one per line)..."></textarea>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="pasteMain()">
+                    <i class="fas fa-paste"></i> Paste
+                </button>
+                <button class="btn btn-primary" onclick="saveNewFile()">
+                    <i class="fas fa-save"></i> Save to Vault
+                </button>
+                <button class="btn btn-danger" onclick="clearMain()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+
+            <div class="message" id="messageBox"></div>
+
+            <!-- Vault List -->
+            <div class="vault-list">
+                <div class="section-title" style="margin-top: 28px;">
+                    <i class="fas fa-folder-open"></i> Your Vault Files
+                    <span id="fileCount" style="margin-left:auto; font-size:13px; color:var(--muted); font-weight:600;"></span>
+                </div>
+                <div id="vaultContainer"></div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Data is stored in your browser (LocalStorage) • No server • Fully private
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Vault File</h3>
+                <button class="modal-close" onclick="closeModal('editModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-weight:600; font-size:13px; margin-bottom:6px; display:block;">File Title</label>
+                    <input type="text" id="editTitle">
+                </div>
+                <div>
+                    <label style="font-weight:600; font-size:13px; margin-bottom:6px; display:block;">Email Data</label>
+                    <textarea id="editData" style="height:220px;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" onclick="closeModal('editModal')">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="updateFile()">
+                    <i class="fas fa-save"></i> Update
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Append Modal -->
+    <div class="modal-overlay" id="appendModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Append Emails</h3>
+                <button class="modal-close" onclick="closeModal('appendModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="appendId">
+                <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">New emails will be added at the end of this file.</p>
+                <textarea id="appendData" style="height:180px;" placeholder="Paste emails to append..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" onclick="closeModal('appendModal')">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="appendToFile()">
+                    <i class="fas fa-plus"></i> Append
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'gtools_email_vault';
+
+        function getVault() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveVault(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
+
+        function showMessage(text, type = 'success') {
+            const box = document.getElementById('messageBox');
+            box.className = `message show ${type}`;
+            box.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${text}`;
+            clearTimeout(window.msgTimeout);
+            window.msgTimeout = setTimeout(() => box.classList.remove('show'), 3500);
+        }
+
+        function pasteMain() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('fileData').value = text;
+                showMessage('Pasted successfully!');
+            }).catch(() => showMessage('Clipboard access failed', 'error'));
+        }
+
+        function clearMain() {
+            document.getElementById('fileTitle').value = '';
+            document.getElementById('fileData').value = '';
+        }
+
+        function saveNewFile() {
+            const title = document.getElementById('fileTitle').value.trim();
+            const data = document.getElementById('fileData').value.trim();
+
+            if (!title) return showMessage('Please enter a file title', 'error');
+            if (!data) return showMessage('Please enter some email data', 'error');
+
+            const vault = getVault();
+            vault.unshift({
+                id: generateId(),
+                title,
+                data,
+                created: new Date().toISOString(),
+                updated: new Date().toISOString()
+            });
+            saveVault(vault);
+            clearMain();
+            renderVault();
+            showMessage('File saved to vault!');
+        }
+
+        function renderVault() {
+            const vault = getVault();
+            const container = document.getElementById('vaultContainer');
+            document.getElementById('fileCount').textContent = vault.length + ' file(s)';
+
+            if (vault.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>No files in your vault yet.<br>Create your first one above.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = vault.map(file => {
+                const lines = file.data.split('\n').filter(l => l.trim()).length;
+                const preview = file.data.split('\n').slice(0, 4).join('\n') + (lines > 4 ? '\n...' : '');
+                const date = new Date(file.updated || file.created).toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'short', year: 'numeric'
+                });
+
+                return `
+                    <div class="vault-item">
+                        <div class="vault-header">
+                            <div>
+                                <div class="vault-title">${escapeHtml(file.title)}</div>
+                                <div class="vault-meta">${lines} emails • Updated ${date}</div>
+                            </div>
+                            <div class="vault-actions">
+                                <button class="btn btn-sm btn-secondary" onclick="openEdit('${file.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-secondary" onclick="openAppend('${file.id}')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="btn btn-sm btn-secondary" onclick="copyFile('${file.id}')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteFile('${file.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="vault-preview">${escapeHtml(preview)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function openEdit(id) {
+            const file = getVault().find(f => f.id === id);
+            if (!file) return;
+            document.getElementById('editId').value = id;
+            document.getElementById('editTitle').value = file.title;
+            document.getElementById('editData').value = file.data;
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function updateFile() {
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('editTitle').value.trim();
+            const data = document.getElementById('editData').value.trim();
+
+            if (!title || !data) return showMessage('Title and data required', 'error');
+
+            const vault = getVault();
+            const idx = vault.findIndex(f => f.id === id);
+            if (idx === -1) return;
+
+            vault[idx].title = title;
+            vault[idx].data = data;
+            vault[idx].updated = new Date().toISOString();
+            saveVault(vault);
+            closeModal('editModal');
+            renderVault();
+            showMessage('File updated!');
+        }
+
+        function openAppend(id) {
+            document.getElementById('appendId').value = id;
+            document.getElementById('appendData').value = '';
+            document.getElementById('appendModal').classList.add('show');
+        }
+
+        function appendToFile() {
+            const id = document.getElementById('appendId').value;
+            const newData = document.getElementById('appendData').value.trim();
+            if (!newData) return showMessage('Nothing to append', 'error');
+
+            const vault = getVault();
+            const idx = vault.findIndex(f => f.id === id);
+            if (idx === -1) return;
+
+            vault[idx].data = vault[idx].data.trim() + '\n' + newData;
+            vault[idx].updated = new Date().toISOString();
+            saveVault(vault);
+            closeModal('appendModal');
+            renderVault();
+            showMessage('Emails appended!');
+        }
+
+        function copyFile(id) {
+            const file = getVault().find(f => f.id === id);
+            if (!file) return;
+            navigator.clipboard.writeText(file.data).then(() => {
+                showMessage('File content copied!');
+            });
+        }
+
+        function deleteFile(id) {
+            if (!confirm('Are you sure you want to delete this file? This cannot be undone.')) return;
+            const vault = getVault().filter(f => f.id !== id);
+            saveVault(vault);
+            renderVault();
+            showMessage('File deleted');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('show');
+            });
+        });
+
+        // Initial render
+        renderVault();
+    </script>
+</body>
+</html>

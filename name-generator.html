@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Names & Recovery Generator | Ultra Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --success: #10b981;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: 
+                radial-gradient(ellipse at 15% 20%, rgba(13, 148, 136, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+                linear-gradient(160deg, #f8fafc 0%, #f1f5f9 40%, #ecfdf5 100%);
+            min-height: 100vh;
+            color: var(--text);
+            padding: 24px 16px 50px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.3);
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .main-card {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            padding: 28px;
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            width: 28px;
+            height: 28px;
+            background: #ccfbf1;
+            color: #0d9488;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        /* Gender */
+        .gender-box {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .gender-option input { display: none; }
+
+        .gender-option label {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            background: #f8fafc;
+        }
+
+        .gender-option input:checked + label {
+            border-color: #14b8a6;
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            color: #0d9488;
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+        }
+
+        /* Quantity */
+        .qty-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .qty-box input {
+            width: 100px;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            background: #f8fafc;
+        }
+
+        .qty-box input:focus {
+            outline: none;
+            border-color: #14b8a6;
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+        }
+
+        /* Domains */
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .domain-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+
+        .domain-item:hover {
+            border-color: #14b8a6;
+        }
+
+        .domain-item input {
+            accent-color: #0d9488;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .domain-item:has(input:checked) {
+            border-color: #14b8a6;
+            background: #f0fdfa;
+            color: #0d9488;
+            font-weight: 600;
+        }
+
+        /* Generate Button */
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4);
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px -5px rgba(13, 148, 136, 0.5);
+        }
+
+        .btn-generate:active { transform: scale(0.98); }
+
+        /* Results */
+        .results {
+            margin-top: 32px;
+            display: none;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .result-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .result-count {
+            background: #0d9488;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+        }
+
+        .name-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .name-card {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .name-card:hover {
+            border-color: #14b8a6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .name-card input {
+            margin-top: 3px;
+            accent-color: #0d9488;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .name-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .name-text {
+            font-weight: 700;
+            font-size: 14.5px;
+            margin-bottom: 4px;
+        }
+
+        .email-text {
+            font-size: 12.5px;
+            color: var(--muted);
+            word-break: break-all;
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 500px) {
+            .action-btns { grid-template-columns: 1fr; }
+        }
+
+        .btn-action {
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-primary-action {
+            background: #0d9488;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-action:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .message {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .message.show { display: flex; }
+        .message.success {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .message.error {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+  var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+  if(!s){ alert('Please login first!'); location.replace('login.html'); return; }
+  if(s.role === 'admin') return;
+  var pkg = s.package || 'Free';
+  if(pkg !== 'Free') return; // paid package OK
+  var keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+  var myKeys = keys.filter(function(k){ return k.userId === s.id && new Date(k.expires) > new Date(); });
+  var paidApi = myKeys.find(function(k){ return (k.type||'free') === 'paid'; });
+  if(paidApi) return;
+  var freeApi = myKeys.find(function(k){ return (k.type||'free') === 'free'; });
+  if(freeApi){
+    alert('Free API দিয়ে টুল চালানো যায় না।
+Paid Package কিনুন বা Admin থেকে Paid API নিন।');
+    location.replace('membership.html');
+    return;
+  }
+  var apiIn = prompt('API Key দিন (Paid API প্রয়োজন):');
+  if(!apiIn){ alert('API Key required!'); location.replace('membership.html'); return; }
+  var valid = keys.find(function(k){ return k.key === apiIn.trim() && new Date(k.expires) > new Date(); });
+  if(!valid){
+    alert('Wrong API Key!');
+    location.replace('membership.html');
+    return;
+  }
+  if((valid.type||'free') === 'free'){
+    alert('Free API দিয়ে টুল চালানো যায় না। Paid API নিন।');
+    location.replace('membership.html');
+    return;
+  }
+})();
+</script>
+
+    <div class="container">
+        <div class="header">
+            <div class="badge"><i class="fas fa-crown"></i> PREMIUM VERSION</div>
+            <h1>Names & Recovery Generator</h1>
+            <p>Generate unique names with mixed recovery emails</p>
+        </div>
+
+        <div class="main-card">
+            <!-- Gender -->
+            <div class="section-title"><i class="fas fa-venus-mars"></i> Select Gender</div>
+            <div class="gender-box">
+                <div class="gender-option">
+                    <input type="radio" name="gender" id="male" value="male" checked>
+                    <label for="male"><i class="fas fa-mars"></i> Male</label>
+                </div>
+                <div class="gender-option">
+                    <input type="radio" name="gender" id="female" value="female">
+                    <label for="female"><i class="fas fa-venus"></i> Female</label>
+                </div>
+            </div>
+
+            <!-- Quantity -->
+            <div class="section-title"><i class="fas fa-hashtag"></i> How many names?</div>
+            <div class="qty-box">
+                <input type="number" id="quantity" value="10" min="1" max="100">
+                <span style="color:var(--muted); font-size:14px;">(Max 100)</span>
+            </div>
+
+            <!-- Domains -->
+            <div class="section-title"><i class="fas fa-envelope"></i> Select Recovery Domains</div>
+            <div class="domains-grid" id="domainsGrid">
+                <!-- Will be filled by JS -->
+            </div>
+
+            <button class="btn-generate" id="generateBtn">
+                <i class="fas fa-user-plus"></i> Generate Names
+            </button>
+
+            <div class="message" id="messageBox"></div>
+
+            <!-- Results -->
+            <div class="results" id="resultsSection">
+                <div class="result-header">
+                    <div class="result-title">Generated Names</div>
+                    <div class="result-count" id="resultCount">0</div>
+                </div>
+
+                <div class="name-list" id="nameList"></div>
+
+                <div class="action-btns">
+                    <button class="btn-action btn-success" id="copySelectedNames">
+                        <i class="fas fa-check-double"></i> Copy Selected Names
+                    </button>
+                    <button class="btn-action btn-primary-action" id="copyAllNames">
+                        <i class="fas fa-clone"></i> Copy All Names
+                    </button>
+                    <button class="btn-action btn-warning" id="copySelectedEmails">
+                        <i class="fas fa-copy"></i> Copy Selected Emails
+                    </button>
+                    <button class="btn-action btn-info" id="copyAllEmails">
+                        <i class="fas fa-envelope"></i> Copy All Emails
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">100% Client-side • No database • Fully offline</div>
+    </div>
+
+    <script>
+        // Name databases
+        const maleFirst = ["James","John","Robert","Michael","William","David","Richard","Joseph","Thomas","Charles","Christopher","Daniel","Matthew","Anthony","Mark","Donald","Steven","Paul","Andrew","Joshua","Kenneth","Kevin","Brian","George","Timothy","Ronald","Edward","Jason","Jeffrey","Ryan","Jacob","Gary","Nicholas","Eric","Jonathan","Stephen","Larry","Justin","Scott","Brandon","Benjamin","Samuel","Raymond","Gregory","Frank","Alexander","Patrick","Jack","Dennis","Jerry","Tyler","Aaron","Jose","Adam","Nathan","Henry","Douglas","Zachary","Peter","Kyle","Noah","Ethan","Jeremy","Walter","Christian","Keith","Roger","Terry","Austin","Sean","Gerald","Carl","Harold","Dylan","Arthur","Lawrence","Jesse","Bryan","Billy","Bruce","Gabriel","Joe","Logan","Albert","Willie","Alan","Juan","Wayne","Elijah","Randy","Roy","Vincent","Ralph","Eugene","Russell","Bobby","Mason","Philip"];
+        const femaleFirst = ["Mary","Patricia","Jennifer","Linda","Elizabeth","Barbara","Susan","Jessica","Sarah","Karen","Nancy","Lisa","Betty","Margaret","Sandra","Ashley","Kimberly","Emily","Donna","Michelle","Dorothy","Carol","Amanda","Melissa","Deborah","Stephanie","Rebecca","Sharon","Laura","Cynthia","Kathleen","Amy","Angela","Shirley","Anna","Brenda","Pamela","Emma","Nicole","Helen","Samantha","Katherine","Christine","Debra","Rachel","Carolyn","Janet","Catherine","Maria","Heather","Diane","Ruth","Julie","Olivia","Joyce","Virginia","Victoria","Kelly","Lauren","Christina","Joan","Evelyn","Judith","Megan","Andrea","Cheryl","Hannah","Jacqueline","Martha","Gloria","Teresa","Ann","Sara","Madison","Frances","Kathryn","Janice","Jean","Abigail","Alice","Judy","Sophia","Grace","Denise","Amber","Doris","Marilyn","Danielle","Beverly","Isabella","Theresa","Diana","Natalie","Brittany","Charlotte","Marie","Kayla","Alexis","Lori"];
+        const lastNames = ["Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez","Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin","Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson","Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores","Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts","Gomez","Phillips","Evans","Turner","Diaz","Parker","Cruz","Edwards","Collins","Reyes","Stewart","Morris","Morales","Murphy","Cook","Rogers","Gutierrez","Ortiz","Morgan","Cooper","Peterson","Bailey","Reed","Kelly","Howard","Ramos","Kim","Cox","Ward","Richardson","Watson","Brooks","Chavez","Wood","James","Bennett","Gray","Mendoza","Ruiz","Hughes","Price","Alvarez","Castillo","Sanders","Patel","Myers","Long","Ross","Foster","Jimenez"];
+
+        const domains = [
+            "@gmail.com", "@yahoo.com", "@outlook.com", "@hotmail.com",
+            "@aol.com", "@zoho.com", "@gmx.com", "@mail.com",
+            "@fastmail.com", "@icloud.com", "@proton.me", "@yandex.com"
+        ];
+
+        // Fill domains
+        const domainsGrid = document.getElementById('domainsGrid');
+        domains.forEach((d, i) => {
+            const id = 'dom' + i;
+            domainsGrid.innerHTML += '<label class="domain-item"><input type="checkbox" value="' + d + '" id="' + id + '"' + (i < 4 ? ' checked' : '') + '> ' + d + '</label>';
+        });
+
+        const generateBtn = document.getElementById('generateBtn');
+        const nameList = document.getElementById('nameList');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultCount = document.getElementById('resultCount');
+        const messageBox = document.getElementById('messageBox');
+
+        let generatedData = [];
+
+        generateBtn.addEventListener('click', () => {
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const qty = Math.min(100, Math.max(1, parseInt(document.getElementById('quantity').value) || 10));
+            const selectedDomains = [...document.querySelectorAll('#domainsGrid input:checked')].map(c => c.value);
+
+            if (selectedDomains.length === 0) {
+                showMessage('Please select at least one recovery domain.', 'error');
+                return;
+            }
+
+            const firstNames = gender === 'male' ? maleFirst : femaleFirst;
+            generatedData = [];
+
+            for (let i = 0; i < qty; i++) {
+                const first = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const last = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const fullName = first + ' ' + last;
+
+                // Random recovery email
+                const domain = selectedDomains[Math.floor(Math.random() * selectedDomains.length)];
+                const emailName = (first + last + Math.floor(Math.random() * 900 + 100)).toLowerCase().replace(/\s/g, '');
+                const recovery = emailName + domain;
+
+                generatedData.push({ name: fullName, email: recovery });
+            }
+
+            // Render
+            nameList.innerHTML = '';
+            generatedData.forEach((item, idx) => {
+                nameList.innerHTML += `
+                    <div class="name-card">
+                        <input type="checkbox" class="item-check" data-idx="${idx}" checked>
+                        <div class="name-info">
+                            <div class="name-text">${item.name}</div>
+                            <div class="email-text">${item.email}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultCount.textContent = generatedData.length;
+            resultsSection.style.display = 'block';
+            showMessage(`Successfully generated ${generatedData.length} names!`, 'success');
+        });
+
+        // Copy functions
+        document.getElementById('copySelectedNames').onclick = () => {
+            const selected = getSelected().map(i => i.name);
+            copyText(selected.join('\n'), 'Selected names');
+        };
+
+        document.getElementById('copyAllNames').onclick = () => {
+            copyText(generatedData.map(i => i.name).join('\n'), 'All names');
+        };
+
+        document.getElementById('copySelectedEmails').onclick = () => {
+            const selected = getSelected().map(i => i.email);
+            copyText(selected.join('\n'), 'Selected emails');
+        };
+
+        document.getElementById('copyAllEmails').onclick = () => {
+            copyText(generatedData.map(i => i.email).join('\n'), 'All emails');
+        };
+
+        function getSelected() {
+            return [...document.querySelectorAll('.item-check:checked')].map(c => generatedData[c.dataset.idx]);
+        }
+
+        function copyText(text, label) {
+            if (!text) {
+                showMessage('Nothing selected to copy.', 'error');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                showMessage(label + ' copied!', 'success');
+            });
+        }
+
+        function showMessage(text, type) {
+            messageBox.className = `message show ${type}`;
+            messageBox.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${text}`;
+            clearTimeout(window.msgTimeout);
+            window.msgTimeout = setTimeout(() => messageBox.classList.remove('show'), 3500);
+        }
+    </script>
+</body>
+</html>
