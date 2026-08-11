@@ -280,13 +280,30 @@ async function saveUsers(u){
   localStorage.setItem('a_tuls_users', JSON.stringify(u));
 }
 
+async 
+function loadLoginLogs(){
+  const el=document.getElementById('loginLogsBox');
+  if(!el)return;
+  const logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+  if(!logs.length){ el.innerHTML='<p class="text-muted">No login activity yet</p>'; return; }
+  el.innerHTML=logs.slice(0,50).map(l=>'<div class="border-bottom py-2"><b>'+(l.user||'')+'</b> · '+(l.device||'')+'<br><small class="text-muted">'+(l.time||'')+'</small><br><small style="font-size:10px;word-break:break-all">'+(l.ua||'')+'</small></div>').join('');
+}
+function loadAdminMsgs(){
+  const el=document.getElementById('adminMsgsBox');
+  if(!el)return;
+  const msgs=JSON.parse(localStorage.getItem('a_tuls_admin_msgs')||'[]');
+  if(!msgs.length){ el.innerHTML='<p class="text-muted">No messages</p>'; return; }
+  el.innerHTML=msgs.slice(0,50).map(m=>'<div class="border-bottom py-2"><b>'+(m.from||'')+'</b> <span class="badge bg-secondary">'+(m.type||'')+'</span><br>'+(m.text||'')+'<br><small class="text-muted">'+(m.time||'')+'</small></div>').join('');
+}
 async function loadStats(){
-  const users = await getUsers();
-  document.getElementById('sUsers').textContent=users.length;
-  document.getElementById('sPaid').textContent=users.filter(u=>u.package&&u.package!=='Free').length;
-  document.getElementById('sFree').textContent=users.filter(u=>!u.package||u.package==='Free').length;
-  const keys = await sbGet('a_tuls_api_keys','?select=id');
-  document.getElementById('sApi').textContent = keys ? keys.length : (JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]')).length;
+  try{
+    const users = await getUsers();
+    document.getElementById('sUsers').textContent=users.length;
+    document.getElementById('sPaid').textContent=users.filter(u=>u.package&&u.package!=='Free').length;
+    document.getElementById('sFree').textContent=users.filter(u=>!u.package||u.package==='Free').length;
+    const keys = await sbGet('a_tuls_api_keys','?select=id');
+    document.getElementById('sApi').textContent = keys ? keys.length : (JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]')).length;
+  }catch(e){ console.warn(e); }
 }
 
 async function loadUsers(){
@@ -347,10 +364,18 @@ async function delUser(id){
   if(!confirm('Delete this user?'))return;
   const conf=prompt('নিশ্চিত করতে লিখুন: DELETE');
   if(conf!=='DELETE'){ alert('বাতিল করা হয়েছে'); return; }
-  await sbDel('a_tuls_users','id=eq.'+encodeURIComponent(id));
-  const users=(await getUsers()).filter(u=>u.id!==id);
+  try{
+    await sbDel('a_tuls_users','id=eq.'+encodeURIComponent(id));
+    // also try string/number id variants
+    await sbDel('a_tuls_users','id=eq.'+id);
+  }catch(e){}
+  let users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+  users = users.filter(u => String(u.id) !== String(id));
   await saveUsers(users);
-  loadUsers();loadStats();
+  // refresh from cloud
+  await loadUsers();
+  await loadStats();
+  alert('User deleted');
 }
 
 async function genApi(){
@@ -408,12 +433,21 @@ async function loadApis(){
 }
 
 async function delApi(idOrIdx, keyStr){
-  if(typeof idOrIdx==='number' && idOrIdx>100) await sbDel('a_tuls_api_keys','id=eq.'+idOrIdx);
-  else if(keyStr) await sbDel('a_tuls_api_keys','key=eq.'+encodeURIComponent(keyStr));
+  if(!confirm('Delete this API key?')) return;
+  try{
+    if(keyStr) await sbDel('a_tuls_api_keys','key=eq.'+encodeURIComponent(keyStr));
+    if(idOrIdx!==undefined && idOrIdx!==null && idOrIdx!=='' && !(typeof idOrIdx==='number' && idOrIdx < 50 && !keyStr)){
+      // try by id when looks like DB id (not array index only)
+      if(typeof idOrIdx==='number' && idOrIdx > 50) await sbDel('a_tuls_api_keys','id=eq.'+idOrIdx);
+      else if(typeof idOrIdx==='string' && idOrIdx.length > 5) await sbDel('a_tuls_api_keys','id=eq.'+encodeURIComponent(idOrIdx));
+    }
+  }catch(e){ console.warn(e); }
   let keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
   keys=keys.filter(k=>k.key!==keyStr);
   localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
-  loadApis();loadStats();
+  await loadApis();
+  await loadStats();
+  alert('API deleted');
 }
 
 function logout(){
@@ -425,5 +459,13 @@ function logout(){
 
 loadStats();
 </script>
+
+<div class="container my-4">
+  <h5>Login Activity (Device)</h5>
+  <div id="loginLogsBox" class="card p-3 mb-4">Loading...</div>
+  <h5>User Messages / Withdraw</h5>
+  <div id="adminMsgsBox" class="card p-3 mb-4">Loading...</div>
+</div>
+<script>try{loadLoginLogs();loadAdminMsgs();}catch(e){}</script>
 </body>
 </html>

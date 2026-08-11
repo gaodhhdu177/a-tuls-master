@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gmail Format Fixer Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090f;
+      --bg-glow: #0c1220;
+      --card: rgba(18, 22, 32, 0.85);
+      --card-solid: #121620;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.12);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-2: #8b5cf6;
+      --accent-glow: rgba(59, 130, 246, 0.35);
+      --danger: #f43f5e;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --input-bg: rgba(8, 11, 18, 0.9);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 28px 20px 48px;
+      line-height: 1.5;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(59, 130, 246, 0.18), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(139, 92, 246, 0.14), transparent 45%),
+        radial-gradient(ellipse 50% 30% at 50% 100%, rgba(16, 185, 129, 0.08), transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-top: 8px;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: #93c5fd;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .logo-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    header h1 {
+      font-size: 2.15rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
+
+    header .features {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    header .features span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    header .features span::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition: border-color 0.25s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .card-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .field {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    select, textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.92rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    select:hover, textarea:hover {
+      border-color: var(--border-hover);
+    }
+
+    select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+      background: rgba(12, 16, 26, 0.95);
+    }
+
+    textarea {
+      min-height: 220px;
+      resize: vertical;
+      font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+      line-height: 1.65;
+      white-space: pre;
+      font-size: 0.85rem;
+      letter-spacing: -0.01em;
+    }
+
+    textarea::placeholder {
+      color: #475569;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      align-items: center;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 11px 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(59, 130, 246, 0.45);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: rgba(30, 36, 48, 0.8);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(40, 48, 64, 0.9);
+      border-color: var(--border-hover);
+    }
+
+    .btn-success {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.28);
+    }
+    .btn-success:hover {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .btn-danger:hover {
+      background: rgba(244, 63, 94, 0.1);
+      border-color: rgba(244, 63, 94, 0.5);
+    }
+
+    /* View Tabs */
+    .view-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .view-tab {
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 20, 30, 0.7);
+      color: var(--muted);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .view-tab:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+      background: rgba(25, 32, 48, 0.9);
+    }
+
+    .view-tab.active {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .view-tab.active.all {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+    }
+
+    .view-tab.active.good {
+      background: linear-gradient(135deg, #059669, #10b981);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+
+    .view-tab.active.dmail {
+      background: linear-gradient(135deg, #e11d48, #f43f5e);
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.35);
+    }
+
+    .view-tab.active.dup {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+    }
+
+    .view-tab .tab-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(0,0,0,0.25);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .view-tab.active .tab-count {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .output-header label {
+      margin: 0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    .count-badge {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+      color: #93c5fd;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat-item {
+      background: rgba(8, 11, 18, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .stat-item:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      background: rgba(15, 20, 32, 0.8);
+    }
+
+    .stat-item.active-stat {
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+
+    .stat-item .label {
+      font-size: 0.72rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .stat-item .value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+
+    .stat-item.valid .value { color: #34d399; }
+    .stat-item.invalid .value { color: #fb7185; }
+    .stat-item.dup .value { color: #fbbf24; }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .checkbox-row input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .tip {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-top: 16px;
+      line-height: 1.55;
+      background: rgba(59, 130, 246, 0.06);
+      padding: 12px 14px;
+      border-radius: 10px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .tip b {
+      color: #93c5fd;
+      font-weight: 600;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: linear-gradient(135deg, #059669, #0d9488);
+      color: white;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      box-shadow: 0 12px 40px rgba(5, 150, 105, 0.35);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .toast.error {
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      box-shadow: 0 12px 40px rgba(225, 29, 72, 0.35);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.78rem;
+      color: #475569;
+    }
+
+    footer span {
+      color: #64748b;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 18px 14px 40px; }
+      header h1 { font-size: 1.7rem; }
+      .row { flex-direction: column; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .view-tabs { gap: 6px; }
+      .view-tab { padding: 8px 11px; font-size: 0.75rem; }
+      .toast { bottom: 20px; right: 16px; left: 16px; text-align: center; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="atuls-back" style="position:fixed;top:0;left:0;right:0;z-index:100000;background:#0f766e;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600">
+  <a href="dashboard.html" style="color:#fff;text-decoration:none">← Dashboard</a>
+  <span style="opacity:.7;margin-left:auto;font-size:12px">A-Tuls Tools</span>
+</div>
+<div style="height:44px"></div>
+
+<script>
+(function(){
+  var s=null; try{s=JSON.parse(localStorage.getItem('a_tuls_session')||'null')}catch(e){}
+  if(!s||!s.id){ alert('লগইন ছাড়া টুল ব্যবহার করা যাবে না।'); location.replace('index.html'); return; }
+  if(s.role==='admin') return;
+  var pkg=s.package||'Free';
+  if(pkg!=='Free') return;
+  var keys=[]; try{keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]')}catch(e){}
+  var paid=keys.find(function(k){return (k.userId===s.id||k.user_id===s.id)&& (k.type||'')==='paid' && (!k.expires||new Date(k.expires)>new Date())});
+  if(paid) return;
+  alert('Paid Membership প্রয়োজন।'); location.replace('membership.html');
+})();
+</script>
+
+  <div class="container">
+    <header>
+      <div class="logo-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Pro Edition
+      </div>
+      <h1>Gmail Format Fixer Pro</h1>
+      <p>Clean, convert & organize email:password lists in seconds</p>
+      <div class="features">
+        <span>100% Client-side</span>
+        <span>No data uploaded</span>
+        <span>Instant results</span>
+      </div>
+    </header>
+
+    <!-- INPUT CARD -->
+    <div class="card">
+      <div class="card-title">Input Settings</div>
+
+      <div class="row">
+        <div class="field">
+          <label>Input Format</label>
+          <select id="inputFormat">
+            <option value="pass-email">Password + Email (separate lines)</option>
+            <option value="email-pass">Email + Password (separate lines)</option>
+            <option value="pass-email-rec">Password + Email + Recovery</option>
+            <option value="email-pass-rec">Email + Password + Recovery</option>
+            <option value="side-email-pass">Side-by-side: Email Password</option>
+            <option value="side-pass-email">Side-by-side: Password Email</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Output Format</label>
+          <select id="outputFormat">
+            <option value="email-tab-pass">Email [Tab] Password ← Best for Sheets/Excel</option>
+            <option value="email-tab-pass-rec">Email [Tab] Password [Tab] Recovery</option>
+            <option value="email-pass-space">Email Password (space)</option>
+            <option value="pass-email-space">Password Email (space)</option>
+            <option value="email-pass-colon">Email:Password</option>
+            <option value="email-pass-pipe">Email | Password</option>
+            <option value="email-only">Email only</option>
+            <option value="pass-only">Password only</option>
+            <option value="separate-lines">Separate Lines</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Input Data</label>
+      <textarea id="inputData" placeholder="Paste your data here...
+
+Example (Password + Email):
+password123
+example@gmail.com
+
+password456
+another@gmail.com"></textarea>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="removeDuplicates" checked />
+        <label for="removeDuplicates">Remove duplicates (from All / Good)</label>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-primary" onclick="formatData()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+          Format Data
+        </button>
+        <button class="btn-success" onclick="pasteFromClipboard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          </svg>
+          Paste
+        </button>
+        <button class="btn-secondary" onclick="clearInput()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          Clear Input
+        </button>
+      </div>
+    </div>
+
+    <!-- OUTPUT CARD -->
+    <div class="card">
+      <div class="output-header">
+        <label>Formatted Output</label>
+        <span class="count-badge" id="outputCount">0 records</span>
+      </div>
+
+      <!-- View Tabs: All / Good / D / Duplicate -->
+      <div class="view-tabs">
+        <button class="view-tab all active" data-view="all" onclick="switchView('all')">
+          All Mail
+          <span class="tab-count" id="tabAll">0</span>
+        </button>
+        <button class="view-tab good" data-view="good" onclick="switchView('good')">
+          Good Mail
+          <span class="tab-count" id="tabGood">0</span>
+        </button>
+        <button class="view-tab dmail" data-view="dmail" onclick="switchView('dmail')">
+          D Mail
+          <span class="tab-count" id="tabD">0</span>
+        </button>
+        <button class="view-tab dup" data-view="dup" onclick="switchView('dup')">
+          Duplicate
+          <span class="tab-count" id="tabDup">0</span>
+        </button>
+      </div>
+
+      <textarea id="outputData" readonly placeholder="Formatted result will appear here..."></textarea>
+
+      <div class="btn-group">
+        <button class="btn-primary" onclick="copyOutput()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy All
+        </button>
+        <button class="btn-danger" onclick="clearOutput()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            <line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+          </svg>
+          Delete
+        </button>
+      </div>
+
+      <div class="tip">
+        Tip: Click <b>All Mail / Good Mail / D Mail / Duplicate</b> to view that list.
+        <b>All Mail</b> = unique valid only (duplicates excluded). Choose <b>Email [Tab] Password</b> for Sheets/Excel.
+      </div>
+
+      <div class="stats">
+        <div class="stat-item" onclick="switchView('all')" id="statAllBox">
+          <div class="label">All Mail</div>
+          <div class="value" id="statTotal">0</div>
+        </div>
+        <div class="stat-item valid" onclick="switchView('good')" id="statGoodBox">
+          <div class="label">Good Mail</div>
+          <div class="value" id="statValid">0</div>
+        </div>
+        <div class="stat-item invalid" onclick="switchView('dmail')" id="statDBox">
+          <div class="label">D Mail</div>
+          <div class="value" id="statInvalid">0</div>
+        </div>
+        <div class="stat-item dup" onclick="switchView('dup')" id="statDupBox">
+          <div class="label">Duplicate</div>
+          <div class="value" id="statDup">0</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Gmail Format Fixer Pro · <span>Private · Fast · Client-side only</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast">Copied!</div>
+
+  <script>
+    // Stored results after format
+    let store = {
+      all: [],      // unique valid (duplicates removed)
+      good: [],     // same as all (unique valid)
+      dmail: [],    // invalid
+      dup: []       // the duplicate records that were removed
+    };
+    let currentView = "all";
+    let currentOutputFormat = "email-tab-pass";
+
+    function showToast(msg = "Copied!", isError = false) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.toggle("error", isError);
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2400);
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function parseInput(text, format) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+      const records = [];
+
+      if (format.startsWith("side-")) {
+        for (const line of lines) {
+          const parts = line.split(/\s+/);
+          if (parts.length >= 2) {
+            if (format === "side-email-pass") {
+              records.push({ email: parts[0], password: parts[1], recovery: parts[2] || "" });
+            } else {
+              records.push({ password: parts[0], email: parts[1], recovery: parts[2] || "" });
+            }
+          }
+        }
+      } else {
+        let i = 0;
+        const hasRecovery = format.includes("-rec");
+        const step = hasRecovery ? 3 : 2;
+
+        while (i + step - 1 < lines.length) {
+          if (format.startsWith("pass-")) {
+            records.push({
+              password: lines[i],
+              email: lines[i + 1],
+              recovery: hasRecovery ? lines[i + 2] : ""
+            });
+          } else {
+            records.push({
+              email: lines[i],
+              password: lines[i + 1],
+              recovery: hasRecovery ? lines[i + 2] : ""
+            });
+          }
+          i += step;
+        }
+      }
+      return records;
+    }
+
+    function formatRecord(r, outputFormat) {
+      switch (outputFormat) {
+        case "email-tab-pass":
+          return r.email + "\t" + r.password;
+        case "email-tab-pass-rec":
+          return r.email + "\t" + r.password + "\t" + (r.recovery || "");
+        case "email-pass-space":
+          return r.email + " " + r.password;
+        case "pass-email-space":
+          return r.password + " " + r.email;
+        case "email-pass-colon":
+          return r.email + ":" + r.password;
+        case "email-pass-pipe":
+          return r.email + " | " + r.password;
+        case "email-only":
+          return r.email;
+        case "pass-only":
+          return r.password;
+        case "separate-lines":
+          return r.email + "\n" + r.password;
+        default:
+          return r.email + "\t" + r.password;
+      }
+    }
+
+    function renderCurrentView() {
+      const list = store[currentView] || [];
+      const outLines = list.map(r => formatRecord(r, currentOutputFormat));
+      document.getElementById("outputData").value = outLines.join("\n");
+      document.getElementById("outputCount").textContent = list.length + " records";
+    }
+
+    function switchView(view) {
+      currentView = view;
+
+      // Update tab active states
+      document.querySelectorAll(".view-tab").forEach(tab => {
+        tab.classList.remove("active");
+        if (tab.dataset.view === view) tab.classList.add("active");
+      });
+
+      // Update stat box highlight
+      document.querySelectorAll(".stat-item").forEach(el => el.classList.remove("active-stat"));
+      const map = { all: "statAllBox", good: "statGoodBox", dmail: "statDBox", dup: "statDupBox" };
+      const box = document.getElementById(map[view]);
+      if (box) box.classList.add("active-stat");
+
+      renderCurrentView();
+    }
+
+    function formatData() {
+      const inputText = document.getElementById("inputData").value;
+      const inputFormat = document.getElementById("inputFormat").value;
+      currentOutputFormat = document.getElementById("outputFormat").value;
+      const removeDup = document.getElementById("removeDuplicates").checked;
+
+      if (!inputText.trim()) {
+        showToast("Please paste some data first", true);
+        return;
+      }
+
+      let records = parseInput(inputText, inputFormat);
+
+      // Split valid / invalid
+      const validList = [];
+      const invalidList = [];
+
+      for (const r of records) {
+        if (r.email && r.password && isValidEmail(r.email)) {
+          validList.push(r);
+        } else {
+          invalidList.push(r);
+        }
+      }
+
+      // Duplicates among valid
+      const seen = new Set();
+      const uniqueValid = [];
+      const dupList = [];
+
+      for (const r of validList) {
+        const key = (r.email + "|" + r.password).toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueValid.push(r);
+        } else {
+          dupList.push(r);
+        }
+      }
+
+      // Store
+      // All Mail = unique valid only (duplicates not counted)
+      store.all = uniqueValid;
+      store.good = uniqueValid;
+      store.dmail = invalidList;
+      store.dup = dupList;
+
+      // Update counts
+      document.getElementById("tabAll").textContent = store.all.length;
+      document.getElementById("tabGood").textContent = store.good.length;
+      document.getElementById("tabD").textContent = store.dmail.length;
+      document.getElementById("tabDup").textContent = store.dup.length;
+
+      document.getElementById("statTotal").textContent = store.all.length;
+      document.getElementById("statValid").textContent = store.good.length;
+      document.getElementById("statInvalid").textContent = store.dmail.length;
+      document.getElementById("statDup").textContent = store.dup.length;
+
+      // Default to All view
+      switchView("all");
+
+      if (store.all.length > 0 || store.dmail.length > 0 || store.dup.length > 0) {
+        showToast("Formatted · All: " + store.all.length + " | D: " + store.dmail.length + " | Dup: " + store.dup.length);
+      } else {
+        showToast("No records found", true);
+      }
+    }
+
+    async function pasteFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById("inputData").value = text;
+        showToast("Pasted from clipboard");
+      } catch (err) {
+        showToast("Clipboard permission denied", true);
+      }
+    }
+
+    function copyOutput() {
+      const text = document.getElementById("outputData").value;
+      if (!text) {
+        showToast("Nothing to copy", true);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Copied! Ready for Sheets / Excel");
+      }).catch(() => {
+        showToast("Copy failed", true);
+      });
+    }
+
+    function clearInput() {
+      document.getElementById("inputData").value = "";
+      showToast("Input cleared");
+    }
+
+    function clearOutput() {
+      store = { all: [], good: [], dmail: [], dup: [] };
+      currentView = "all";
+      document.getElementById("outputData").value = "";
+      document.getElementById("outputCount").textContent = "0 records";
+      document.getElementById("tabAll").textContent = "0";
+      document.getElementById("tabGood").textContent = "0";
+      document.getElementById("tabD").textContent = "0";
+      document.getElementById("tabDup").textContent = "0";
+      document.getElementById("statTotal").textContent = "0";
+      document.getElementById("statValid").textContent = "0";
+      document.getElementById("statInvalid").textContent = "0";
+      document.getElementById("statDup").textContent = "0";
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelector('.view-tab[data-view="all"]').classList.add("active");
+      document.querySelectorAll(".stat-item").forEach(el => el.classList.remove("active-stat"));
+      showToast("Output cleared");
+    }
+
+    // Re-render when output format changes (if data already formatted)
+    document.getElementById("outputFormat").addEventListener("change", function () {
+      currentOutputFormat = this.value;
+      if (store.all.length || store.dmail.length || store.dup.length) {
+        renderCurrentView();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -90,7 +90,10 @@ body {
     </div>
     <div class="mb-3">
       <label class="form-label">Password</label>
+      <div class="input-group">
       <input type="password" class="form-control" id="loginPass" placeholder="••••••••" required>
+      <button type="button" class="btn btn-outline-secondary" tabindex="-1" onclick="togglePass('loginPass',this)"><i class="fas fa-eye"></i></button>
+    </div>
       <div id="loginError" class="error-msg">Invalid email or password!</div>
     </div>
     <button type="submit" class="btn-auth">Login Now</button>
@@ -118,6 +121,13 @@ async function handleLogin(e) {
   err.style.display = 'none';
   if(email === 'gourabmon112233@gmail.com' && pass === 'goUrab@2008') {
     localStorage.setItem('a_tuls_session', JSON.stringify({id:'admin',username:'Gourab',email:email,role:'admin',package:'Lifetime'}));
+      try{
+        var logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+        logs.unshift({user:u.username||u.email,email:u.email,time:new Date().toISOString(),ua:navigator.userAgent.slice(0,120),device:(/Mobile|Android|iPhone/i.test(navigator.userAgent)?'Mobile':'Desktop')});
+        localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200)));
+        localStorage.setItem('a_tuls_last_active', String(Date.now()));
+      }catch(e){}
+
     localStorage.setItem('a_tuls_role', 'admin');
     window.location.href = 'admin.html';
     return;

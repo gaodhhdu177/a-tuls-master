@@ -460,18 +460,61 @@ Paid Package কিনুন।');
     </div>
 
     <script>
-        const STORAGE_KEY = 'gtools_email_vault';
+        const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+        const SB_H = { 'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
+
+        function vaultUserId(){
+          try {
+            const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+            return (s && (s.id || s.email || s.username)) ? String(s.id || s.email || s.username) : 'guest';
+          } catch(e){ return 'guest'; }
+        }
+        function STORAGE_KEY(){ return 'a_tuls_vault_' + vaultUserId(); }
 
         function getVault() {
             try {
-                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                return JSON.parse(localStorage.getItem(STORAGE_KEY())) || [];
             } catch {
                 return [];
             }
         }
 
+        async function loadVaultCloud(){
+          const uid = vaultUserId();
+          if(uid==='guest') return getVault();
+          try {
+            const r = await fetch(SB_URL+'a_tuls_vault?user_id=eq.'+encodeURIComponent(uid)+'&select=data', { headers: SB_H });
+            if(r.ok){
+              const rows = await r.json();
+              if(rows && rows[0] && rows[0].data){
+                const data = Array.isArray(rows[0].data) ? rows[0].data : (rows[0].data.files || []);
+                localStorage.setItem(STORAGE_KEY(), JSON.stringify(data));
+                return data;
+              }
+            }
+          } catch(e){ console.warn('vault cloud load', e); }
+          return getVault();
+        }
+
         function saveVault(data) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            localStorage.setItem(STORAGE_KEY(), JSON.stringify(data));
+            // cloud sync (fire and forget)
+            const uid = vaultUserId();
+            if(uid==='guest') return;
+            const body = JSON.stringify({ user_id: uid, data: data, updated_at: new Date().toISOString() });
+            fetch(SB_URL+'a_tuls_vault?user_id=eq.'+encodeURIComponent(uid), {
+              method: 'PATCH', headers: Object.assign({}, SB_H, {'Prefer':'return=minimal'}), body
+            }).then(async r => {
+              if(r.status === 404 || r.status === 406 || (r.ok && r.headers.get('content-range')==='*/0')){
+                // upsert insert
+                await fetch(SB_URL+'a_tuls_vault', { method:'POST', headers: Object.assign({}, SB_H, {'Prefer':'resolution=merge-duplicates,return=minimal'}), body });
+              } else if(!r.ok){
+                await fetch(SB_URL+'a_tuls_vault', { method:'POST', headers: SB_H, body });
+              }
+            }).catch(()=>{
+              fetch(SB_URL+'a_tuls_vault', { method:'POST', headers: SB_H, body }).catch(()=>{});
+            });
         }
 
         function generateId() {
@@ -515,7 +558,7 @@ Paid Package কিনুন।');
             });
             saveVault(vault);
             clearMain();
-            renderVault();
+            loadVaultCloud().then(function(){ renderVault(); });
             showMessage('File saved to vault!');
         }
 
