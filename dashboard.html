@@ -99,6 +99,18 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 </style>
 </head>
 <body>
+<script>
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+    if(!s || !s.email){
+      alert('Please Login or Sign Up first');
+      location.replace('index.html');
+    }
+  } catch(e){ location.replace('index.html'); }
+})();
+</script>
+
 
 <header class="header">
 <div class="container d-flex justify-content-between align-items-center">
@@ -120,6 +132,7 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 <div class="small opacity-75 mt-1">www.a-tuls.com</div>
 </div>
 </div>
+<div class="d-flex justify-content-end p-2"><button type="button" id="drawerClose" class="btn btn-sm btn-light" style="border-radius:50%;width:36px;height:36px;font-size:1.1rem" onclick="closeD()">✕</button></div>
 <ul class="menu">
 <li><a class="active" data-p="dashboard"><i class="fas fa-th"></i> Dashboard</a></li>
 <li><a data-p="email-vault"><i class="fas fa-folder-open"></i> Email Vault</a></li>
@@ -198,7 +211,7 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 </div>
 
 <div class="row g-3 mb-3">
-<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold" style="color:var(--p)" id="statTools">10</div><div class="small text-muted">Tools</div></div></div>
+<div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold" style="color:var(--p)" id="statTools">15</div><div class="small text-muted">Tools</div></div></div>
 <div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-success" id="statPkg">Free</div><div class="small text-muted">Membership</div></div></div>
 <div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-primary" id="vc">0</div><div class="small text-muted">Vault Files</div></div></div>
 <div class="col-6 col-md-3"><div class="card text-center py-3 mb-0"><div class="fs-4 fw-bold text-warning" id="statInvest">৳0</div><div class="small text-muted">Invested</div></div></div>
@@ -208,64 +221,95 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 
 <div class="tcard">
 <div class="ticon" style="background:#eef2ff;color:#4f46e5"><i class="fas fa-wand-magic-sparkles"></i></div>
-<div class="tinfo"><h6>Gmail Format Fixer Pro <span class="badge bg-danger" style="font-size:.65rem">New</span></h6>
+<div class="tinfo"><h6>1. Gmail Format Fixer Pro <span class="badge bg-danger" style="font-size:.65rem">New</span></h6>
 <p class="text-muted small mb-2">Clean, convert & organize email:password lists. All / Good / D / Duplicate views.</p>
 <button class="obtn" onclick="openTool('gmail-format-fixer-pro.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-folder-open"></i></div>
-<h5>Personal Email Vault <span class="badge-new">New</span></h5>
-<p>Store your email files securely. They're private and linked to your account.</p>
-<button class="obtn" onclick="openTool('personal-email-vault.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#ecfdf5;color:#059669"><i class="fas fa-chart-bar"></i></div>
+<div class="tinfo"><h6>2. Email Report</h6>
+<p class="text-muted small mb-2">Found vs Good report. Password, recovery, verify — full row copy without line numbers.</p>
+<button class="obtn" onclick="openTool('email-report.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-at"></i></div>
-<h5>Easy Email Validator</h5>
-<p>Easily check and separate valid and invalid email addresses instantly.</p>
-<button class="obtn" onclick="openTool('easy-email-validator.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#eff6ff;color:#2563eb"><i class="fas fa-globe"></i></div>
+<div class="tinfo"><h6>3. IP TimeZone Finder</h6>
+<p class="text-muted small mb-2">Location, timezone, country & network info for any IP address.</p>
+<button class="obtn" onclick="openTool('ip-timezone.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-user-lock"></i></div>
-<h5>Multiple Password Generator</h5>
-<p>Generate multiple passwords at once with a single click using various formats.</p>
-<button class="obtn" onclick="openTool('password-generator.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#fef3c7;color:#d97706"><i class="fas fa-copy"></i></div>
+<div class="tinfo"><h6>4. Duplicate Checker</h6>
+<p class="text-muted small mb-2">Remove duplicate emails and get a unique clean list.</p>
+<button class="obtn" onclick="openTool('duplicate-email-checker.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-globe"></i></div>
-<h5>IP TimeZone Finder</h5>
-<p>Check exact location, timezone and country info of any IP address in real time.</p>
-<button class="obtn" onclick="openTool('ip-timezone.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#fce7f3;color:#db2777"><i class="fas fa-user-edit"></i></div>
+<div class="tinfo"><h6>5. Name Generator</h6>
+<p class="text-muted small mb-2">Random names, usernames & recovery text for profiles.</p>
+<button class="obtn" onclick="openTool('name-generator.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-copy"></i></div>
-<h5>Duplicate Checker</h5>
-<p>Scan your lists, filter duplicates and get clean error-free datasets instantly.</p>
-<button class="obtn" onclick="openTool('duplicate-email-checker.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#e0e7ff;color:#4f46e5"><i class="fas fa-wrench"></i></div>
+<div class="tinfo"><h6>6. Gmail Format Fixer</h6>
+<p class="text-muted small mb-2">Quick fix spaces, tabs, colons into standard email:password format.</p>
+<button class="obtn" onclick="openTool('gmail-format-fixer.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-user-edit"></i></div>
-<h5>Name Generator</h5>
-<p>Create unique random names and professional usernames with one click.</p>
-<button class="obtn" onclick="openTool('name-generator.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#fef2f2;color:#dc2626"><i class="fas fa-key"></i></div>
+<div class="tinfo"><h6>7. Multiple Password Generator</h6>
+<p class="text-muted small mb-2">Generate multiple strong passwords in one click.</p>
+<button class="obtn" onclick="openTool('password-generator.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-file-alt"></i></div>
-<h5>Email Report</h5>
-<p>Track detailed reports and analytics for your email lists and campaigns.</p>
-<button class="obtn" onclick="openTool('email-report.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#f0fdf4;color:#16a34a"><i class="fas fa-check-double"></i></div>
+<div class="tinfo"><h6>8. Easy Email Validator</h6>
+<p class="text-muted small mb-2">Check valid / invalid emails and clean your list.</p>
+<button class="obtn" onclick="openTool('easy-email-validator.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-align-left"></i></div>
-<h5>Data Formatter</h5>
-<p>Format and organize your email or data lists in a clear structured way.</p>
-<button class="obtn" onclick="openTool('email-data-formatter.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
+<div class="ticon" style="background:#f8fafc;color:#0f766e"><i class="fas fa-folder-open"></i></div>
+<div class="tinfo"><h6>9. Personal Email Vault</h6>
+<p class="text-muted small mb-2">Cloud vault — same files on every browser & phone.</p>
+<button class="obtn" onclick="openTool('personal-email-vault.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
 <div class="tcard">
-<div class="ticon"><i class="fas fa-envelope-circle-check"></i></div>
-<h5>Gmail Format Fixer</h5>
-<p>Fix and clean Gmail format issues from your email lists automatically.</p>
-<button class="obtn" onclick="openTool('gmail-format-fixer.html')"><i class="fas fa-arrow-right"></i> Open Application</button>
-</div>
-</div>
+<div class="ticon" style="background:#f1f5f9;color:#64748b"><i class="fas fa-table"></i></div>
+<div class="tinfo"><h6>10. Email Data Formatter</h6>
+<p class="text-muted small mb-2">Convert tab/comma/space/colon lists into one format.</p>
+<button class="obtn" onclick="openTool('email-data-formatter.html')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>
+
+<div class="tcard" style="opacity:.85">
+<div class="ticon" style="background:#fef3c7;color:#b45309"><i class="fas fa-envelope-open-text"></i></div>
+<div class="tinfo"><h6>11. Gmail Checker <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6>
+<p class="text-muted small mb-2">Advanced Gmail status checker.</p>
+<button class="obtn" onclick="alert('Coming Soon!')" style="background:#94a3b8"><i class="fas fa-clock"></i> Coming Soon</button></div></div>
+
+<div class="tcard" style="opacity:.85">
+<div class="ticon" style="background:#ede9fe;color:#7c3aed"><i class="fas fa-shield-halved"></i></div>
+<div class="tinfo"><h6>12. 2FA Generator <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6>
+<p class="text-muted small mb-2">Generate 2FA codes easily.</p>
+<button class="obtn" onclick="alert('Coming Soon!')" style="background:#94a3b8"><i class="fas fa-clock"></i> Coming Soon</button></div></div>
+
+<div class="tcard" style="opacity:.85">
+<div class="ticon" style="background:#ecfeff;color:#0891b2"><i class="fas fa-inbox"></i></div>
+<div class="tinfo"><h6>13. Temp Mail <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6>
+<p class="text-muted small mb-2">Temporary disposable email.</p>
+<button class="obtn" onclick="alert('Coming Soon!')" style="background:#94a3b8"><i class="fas fa-clock"></i> Coming Soon</button></div></div>
+
+<div class="tcard" style="opacity:.85">
+<div class="ticon" style="background:#fff7ed;color:#ea580c"><i class="fas fa-network-wired"></i></div>
+<div class="tinfo"><h6>14. IP & VPN Buy/Sell Zone <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6>
+<p class="text-muted small mb-2">Buy & sell IP / VPN services.</p>
+<button class="obtn" onclick="alert('Coming Soon!')" style="background:#94a3b8"><i class="fas fa-clock"></i> Coming Soon</button></div></div>
+
+<div class="tcard" style="opacity:.85">
+<div class="ticon" style="background:#fdf2f8;color:#be185d"><i class="fas fa-globe-asia"></i></div>
+<div class="tinfo"><h6>15. Outside Zone <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6>
+<p class="text-muted small mb-2">Extra community zone tools.</p>
+<button class="obtn" onclick="alert('Coming Soon!')" style="background:#94a3b8"><i class="fas fa-clock"></i> Coming Soon</button></div></div>
+
+</div></div>
 </div>
 
 <!-- EMAIL VAULT -->
@@ -456,47 +500,110 @@ setInterval(checkSessionTimeout, 30000);
 
 function doSearch(){
   const tools=[
-    {n:'Gmail Format Fixer Pro',p:'gmail-format-fixer-pro.html',k:'gmail format email password'},
-    {n:'Email Report',p:'email-report.html',k:'email report'},
-    {n:'Personal Email Vault',p:'personal-email-vault.html',k:'vault email storage'},
-    {n:'Gmail Format Fixer',p:'gmail-format-fixer.html',k:'gmail format'},
-    {n:'Easy Email Validator',p:'easy-email-validator.html',k:'validate email'},
-    {n:'Duplicate Email Checker',p:'duplicate-email-checker.html',k:'duplicate email'},
-    {n:'Email Data Formatter',p:'email-data-formatter.html',k:'formatter data'},
-    {n:'Password Generator',p:'password-generator.html',k:'password generate'},
-    {n:'Name & Recovery Generator',p:'name-generator.html',k:'name recovery'},
-    {n:'IP Timezone Finder',p:'ip-timezone.html',k:'ip timezone location'}
+    {n:'Gmail Format Fixer Pro',p:'gmail-format-fixer-pro.html',k:'gmail format email password',type:'tool'},
+    {n:'Email Report',p:'email-report.html',k:'email report found good',type:'tool'},
+    {n:'IP TimeZone Finder',p:'ip-timezone.html',k:'ip timezone location',type:'tool'},
+    {n:'Duplicate Email Checker',p:'duplicate-email-checker.html',k:'duplicate email',type:'tool'},
+    {n:'Name Generator',p:'name-generator.html',k:'name recovery',type:'tool'},
+    {n:'Gmail Format Fixer',p:'gmail-format-fixer.html',k:'gmail format',type:'tool'},
+    {n:'Multiple Password Generator',p:'password-generator.html',k:'password generate',type:'tool'},
+    {n:'Easy Email Validator',p:'easy-email-validator.html',k:'validate email',type:'tool'},
+    {n:'Personal Email Vault',p:'personal-email-vault.html',k:'vault email storage',type:'tool'},
+    {n:'Email Data Formatter',p:'email-data-formatter.html',k:'formatter data',type:'tool'},
+    {n:'Gmail Checker',p:'',k:'gmail checker',type:'soon'},
+    {n:'2FA Generator',p:'',k:'2fa otp',type:'soon'},
+    {n:'Temp Mail',p:'',k:'temp mail disposable',type:'soon'},
+    {n:'IP & VPN Buy/Sell Zone',p:'',k:'ip vpn buy sell',type:'soon'},
+    {n:'Outside Zone',p:'',k:'outside zone',type:'soon'}
   ];
   let overlay=document.getElementById('searchOverlay');
-  if(!overlay){
-    overlay=document.createElement('div');
-    overlay.id='searchOverlay';
-    overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:60px 16px 16px';
-    overlay.innerHTML='<div style="background:#fff;border-radius:16px;width:100%;max-width:420px;padding:16px;box-shadow:0 10px 40px rgba(0,0,0,.2)"><div class="d-flex justify-content-between align-items-center mb-2"><b>সার্চ টুল / পেজ</b><button class="btn btn-sm btn-light" id="searchClose">✕</button></div><input id="searchInput" class="form-control mb-2" placeholder="নাম লিখুন..." autofocus><div id="searchResults" style="max-height:50vh;overflow:auto"></div></div>';
-    document.body.appendChild(overlay);
-    overlay.addEventListener('click',function(e){ if(e.target===overlay) overlay.remove(); });
-    document.getElementById('searchClose').onclick=function(){ overlay.remove(); };
-    document.getElementById('searchInput').oninput=function(){
-      const q=this.value.trim().toLowerCase();
-      const box=document.getElementById('searchResults');
-      const list=!q?tools:tools.filter(t=>t.n.toLowerCase().includes(q)||t.k.includes(q)||t.n.toLowerCase().split('').some((ch,i)=>q.includes(ch)));
-      // better: match by characters sequence
-      const scored=tools.map(t=>{
-        const name=t.n.toLowerCase();
-        let score=0;
-        if(name.includes(q)) score+=10;
-        if(t.k.includes(q)) score+=5;
-        for(const ch of q){ if(name.includes(ch)) score+=1; }
-        return {t,score};
-      }).filter(x=>!q||x.score>0).sort((a,b)=>b.score-a.score);
-      box.innerHTML=(scored.length?scored:tools.map(t=>({t,score:0}))).map(({t})=>
-        '<div class="p-2 border-bottom" style="cursor:pointer" onclick="openTool(\''+t.p+'\')"><b>'+t.n+'</b><br><small class="text-muted">'+t.p+'</small></div>'
-      ).join('') || '<p class="text-muted p-2">কিছু পাওয়া যায়নি</p>';
-    };
-    document.getElementById('searchInput').dispatchEvent(new Event('input'));
+  if(overlay){ overlay.remove(); }
+  overlay=document.createElement('div');
+  overlay.id='searchOverlay';
+  overlay.style.cssText='position:fixed;inset:0;background:#0f172a;z-index:99999;display:flex;flex-direction:column;';
+  overlay.innerHTML=`
+    <div style="background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <button id="searchClose" style="background:rgba(255,255,255,.2);border:0;color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem">✕</button>
+      <div style="flex:1"><input id="searchInput" placeholder="Search tools or users..." style="width:100%;border:0;border-radius:12px;padding:10px 14px;font-size:15px;outline:none"></div>
+    </div>
+    <div id="searchResults" style="flex:1;overflow:auto;background:#f8fafc;padding:12px"></div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('searchClose').onclick=function(){ overlay.remove(); };
+  async function runSearch(){
+    const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
+    const box=document.getElementById('searchResults');
+    let html='';
+    // tools
+    const tlist = !q ? tools : tools.filter(t=>t.n.toLowerCase().includes(q)||t.k.includes(q));
+    html+='<div style="font-size:12px;font-weight:700;color:#64748b;margin:8px 4px">TOOLS</div>';
+    if(!tlist.length) html+='<div class="text-muted small px-2">No tools matched</div>';
+    tlist.forEach(t=>{
+      if(t.type==='soon'){
+        html+=`<div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid #e2e8f0;opacity:.75" onclick="alert('Coming Soon!')"><b>${t.n}</b><div style="font-size:12px;color:#94a3b8">Coming Soon</div></div>`;
+      } else {
+        html+=`<div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid #e2e8f0;cursor:pointer" onclick="openTool('${t.p}');document.getElementById('searchOverlay')?.remove()"><b>${t.n}</b><div style="font-size:12px;color:#64748b">${t.p}</div></div>`;
+      }
+    });
+    // users from cloud + local
+    let users=[];
+    try{
+      const r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,whatsapp,telegram&order=created.desc',{headers:SB_H_V});
+      if(r.ok) users=await r.json();
+    }catch(e){}
+    if(!users.length){ try{ users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); }catch(e){} }
+    if(q) users=users.filter(u=>((u.username||'')+(u.email||'')).toLowerCase().includes(q));
+    html+='<div style="font-size:12px;font-weight:700;color:#64748b;margin:16px 4px 8px">USERS</div>';
+    if(!users.length) html+='<div class="text-muted small px-2">No users matched</div>';
+    users.slice(0,40).forEach(u=>{
+      const pic=u.profile_pic?`<img src="${u.profile_pic}" style="width:40px;height:40px;border-radius:50%;object-fit:cover">`:`<div style="width:40px;height:40px;border-radius:50%;background:#0f766e;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">${(u.username||'?')[0]}</div>`;
+      html+=`<div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid #e2e8f0;display:flex;gap:12px;align-items:center;cursor:pointer" onclick="openUserProfile('${String(u.id||'').replace(/'/g,"\\'")}','${String(u.username||'').replace(/'/g,"\\'")}')">
+        ${pic}<div><b>${(u.username||'')}</b> <span class="badge bg-secondary" style="font-size:10px">${u.package||'Free'}</span><div style="font-size:12px;color:#64748b">Tap to view profile & message</div></div></div>`;
+    });
+    box.innerHTML=html;
   }
+  document.getElementById('searchInput').oninput=runSearch;
+  document.getElementById('searchInput').focus();
+  runSearch();
 }
-function fillMemHistory(){
+function openUserProfile(id, name){
+  // Show profile modal without exposing WA/TG until here
+  let users=[];
+  try{ users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); }catch(e){}
+  let u=users.find(x=>String(x.id)===String(id));
+  (async()=>{
+    if(!u){
+      try{
+        const r=await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(id)+'&select=*',{headers:SB_H_V});
+        if(r.ok){ const rows=await r.json(); u=rows[0]; }
+      }catch(e){}
+    }
+    if(!u){ alert('User not found'); return; }
+    const wa=(u.whatsapp||'').replace(/\D/g,'');
+    const tg=(u.telegram||'').replace('@','');
+    const pic=u.profile_pic?`<img src="${u.profile_pic}" style="width:72px;height:72px;border-radius:50%;object-fit:cover">`:`<div style="width:72px;height:72px;border-radius:50%;background:#0f766e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700">${(u.username||'?')[0]}</div>`;
+    let ov=document.getElementById('userProfOverlay');
+    if(ov) ov.remove();
+    ov=document.createElement('div');
+    ov.id='userProfOverlay';
+    ov.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px';
+    ov.innerHTML=`<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:380px;text-align:center">
+      <button onclick="this.closest('#userProfOverlay').remove()" style="float:right;border:0;background:#f1f5f9;width:32px;height:32px;border-radius:50%">✕</button>
+      <div style="margin:8px auto 12px">${pic}</div>
+      <h5 class="mb-1">${u.username||name||''}</h5>
+      <div class="badge bg-success mb-2">${u.package||'Free'}</div>
+      <div class="small text-muted mb-3">${u.email||''}</div>
+      <div class="d-grid gap-2">
+        ${wa?`<a class="btn btn-success" href="https://wa.me/${wa}" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>`:''}
+        ${tg?`<a class="btn btn-info text-white" href="https://t.me/${tg}" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>`:''}
+        <button class="btn btn-primary" onclick="alert('Message sent to admin queue');document.getElementById('userProfOverlay')?.remove()"><i class="fas fa-envelope"></i> Send Message</button>
+      </div>
+    </div>`;
+    document.body.appendChild(ov);
+    ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+    document.getElementById('searchOverlay')?.remove();
+  })();
+}
+function function fillMemHistory(){
   const box=document.getElementById('memHistBox'); if(!box) return;
   const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
   const pkg=s.package||'Free';
@@ -604,6 +711,7 @@ if(sess){
         const u=rows[0];
         if(u.profile_pic){
           localStorage.setItem('a_tuls_profile_pic', u.profile_pic);
+          document.querySelectorAll('[data-av],.sc-av img,#navAv img,#welcomeAv img,.brand-logo img').forEach(function(el){ if(el.tagName==='IMG') el.src=u.profile_pic; });
           s.profile_pic=u.profile_pic;
         }
         if(u.package) s.package=u.package;
@@ -644,7 +752,7 @@ function chgPhoto(e){
         localStorage.setItem('a_tuls_session', JSON.stringify(s));
         if(s.id){
           await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id),{
-            method:'PATCH', headers:SB_H_V,
+            method:'PATCH', headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),
             body:JSON.stringify({profile_pic:dataUrl})
           });
           // ensure admin row exists
@@ -813,25 +921,41 @@ function loadProfileFields(){
 
 async function renderSellers(){
   const box=document.getElementById('sellersList');
-  if(!box)return;
-  box.innerHTML='<p class="text-muted">Loading community...</p>';
+  if(!box) return;
   let users=[];
   try{
-    const r=await fetch(SB_URL_V+'a_tuls_users?select=*&order=created.desc',{headers:SB_H_V});
-    if(r.ok){ users=await r.json(); localStorage.setItem('a_tuls_users',JSON.stringify(users)); }
+    const r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb&order=created.desc',{headers:SB_H_V});
+    if(r.ok) users=await r.json();
   }catch(e){}
-  if(!users.length) users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+  if(!users||!users.length){
+    try{ users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); }catch(e){ users=[]; }
+  }
   if(!users.length){
-    box.innerHTML='<div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p><p class="small mb-0">Users appear here after they register on your site.</p></div>';
+    box.innerHTML='<div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p></div>';
     return;
   }
+  // Admin first
+  users.sort((a,b)=>{
+    const aa=(a.role==='admin'||a.email==='gourabmon112233@gmail.com')?0:1;
+    const bb=(b.role==='admin'||b.email==='gourabmon112233@gmail.com')?0:1;
+    return aa-bb;
+  });
   box.innerHTML=users.map(u=>{
-    const initial=(u.username||'U').charAt(0).toUpperCase();
     const pkg=u.package||'Free';
     const badge=pkg==='Free'?'bg-secondary':'bg-success';
-    const pic=u.profile_pic||'';
-    const av=pic?('<img src="'+pic+'" style="width:48px;height:48px;border-radius:50%;object-fit:cover">'):('<div class="la" style="width:48px;height:48px">'+initial+'</div>');
-    return '<div class="card mb-3 p-3"><div class="d-flex align-items-center gap-3 mb-2">'+av+'<div><div class="fw-bold">'+esc(u.username)+' <span class="badge '+badge+'" style="font-size:.65rem">'+esc(pkg)+'</span></div><small class="text-muted">Joined: '+(u.created?new Date(u.created).toLocaleDateString():'-')+'</small></div></div><div class="small mb-1"><i class="fas fa-envelope text-secondary me-2"></i>'+esc(u.email||u.gmail||'')+'</div>'+(u.whatsapp?'<div class="small mb-1"><i class="fab fa-whatsapp text-success me-2"></i><a href="https://wa.me/'+esc(String(u.whatsapp).replace(/\D/g,''))+'" target="_blank">'+esc(u.whatsapp)+'</a></div>':'')+(u.telegram?'<div class="small mb-1"><i class="fab fa-telegram text-info me-2"></i>'+esc(u.telegram)+'</div>':'')+(u.fb?'<div class="small"><i class="fab fa-facebook text-primary me-2"></i><a href="'+esc(u.fb)+'" target="_blank">Facebook</a></div>':'')+'</div>';
+    const pic=u.profile_pic
+      ? '<img src="'+u.profile_pic+'" style="width:48px;height:48px;border-radius:50%;object-fit:cover">'
+      : '<div style="width:48px;height:48px;border-radius:50%;background:#0f766e;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">'+(u.username||'?')[0]+'</div>';
+    const id=String(u.id||'').replace(/'/g,"\\'");
+    const un=String(u.username||'').replace(/'/g,"\\'");
+    // NO whatsapp/telegram on list — only after profile click
+    return '<div class="card mb-3 p-3" style="cursor:pointer" onclick="openUserProfile(\''+id+'\',\''+un+'\')">'
+      +'<div class="d-flex align-items-center gap-3">'
+      +pic
+      +'<div><div class="fw-bold">'+esc(u.username||'')+' <span class="badge '+badge+'" style="font-size:.65rem">'+esc(pkg)+'</span></div>'
+      +'<small class="text-muted">Joined: '+(u.created?new Date(u.created).toLocaleDateString():'-')+'</small>'
+      +'<div class="small text-primary mt-1"><i class="fas fa-user me-1"></i>Tap to view profile & message</div>'
+      +'</div></div></div>';
   }).join('');
 }
 

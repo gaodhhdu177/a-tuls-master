@@ -130,6 +130,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
         </div>
       </div>
 
+      <div class="card-box mt-3">
+        <h6 class="fw-bold mb-3"><i class="fas fa-radar me-2 text-danger"></i>Ultra Tracking</h6>
+        <p class="small text-muted">Per-user devices, browser, OS, IP, last seen, block/unblock, login history & usage.</p>
+        <div id="ultraTrackBox"><p class="text-muted">Loading tracking data...</p></div>
+      </div>
+
+
       <div class="card-box">
         <h6 class="fw-bold mb-3"><i class="fas fa-envelope me-2"></i>User Messages / Withdraw</h6>
         <div id="adminMsgsBox"><p class="text-muted mb-0">Loading...</p></div>
@@ -277,7 +284,7 @@ async function sbDel(table, filter){
   const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
   if(!s || s.role !== 'admin' || s.email !== 'gourabmon112233@gmail.com'){
     alert('Access Denied! Admin only.');
-    window.location.href = 'login.html';
+    window.location.replace('index.html');
     return;
   }
   document.getElementById('adminName').textContent = s.username || 'Gourab';
@@ -420,21 +427,21 @@ async function quickUpgrade(id){
 }
 
 async function delUser(id){
-  if(!confirm('Delete this user?'))return;
-  const conf=prompt('Type DELETE to confirm');
-  if(conf!=='DELETE'){ alert('Cancelled'); return; }
+  if(!id){ alert('Invalid user id'); return; }
+  if(!confirm('Delete this user permanently?\n\nOK = Delete\nCancel = Keep')) return;
+  let ok=false;
   try{
-    await sbDel('a_tuls_users','id=eq.'+encodeURIComponent(id));
-    // also try string/number id variants
-    await sbDel('a_tuls_users','id=eq.'+id);
-  }catch(e){}
+    ok = await sbDel('a_tuls_users','id=eq.'+encodeURIComponent(String(id)));
+    if(!ok) ok = await sbDel('a_tuls_users','id=eq.'+encodeURIComponent(id));
+  }catch(e){ console.warn(e); }
   let users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
   users = users.filter(u => String(u.id) !== String(id));
-  await saveUsers(users);
-  // refresh from cloud
+  localStorage.setItem('a_tuls_users', JSON.stringify(users));
+  // also remove their api keys
+  try{ await sbDel('a_tuls_api_keys','user_id=eq.'+encodeURIComponent(String(id))); }catch(e){}
   await loadUsers();
   await loadStats();
-  alert('User deleted');
+  alert(ok ? 'User deleted from cloud' : 'User removed locally (check Supabase RLS if still in cloud)');
 }
 
 async function genApi(){
@@ -516,11 +523,65 @@ function logout(){
   window.location.replace('login.html');
 }
 
+
+async function loadUltraTracking(){
+  const box=document.getElementById('ultraTrackBox');
+  if(!box) return;
+  let users = await getUsers();
+  let logs = [];
+  try{
+    const r=await fetch(SB_URL+'a_tuls_login_logs?select=*&order=time.desc&limit=200',{headers:SB_H});
+    if(r.ok) logs=await r.json();
+  }catch(e){}
+  if(!logs.length){ try{ logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]'); }catch(e){} }
+  const blocked = JSON.parse(localStorage.getItem('a_tuls_blocked_devices')||'{}');
+  let html = '<div class="small mb-2 text-muted">Total Users: <b>'+users.length+'</b> · Login rows: <b>'+logs.length+'</b> · Devices tracked below</div>';
+  users.forEach(u=>{
+    const ulogs = logs.filter(l=>String(l.user_id)===String(u.id)||(l.email&&l.email===u.email)||(l.username&&l.username===u.username));
+    const devices = {};
+    ulogs.forEach(l=>{
+      const key=(l.device||'unknown')+'|'+(l.ua||'').slice(0,40);
+      if(!devices[key]) devices[key]={device:l.device||'Unknown',ua:l.ua||'',ip:l.ip||'-',last:l.time,count:0};
+      devices[key].count++;
+      if(l.time && (!devices[key].last || l.time>devices[key].last)) devices[key].last=l.time;
+    });
+    const devList = Object.entries(devices);
+    html += '<div class="border rounded-3 p-3 mb-3">';
+    html += '<div class="fw-bold mb-1">'+esc(u.username||'')+' <span class="badge bg-secondary">'+esc(u.package||'Free')+'</span></div>';
+    html += '<div class="small text-muted mb-2">'+esc(u.email||'')+' · ID: '+esc(String(u.id||''))+' · Joined: '+(u.created?new Date(u.created).toLocaleString():'-')+'</div>';
+    html += '<div class="small mb-1"><b>Devices ('+devList.length+')</b></div>';
+    if(!devList.length) html += '<div class="small text-muted mb-2">No login device logged yet</div>';
+    devList.forEach(([key,d])=>{
+      const isBlock = blocked[key];
+      html += '<div class="d-flex justify-content-between align-items-start border-bottom py-2 small">'
+        +'<div><b>'+esc(d.device)+'</b> · logins: '+d.count
+        +'<br><span class="text-muted" style="font-size:10px;word-break:break-all">'+esc((d.ua||'').slice(0,90))+'</span>'
+        +'<br>IP: '+esc(d.ip)+' · Last: '+(d.last?new Date(d.last).toLocaleString():'-')+'</div>'
+        +'<button class="btn btn-sm '+(isBlock?'btn-success':'btn-outline-danger')+'" onclick="toggleBlockDevice(\''+key.replace(/'/g,"\\'")+'\')">'+
+        (isBlock?'Unblock':'Block')+'</button></div>';
+    });
+    html += '<div class="small mt-2"><b>Recent logins</b></div>';
+    ulogs.slice(0,8).forEach(l=>{
+      html += '<div class="small text-muted">· '+(l.time?new Date(l.time).toLocaleString():'')+' — '+esc(l.device||'')+'</div>';
+    });
+    html += '</div>';
+  });
+  box.innerHTML = html || '<p class="text-muted">No data</p>';
+}
+function toggleBlockDevice(key){
+  const blocked=JSON.parse(localStorage.getItem('a_tuls_blocked_devices')||'{}');
+  if(blocked[key]) delete blocked[key]; else blocked[key]=true;
+  localStorage.setItem('a_tuls_blocked_devices', JSON.stringify(blocked));
+  loadUltraTracking();
+  alert(blocked[key]?'Device blocked':'Device unblocked');
+}
+
 async function bootAdmin(){
   await loadStats();
   await loadUsers();
   await loadLoginLogs();
   loadAdminMsgs();
+  await loadUltraTracking();
 }
 bootAdmin();
 </script>
