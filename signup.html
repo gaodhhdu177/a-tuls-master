@@ -89,8 +89,8 @@ body {
     </div>
     <div class="mb-2">
       <label class="form-label">API Code <span class="ref-note">* Required</span></label>
-      <input type="text" class="form-control" id="apiCode" placeholder="Admin থেকে পাওয়া API Key" required>
-      <div class="ref-note" style="margin-top:4px;font-weight:500">সঠিক API Code ছাড়া সাইনআপ হবে না</div>
+      <input type="text" class="form-control" id="apiCode" placeholder="API Key from Admin" required>
+      <div class="ref-note" style="margin-top:4px;font-weight:500">Signup requires a valid API Code</div>
     </div>
     <div class="mb-2">
       <label class="form-label">WhatsApp Number</label>
@@ -151,7 +151,7 @@ document.getElementById('signupForm').onsubmit = async function(e){
   if(pass.length < 6){ alert('Password min 6 characters'); return; }
   if(!apiCode){ alert('API Code required!'); return; }
 
-  // 1) Cloud API keys (সব ডিভাইস)
+  // 1) Cloud API keys (all devices)
   let validKey = null;
   try{
     const r = await fetch(SB_URL+'a_tuls_api_keys?key=eq.'+encodeURIComponent(apiCode)+'&select=*', {headers:SB_H});
@@ -171,14 +171,14 @@ document.getElementById('signupForm').onsubmit = async function(e){
   }
 
   if(!validKey){
-    alert('Wrong API Code!\n\nসঠিক API Code দিন অথবা Membership থেকে প্যাকেজ কিনুন।\n\n* Admin Panel থেকে Generate করা কোড Copy করে দিন।');
+    alert('Wrong API Code!\n\nEnter a valid API Code or buy a package from Membership.\n\n* Copy the key generated from Admin Panel.');
     return;
   }
 
-  // এক API = একটাই Signup
+  // One API = one Signup only
   const linked = validKey.userId || validKey.user_id || '';
   if(linked && !String(linked).startsWith('invite_')){
-    alert('এই API Code ইতিমধ্যে ব্যবহার করা হয়েছে।\n\nএক API দিয়ে শুধু একটা অ্যাকাউন্ট Signup করা যায়।\nAdmin থেকে নতুন API নিন।');
+    alert('This API Code is already used.\n\nOne API key allows only one Signup.\nAsk Admin for a new key.');
     return;
   }
 

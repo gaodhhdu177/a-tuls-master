@@ -94,12 +94,45 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
       <div class="card-box">
         <h6 class="fw-bold mb-3"><i class="fas fa-info-circle me-2 text-success"></i>Admin Controls</h6>
         <ul class="mb-0 text-muted small">
-          <li class="mb-2"><strong>All Users</strong> — দেখুন কে কে রেজিস্ট্রেশন করেছে, প্যাকেজ চেঞ্জ/ডিলিট করুন</li>
-          <li class="mb-2"><strong>Membership</strong> — ইউজারের প্যাকেজ Approve / Upgrade করুন</li>
-          <li class="mb-2"><strong>API Keys</strong> — ইউজারের জন্য API Key জেনারেট করুন</li>
-          <li class="mb-2"><strong>Packages</strong> — প্যাকেজ দাম দেখুন (৳150 / ৳450 / ৳900 / ৳1800)</li>
-          <li>নতুন ইউজার Signup করলেই <strong>All Users</strong>-এ দেখা যাবে</li>
+          <li class="mb-2"><strong>All Users</strong> — View registrations, change package or delete</li>
+          <li class="mb-2"><strong>Membership</strong> — Approve / upgrade user packages</li>
+          <li class="mb-2"><strong>API Keys</strong> — Generate API keys for signup</li>
+          <li class="mb-2"><strong>Packages</strong> — Prices: ৳150 / ৳450 / ৳900 / ৳1800</li>
+          <li>New signups appear under <strong>All Users</strong> automatically</li>
         </ul>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="card-box">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0"><i class="fas fa-users me-2 text-success"></i>All Users (live)</h6>
+              <button class="btn btn-sm btn-p" onclick="loadUsers();loadStats()"><i class="fas fa-sync"></i></button>
+            </div>
+            <div class="table-responsive" style="max-height:320px;overflow:auto">
+              <table class="table table-hover align-middle mb-0">
+                <thead><tr><th>#</th><th>User</th><th>Package</th><th>Joined</th><th></th></tr></thead>
+                <tbody id="dashUsersBody"><tr><td colspan="5" class="text-center text-muted py-3">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card-box">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0"><i class="fas fa-laptop me-2 text-primary"></i>Login History (Device)</h6>
+              <button class="btn btn-sm btn-outline-secondary" onclick="loadLoginLogs()"><i class="fas fa-sync"></i></button>
+            </div>
+            <div id="loginLogsBox" style="max-height:320px;overflow:auto">
+              <p class="text-muted mb-0">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-box">
+        <h6 class="fw-bold mb-3"><i class="fas fa-envelope me-2"></i>User Messages / Withdraw</h6>
+        <div id="adminMsgsBox"><p class="text-muted mb-0">Loading...</p></div>
       </div>
     </div>
 
@@ -141,7 +174,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
             <button class="btn btn-p w-100" onclick="upgradePkg()">Update Package</button>
           </div>
         </div>
-        <p class="small text-muted mb-0">Payment confirm হলে এখান থেকে ইউজারের প্যাকেজ অ্যাকটিভ করুন।</p>
+        <p class="small text-muted mb-0">After payment confirmation, activate the user package here.</p>
       </div>
     </div>
 
@@ -151,12 +184,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
         <h6 class="fw-bold mb-3">Generate API Key</h6>
         <div class="row g-2 mb-3">
           <div class="col-md-4">
-            <select class="form-select" id="apiUser"><option value="">Invite Code (Signup-এর জন্য) / Select user</option></select>
+            <select class="form-select" id="apiUser"><option value="">Invite Code (for Signup) / Select user</option></select>
           </div>
           <div class="col-md-3">
             <select class="form-select" id="apiType">
-              <option value="free">Free API (শুধু দেখা)</option>
-              <option value="paid">Paid API (পুরো ব্যবহার)</option>
+              <option value="free">Free API (view only)</option>
+              <option value="paid">Paid API (full use)</option>
             </select>
           </div>
           <div class="col-md-2">
@@ -171,8 +204,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
             <button class="btn btn-p w-100" onclick="genApi()"><i class="fas fa-key me-1"></i> Generate</button>
           </div>
         </div>
-        <p class="small text-muted mb-2"><strong>Free API</strong> = শুধু দেখা। <strong>Paid API</strong> = পুরো ব্যবহার।</p>
-        <p class="small text-success mb-3">✅ Supabase ক্লাউড চালু থাকলে API <strong>সব ব্রাউজার/ডিভাইসে</strong> কাজ করবে। প্রথমে <code>SUPABASE-SETUP.md</code> অনুসারে টেবিল তৈরি করুন।</p>
+        <p class="small text-muted mb-2"><strong>Free API</strong> = view only. <strong>Paid API</strong> = full use.</p>
+        <p class="small text-success mb-3">✅ With Supabase cloud on, API works on <strong>all browsers/devices</strong>. Create tables per <code>SUPABASE-SETUP.md</code> first.</p>
         <div class="table-responsive">
           <table class="table table-hover">
             <thead><tr><th>User</th><th>Type</th><th>API Key</th><th>Expires</th><th></th></tr></thead>
@@ -207,7 +240,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
 </div>
 
 <script>
-// ===== SUPABASE (সব ব্রাউজার/ডিভাইসে একই ডেটা) =====
+// ===== SUPABASE (same data on all browsers/devices) =====
 const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
 const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
@@ -280,7 +313,6 @@ async function saveUsers(u){
   localStorage.setItem('a_tuls_users', JSON.stringify(u));
 }
 
-async 
 async function loadLoginLogs(){
   const el=document.getElementById('loginLogsBox');
   if(!el)return;
@@ -314,23 +346,43 @@ async function loadStats(){
 async function loadUsers(){
   const users=await getUsers();
   const body=document.getElementById('usersBody');
-  if(!users.length){body.innerHTML='<tr><td colspan="6" class="text-center text-muted py-4">No users yet — they appear after Signup</td></tr>';return}
-  body.innerHTML=users.map((u,i)=>{
-    const pkg=u.package||'Free';
-    const badge=pkg==='Free'?'badge-free':'badge-p';
-    const contact=[u.email,u.whatsapp,u.telegram].filter(Boolean).join('<br>');
-    return `<tr>
-      <td>${i+1}</td>
-      <td><strong>${esc(u.username)}</strong><br><small class="text-muted">${esc(u.gender||'')}</small></td>
-      <td class="small">${contact||'-'}</td>
-      <td><span class="badge ${badge}">${esc(pkg)}</span></td>
-      <td class="small">${u.created?new Date(u.created).toLocaleDateString():'-'}</td>
-      <td>
-        <button class="btn btn-sm btn-outline-primary" onclick="quickUpgrade('${u.id}')">Pkg</button>
-        <button class="btn btn-sm btn-outline-danger" onclick="delUser('${u.id}')">Del</button>
-      </td>
-    </tr>`;
-  }).join('');
+  const dash=document.getElementById('dashUsersBody');
+  if(!users.length){
+    if(body) body.innerHTML='<tr><td colspan="6" class="text-center text-muted py-4">No users yet — they appear after Signup</td></tr>';
+    if(dash) dash.innerHTML='<tr><td colspan="5" class="text-center text-muted py-3">No users yet</td></tr>';
+    return;
+  }
+  if(body){
+    body.innerHTML=users.map((u,i)=>{
+      const pkg=u.package||'Free';
+      const badge=pkg==='Free'?'badge-free':'badge-p';
+      const contact=[u.email,u.whatsapp,u.telegram].filter(Boolean).join('<br>');
+      return `<tr>
+        <td>${i+1}</td>
+        <td><strong>${esc(u.username)}</strong><br><small class="text-muted">${esc(u.gender||'')}</small></td>
+        <td class="small">${contact||'-'}</td>
+        <td><span class="badge ${badge}">${esc(pkg)}</span></td>
+        <td class="small">${u.created?new Date(u.created).toLocaleDateString():'-'}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary" onclick="quickUpgrade('${u.id}')">Pkg</button>
+          <button class="btn btn-sm btn-outline-danger" onclick="delUser('${u.id}')">Del</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+  if(dash){
+    dash.innerHTML=users.map((u,i)=>{
+      const pkg=u.package||'Free';
+      const badge=pkg==='Free'?'badge-free':'badge-p';
+      return `<tr>
+        <td>${i+1}</td>
+        <td><strong>${esc(u.username)}</strong><br><small class="text-muted">${esc(u.email||'')}</small></td>
+        <td><span class="badge ${badge}">${esc(pkg)}</span></td>
+        <td class="small">${u.created?new Date(u.created).toLocaleDateString():'-'}</td>
+        <td><button class="btn btn-sm btn-outline-danger" onclick="delUser('${u.id}')">Del</button></td>
+      </tr>`;
+    }).join('');
+  }
 }
 
 function esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
@@ -344,31 +396,33 @@ async function fillUserSelects(){
   if(ap) ap.innerHTML=opts;
 }
 
-function upgradePkg(){
+async function upgradePkg(){
   const id=document.getElementById('upUser').value;
   const pkg=document.getElementById('upPkg').value;
   if(!id)return alert('Select a user');
-  let users=getUsers();
+  let users=await getUsers();
   users=users.map(u=>u.id===id?{...u,package:pkg}:u);
-  saveUsers(users);
+  await saveUsers(users);
+  try{ await sbPatch('a_tuls_users','id=eq.'+encodeURIComponent(id),{package:pkg}); }catch(e){}
   alert('Package updated to '+pkg);
-  loadStats();
+  loadStats(); loadUsers();
 }
 
-function quickUpgrade(id){
+async function quickUpgrade(id){
   const pkg=prompt('Enter package: Free / Basic / Standard / Popular / Premium / Lifetime','Standard');
   if(!pkg)return;
-  let users=getUsers();
+  let users=await getUsers();
   users=users.map(u=>u.id===id?{...u,package:pkg}:u);
-  saveUsers(users);
+  await saveUsers(users);
+  try{ await sbPatch('a_tuls_users','id=eq.'+encodeURIComponent(id),{package:pkg}); }catch(e){}
   loadUsers();loadStats();
   alert('Updated');
 }
 
 async function delUser(id){
   if(!confirm('Delete this user?'))return;
-  const conf=prompt('নিশ্চিত করতে লিখুন: DELETE');
-  if(conf!=='DELETE'){ alert('বাতিল করা হয়েছে'); return; }
+  const conf=prompt('Type DELETE to confirm');
+  if(conf!=='DELETE'){ alert('Cancelled'); return; }
   try{
     await sbDel('a_tuls_users','id=eq.'+encodeURIComponent(id));
     // also try string/number id variants
@@ -406,9 +460,9 @@ async function genApi(){
   localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
   loadApis();loadStats();
   if(saved){
-    alert((type==='paid'?'Paid':'Free')+' API Key (Cloud):\n'+key+'\n\n✅ সব ডিভাইসে কাজ করবে!\nSignup পেজে এই কোড দিন।');
+    alert((type==='paid'?'Paid':'Free')+' API Key (Cloud):\n'+key+'\n\n✅ Works on all devices!\nGive this code on the Signup page.');
   } else {
-    alert((type==='paid'?'Paid':'Free')+' API Key (Local only):\n'+key+'\n\n⚠️ Supabase টেবিল নেই — SUPABASE-SETUP.md দেখুন।\nএখন শুধু এই ব্রাউজারে কাজ করবে।');
+    alert((type==='paid'?'Paid':'Free')+' API Key (Local only):\n'+key+'\n\n⚠️ No Supabase table — see SUPABASE-SETUP.md.\nWorks only on this browser for now.');
   }
 }
 
@@ -462,15 +516,14 @@ function logout(){
   window.location.replace('login.html');
 }
 
-loadStats();
+async function bootAdmin(){
+  await loadStats();
+  await loadUsers();
+  await loadLoginLogs();
+  loadAdminMsgs();
+}
+bootAdmin();
 </script>
 
-<div class="container my-4">
-  <h5>Login Activity (Device)</h5>
-  <div id="loginLogsBox" class="card p-3 mb-4">Loading...</div>
-  <h5>User Messages / Withdraw</h5>
-  <div id="adminMsgsBox" class="card p-3 mb-4">Loading...</div>
-</div>
-<script>try{loadLoginLogs();loadAdminMsgs();}catch(e){}</script>
 </body>
 </html>
