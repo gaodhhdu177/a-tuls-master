@@ -231,6 +231,13 @@ document.getElementById('signupForm').onsubmit = async function(e){
   alert('Account created! Going to dashboard...');
   window.location.href = 'dashboard.html';
 };
+
+function togglePass(id, btn){
+  const inp=document.getElementById(id);
+  if(!inp) return;
+  if(inp.type==='password'){ inp.type='text'; if(btn) btn.innerHTML='<i class="fas fa-eye-slash"></i>'; }
+  else { inp.type='password'; if(btn) btn.innerHTML='<i class="fas fa-eye"></i>'; }
+}
 </script>
 </body>
 </html>

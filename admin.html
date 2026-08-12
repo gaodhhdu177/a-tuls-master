@@ -265,7 +265,7 @@ function tab(name){
   if(name==='users') loadUsers();
   if(name==='membership'||name==='api') fillUserSelects();
   if(name==='api') loadApis();
-  if(name==='dash') loadStats();
+  if(name==='dash'){ loadStats(); loadLoginLogs(); loadAdminMsgs(); }
 }
 
 async function getUsers(){
@@ -281,12 +281,17 @@ async function saveUsers(u){
 }
 
 async 
-function loadLoginLogs(){
+async function loadLoginLogs(){
   const el=document.getElementById('loginLogsBox');
   if(!el)return;
-  const logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+  let logs=[];
+  try{
+    const r=await fetch(SB_URL+'a_tuls_login_logs?select=*&order=time.desc&limit=80',{headers:SB_H});
+    if(r.ok) logs=await r.json();
+  }catch(e){}
+  if(!logs.length) logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
   if(!logs.length){ el.innerHTML='<p class="text-muted">No login activity yet</p>'; return; }
-  el.innerHTML=logs.slice(0,50).map(l=>'<div class="border-bottom py-2"><b>'+(l.user||'')+'</b> · '+(l.device||'')+'<br><small class="text-muted">'+(l.time||'')+'</small><br><small style="font-size:10px;word-break:break-all">'+(l.ua||'')+'</small></div>').join('');
+  el.innerHTML=logs.slice(0,80).map(l=>'<div class="border-bottom py-2"><b>'+(l.username||l.user||l.email||'')+'</b> · '+(l.device||'')+'<br><small class="text-muted">'+(l.time?new Date(l.time).toLocaleString():'')+'</small><br><small style="font-size:10px;word-break:break-all">'+(l.ua||'')+'</small></div>').join('');
 }
 function loadAdminMsgs(){
   const el=document.getElementById('adminMsgsBox');

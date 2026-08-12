@@ -113,26 +113,56 @@ const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
 const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
 
+function togglePass(id, btn){
+  const inp=document.getElementById(id);
+  if(!inp) return;
+  if(inp.type==='password'){ inp.type='text'; if(btn) btn.innerHTML='<i class="fas fa-eye-slash"></i>'; }
+  else { inp.type='password'; if(btn) btn.innerHTML='<i class="fas fa-eye"></i>'; }
+}
 async function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   const err = document.getElementById('loginError');
   err.style.display = 'none';
-  if(email === 'gourabmon112233@gmail.com' && pass === 'goUrab@2008') {
-    localStorage.setItem('a_tuls_session', JSON.stringify({id:'admin',username:'Gourab',email:email,role:'admin',package:'Lifetime'}));
-      try{
-        var logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
-        logs.unshift({user:u.username||u.email,email:u.email,time:new Date().toISOString(),ua:navigator.userAgent.slice(0,120),device:(/Mobile|Android|iPhone/i.test(navigator.userAgent)?'Mobile':'Desktop')});
-        localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200)));
-        localStorage.setItem('a_tuls_last_active', String(Date.now()));
-      }catch(e){}
 
+  async function pushLoginLog(userObj){
+    const row = {
+      user_id: String(userObj.id||''),
+      username: userObj.username||'',
+      email: userObj.email||email,
+      device: (/Mobile|Android|iPhone/i.test(navigator.userAgent)?'Mobile':'Desktop'),
+      ua: (navigator.userAgent||'').slice(0,180),
+      time: new Date().toISOString()
+    };
+    try{
+      let logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+      logs.unshift(row);
+      localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200)));
+      localStorage.setItem('a_tuls_last_active', String(Date.now()));
+      await fetch(SB_URL+'a_tuls_login_logs', {
+        method:'POST',
+        headers:Object.assign({},SB_H,{'Prefer':'return=minimal'}),
+        body:JSON.stringify(row)
+      });
+    }catch(ex){}
+  }
+
+  if(email === 'gourabmon112233@gmail.com' && pass === 'goUrab@2008') {
+    const adminSess = {id:'admin',username:'Gourab',email:email,role:'admin',package:'Lifetime',profile_pic:''};
+    // load admin pic from cloud if any
+    try{
+      const r=await fetch(SB_URL+"a_tuls_users?id=eq.admin&select=*",{headers:SB_H});
+      if(r.ok){ const rows=await r.json(); if(rows&&rows[0]){ if(rows[0].profile_pic) adminSess.profile_pic=rows[0].profile_pic; if(rows[0].username) adminSess.username=rows[0].username; } }
+    }catch(ex){}
+    localStorage.setItem('a_tuls_session', JSON.stringify(adminSess));
     localStorage.setItem('a_tuls_role', 'admin');
+    if(adminSess.profile_pic) localStorage.setItem('a_tuls_profile_pic', adminSess.profile_pic);
+    await pushLoginLog(adminSess);
     window.location.href = 'admin.html';
     return;
   }
-  // Cloud users (সব ডিভাইস)
+
   let u = null;
   try{
     const r = await fetch(SB_URL+'a_tuls_users?or=(email.eq.'+encodeURIComponent(email)+',username.eq.'+encodeURIComponent(email)+')&select=*', {headers:SB_H});
@@ -140,15 +170,29 @@ async function handleLogin(e) {
       const rows = await r.json();
       u = (rows||[]).find(x => x.password === pass) || null;
     }
-  }catch(err){}
-  // Local fallback
+  }catch(ex){}
   if(!u){
     const users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
     u = users.find(x => (x.email === email || x.username === email) && x.password === pass);
   }
   if(!u){ err.style.display = 'block'; return; }
-  localStorage.setItem('a_tuls_session', JSON.stringify({id:u.id,username:u.username,email:u.email,role:u.role||'user',package:u.package||'Free'}));
-  localStorage.setItem('a_tuls_role', u.role||'user');
+
+  const sess = {
+    id:u.id, username:u.username, email:u.email,
+    role:u.role||'user', package:u.package||'Free',
+    profile_pic:u.profile_pic||'',
+    package_expires:u.package_expires||'',
+    whatsapp:u.whatsapp||'', telegram:u.telegram||'', fb:u.fb||'', gmail:u.gmail||u.email||''
+  };
+  localStorage.setItem('a_tuls_session', JSON.stringify(sess));
+  localStorage.setItem('a_tuls_role', sess.role);
+  if(sess.profile_pic) localStorage.setItem('a_tuls_profile_pic', sess.profile_pic);
+  else localStorage.removeItem('a_tuls_profile_pic');
+  localStorage.setItem('a_tuls_profile', JSON.stringify({
+    name:sess.username, gmail:sess.gmail||sess.email,
+    whatsapp:sess.whatsapp, telegram:sess.telegram, fb:sess.fb
+  }));
+  await pushLoginLog(sess);
   window.location.href = 'dashboard.html';
 }
 </script>

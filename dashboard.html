@@ -342,7 +342,7 @@ services:{t:'Explore Services',h:'<p class="text-muted">All services will be lis
 'create-service':{t:'Create Service',h:'<div class="mb-3"><label class="form-label">Title</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label">Price</label><input type="number" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Service created\')">Create</button>'},
 'managed-services':{t:'Managed Services',h:'<p class="text-muted">Your created services appear here. You can edit or delete them.</p>'},
 membership:{t:'Paid Membership',h:'<div id="memBox"><p>Loading...</p></div><button class="btn btn-p btn-sm mt-2" onclick="go(\'addmoney\')">Upgrade / Buy</button>'},
-'membership-history':{t:'Membership History',h:'<div class="li"><div><div class="fw-bold">Standard Package</div><small class="text-muted">10 Aug 2026 • ৳900</small></div></div>'},
+'membership-history':{t:'Membership History',h:'<div id="memHistBox"><p class="text-muted">Loading...</p></div>'},
 badge:{t:'Apply for Badge',h:'<p class="text-muted">Apply for Trusted / Verified badge.</p><button class="btn btn-p btn-sm" onclick="alert(\'Submitted\')">Apply Now</button>'},
 profile:{t:'My Profile',h:'<div id="profileView"><div class="text-center mb-3"><div class="pc mx-auto mb-2" style="width:80px;height:80px;font-size:2rem" id="pvAv">U</div><h5 id="pvName">User</h5><span class="badge bg-success" id="pvPkg">Free</span></div><p class="mb-1"><strong>Gmail:</strong> <span id="pvGmail">-</span></p><p class="mb-1"><strong>WhatsApp:</strong> <span id="pvWa">-</span></p><p class="mb-1"><strong>Telegram:</strong> <span id="pvTg">-</span></p><p class="mb-1"><strong>Facebook:</strong> <span id="pvFb">-</span></p><p class="mb-0"><strong>Package:</strong> <span id="pvPackage">Free</span></p></div>'},
 'edit-profile':{t:'Edit Profile',h:'<div class="mb-3 text-center"><div class="pc mx-auto mb-2" style="width:80px;height:80px" onclick="document.getElementById(\'pi\').click()" id="epAv">T</div><small class="text-muted">Click photo to change</small></div><div class="mb-2"><label class="form-label">Name</label><input class="form-control" id="epName"></div><div class="mb-2"><label class="form-label">Gmail</label><input type="email" class="form-control" id="epGmail" placeholder="name@gmail.com"></div><div class="mb-2"><label class="form-label">WhatsApp</label><input class="form-control" id="epWa" placeholder="01XXXXXXXXX"></div><div class="mb-2"><label class="form-label">Telegram</label><input class="form-control" id="epTg" placeholder="@username"></div><div class="mb-3"><label class="form-label">Facebook URL</label><input class="form-control" id="epFb" placeholder="https://facebook.com/..."></div><button class="btn btn-p w-100" onclick="saveProfile()">Save Profile</button>'},
@@ -352,7 +352,7 @@ withdrawal:{t:'Withdrawal History',h:'<p class="text-muted">No withdrawal histor
 security:{t:'Security',h:'<p><strong>Last Login:</strong> Today</p><p><strong>Devices:</strong> 2 active</p>'},
 'change-password':{t:'Change Password',h:'<div class="mb-3"><label class="form-label">Current Password</label><input type="password" class="form-control"></div><div class="mb-3"><label class="form-label">New Password</label><input type="password" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Changed\')">Update</button>'},
 'delete-account':{t:'Delete Account',h:'<p class="text-danger fw-bold">⚠️ Account delete সুরক্ষিত</p><p class="small text-muted mb-3">আপনার অ্যাকাউন্ট ডিলিট করতে Admin-এর অনুমতি লাগবে। ইচ্ছামতো ডিলিট করা যাবে না।</p><p class="small">Delete request পাঠাতে WhatsApp করুন অথবা Admin-কে মেসেজ দিন।</p><button class="btn btn-outline-danger w-100" onclick="alert(\'Delete request Admin-এর কাছে পাঠানো হয়েছে। Admin approve করলেই ডিলিট হবে।\')">Request Account Delete</button>'},
-devices:{t:'Associated Devices',h:'<div class="li"><div><div class="fw-bold">Chrome Mobile</div><small class="text-muted">Infinix • Today</small></div></div><div class="li"><div><div class="fw-bold">Chrome Desktop</div><small class="text-muted">Windows • Yesterday</small></div></div>'}
+devices:{t:'Associated Devices',h:'<div id="devicesBox"><p class="text-muted">Loading devices...</p></div>'}
 };
 
 function openTool(page){
@@ -389,7 +389,7 @@ else if(p==='email-vault'){
   openTool('personal-email-vault.html');
   return;
 }
-else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h;document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);}
+else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h;document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);if(p==='membership-history')setTimeout(fillMemHistory,50);if(p==='devices')setTimeout(fillDevices,50);}
 closeD();window.scrollTo({top:0,behavior:'smooth'});
 }
 function loadStoryManage(){
@@ -416,12 +416,13 @@ document.querySelectorAll('[data-p]').forEach(e=>{e.addEventListener('click',fun
 
 
 function fillMembershipBox(){
-  const box=document.getElementById('memBox');
-  if(!box)return;
   const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
-  const pkg=s.role==='admin'?'Lifetime':(s.package||'Free');
-  const exp=s.expires||s.package_expires||(s.role==='admin'?'Never':'—');
-  box.innerHTML='<p>Current Package: <strong class="text-success">'+pkg+'</strong></p><p class="text-muted small">Expires: '+exp+'</p>';
+  const box=document.getElementById('memBox');
+  if(!box) return;
+  const pkg=s.package||'Free';
+  const exp=s.package_expires?new Date(s.package_expires).toLocaleDateString('en-GB'):'—';
+  const map={Free:'৳0',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
+  box.innerHTML='<div class="card p-3 border-0 shadow-sm"><div class="fw-bold fs-5 mb-1">'+_esc(pkg)+' Package</div><div class="text-muted small mb-2">Price: '+(map[pkg]||'—')+'</div><div class="small">মেয়াদ শেষ: <b>'+exp+'</b></div><div class="small mt-1">ইউজার: '+_esc(s.username||'')+'</div></div>';
 }
 function updateVaultCount(){
   try{
@@ -454,23 +455,69 @@ document.addEventListener('keydown', touchSession);
 setInterval(checkSessionTimeout, 30000);
 
 function doSearch(){
-  const q=prompt('সার্চ করুন (টুল / পেজ নাম):');
-  if(!q)return;
-  const map={
-    'format':'gmail-format-fixer-pro.html','fixer':'gmail-format-fixer-pro.html','gmail format':'gmail-format-fixer-pro.html',
-    'report':'email-report.html','vault':'personal-email-vault.html','email vault':'personal-email-vault.html',
-    'validator':'easy-email-validator.html','easy':'easy-email-validator.html',
-    'password':'password-generator.html','duplicate':'duplicate-email-checker.html',
-    'name':'name-generator.html','ip':'ip-timezone.html','timezone':'ip-timezone.html',
-    'formatter':'email-data-formatter.html','data':'email-data-formatter.html',
-    'membership':'addmoney','package':'addmoney','story':'dashboard','profile':'profile'
-  };
-  const key=q.trim().toLowerCase();
-  let found=null;
-  for(const [k,v] of Object.entries(map)){ if(key.includes(k)||k.includes(key)){ found=v; break; } }
-  if(!found){ alert('কিছু পাওয়া যায়নি: '+q); return; }
-  if(found.endsWith('.html')) openTool(found);
-  else go(found);
+  const tools=[
+    {n:'Gmail Format Fixer Pro',p:'gmail-format-fixer-pro.html',k:'gmail format email password'},
+    {n:'Email Report',p:'email-report.html',k:'email report'},
+    {n:'Personal Email Vault',p:'personal-email-vault.html',k:'vault email storage'},
+    {n:'Gmail Format Fixer',p:'gmail-format-fixer.html',k:'gmail format'},
+    {n:'Easy Email Validator',p:'easy-email-validator.html',k:'validate email'},
+    {n:'Duplicate Email Checker',p:'duplicate-email-checker.html',k:'duplicate email'},
+    {n:'Email Data Formatter',p:'email-data-formatter.html',k:'formatter data'},
+    {n:'Password Generator',p:'password-generator.html',k:'password generate'},
+    {n:'Name & Recovery Generator',p:'name-generator.html',k:'name recovery'},
+    {n:'IP Timezone Finder',p:'ip-timezone.html',k:'ip timezone location'}
+  ];
+  let overlay=document.getElementById('searchOverlay');
+  if(!overlay){
+    overlay=document.createElement('div');
+    overlay.id='searchOverlay';
+    overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:60px 16px 16px';
+    overlay.innerHTML='<div style="background:#fff;border-radius:16px;width:100%;max-width:420px;padding:16px;box-shadow:0 10px 40px rgba(0,0,0,.2)"><div class="d-flex justify-content-between align-items-center mb-2"><b>সার্চ টুল / পেজ</b><button class="btn btn-sm btn-light" id="searchClose">✕</button></div><input id="searchInput" class="form-control mb-2" placeholder="নাম লিখুন..." autofocus><div id="searchResults" style="max-height:50vh;overflow:auto"></div></div>';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click',function(e){ if(e.target===overlay) overlay.remove(); });
+    document.getElementById('searchClose').onclick=function(){ overlay.remove(); };
+    document.getElementById('searchInput').oninput=function(){
+      const q=this.value.trim().toLowerCase();
+      const box=document.getElementById('searchResults');
+      const list=!q?tools:tools.filter(t=>t.n.toLowerCase().includes(q)||t.k.includes(q)||t.n.toLowerCase().split('').some((ch,i)=>q.includes(ch)));
+      // better: match by characters sequence
+      const scored=tools.map(t=>{
+        const name=t.n.toLowerCase();
+        let score=0;
+        if(name.includes(q)) score+=10;
+        if(t.k.includes(q)) score+=5;
+        for(const ch of q){ if(name.includes(ch)) score+=1; }
+        return {t,score};
+      }).filter(x=>!q||x.score>0).sort((a,b)=>b.score-a.score);
+      box.innerHTML=(scored.length?scored:tools.map(t=>({t,score:0}))).map(({t})=>
+        '<div class="p-2 border-bottom" style="cursor:pointer" onclick="openTool(\''+t.p+'\')"><b>'+t.n+'</b><br><small class="text-muted">'+t.p+'</small></div>'
+      ).join('') || '<p class="text-muted p-2">কিছু পাওয়া যায়নি</p>';
+    };
+    document.getElementById('searchInput').dispatchEvent(new Event('input'));
+  }
+}
+function fillMemHistory(){
+  const box=document.getElementById('memHistBox'); if(!box) return;
+  const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const pkg=s.package||'Free';
+  const map={Free:'৳0',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
+  const exp=s.package_expires?new Date(s.package_expires).toLocaleDateString('en-GB'):(pkg==='Free'?'—':'Active');
+  box.innerHTML='<div class="li"><div><div class="fw-bold">'+_esc(pkg)+' Package</div><small class="text-muted">'+(map[pkg]||'')+' · মেয়াদ শেষ: '+exp+'</small></div></div>';
+}
+async function fillDevices(){
+  let logs=[];
+  try{
+    const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    let url=SB_URL_V+'a_tuls_login_logs?select=*&order=time.desc&limit=80';
+    if(s.role!=='admin') url=SB_URL_V+'a_tuls_login_logs?or=(user_id.eq.'+encodeURIComponent(s.id)+',email.eq.'+encodeURIComponent(s.email||'')+')&order=time.desc&limit=40';
+    const r=await fetch(url,{headers:SB_H_V});
+    if(r.ok) logs=await r.json();
+  }catch(e){}
+  if(!logs.length) logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+  const html=logs.length?logs.map(l=>'<div class="li"><div><div class="fw-bold">'+_esc(l.username||l.user||l.email||'')+' · '+_esc(l.device||'')+'</div><small class="text-muted">'+(l.time?new Date(l.time).toLocaleString():'')+'</small><br><small style="font-size:10px;word-break:break-all">'+_esc(l.ua||'')+'</small></div></div>').join(''):'<p class="text-muted">No login activity yet</p>';
+  const box=document.getElementById('devicesBox');
+  if(box) box.innerHTML=html;
+  else if(document.getElementById('oc')) document.getElementById('oc').innerHTML=html;
 }
 
 
@@ -503,6 +550,10 @@ function doLogout(){
   alert('Logged out');
   window.location.replace('login.html');
 }
+
+const SB_URL_V='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+const SB_KEY_V='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+const SB_H_V={'apikey':SB_KEY_V,'Authorization':'Bearer '+SB_KEY_V,'Content-Type':'application/json','Prefer':'return=minimal'};
 
 // Force login - no access without session
 const sess=JSON.parse(localStorage.getItem('a_tuls_session')||'null');
@@ -542,44 +593,140 @@ if(sess){
   const pc=document.getElementById('pc');
   if(pc && !pc.querySelector('img')) pc.textContent=un.charAt(0).toUpperCase();
 }
-const sp=localStorage.getItem('a_tuls_profile_pic');
-if(sp){document.getElementById('pc').innerHTML='<img src="'+sp+'">';document.getElementById('dav').innerHTML='<img src="'+sp+'">';}
-function chgPhoto(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{localStorage.setItem('a_tuls_profile_pic',ev.target.result);document.getElementById('pc').innerHTML='<img src="'+ev.target.result+'">';document.getElementById('dav').innerHTML='<img src="'+ev.target.result+'">';alert('Photo updated! Save Profile চাপুন যাতে সবাই দেখে।');};r.readAsDataURL(f)}
-function postS(){
+(async function loadMyCloudPhoto(){
+  try{
+    const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    if(!s.id) return;
+    const r=await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id)+'&select=profile_pic,username,package,package_expires,whatsapp,telegram,fb,gmail',{headers:SB_H_V});
+    if(r.ok){
+      const rows=await r.json();
+      if(rows&&rows[0]){
+        const u=rows[0];
+        if(u.profile_pic){
+          localStorage.setItem('a_tuls_profile_pic', u.profile_pic);
+          s.profile_pic=u.profile_pic;
+        }
+        if(u.package) s.package=u.package;
+        if(u.package_expires) s.package_expires=u.package_expires;
+        localStorage.setItem('a_tuls_session', JSON.stringify(s));
+        const pic=u.profile_pic||localStorage.getItem('a_tuls_profile_pic');
+        if(pic){
+          const pc=document.getElementById('pc'); if(pc) pc.innerHTML='<img src="'+pic+'">';
+          const dav=document.getElementById('dav'); if(dav) dav.innerHTML='<img src="'+pic+'">';
+        }
+      }
+    }
+  }catch(e){}
+  const sp=localStorage.getItem('a_tuls_profile_pic');
+  if(sp){
+    const pc=document.getElementById('pc'); if(pc) pc.innerHTML='<img src="'+sp+'">';
+    const dav=document.getElementById('dav'); if(dav) dav.innerHTML='<img src="'+sp+'">';
+  }
+})();
+function chgPhoto(e){
+  const f=e.target.files[0]; if(!f) return;
+  const img=new Image();
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    img.onload=async function(){
+      const max=240; let w=img.width,h=img.height;
+      if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r); }
+      const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const dataUrl=canvas.toDataURL('image/jpeg',0.72);
+      localStorage.setItem('a_tuls_profile_pic', dataUrl);
+      const pc=document.getElementById('pc'); if(pc) pc.innerHTML='<img src="'+dataUrl+'">';
+      const dav=document.getElementById('dav'); if(dav) dav.innerHTML='<img src="'+dataUrl+'">';
+      // permanent on user id in Supabase
+      try{
+        const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+        s.profile_pic=dataUrl;
+        localStorage.setItem('a_tuls_session', JSON.stringify(s));
+        if(s.id){
+          await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id),{
+            method:'PATCH', headers:SB_H_V,
+            body:JSON.stringify({profile_pic:dataUrl})
+          });
+          // ensure admin row exists
+          if(s.id==='admin'){
+            await fetch(SB_URL_V+'a_tuls_users',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'resolution=merge-duplicates,return=minimal'}),
+              body:JSON.stringify({id:'admin',username:s.username||'Gourab',email:s.email,role:'admin',package:'Lifetime',profile_pic:dataUrl})});
+          }
+        }
+        alert('ফটো সেভ হয়েছে! সব ব্রাউজার/ডিভাইসে একই দেখাবে।');
+      }catch(err){ alert('লোকাল সেভ হয়েছে, ক্লাউড আপডেট ব্যর্থ — আবার চেষ্টা করুন'); }
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+function _esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
+async function postS(){
   const t=document.getElementById('st').value.trim();
   if(!t)return alert('Write something');
   const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const pic=s.profile_pic||localStorage.getItem('a_tuls_profile_pic')||'';
+  const row={user_id:String(s.id||''),username:s.username||'User',text:t,package:s.package||'Free',profile_pic:pic,created:new Date().toISOString()};
+  try{
+    await fetch(SB_URL_V+'a_tuls_stories',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({user_id:row.user_id,username:row.username,text:row.text,created:row.created})});
+  }catch(e){}
   let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
-  stories.unshift({text:t,name:s.username||'User',package:s.package||'Free',time:new Date().toLocaleString(),created:new Date().toISOString()});
+  stories.unshift(row);
   localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,50)));
   alert('Story posted! Everyone can see it.');
-  bootstrap.Modal.getInstance(document.getElementById('sm')).hide();
+  try{bootstrap.Modal.getInstance(document.getElementById('sm')).hide()}catch(e){}
   document.getElementById('st').value='';
   renderStories();
 }
-function _esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
-function renderStories(){
+async function renderStories(){
   const row=document.querySelector('.story-wrap .srow');
   if(!row)return;
-  const stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+  let stories=[];
+  try{
+    const r=await fetch(SB_URL_V+'a_tuls_stories?select=*&order=created.desc&limit=30',{headers:SB_H_V});
+    if(r.ok) stories=await r.json();
+  }catch(e){}
+  if(!stories.length) stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+  else localStorage.setItem('a_tuls_stories',JSON.stringify(stories));
+
+  // load user pics map
+  let users=[];
+  try{
+    const r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic',{headers:SB_H_V});
+    if(r.ok) users=await r.json();
+  }catch(e){}
+  const byId={}, byName={};
+  users.forEach(u=>{ byId[String(u.id)]=u; byName[(u.username||'').toLowerCase()]=u; });
+
+  // admin first
+  stories.sort((a,b)=>{
+    const aAd=(String(a.user_id)==='admin'||(a.username||'').toLowerCase()==='gourab')?0:1;
+    const bAd=(String(b.user_id)==='admin'||(b.username||'').toLowerCase()==='gourab')?0:1;
+    if(aAd!==bAd) return aAd-bAd;
+    return new Date(b.created||0)-new Date(a.created||0);
+  });
+
   let html='<div class="sadd" data-bs-toggle="modal" data-bs-target="#sm"><i class="fas fa-plus"></i></div>';
   if(!stories.length){
     html+='<div class="story-card"><div class="sc-head"><div class="sc-av">A</div><div><div class="sc-name">Admin</div><div class="sc-status">● Status: Paid</div><div class="sc-date">Welcome</div></div></div><div class="sc-text">Welcome to A-Tuls! Post your first story.</div></div>';
   } else {
-    stories.slice(0,15).forEach(st=>{
-      const initial=(st.name||'U').charAt(0).toUpperCase();
-      const isPaid=(st.package&&st.package!=='Free');
-      const date=st.created?new Date(st.created).toLocaleDateString('en-GB'):(st.time||'');
-      html+='<div class="story-card"><div class="sc-head"><div class="sc-av">'+initial+'</div><div><div class="sc-name">'+_esc(st.name||'User')+'</div><div class="sc-status">'+(isPaid?'● Status: Paid':'○ Status: Free')+'</div><div class="sc-date">'+_esc(String(date))+'</div></div></div><div class="sc-text">'+_esc(st.text||'')+'</div></div>';
+    stories.slice(0,20).forEach(st=>{
+      const u=byId[String(st.user_id)]||byName[(st.username||'').toLowerCase()]||{};
+      const pic=st.profile_pic||u.profile_pic||'';
+      const name=st.username||st.name||u.username||'User';
+      const initial=name.charAt(0).toUpperCase();
+      const pkg=st.package||u.package||'Free';
+      const isPaid=pkg&&pkg!=='Free';
+      const date=st.created?new Date(st.created).toLocaleDateString('en-GB'):'';
+      const av=pic?('<img class="sc-av" src="'+pic+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover">'):('<div class="sc-av">'+initial+'</div>');
+      html+='<div class="story-card"><div class="sc-head">'+av+'<div><div class="sc-name">'+_esc(name)+'</div><div class="sc-status">'+(isPaid?'● Status: Paid':'○ Status: Free')+'</div><div class="sc-date">'+_esc(String(date))+'</div></div></div><div class="sc-text">'+_esc(st.text||'')+'</div></div>';
     });
   }
   row.innerHTML=html;
 }
 try{renderStories()}catch(e){}
 
-const SB_URL_V='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-const SB_KEY_V='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-const SB_H_V={'apikey':SB_KEY_V,'Authorization':'Bearer '+SB_KEY_V,'Content-Type':'application/json','Prefer':'return=minimal'};
+
 function vaultUid(){try{const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');return String(s.id||s.email||s.username||'guest')}catch(e){return 'guest'}}
 function K(){return 'a_tuls_email_vault_'+vaultUid()}
 function ls(){try{return JSON.parse(localStorage.getItem(K()))||{};}catch(e){return{}}}
