@@ -127,12 +127,18 @@ async function handleLogin(e) {
   err.style.display = 'none';
 
   async function pushLoginLog(userObj){
+    const ua = navigator.userAgent||'';
+    let browser = 'Unknown', os = 'Unknown';
+    if(/Edg\//.test(ua)) browser='Edge'; else if(/Chrome\//.test(ua)) browser='Chrome'; else if(/Firefox\//.test(ua)) browser='Firefox'; else if(/Safari\//.test(ua)) browser='Safari'; else if(/Opera|OPR\//.test(ua)) browser='Opera';
+    if(/Windows/.test(ua)) os='Windows'; else if(/Android/.test(ua)) os='Android'; else if(/iPhone|iPad|iPod/.test(ua)) os='iOS'; else if(/Mac OS/.test(ua)) os='Mac'; else if(/Linux/.test(ua)) os='Linux';
     const row = {
       user_id: String(userObj.id||''),
       username: userObj.username||'',
       email: userObj.email||email,
-      device: (/Mobile|Android|iPhone/i.test(navigator.userAgent)?'Mobile':'Desktop'),
-      ua: (navigator.userAgent||'').slice(0,180),
+      device: (/Mobile|Android|iPhone|iPad/i.test(ua)?'Mobile':'Desktop'),
+      browser: browser,
+      os: os,
+      ua: ua.slice(0,180),
       time: new Date().toISOString()
     };
     try{

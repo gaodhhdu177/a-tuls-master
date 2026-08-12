@@ -330,7 +330,10 @@ async function loadLoginLogs(){
   }catch(e){}
   if(!logs.length) logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
   if(!logs.length){ el.innerHTML='<p class="text-muted">No login activity yet</p>'; return; }
-  el.innerHTML=logs.slice(0,80).map(l=>'<div class="border-bottom py-2"><b>'+(l.username||l.user||l.email||'')+'</b> · '+(l.device||'')+'<br><small class="text-muted">'+(l.time?new Date(l.time).toLocaleString():'')+'</small><br><small style="font-size:10px;word-break:break-all">'+(l.ua||'')+'</small></div>').join('');
+  el.innerHTML=logs.slice(0,80).map(l=>{
+    const meta=[l.device,l.browser,l.os].filter(Boolean).join(' · ')||'Unknown';
+    return '<div class="border-bottom py-2"><b>'+(l.username||l.user||l.email||'')+'</b> · <span class="badge bg-light text-dark border">'+(meta)+'</span><br><small class="text-muted">'+(l.time?new Date(l.time).toLocaleString():'')+'</small><br><small style="font-size:10px;word-break:break-all;color:#94a3b8">'+(l.ua||'')+'</small></div>';
+  }).join('');
 }
 function loadAdminMsgs(){
   const el=document.getElementById('adminMsgsBox');
