@@ -488,7 +488,8 @@ function tab(name){
   if(name==='api') loadApis();
   if(name==='packages') loadPkgPrices();
   if(name==='support') loadSupportMsgs();
-  if(name==='dash'){ loadStats(); loadLoginLogs(); loadAdminMsgs(); }
+  if(name==='dash'){ loadStats(); loadLoginLogs(); loadAdminMsgs();
+  loadSupportMsgs(); }
 }
 
 async function getUsers(){
@@ -808,10 +809,38 @@ async function loadSupportMsgs(){
       '<small class="text-muted">'+(t?new Date(t).toLocaleString():'')+'</small></div>'+
       '<div class="small text-muted">'+esc(em)+'</div>'+
       '<div class="mt-2">'+esc(tx)+'</div>'+
-      '<div class="small mt-1"><span class="badge bg-secondary">'+(esc(m.msg_type||'support'))+'</span></div></div>';
+      (m.admin_reply?'<div class="mt-2 p-2 rounded bg-light border-start border-3 border-primary"><b class="text-primary">Admin Reply:</b><div>'+esc(m.admin_reply)+'</div></div>':'')+
+      '<div class="mt-2 d-flex gap-2 flex-wrap"><span class="badge bg-secondary">'+(esc(m.msg_type||'support'))+'</span>'+
+      '<button type="button" class="btn btn-sm btn-outline-primary" onclick="replySupportMsg(\''+String(m.id||'').replace(/'/g,'')+'\',\''+String(em).replace(/'/g,'')+'\',\''+String(m.user_id||m.from_user||'').replace(/'/g,'')+'\')">Reply</button></div></div>';
   }).join('');
 }
 
+
+async function replySupportMsg(msgId, email, userId){
+  const text = prompt('Reply to user:');
+  if(!text || !text.trim()) return;
+  const reply = text.trim();
+  const now = new Date().toISOString();
+  try{
+    if(msgId){
+      await fetch(SB_URL+'a_tuls_messages?id=eq.'+encodeURIComponent(msgId), {
+        method:'PATCH', headers:Object.assign({},SB_H,{'Prefer':'return=minimal'}),
+        body: JSON.stringify({admin_reply: reply, replied_at: now})
+      });
+    }
+    await fetch(SB_URL+'a_tuls_messages', {
+      method:'POST', headers:Object.assign({},SB_H,{'Prefer':'return=minimal'}),
+      body: JSON.stringify({from_user:'Admin', email:email||'', user_id:userId||'', text:reply, msg_type:'admin_reply', to_email:email||'', created:now})
+    });
+  }catch(e){ console.warn(e); }
+  try{
+    let msgs = JSON.parse(localStorage.getItem('a_tuls_messages')||'[]');
+    msgs.unshift({from_user:'Admin', email:email||'', text:reply, msg_type:'admin_reply', to_email:email||'', created:now, time:now, admin_reply:reply});
+    localStorage.setItem('a_tuls_messages', JSON.stringify(msgs.slice(0,100)));
+  }catch(e){}
+  alert('Reply sent! User will see it in Messages.');
+  await loadSupportMsgs();
+}
 async function loadPkgPrices(){
   let prices = null;
   try{
@@ -873,10 +902,12 @@ async function savePkgPrices(){
 
 
 async function bootAdmin(){
+  await loadPkgPrices();
   await loadStats();
   await loadUsers();
   await loadLoginLogs();
   loadAdminMsgs();
+  loadSupportMsgs();
   await loadUltraTracking();
 }
 bootAdmin();

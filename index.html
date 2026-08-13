@@ -710,5 +710,32 @@ function wa(n,p,d) {
   window.open(`https://wa.me/${WA}?text=${m}`,'_blank');
 }
 </script>
+
+<script>
+(async function loadIndexPkgPrices(){
+  try{
+    const SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+    const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+    const r=await fetch(SB_URL+'a_tuls_settings?key=eq.package_prices&select=value',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(!r.ok) return;
+    const rows=await r.json();
+    if(!rows||!rows[0]) return;
+    let prices=rows[0].value;
+    if(typeof prices==='string') try{prices=JSON.parse(prices)}catch(e){return}
+    if(!Array.isArray(prices)||!prices.length) return;
+    localStorage.setItem('a_tuls_package_prices', JSON.stringify(prices));
+    // map by name keywords
+    const cards=document.querySelectorAll('#packages .pkg-card, #packages [class*="pkg"], section#packages .col-md-4, section#packages .col-6');
+    // update all .pkg-price and strikethrough siblings by order
+    const priceEls=document.querySelectorAll('#packages .pkg-price');
+    const oldEls=document.querySelectorAll('#packages [style*="line-through"]');
+    prices.forEach((p,i)=>{
+      if(priceEls[i]) priceEls[i].textContent='৳'+(p.price||0);
+      if(oldEls[i]) oldEls[i].textContent='৳'+(p.old||0);
+    });
+  }catch(e){ console.warn(e); }
+})();
+</script>
+
 </body>
 </html>

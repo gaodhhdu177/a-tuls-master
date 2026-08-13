@@ -412,7 +412,7 @@ ov.onclick=closeD;
 document.querySelectorAll('.dd .trig').forEach(t=>{t.onclick=function(e){e.preventDefault();this.closest('.dd').classList.toggle('open')}});
 
 const P={
-messages:{t:'Messages',h:'<p class="text-muted">No new messages.</p>'},
+messages:{t:'Messages',h:'<div id="userMsgInbox"><p class="text-muted">Loading messages...</p></div>'},
 addmoney:{t:'Add Money / Packages',h:'<div class="row g-3"><div class="col-6"><div class="border rounded-3 p-3 text-center border-warning"><div class="text-muted small"><s>৳50</s></div><div class="fw-bold text-success fs-4">৳20</div><small>1 Day · Very Low</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+1Day+20\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center border-info"><div class="text-muted small"><s>৳150</s></div><div class="fw-bold text-success fs-4">৳70</div><small>7 Day · Medium</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+7Day+70\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳300</s></div><div class="fw-bold text-success fs-4">৳150</div><small>Basic · 1 Month</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Basic+150\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center border-success"><div class="text-muted small"><s>৳900</s></div><div class="fw-bold text-success fs-4">৳450</div><small>Standard · 3 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Standard+450\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳1,800</s></div><div class="fw-bold text-success fs-4">৳900</div><small>Popular · 6 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Popular+900\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳3,600</s></div><div class="fw-bold text-success fs-4">৳1,800</div><small>Premium · 12 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Premium+1800\')">Buy Now</button></div></div></div>'},
 sellers:{t:'Explore Sellers',h:'<div id="sellersList"><div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p><p class="small mb-0">Users appear here after they register.</p></div></div>'},
 services:{t:'Explore Services',h:'<p class="text-muted">All services will be listed here with full details.</p>'},
@@ -466,7 +466,7 @@ else if(p==='email-vault'){
   openTool('personal-email-vault.html');
   return;
 }
-else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h;document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);if(p==='membership-history')setTimeout(fillMemHistory,50);if(p==='devices')setTimeout(fillDevices,50);}
+else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h; if(k==='messages'||(x&&x.t==='Messages')) setTimeout(loadUserMessages,80);document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);if(p==='membership-history')setTimeout(fillMemHistory,50);if(p==='devices')setTimeout(fillDevices,50);}
 closeD();window.scrollTo({top:0,behavior:'smooth'});
 }
 function loadStoryManage(){
@@ -829,23 +829,41 @@ async function postS(){
   if(/Mobile|Android|iPhone|iPad/i.test(_ua)) _dev='Mobile';
   let _br='Browser';
   if(/Edg\//.test(_ua)) _br='Edge'; else if(/Chrome\//.test(_ua)) _br='Chrome'; else if(/Firefox\//.test(_ua)) _br='Firefox'; else if(/Safari\//.test(_ua)) _br='Safari';
-  const row={user_id:String(s.id||''),username:s.username||'User',text:t,package:s.package||'Free',profile_pic:pic,device:_dev+' · '+_br,created:new Date().toISOString()};
-  // Store story without huge base64 (pic resolved from users on render)
+  const created = new Date().toISOString();
+  const row={user_id:String(s.id||''),username:s.username||'User',text:t,package:s.package||'Free',profile_pic:pic,device:_dev+' · '+_br,created:created};
   const cloudRow = {user_id:row.user_id,username:row.username,text:row.text,package:row.package,profile_pic:'',device:row.device||'',created:row.created};
   try{
-    const r = await fetch(SB_URL_V+'a_tuls_stories',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify(cloudRow)});
-    if(!r.ok) console.warn('story post', r.status, await r.text().catch(()=>''));
+    const r = await fetch(SB_URL_V+'a_tuls_stories',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'return=representation'}),body:JSON.stringify(cloudRow)});
+    if(r.ok){
+      const saved = await r.json();
+      const one = Array.isArray(saved)?saved[0]:saved;
+      if(one && one.id) row.id = one.id;
+    } else {
+      console.warn('story post', r.status, await r.text().catch(()=>''));
+    }
   }catch(e){ console.warn(e); }
   let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
   stories.unshift(row);
   try{ localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,50))); }catch(e){
-    // localStorage full — keep without pic
     try{ row.profile_pic=''; stories[0]=row; localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,30))); }catch(e2){}
   }
   alert('Story posted! Everyone can see it.');
   try{bootstrap.Modal.getInstance(document.getElementById('sm')).hide()}catch(e){}
   try{ document.getElementById('st').value=''; }catch(e){}
   await renderStories();
+}
+function _deletedStoryIds(){
+  try{ return JSON.parse(localStorage.getItem('a_tuls_deleted_stories')||'[]'); }catch(e){ return []; }
+}
+function _markDeletedStory(key){
+  if(!key) return;
+  const arr = _deletedStoryIds();
+  if(arr.indexOf(key)===-1) arr.push(String(key));
+  localStorage.setItem('a_tuls_deleted_stories', JSON.stringify(arr.slice(-200)));
+}
+function _storyKey(st){
+  if(st && st.id) return 'id:'+st.id;
+  return 't:'+(st.username||'')+'|'+(st.text||'')+'|'+(st.created||'');
 }
 async function renderStories(){
   const row=document.querySelector('.story-wrap .srow');
@@ -857,16 +875,21 @@ async function renderStories(){
   }catch(e){}
   let localStories=[];
   try{ localStories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]'); }catch(e){ localStories=[]; }
-  if(!stories.length){ stories = localStories; }
-  else {
-    // merge: local posts not yet in cloud
-    const keys = new Set(stories.map(s => (s.text||'')+'|'+(s.username||'')+'|'+(s.created||'')));
+  const deleted = new Set(_deletedStoryIds());
+  // filter deleted
+  stories = (stories||[]).filter(s => !deleted.has(_storyKey(s)) && !(s.id && deleted.has('id:'+s.id)));
+  localStories = (localStories||[]).filter(s => !deleted.has(_storyKey(s)) && !(s.id && deleted.has('id:'+s.id)));
+  if(!stories.length){
+    stories = localStories;
+  } else {
+    const keys = new Set(stories.map(s => _storyKey(s)));
     localStories.forEach(ls => {
-      const k = (ls.text||'')+'|'+(ls.username||'')+'|'+(ls.created||'');
-      if(!keys.has(k)) stories.unshift(ls);
+      const k = _storyKey(ls);
+      if(!keys.has(k) && !deleted.has(k)){ stories.unshift(ls); keys.add(k); }
     });
-    try{ localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,50))); }catch(e){}
   }
+  // persist cleaned local (no deleted, max 50)
+  try{ localStorage.setItem('a_tuls_stories', JSON.stringify(stories.slice(0,50))); }catch(e){}
 
   let users=[];
   try{
@@ -885,7 +908,7 @@ async function renderStories(){
 
   let html='<div class="sadd" data-bs-toggle="modal" data-bs-target="#sm"><i class="fas fa-plus"></i></div>';
   if(!stories.length){
-    html+='<div class="story-card"><div class="sc-head"><div class="sc-av">A</div><div><div class="sc-name">A-Tuls</div><div class="sc-status">● Status: Paid</div></div></div><div class="sc-text">Welcome! Post your first story.</div></div>';
+    html+='<div class="story-card"><div class="sc-head"><div class="sc-av">A</div><div><div class="sc-name">A-Tuls</div><div class="sc-status">● Status: Paid</div></div></div><div class="sc-text">Welcome! Share your first story.</div></div>';
   }
   const sess = JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
   const isAdmin = (sess.role==='admin') || (String(sess.email||'').toLowerCase()==='gourabmon112233@gmail.com') || (sess.id==='admin');
@@ -901,8 +924,10 @@ async function renderStories(){
       ? '<img src="'+pic+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
       : (name[0]||'U').toUpperCase();
     const own = isAdmin || String(st.user_id)===String(sess.id) || (st.username||'')===(sess.username||'');
-    const delKey = st.id ? ('id:'+st.id) : ('i:'+idx);
-    const delBtn = own ? '<button type="button" class="sc-del" title="Delete story" onclick="event.stopPropagation();deleteStoryCard(\''+String(st.id||'')+'\',\''+_esc(st.created||'')+'\',\''+_esc(st.text||'').replace(/'/g,"")+'\')">×</button>' : '';
+    const sid = String(st.id||'').replace(/'/g,'');
+    const screated = String(st.created||'').replace(/'/g,'');
+    const stext = String(st.text||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const delBtn = own ? '<button type="button" class="sc-del" title="Delete story" onclick="event.stopPropagation();deleteStoryCard(\''+sid+'\',\''+screated+'\',\''+stext+'\')">×</button>' : '';
     html+='<div class="story-card">'
       + delBtn
       +'<div class="sc-head"><div class="sc-av">'+av+'</div><div>'
@@ -918,28 +943,97 @@ async function renderStories(){
 
 async function deleteStoryCard(id, created, text){
   if(!confirm('Delete this story?')) return;
-  const sess = JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  // mark deleted first so UI won't bring it back
+  if(id) _markDeletedStory('id:'+id);
+  _markDeletedStory('t:'+''+'|'+(text||'')+'|'+(created||''));
+  // also mark with username variants via local scan
+  try{
+    let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+    stories.forEach(s=>{
+      if((id && String(s.id)===String(id)) || (created && s.created===created && s.text===text)){
+        _markDeletedStory(_storyKey(s));
+        if(s.id) _markDeletedStory('id:'+s.id);
+      }
+    });
+  }catch(e){}
   // Supabase delete
   try{
     if(id){
-      await fetch(SB_URL_V+'a_tuls_stories?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:SB_H_V});
-    } else if(created && text){
-      await fetch(SB_URL_V+'a_tuls_stories?created=eq.'+encodeURIComponent(created)+'&text=eq.'+encodeURIComponent(text),{method:'DELETE',headers:SB_H_V});
+      const r = await fetch(SB_URL_V+'a_tuls_stories?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'})});
+      console.log('del by id', r.status);
+    }
+    if(created){
+      // fallback match
+      let q = 'created=eq.'+encodeURIComponent(created);
+      if(text) q += '&text=eq.'+encodeURIComponent(text);
+      const r2 = await fetch(SB_URL_V+'a_tuls_stories?'+q,{method:'DELETE',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'})});
+      console.log('del by created', r2.status);
     }
   }catch(e){ console.warn(e); }
-  // local
+  // local remove
   try{
     let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
     stories = stories.filter(s => {
       if(id && String(s.id)===String(id)) return false;
       if(created && text && s.created===created && s.text===text) return false;
+      if(created && s.created===created) return false;
       return true;
     });
     localStorage.setItem('a_tuls_stories', JSON.stringify(stories));
   }catch(e){}
   await renderStories();
+  alert('Story deleted');
 }
 
+
+async function loadUserMessages(){
+  const box = document.getElementById('userMsgInbox');
+  if(!box) return;
+  const sess = JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const email = (sess.email||'').toLowerCase();
+  const uname = sess.username||'';
+  let msgs = [];
+  try{
+    const r = await fetch(SB_URL_V+'a_tuls_messages?select=*&order=created.desc&limit=80',{headers:SB_H_V});
+    if(r.ok) msgs = await r.json();
+  }catch(e){}
+  try{
+    const loc = JSON.parse(localStorage.getItem('a_tuls_messages')||'[]');
+    // merge
+    const keys = new Set(msgs.map(m => (m.text||'')+'|'+(m.created||m.time||'')));
+    loc.forEach(m => {
+      const k = (m.text||'')+'|'+(m.created||m.time||'');
+      if(!keys.has(k)) msgs.push(m);
+    });
+  }catch(e){}
+  // filter for this user or admin replies to them
+  msgs = msgs.filter(m => {
+    const em = (m.email||m.to_email||'').toLowerCase();
+    const from = m.from_user||m.username||'';
+    const typ = m.msg_type||'';
+    if(typ==='admin_reply' && (em===email || !em)) return true;
+    if(em===email) return true;
+    if(from===uname) return true;
+    if(m.admin_reply && (em===email || from===uname)) return true;
+    return false;
+  });
+  if(!msgs.length){
+    box.innerHTML = '<p class="text-muted mb-0">No messages yet. Use Live Support (+) to contact admin.</p>';
+    return;
+  }
+  box.innerHTML = msgs.map(m => {
+    const isAdmin = (m.msg_type==='admin_reply') || (m.from_user==='Admin');
+    const t = m.created || m.time || '';
+    const who = isAdmin ? 'Admin' : (m.from_user || m.username || 'You');
+    const tx = m.text || m.message || '';
+    const reply = m.admin_reply ? '<div class="mt-2 p-2 rounded" style="background:#eff6ff;border-left:3px solid #2563eb"><b style="color:#2563eb">Admin Reply:</b><div>'+_esc(m.admin_reply)+'</div></div>' : '';
+    return '<div class="border rounded-3 p-3 mb-2 bg-white">'+
+      '<div class="d-flex justify-content-between"><b>'+_esc(who)+'</b><small class="text-muted">'+(t?new Date(t).toLocaleString():'')+'</small></div>'+
+      '<div class="mt-1">'+_esc(tx)+'</div>'+ reply +
+      (isAdmin?'<span class="badge bg-primary mt-2">Admin</span>':'')+
+      '</div>';
+  }).join('');
+}
 
 async function loadDashVaultCloud(){
   const uid=vaultUid(); if(uid==='guest') return;
