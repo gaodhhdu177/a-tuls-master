@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+/* A_TULS_DOMAIN_LOCK + session gate */
+(function(){
+  try{
+    var host = (location.hostname||'').toLowerCase();
+    var ok = !host || host==='localhost' || host==='127.0.0.1' || host.indexOf('onrender.com')>=0 || host.indexOf('a-tuls')>=0 || host.indexOf('github.io')>=0 || host.indexOf('netlify.app')>=0 || host.indexOf('vercel.app')>=0;
+    if(!ok){
+      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0 0 12px">Access Denied</h1><p style="opacity:.9;margin:0 0 8px">This copy of A-Tuls is not authorized on this domain.</p><p style="opacity:.55;margin:0;font-size:.9rem">Official site only.</p></div>';
+      throw new Error('domain-lock');
+    }
+  }catch(e){ if(String(e.message||e)==='domain-lock' || (e&&e.message==='domain-lock')) throw e; }
+  try{
+    var path = (location.pathname||'').toLowerCase();
+    var isPublic = /index\.html|login\.html|signup\.html|membership\.html|logo\.html|demo/.test(path) || path.endsWith('/') || path==='' ;
+    if(!isPublic){
+      var s = null;
+      try{ s = JSON.parse(localStorage.getItem('a_tuls_session')||'null'); }catch(_e){}
+      if(!s || !s.email){
+        alert('Please login first!');
+        location.replace('login.html');
+      }
+    }
+  }catch(e){}
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A-Tuls - Dashboard</title>
@@ -87,6 +113,10 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 .obtn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:none;padding:10px 22px;border-radius:50px;font-weight:600;font-size:.88rem;cursor:pointer;text-decoration:none}
 .obtn:hover{background:#1d4ed8;color:#fff}
 .badge-new{background:#ef4444;color:#fff;font-size:.65rem;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:6px;vertical-align:middle}
+.v-badge{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:20px;margin-left:4px;vertical-align:middle;box-shadow:0 2px 6px rgba(37,99,235,.35)}
+.v-badge i{font-size:.6rem}
+.admin-badge{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:20px;margin-left:4px;vertical-align:middle}
+
 
 /* Vault */
 .ta-wrap{display:flex;border:1px solid #cbd5e1;border-radius:10px;overflow:hidden}
@@ -231,20 +261,6 @@ window.A_TULS_DB = {
 </script>
 
 </head>
-
-<script>
-/* A_TULS_DOMAIN_LOCK — stolen copy on other domain will soft-block */
-(function(){
-  try{
-    var host = (location.hostname||'').toLowerCase();
-    var ok = !host || host==='localhost' || host==='127.0.0.1' || host.indexOf('onrender.com')>=0 || host.indexOf('a-tuls')>=0 || host.indexOf('github.io')>=0;
-    if(!ok){
-      document.documentElement.innerHTML = '<div style="font-family:sans-serif;padding:40px;text-align:center"><h2>Access Denied</h2><p>This copy of A-Tuls is not authorized on this domain.</p><p style="color:#64748b">Official site only.</p></div>';
-      throw new Error('domain lock');
-    }
-  }catch(e){ if(String(e.message)==='domain lock') throw e; }
-})();
-</script>
 
 <body>
 
@@ -646,7 +662,7 @@ function openUserProfile(id, name){
     ov.innerHTML=`<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:380px;text-align:center">
       <button onclick="this.closest('#userProfOverlay').remove()" style="float:right;border:0;background:#f1f5f9;width:32px;height:32px;border-radius:50%">✕</button>
       <div style="margin:8px auto 12px">${pic}</div>
-      <h5 class="mb-1">${u.username||name||''}</h5>
+      <h5 class="mb-1">${u.username||name||''}${typeof nameBadges==='function'?nameBadges(u):''}</h5>
       <div class="badge bg-success mb-2">${u.package||'Free'}</div>
       <div class="small text-muted mb-3">${u.email||''}</div>
       <div class="d-grid gap-2">
@@ -761,7 +777,7 @@ if(sess){
       if(el.classList.contains('fs-5')&&el.closest('.ubar')){
         const pkg=sess.package||'Free';
         const isPaid=pkg!=='Free';
-        el.innerHTML='Welcome, '+un+' <span class="badge '+(isPaid||sess.role==='admin'?'bg-success':'bg-light text-primary')+' rounded-pill" style="font-size:.7rem">'+(sess.role==='admin'?'Admin':pkg)+'</span>'+(sess.role==='admin'||sess.email==='gourabmon112233@gmail.com'||sess.verified?' <span class="badge bg-primary rounded-pill" style="font-size:.7rem">✓ Verified</span>':'');
+        el.innerHTML='Welcome, '+un+nameBadges(sess)+' <span class="badge '+(isPaid||sess.role==='admin'?'bg-success':'bg-light text-primary')+' rounded-pill" style="font-size:.7rem">'+(sess.role==='admin'?'Lifetime':pkg)+'</span>';
       }
       else if(el.closest('.drawer-head')) el.textContent=un;
     }
@@ -803,6 +819,8 @@ if(sess){
           s.profile_pic=u.profile_pic;
         }
         if(u.package) s.package=u.package;
+        if(u.verified!=null) s.verified=u.verified;
+        if(u.role) s.role=u.role;
         if(u.package_expires) s.package_expires=u.package_expires;
         localStorage.setItem('a_tuls_session', JSON.stringify(s));
         const pic=u.profile_pic||localStorage.getItem('a_tuls_profile_pic');
@@ -866,6 +884,16 @@ function chgPhoto(e){
     img.src=ev.target.result;
   };
   reader.readAsDataURL(f);
+}
+
+function nameBadges(u){
+  u = u || {};
+  var isAd = u.role==='admin' || String(u.email||'').toLowerCase()==='gourabmon112233@gmail.com' || u.id==='admin';
+  var isV = isAd || u.verified===true || u.verified==='true' || u.badge_status==='verified';
+  var h = '';
+  if(isAd) h += ' <span class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>';
+  if(isV) h += ' <span class="v-badge"><i class="fas fa-check-circle"></i> Verified</span>';
+  return h;
 }
 function _esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
 async function postS(){
@@ -981,7 +1009,7 @@ async function renderStories(){
     html+='<div class="story-card">'
       + delBtn
       +'<div class="sc-head"><div class="sc-av">'+av+'</div><div>'
-      +'<div class="sc-name">'+_esc(name)+'</div>'
+      +'<div class="sc-name">'+_esc(name)+nameBadges({username:name,user_id:st.user_id,role:(u&&u.role),email:(u&&u.email),verified:(u&&u.verified)||st.verified})+'</div>'
       +'<div class="sc-status">● Status: '+(isPaid?'Paid':'Free')+'</div>'
       +(date?'<div class="sc-date">'+date+'</div>':'')
       +(device?'<div class="sc-date">📱 '+_esc(device)+'</div>':'')
@@ -1274,7 +1302,7 @@ async function renderSellers(){
     return '<div class="card mb-3 p-3" style="cursor:pointer" onclick="openUserProfile(\''+id+'\',\''+un+'\')">'
       +'<div class="d-flex align-items-center gap-3">'
       +pic
-      +'<div><div class="fw-bold">'+_esc(u.username||'')+(u.verified||u.role==='admin'||u.email==='gourabmon112233@gmail.com'?' <span class="badge bg-primary" style="font-size:.65rem">✓ Verified</span>':'')+' <span class="badge '+badge+'" style="font-size:.65rem">'+_esc(pkg)+'</span></div>'
+      +'<div><div class="fw-bold">'+_esc(u.username||'')+nameBadges(u)+' <span class="badge '+badge+'" style="font-size:.65rem">'+_esc(pkg)+'</span></div>'
       +'<small class="text-muted">Joined: '+(u.created?new Date(u.created).toLocaleDateString():'-')+'</small>'
       +'<div class="small text-primary mt-1"><i class="fas fa-user me-1"></i>Tap to view profile & message</div>'
       +'</div></div></div>';

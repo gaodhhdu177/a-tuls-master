@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+/* A_TULS_DOMAIN_LOCK + session gate */
+(function(){
+  try{
+    var host = (location.hostname||'').toLowerCase();
+    var ok = !host || host==='localhost' || host==='127.0.0.1' || host.indexOf('onrender.com')>=0 || host.indexOf('a-tuls')>=0 || host.indexOf('github.io')>=0 || host.indexOf('netlify.app')>=0 || host.indexOf('vercel.app')>=0;
+    if(!ok){
+      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0 0 12px">Access Denied</h1><p style="opacity:.9;margin:0 0 8px">This copy of A-Tuls is not authorized on this domain.</p><p style="opacity:.55;margin:0;font-size:.9rem">Official site only.</p></div>';
+      throw new Error('domain-lock');
+    }
+  }catch(e){ if(String(e.message||e)==='domain-lock' || (e&&e.message==='domain-lock')) throw e; }
+  try{
+    var path = (location.pathname||'').toLowerCase();
+    var isPublic = /index\.html|login\.html|signup\.html|membership\.html|logo\.html|demo/.test(path) || path.endsWith('/') || path==='' ;
+    if(!isPublic){
+      var s = null;
+      try{ s = JSON.parse(localStorage.getItem('a_tuls_session')||'null'); }catch(_e){}
+      if(!s || !s.email){
+        alert('Please login first!');
+        location.replace('login.html');
+      }
+    }
+  }catch(e){}
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel | A-Tuls</title>
@@ -215,6 +241,7 @@ window.A_TULS_DB = {
     <li><a data-tab="membership" onclick="tab('membership')"><i class="fas fa-crown"></i> Membership</a></li>
     <li><a data-tab="api" onclick="tab('api')"><i class="fas fa-key"></i> API Keys</a></li>
     <li><a data-tab="packages" onclick="tab('packages')"><i class="fas fa-box"></i> Packages</a></li>
+    <li><a data-tab="badges" onclick="tab('badges')"><i class="fas fa-certificate"></i> Badge Requests</a></li>
     <li><a data-tab="support" onclick="tab('support')"><i class="fas fa-headset"></i> Live Support <span id="supportBadge" class="badge bg-danger" style="display:none">0</span></a></li>
     <li><a data-tab="settings" onclick="tab('settings')"><i class="fas fa-cog"></i> Settings</a></li>
     <li style="margin-top:20px;border-top:1px solid rgba(255,255,255,.08);padding-top:8px">
@@ -405,7 +432,15 @@ window.A_TULS_DB = {
     <div id="tab-support" style="display:none">
       <div class="card-box">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h6 class="fw-bold mb-0"><i class="fas fa-headset me-2 text-danger"></i>Live Support (User Knocks)</h6>
+          <div id="tab-badges" style="display:none">
+        <div class="card-box mb-3">
+          <h6 class="fw-bold mb-2"><i class="fas fa-certificate me-2 text-primary"></i>Badge Applications</h6>
+          <p class="small text-muted">Users apply from Dashboard → Apply for Badge. Approve to show blue Verified badge on their profile everywhere.</p>
+          <button class="btn btn-sm btn-outline-primary mb-2" onclick="loadBadgeRequests()">Refresh</button>
+          <div id="badgeReqBox"><p class="text-muted">Loading...</p></div>
+        </div>
+      </div>
+      <h6 class="fw-bold mb-0"><i class="fas fa-headset me-2 text-danger"></i>Live Support (User Knocks)</h6>
           <button class="btn btn-sm btn-outline-primary" onclick="loadSupportMsgs()"><i class="fas fa-sync"></i> Refresh</button>
         </div>
         <p class="small text-muted">User Dashboard-এ Live Support ক্লিক করলে এখানে নক আসবে (Supabase + local)।</p>
@@ -475,7 +510,7 @@ function openSide(){document.getElementById('side').classList.add('open');docume
 function closeSide(){document.getElementById('side').classList.remove('open');document.getElementById('ov').classList.remove('show')}
 
 function tab(name){
-  ['dash','users','membership','api','packages','support','settings'].forEach(t=>{
+  ['dash','users','membership','api','packages','badges','support','settings'].forEach(t=>{
     const el=document.getElementById('tab-'+t); if(el) el.style.display = t===name?'block':'none';
   });
   document.querySelectorAll('.side-menu a').forEach(a=>a.classList.remove('active'));
@@ -488,8 +523,10 @@ function tab(name){
   if(name==='api') loadApis();
   if(name==='packages') loadPkgPrices();
   if(name==='support') loadSupportMsgs();
+  try{loadBadgeRequests()}catch(e){}
   if(name==='dash'){ loadStats(); loadLoginLogs(); loadAdminMsgs();
-  loadSupportMsgs(); }
+  loadSupportMsgs();
+  try{loadBadgeRequests()}catch(e){} }
 }
 
 async function getUsers(){
@@ -833,6 +870,45 @@ async function approveBadge(userId, email, username){
   }catch(e){ console.warn(e); }
   alert('Badge approved! User will see ✓ Verified.');
   loadSupportMsgs();
+  try{loadBadgeRequests()}catch(e){}
+}
+async function loadBadgeRequests(){
+  const box=document.getElementById('badgeReqBox');
+  if(!box) return;
+  box.innerHTML='<p class="text-muted">Loading...</p>';
+  let msgs=[];
+  try{
+    const r=await fetch(SB_URL+'a_tuls_messages?select=*&order=created.desc&limit=100',{headers:SB_H});
+    if(r.ok) msgs=await r.json();
+  }catch(e){}
+  try{
+    const loc=JSON.parse(localStorage.getItem('a_tuls_messages')||'[]');
+    msgs = msgs.concat(loc);
+  }catch(e){}
+  msgs = msgs.filter(m => String(m.msg_type||'').indexOf('badge')>=0 || String(m.text||'').toLowerCase().indexOf('badge apply')>=0);
+  // dedupe
+  const seen=new Set();
+  msgs = msgs.filter(m=>{
+    const k=(m.email||'')+'|'+(m.created||m.time||'')+'|'+(m.text||'');
+    if(seen.has(k)) return false; seen.add(k); return true;
+  });
+  if(!msgs.length){
+    box.innerHTML='<p class="text-muted mb-0">No badge applications yet.</p>';
+    return;
+  }
+  box.innerHTML = msgs.map(m=>{
+    const who=m.from_user||m.username||'User';
+    const em=m.email||'';
+    const uid=m.user_id||'';
+    const t=m.created||m.time||'';
+    return '<div class="border rounded-3 p-3 mb-2 bg-white">'+
+      '<div class="d-flex justify-content-between"><b>'+esc(who)+'</b><small class="text-muted">'+(t?new Date(t).toLocaleString():'')+'</small></div>'+
+      '<div class="small text-muted">'+esc(em)+'</div>'+
+      '<div class="mt-1">'+esc(m.text||'')+'</div>'+
+      '<div class="mt-2 d-flex gap-2">'+
+      '<button class="btn btn-sm btn-success" onclick="approveBadge(\''+String(uid).replace(/'/g,'')+'\',\''+String(em).replace(/'/g,'')+'\',\''+String(who).replace(/'/g,'')+'\')">Approve Verified</button>'+
+      '</div></div>';
+  }).join('');
 }
 async function replySupportMsg(msgId, email, userId){
   const text = prompt('Reply to user:');
@@ -858,6 +934,7 @@ async function replySupportMsg(msgId, email, userId){
   }catch(e){}
   alert('Reply sent! User will see it in Messages.');
   await loadSupportMsgs();
+  try{loadBadgeRequests()}catch(e){}
 }
 async function loadPkgPrices(){
   let prices = null;
@@ -926,6 +1003,7 @@ async function bootAdmin(){
   await loadLoginLogs();
   loadAdminMsgs();
   loadSupportMsgs();
+  try{loadBadgeRequests()}catch(e){}
   await loadUltraTracking();
 }
 bootAdmin();

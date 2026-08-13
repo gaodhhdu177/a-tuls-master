@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+/* A_TULS_DOMAIN_LOCK + session gate */
+(function(){
+  try{
+    var host = (location.hostname||'').toLowerCase();
+    var ok = !host || host==='localhost' || host==='127.0.0.1' || host.indexOf('onrender.com')>=0 || host.indexOf('a-tuls')>=0 || host.indexOf('github.io')>=0 || host.indexOf('netlify.app')>=0 || host.indexOf('vercel.app')>=0;
+    if(!ok){
+      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0 0 12px">Access Denied</h1><p style="opacity:.9;margin:0 0 8px">This copy of A-Tuls is not authorized on this domain.</p><p style="opacity:.55;margin:0;font-size:.9rem">Official site only.</p></div>';
+      throw new Error('domain-lock');
+    }
+  }catch(e){ if(String(e.message||e)==='domain-lock' || (e&&e.message==='domain-lock')) throw e; }
+  try{
+    var path = (location.pathname||'').toLowerCase();
+    var isPublic = /index\.html|login\.html|signup\.html|membership\.html|logo\.html|demo/.test(path) || path.endsWith('/') || path==='' ;
+    if(!isPublic){
+      var s = null;
+      try{ s = JSON.parse(localStorage.getItem('a_tuls_session')||'null'); }catch(_e){}
+      if(!s || !s.email){
+        alert('Please login first!');
+        location.replace('login.html');
+      }
+    }
+  }catch(e){}
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A-Tuls - Membership</title>
