@@ -255,54 +255,64 @@ async function handleLogin(e) {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   const err = document.getElementById('loginError');
-  err.style.display = 'none';
+  if(err) err.style.display = 'none';
 
   async function pushLoginLog(userObj){
-    const ua = navigator.userAgent||'';
-    let browser = 'Unknown', os = 'Unknown';
-    if(/Edg\//.test(ua)) browser='Edge'; else if(/Chrome\//.test(ua)) browser='Chrome'; else if(/Firefox\//.test(ua)) browser='Firefox'; else if(/Safari\//.test(ua)) browser='Safari'; else if(/Opera|OPR\//.test(ua)) browser='Opera';
-    if(/Windows/.test(ua)) os='Windows'; else if(/Android/.test(ua)) os='Android'; else if(/iPhone|iPad|iPod/.test(ua)) os='iOS'; else if(/Mac OS/.test(ua)) os='Mac'; else if(/Linux/.test(ua)) os='Linux';
-    const row = {
-      user_id: String(userObj.id||''),
-      username: userObj.username||'',
-      email: userObj.email||email,
-      device: (/Mobile|Android|iPhone|iPad/i.test(ua)?'Mobile':'Desktop'),
-      browser: browser,
-      os: os,
-      ua: ua.slice(0,180),
-      time: new Date().toISOString()
-    };
     try{
-      let logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
-      logs.unshift(row);
-      localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200)));
+      const ua = navigator.userAgent||'';
+      let browser = 'Unknown', os = 'Unknown';
+      if(/Edg\//.test(ua)) browser='Edge'; else if(/Chrome\//.test(ua)) browser='Chrome'; else if(/Firefox\//.test(ua)) browser='Firefox'; else if(/Safari\//.test(ua)) browser='Safari'; else if(/Opera|OPR\//.test(ua)) browser='Opera';
+      if(/Windows/.test(ua)) os='Windows'; else if(/Android/.test(ua)) os='Android'; else if(/iPhone|iPad|iPod/.test(ua)) os='iOS'; else if(/Mac OS/.test(ua)) os='Mac'; else if(/Linux/.test(ua)) os='Linux';
+      const row = {
+        user_id: String(userObj.id||''),
+        username: userObj.username||'',
+        email: userObj.email||email,
+        device: (/Mobile|Android|iPhone|iPad/i.test(ua)?'Mobile':'Desktop'),
+        browser: browser,
+        os: os,
+        ua: ua.slice(0,180),
+        time: new Date().toISOString()
+      };
+      try{
+        let logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+        logs.unshift(row);
+        localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200)));
+      }catch(_e){}
       localStorage.setItem('a_tuls_last_active', String(Date.now()));
-      const rlog = try{ if(window.A_TULS) await A_TULS.dualInsert('a_tuls_login_logs', row); }catch(_e){}
-      await fetch(SB_URL+'a_tuls_login_logs', {
-        method:'POST',
-        headers:Object.assign({},SB_H,{'Prefer':'return=minimal','Content-Type':'application/json'}),
-        body:JSON.stringify(row)
-      });
-      if(!rlog.ok) console.warn('Supabase login log failed', rlog.status);
-    }catch(ex){}
+      try{
+        await fetch(SB_URL+'a_tuls_login_logs', {
+          method:'POST',
+          headers:Object.assign({},SB_H,{'Prefer':'return=minimal'}),
+          body:JSON.stringify(row)
+        });
+      }catch(_e){}
+      try{ if(window.A_TULS) await A_TULS.dualInsert('a_tuls_login_logs', row); }catch(_e){}
+    }catch(ex){ console.warn('login log', ex); }
   }
 
-  if(email === 'gourabmon112233@gmail.com' && pass === 'goUrab@2008') {
-    const adminSess = {id:'admin',username:'Gourab',email:email,role:'admin',package:'Lifetime',profile_pic:''};
-    // load admin pic from cloud if any
+  // ===== ADMIN LOGIN (hardcoded) =====
+  if(email.toLowerCase() === 'gourabmon112233@gmail.com' && pass === 'goUrab@2008') {
+    const adminSess = {id:'admin',username:'Gourab',email:email.toLowerCase(),role:'admin',package:'Lifetime',profile_pic:''};
     try{
       const r=await fetch(SB_URL+"a_tuls_users?id=eq.admin&select=*",{headers:SB_H});
-      if(r.ok){ const rows=await r.json(); if(rows&&rows[0]){ if(rows[0].profile_pic) adminSess.profile_pic=rows[0].profile_pic; if(rows[0].username) adminSess.username=rows[0].username; } }
+      if(r.ok){
+        const rows=await r.json();
+        if(rows&&rows[0]){
+          if(rows[0].profile_pic) adminSess.profile_pic=rows[0].profile_pic;
+          if(rows[0].username) adminSess.username=rows[0].username;
+        }
+      }
     }catch(ex){}
     localStorage.setItem('a_tuls_last_active', String(Date.now()));
     localStorage.setItem('a_tuls_session', JSON.stringify(adminSess));
     localStorage.setItem('a_tuls_role', 'admin');
     if(adminSess.profile_pic) localStorage.setItem('a_tuls_profile_pic', adminSess.profile_pic);
-    try{ if(window.A_TULS) await A_TULS.logLogin(adminSess);
+    try{ await pushLoginLog(adminSess); }catch(ex){}
     window.location.href = 'admin.html';
     return;
   }
 
+  // ===== NORMAL USER =====
   let u = null;
   try{
     const r = await fetch(SB_URL+'a_tuls_users?or=(email.eq.'+encodeURIComponent(email)+',username.eq.'+encodeURIComponent(email)+')&select=*', {headers:SB_H});
@@ -312,10 +322,15 @@ async function handleLogin(e) {
     }
   }catch(ex){}
   if(!u){
-    const users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
-    u = users.find(x => (x.email === email || x.username === email) && x.password === pass);
+    try{
+      const users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+      u = users.find(x => (x.email === email || x.username === email) && x.password === pass);
+    }catch(ex){}
   }
-  if(!u){ err.style.display = 'block'; return; }
+  if(!u){
+    if(err) err.style.display = 'block';
+    return;
+  }
 
   const sess = {
     id:u.id, username:u.username, email:u.email,
@@ -325,7 +340,7 @@ async function handleLogin(e) {
     whatsapp:u.whatsapp||'', telegram:u.telegram||'', fb:u.fb||'', gmail:u.gmail||u.email||''
   };
   localStorage.setItem('a_tuls_last_active', String(Date.now()));
-    localStorage.setItem('a_tuls_session', JSON.stringify(sess));
+  localStorage.setItem('a_tuls_session', JSON.stringify(sess));
   localStorage.setItem('a_tuls_role', sess.role);
   if(sess.profile_pic) localStorage.setItem('a_tuls_profile_pic', sess.profile_pic);
   else localStorage.removeItem('a_tuls_profile_pic');
@@ -333,8 +348,8 @@ async function handleLogin(e) {
     name:sess.username, gmail:sess.gmail||sess.email,
     whatsapp:sess.whatsapp, telegram:sess.telegram, fb:sess.fb
   }));
-  try{ if(window.A_TULS) await A_TULS.logLogin(sess);
-  window.location.href = 'dashboard.html';
+  try{ await pushLoginLog(sess); }catch(ex){}
+  window.location.href = (sess.role === 'admin') ? 'admin.html' : 'dashboard.html';
 }
 </script>
 </body>

@@ -174,33 +174,29 @@ window.A_TULS_DB = {
 
 </head>
 <body>
+
 <script>
 (function(){
-  try {
+  try{
     var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
     if(!s || !s.email){
-      location.replace('index.html');
-      return;
-    }
-    // idle 30 min -> re-login
-    var last = +localStorage.getItem('a_tuls_last_active')||Date.now();
-    if(Date.now()-last > 30*60*1000){
-      localStorage.removeItem('a_tuls_session');
+      alert('Please login first');
       location.replace('login.html');
       return;
     }
+    var isAdmin = (s.role === 'admin') || (String(s.email).toLowerCase() === 'gourabmon112233@gmail.com') || (s.id === 'admin');
+    if(!isAdmin){
+      alert('Admin only');
+      location.replace('dashboard.html');
+      return;
+    }
     localStorage.setItem('a_tuls_last_active', String(Date.now()));
-    document.addEventListener('click', function(){ localStorage.setItem('a_tuls_last_active', String(Date.now())); });
-  } catch(e){ location.replace('index.html'); }
+  }catch(e){
+    location.replace('login.html');
+  }
 })();
-// Basic deterrents (not 100% secure — real lock needs Node backend)
-document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-document.addEventListener('keydown', function(e){
-  if(e.key==='F12') e.preventDefault();
-  if(e.ctrlKey && e.shiftKey && (e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
-  if(e.ctrlKey && (e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')) e.preventDefault();
-});
 </script>
+
 
 
 <div class="overlay" id="ov" onclick="closeSide()"></div>
