@@ -513,12 +513,30 @@
   try {
     var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
     if(!s || !s.email){
-      alert('Please Login or Sign Up first');
       location.replace('index.html');
+      return;
     }
+    // idle 30 min -> re-login
+    var last = +localStorage.getItem('a_tuls_last_active')||Date.now();
+    if(Date.now()-last > 30*60*1000){
+      localStorage.removeItem('a_tuls_session');
+      location.replace('login.html');
+      return;
+    }
+    localStorage.setItem('a_tuls_last_active', String(Date.now()));
+    document.addEventListener('click', function(){ localStorage.setItem('a_tuls_last_active', String(Date.now())); });
   } catch(e){ location.replace('index.html'); }
 })();
+// Basic deterrents (not 100% secure — real lock needs Node backend)
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+document.addEventListener('keydown', function(e){
+  if(e.key==='F12') e.preventDefault();
+  if(e.ctrlKey && e.shiftKey && (e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
+  if(e.ctrlKey && (e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')) e.preventDefault();
+});
 </script>
+
+
 
 
 <div id="atuls-back" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#0f766e;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.15)">

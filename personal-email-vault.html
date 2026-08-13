@@ -328,6 +328,137 @@
             color: var(--muted);
         }
     </style>
+
+<script>
+/* ===== A-Tuls Database: Supabase (primary) =====
+   শুধু HTML + Supabase। Mongo ফিল্ড খালি রাখুন — লাগবে না।
+*/
+window.A_TULS_DB = {
+  // DB1 — Supabase (প্রাইমারি)
+  SB_URL: 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/',
+  SB_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs',
+  // DB2 — MongoDB Atlas Data API (ব্যাকআপ / ২য় DB)
+  // Atlas UI → App Services → Data API → Enable → URL + API Key বসান
+  MONGO_API_URL: '', /* e.g. https://ap-south-1.aws.data.mongodb-api.com/app/data-xxxxx/endpoint/data/v1 */
+  MONGO_API_KEY: '', /* Data API Key */
+  MONGO_DATA_SOURCE: 'gourabadmin' /* Atlas cluster / data source name */,
+  MONGO_DATABASE: 'atuls'
+};
+(function(){
+  const C = window.A_TULS_DB;
+  const SB_H = () => ({
+    'apikey': C.SB_KEY,
+    'Authorization': 'Bearer ' + C.SB_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=minimal'
+  });
+  function mongoEnabled(){
+    return !!(C.MONGO_API_URL && C.MONGO_API_KEY && C.MONGO_API_URL.indexOf('http')===0);
+  }
+  async function mongoAction(action, body){
+    if(!mongoEnabled()) return null;
+    try{
+      const r = await fetch(C.MONGO_API_URL.replace(/\/$/,'') + '/action/' + action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': C.MONGO_API_KEY
+        },
+        body: JSON.stringify(Object.assign({
+          dataSource: C.MONGO_DATA_SOURCE,
+          database: C.MONGO_DATABASE
+        }, body))
+      });
+      if(!r.ok){ console.warn('Mongo', action, r.status); return null; }
+      return await r.json().catch(()=>({ok:true}));
+    }catch(e){ console.warn('Mongo', e); return null; }
+  }
+  window.A_TULS = {
+    sbHeaders: SB_H,
+    async sbInsert(table, row){
+      try{
+        const r = await fetch(C.SB_URL + table, { method:'POST', headers: SB_H(), body: JSON.stringify(row) });
+        return r.ok;
+      }catch(e){ return false; }
+    },
+    async sbUpsert(table, filter, row){
+      try{
+        await fetch(C.SB_URL + table + '?' + filter, { method:'PATCH', headers: SB_H(), body: JSON.stringify(row) });
+        await fetch(C.SB_URL + table, { method:'POST', headers: Object.assign({}, SB_H(), {'Prefer':'resolution=merge-duplicates,return=minimal'}), body: JSON.stringify(row) });
+        return true;
+      }catch(e){ return false; }
+    },
+    async sbGet(table, qs){
+      try{
+        const r = await fetch(C.SB_URL + table + (qs||''), { headers: SB_H() });
+        if(!r.ok) return null;
+        return await r.json();
+      }catch(e){ return null; }
+    },
+    /** দুই DB-তে একসাথে সেভ */
+    async dualInsert(collection, row){
+      const a = await this.sbInsert(collection, row);
+      const b = await mongoAction('insertOne', { collection: collection, document: row });
+      return { supabase: !!a, mongo: !!b };
+    },
+    async dualUpsert(collection, idField, idVal, row){
+      const a = await this.sbUpsert(collection, idField + '=eq.' + encodeURIComponent(idVal), row);
+      const filter = {}; filter[idField] = idVal;
+      const b = await mongoAction('updateOne', {
+        collection: collection,
+        filter: filter,
+        update: { $set: row },
+        upsert: true
+      });
+      return { supabase: !!a, mongo: !!b };
+    },
+    /** সেশন চেক — লগইন ছাড়া কাজ নয় */
+    requireSession(redirect){
+      try{
+        const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+        if(!s || !s.email){
+          location.replace(redirect || 'index.html');
+          return null;
+        }
+        const last = +localStorage.getItem('a_tuls_last_active') || Date.now();
+        if(Date.now() - last > 30*60*1000){
+          localStorage.removeItem('a_tuls_session');
+          location.replace('login.html');
+          return null;
+        }
+        localStorage.setItem('a_tuls_last_active', String(Date.now()));
+        return s;
+      }catch(e){
+        location.replace(redirect || 'index.html');
+        return null;
+      }
+    },
+    async logLogin(userObj){
+      const ua = navigator.userAgent || '';
+      let browser = 'Unknown', os = 'Unknown';
+      if(/Edg\//.test(ua)) browser='Edge'; else if(/Chrome\//.test(ua)) browser='Chrome'; else if(/Firefox\//.test(ua)) browser='Firefox'; else if(/Safari\//.test(ua)) browser='Safari';
+      if(/Windows/.test(ua)) os='Windows'; else if(/Android/.test(ua)) os='Android'; else if(/iPhone|iPad/.test(ua)) os='iOS'; else if(/Mac OS/.test(ua)) os='Mac'; else if(/Linux/.test(ua)) os='Linux';
+      const row = {
+        user_id: String(userObj.id||''),
+        username: userObj.username||'',
+        email: userObj.email||'',
+        device: /Mobile|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop',
+        browser: browser, os: os, ua: ua.slice(0,180),
+        time: new Date().toISOString()
+      };
+      try{
+        let logs = JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+        logs.unshift(row);
+        localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200)));
+      }catch(e){}
+      // দুই DB-তে লগইন লগ
+      await this.dualInsert('a_tuls_login_logs', row);
+      return row;
+    }
+  };
+})();
+</script>
+
 </head>
 <body>
 <script>
@@ -335,12 +466,30 @@
   try {
     var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
     if(!s || !s.email){
-      alert('Please Login or Sign Up first');
       location.replace('index.html');
+      return;
     }
+    // idle 30 min -> re-login
+    var last = +localStorage.getItem('a_tuls_last_active')||Date.now();
+    if(Date.now()-last > 30*60*1000){
+      localStorage.removeItem('a_tuls_session');
+      location.replace('login.html');
+      return;
+    }
+    localStorage.setItem('a_tuls_last_active', String(Date.now()));
+    document.addEventListener('click', function(){ localStorage.setItem('a_tuls_last_active', String(Date.now())); });
   } catch(e){ location.replace('index.html'); }
 })();
+// Basic deterrents (not 100% secure — real lock needs Node backend)
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+document.addEventListener('keydown', function(e){
+  if(e.key==='F12') e.preventDefault();
+  if(e.ctrlKey && e.shiftKey && (e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
+  if(e.ctrlKey && (e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')) e.preventDefault();
+});
 </script>
+
+
 
 
 <div id="atuls-back" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#0f766e;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.15)">

@@ -116,12 +116,30 @@
   try {
     var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
     if(!s || !s.email){
-      alert('Please Login or Sign Up first');
       location.replace('index.html');
+      return;
     }
+    // idle 30 min -> re-login
+    var last = +localStorage.getItem('a_tuls_last_active')||Date.now();
+    if(Date.now()-last > 30*60*1000){
+      localStorage.removeItem('a_tuls_session');
+      location.replace('login.html');
+      return;
+    }
+    localStorage.setItem('a_tuls_last_active', String(Date.now()));
+    document.addEventListener('click', function(){ localStorage.setItem('a_tuls_last_active', String(Date.now())); });
   } catch(e){ location.replace('index.html'); }
 })();
+// Basic deterrents (not 100% secure — real lock needs Node backend)
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+document.addEventListener('keydown', function(e){
+  if(e.key==='F12') e.preventDefault();
+  if(e.ctrlKey && e.shiftKey && (e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
+  if(e.ctrlKey && (e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')) e.preventDefault();
+});
 </script>
+
+
 
 
 <div id="atuls-back" style="position:fixed;top:0;left:0;right:0;z-index:100000;background:#0f766e;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.15)">
@@ -381,12 +399,10 @@ Paid Package কিনুন।');
 
       function initCloudflareCheck() {
         const overlay = document.getElementById('cf-overlay');
-        if (sessionStorage.getItem('cf_verified')) {
-          overlay.style.display = 'none';
-          document.body.style.overflow = 'auto';
-        } else {
-          document.body.style.overflow = 'hidden';
-        }
+        // Always allow tool access after login (no stuck overlay)
+        sessionStorage.setItem('cf_verified', 'true');
+        if (overlay) overlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
       }
 
       lucide.createIcons();
@@ -536,27 +552,68 @@ Paid Package কিনুন।');
 
         try {
           let data = null;
+          const ipQ = (targetIp || "").trim();
           const providers = [
-            async () => fetch(`https://ipwho.is${queryUrlAdd}`).then((r) => r.json()).then((j) => {
-              if (!j.success) throw new Error();
-              const isp = j.connection?.isp || j.connection?.org;
+            async () => {
+              const r = await fetch("https://ipwho.is/" + (ipQ || ""), { cache: "no-store" });
+              const j = await r.json();
+              if (!j || j.success === false) throw new Error("ipwho");
+              const isp = j.connection?.isp || j.connection?.org || j.isp;
               return {
-                ip: j.ip, asn: String(j.connection?.asn || "Unknown").replace(/^AS/i, ""),
-                city: j.city, countryFull: j.country, countryShort: j.country_code, region: j.region,
-                isp: isp || "Unknown", timezone: j.timezone?.id, proxy: j.security?.proxy || false,
-                vpn: j.security?.vpn || false, tor: j.security?.tor || false, hosting: j.security?.hosting || false,
-                ip_type: guessIPType(isp, j.security),
+                ip: j.ip, asn: String(j.connection?.asn || j.asn || "Unknown").replace(/^AS/i, ""),
+                city: j.city || "Unknown", countryFull: j.country || "Unknown", countryShort: j.country_code || "",
+                region: j.region || j.regionName || "", isp: isp || "Unknown",
+                timezone: (j.timezone && (j.timezone.id || j.timezone)) || "",
+                proxy: !!(j.security && j.security.proxy), vpn: !!(j.security && j.security.vpn),
+                tor: !!(j.security && j.security.tor), hosting: !!(j.security && j.security.hosting),
+                ip_type: guessIPType(isp, j.security || null),
               };
-            }),
-            async () => fetch(`https://ipapi.co/${targetIp || ""}/json/`).then((r) => r.json()).then((j) => {
-              if (j.error) throw new Error();
+            },
+            async () => {
+              const url = ipQ ? ("https://ipapi.co/" + ipQ + "/json/") : "https://ipapi.co/json/";
+              const r = await fetch(url, { cache: "no-store" });
+              const j = await r.json();
+              if (!j || j.error || !j.ip) throw new Error("ipapi");
               return {
-                ip: j.ip, asn: String(j.asn || "Unknown").replace(/^AS/i, ""), city: j.city,
-                countryFull: j.country_name || j.country, countryShort: j.country_code, region: j.region,
-                isp: j.org || "Unknown", timezone: j.timezone, proxy: false, vpn: false, tor: false,
-                ip_type: guessIPType(j.org, null),
+                ip: j.ip, asn: String(j.asn || "Unknown").replace(/^AS/i, ""), city: j.city || "Unknown",
+                countryFull: j.country_name || j.country || "Unknown", countryShort: j.country_code || "",
+                region: j.region || "", isp: j.org || "Unknown", timezone: j.timezone || "",
+                proxy: false, vpn: false, tor: false, hosting: false, ip_type: guessIPType(j.org, null),
               };
-            })
+            },
+            async () => {
+              // geojs — reliable CORS
+              let ip = ipQ;
+              if (!ip) {
+                const r0 = await fetch("https://get.geojs.io/v1/ip.json", { cache: "no-store" });
+                const j0 = await r0.json();
+                ip = j0.ip;
+              }
+              const r = await fetch("https://get.geojs.io/v1/ip/geo/" + encodeURIComponent(ip) + ".json", { cache: "no-store" });
+              const j = await r.json();
+              if (!j || !j.ip) throw new Error("geojs");
+              return {
+                ip: j.ip, asn: String(j.asn || "Unknown").replace(/^AS/i, ""),
+                city: j.city || "Unknown", countryFull: j.country || "Unknown", countryShort: j.country_code || "",
+                region: j.region || "", isp: j.organization || j.organization_name || "Unknown",
+                timezone: j.timezone || "", proxy: false, vpn: false, tor: false, hosting: false,
+                ip_type: guessIPType(j.organization || "", null),
+              };
+            },
+            async () => {
+              // freeipapi
+              const url = ipQ ? ("https://freeipapi.com/api/json/" + ipQ) : "https://freeipapi.com/api/json";
+              const r = await fetch(url, { cache: "no-store" });
+              const j = await r.json();
+              if (!j || !(j.ipAddress || j.ip)) throw new Error("freeipapi");
+              return {
+                ip: j.ipAddress || j.ip, asn: String(j.asn || "Unknown").replace(/^AS/i, ""),
+                city: j.cityName || j.city || "Unknown", countryFull: j.countryName || "Unknown",
+                countryShort: j.countryCode || "", region: j.regionName || "",
+                isp: "Unknown", timezone: j.timeZone || "", proxy: false, vpn: false, tor: false, hosting: false,
+                ip_type: "Residential",
+              };
+            }
           ];
 
           for (const provider of providers) {

@@ -36,12 +36,30 @@ body{background:#f8fafc;font-family:system-ui,sans-serif;padding-bottom:80px}
   try {
     var s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
     if(!s || !s.email){
-      alert('Please Login or Sign Up first');
       location.replace('index.html');
+      return;
     }
+    // idle 30 min -> re-login
+    var last = +localStorage.getItem('a_tuls_last_active')||Date.now();
+    if(Date.now()-last > 30*60*1000){
+      localStorage.removeItem('a_tuls_session');
+      location.replace('login.html');
+      return;
+    }
+    localStorage.setItem('a_tuls_last_active', String(Date.now()));
+    document.addEventListener('click', function(){ localStorage.setItem('a_tuls_last_active', String(Date.now())); });
   } catch(e){ location.replace('index.html'); }
 })();
+// Basic deterrents (not 100% secure — real lock needs Node backend)
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+document.addEventListener('keydown', function(e){
+  if(e.key==='F12') e.preventDefault();
+  if(e.ctrlKey && e.shiftKey && (e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
+  if(e.ctrlKey && (e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')) e.preventDefault();
+});
 </script>
+
+
 
 
 <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
@@ -80,7 +98,40 @@ body{background:#f8fafc;font-family:system-ui,sans-serif;padding-bottom:80px}
       <h2 class="fw-bold">Membership Packages</h2>
     </div>
     <div class="row g-3">
-      <div class="col-6 col-md-3">
+      
+        <div class="col-6 col-md-4 mb-3">
+          <div class="card h-100 text-center p-3 border-warning">
+            <span class="badge bg-warning text-dark mb-2">NEW</span>
+            <h4>1 Day</h4>
+            <div class="price-old">৳50</div>
+            <div class="text-success small fw-bold">Very Low</div>
+            <div class="price">৳20</div>
+            <div class="text-muted small mb-2">1 Day Access</div>
+            <ul class="list-unstyled small text-start mb-2">
+              <li>✓ All Premium Tools</li>
+              <li>✓ API Access (1 day)</li>
+              <li>✓ Live Support</li>
+            </ul>
+            <button class="btn btn-p btn-sm w-100" onclick="order(20,'1 Day')">Buy Now</button>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 mb-3">
+          <div class="card h-100 text-center p-3 border-info">
+            <span class="badge bg-info text-dark mb-2">NEW</span>
+            <h4>7 Day</h4>
+            <div class="price-old">৳150</div>
+            <div class="text-success small fw-bold">Medium</div>
+            <div class="price">৳70</div>
+            <div class="text-muted small mb-2">7 Days Access</div>
+            <ul class="list-unstyled small text-start mb-2">
+              <li>✓ All Premium Tools</li>
+              <li>✓ API Access (7 days)</li>
+              <li>✓ Live Support</li>
+            </ul>
+            <button class="btn btn-p btn-sm w-100" onclick="order(70,'7 Day')">Buy Now</button>
+          </div>
+        </div>
+<div class="col-6 col-md-3">
         <div class="pkg">
           <h4>Basic</h4>
           <div class="price-old">৳300</div>
