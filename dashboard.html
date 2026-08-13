@@ -231,6 +231,21 @@ window.A_TULS_DB = {
 </script>
 
 </head>
+
+<script>
+/* A_TULS_DOMAIN_LOCK — stolen copy on other domain will soft-block */
+(function(){
+  try{
+    var host = (location.hostname||'').toLowerCase();
+    var ok = !host || host==='localhost' || host==='127.0.0.1' || host.indexOf('onrender.com')>=0 || host.indexOf('a-tuls')>=0 || host.indexOf('github.io')>=0;
+    if(!ok){
+      document.documentElement.innerHTML = '<div style="font-family:sans-serif;padding:40px;text-align:center"><h2>Access Denied</h2><p>This copy of A-Tuls is not authorized on this domain.</p><p style="color:#64748b">Official site only.</p></div>';
+      throw new Error('domain lock');
+    }
+  }catch(e){ if(String(e.message)==='domain lock') throw e; }
+})();
+</script>
+
 <body>
 
 
@@ -248,9 +263,9 @@ window.A_TULS_DB = {
 <div class="overlay" id="ov"></div>
 <aside class="drawer" id="dr">
 <div class="drawer-head">
-<div class="avatar" id="dav">T</div>
+<div class="avatar" id="dav">U</div>
 <div>
-<div class="fw-bold fs-5">Torikul</div>
+<div class="fw-bold fs-5">User</div>
 <div class="role">User • Paid</div>
 <div class="small opacity-75 mt-1">www.a-tuls.com</div>
 </div>
@@ -306,7 +321,7 @@ window.A_TULS_DB = {
 <div class="container">
 <div class="d-flex align-items-center justify-content-between">
 <div class="d-flex align-items-center gap-3">
-<div class="pc" id="pc" onclick="document.getElementById('pi').click()">T</div>
+<div class="pc" id="pc" onclick="document.getElementById('pi').click()">U</div>
 <input type="file" id="pi" accept="image/*" style="display:none" onchange="chgPhoto(event)">
 <div>
 <div class="fw-bold fs-5" style="color:#fff">Welcome, User <span class="badge bg-light text-primary rounded-pill" style="font-size:.7rem">Free</span></div>
@@ -326,10 +341,6 @@ window.A_TULS_DB = {
 <h6><i class="fas fa-book-open me-2"></i>Story</h6>
 <div class="srow">
 <div class="sadd" data-bs-toggle="modal" data-bs-target="#sm"><i class="fas fa-plus"></i></div>
-<div class="story-card" id="storyCards">
-<div class="sc-head"><div class="sc-av">R</div><div><div class="sc-name">Rezaul</div><div class="sc-status">● Status: Paid</div><div class="sc-date">Created: 08,06,2026</div></div></div>
-<div class="sc-text">Ip created iphone skip or otp gmail needs regularly. The price is good. Seller come to inbox.</div>
-</div>
 </div>
 </div>
 
@@ -415,12 +426,12 @@ const P={
 messages:{t:'Messages',h:'<div id="userMsgInbox"><p class="text-muted">Loading messages...</p></div>'},
 addmoney:{t:'Add Money / Packages',h:'<div class="row g-3"><div class="col-6"><div class="border rounded-3 p-3 text-center border-warning"><div class="text-muted small"><s>৳50</s></div><div class="fw-bold text-success fs-4">৳20</div><small>1 Day · Very Low</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+1Day+20\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center border-info"><div class="text-muted small"><s>৳150</s></div><div class="fw-bold text-success fs-4">৳70</div><small>7 Day · Medium</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+7Day+70\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳300</s></div><div class="fw-bold text-success fs-4">৳150</div><small>Basic · 1 Month</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Basic+150\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center border-success"><div class="text-muted small"><s>৳900</s></div><div class="fw-bold text-success fs-4">৳450</div><small>Standard · 3 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Standard+450\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳1,800</s></div><div class="fw-bold text-success fs-4">৳900</div><small>Popular · 6 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Popular+900\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳3,600</s></div><div class="fw-bold text-success fs-4">৳1,800</div><small>Premium · 12 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Premium+1800\')">Buy Now</button></div></div></div>'},
 sellers:{t:'Explore Sellers',h:'<div id="sellersList"><div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p><p class="small mb-0">Users appear here after they register.</p></div></div>'},
-services:{t:'Explore Services',h:'<p class="text-muted">All services will be listed here with full details.</p>'},
+services:{t:'Explore Services',h:'<p class="text-muted mb-2">Search tools & users</p><button class="btn btn-p w-100" onclick="openSearch()"><i class="fas fa-search me-1"></i> Open Search</button>'},
 'create-service':{t:'Create Service',h:'<div class="mb-3"><label class="form-label">Title</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label">Price</label><input type="number" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Service created\')">Create</button>'},
-'managed-services':{t:'Managed Services',h:'<p class="text-muted">Your created services appear here. You can edit or delete them.</p>'},
+'managed-services':{t:'Managed Services',h:'<div id="pinnedToolsBox"><p class="text-muted">Loading...</p></div><hr><p class="small fw-bold">Pin a tool to your profile</p><select id="pinToolSelect" class="form-select mb-2"></select><button class="btn btn-p w-100" onclick="pinSelectedTool()">Pin to Profile</button>'},
 membership:{t:'Paid Membership',h:'<div id="memBox"><p>Loading...</p></div><button class="btn btn-p btn-sm mt-2" onclick="go(\'addmoney\')">Upgrade / Buy</button>'},
 'membership-history':{t:'Membership History',h:'<div id="memHistBox"><p class="text-muted">Loading...</p></div>'},
-badge:{t:'Apply for Badge',h:'<p class="text-muted">Apply for Trusted / Verified badge.</p><button class="btn btn-p btn-sm" onclick="alert(\'Submitted\')">Apply Now</button>'},
+badge:{t:'Apply for Badge',h:'<div class="card p-3 border-0 shadow-sm"><p class="mb-2">Verified badge পেতে Apply করুন। Admin approve করলে নামের পাশে <span class="badge bg-primary">✓ Verified</span> দেখাবে।</p><textarea id="badgeReason" class="form-control mb-2" rows="3" placeholder="কেন badge চান? (optional)"></textarea><button class="btn btn-p w-100" onclick="applyBadge()">Apply Now</button><div id="badgeStatus" class="small text-muted mt-2"></div></div>'},
 profile:{t:'My Profile',h:'<div id="profileView"><div class="text-center mb-3"><div class="pc mx-auto mb-2" style="width:80px;height:80px;font-size:2rem" id="pvAv">U</div><h5 id="pvName">User</h5><span class="badge bg-success" id="pvPkg">Free</span></div><p class="mb-1"><strong>Gmail:</strong> <span id="pvGmail">-</span></p><p class="mb-1"><strong>WhatsApp:</strong> <span id="pvWa">-</span></p><p class="mb-1"><strong>Telegram:</strong> <span id="pvTg">-</span></p><p class="mb-1"><strong>Facebook:</strong> <span id="pvFb">-</span></p><p class="mb-0"><strong>Package:</strong> <span id="pvPackage">Free</span></p></div>'},
 'edit-profile':{t:'Edit Profile',h:'<div class="mb-3 text-center"><div class="pc mx-auto mb-2" style="width:80px;height:80px" onclick="document.getElementById(\'pi\').click()" id="epAv">T</div><small class="text-muted">Click photo to change</small></div><div class="mb-2"><label class="form-label">Name</label><input class="form-control" id="epName"></div><div class="mb-2"><label class="form-label">Gmail</label><input type="email" class="form-control" id="epGmail" placeholder="name@gmail.com"></div><div class="mb-2"><label class="form-label">WhatsApp</label><input class="form-control" id="epWa" placeholder="01XXXXXXXXX"></div><div class="mb-2"><label class="form-label">Telegram</label><input class="form-control" id="epTg" placeholder="@username"></div><div class="mb-3"><label class="form-label">Facebook URL</label><input class="form-control" id="epFb" placeholder="https://facebook.com/..."></div><button class="btn btn-p w-100" onclick="saveProfile()">Save Profile</button>'},
 stories:{t:'Manage Stories',h:'<div id="storyManageList"><p class="text-muted small mb-2">নিজের story ডিলিট করতে পারেন। Admin সব ডিলিট করতে পারে।</p><div id="storyListBox">Loading...</div></div>'},
@@ -466,18 +477,30 @@ else if(p==='email-vault'){
   openTool('personal-email-vault.html');
   return;
 }
-else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h; if(k==='messages'||(x&&x.t==='Messages')) setTimeout(loadUserMessages,80);document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);if(p==='membership-history')setTimeout(fillMemHistory,50);if(p==='devices')setTimeout(fillDevices,50);}
+else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h; if(k==='messages'||(x&&x.t==='Messages')) setTimeout(loadUserMessages,80);document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);if(p==='membership-history')setTimeout(fillMemHistory,50);if(p==='devices')setTimeout(fillDevices,50);if(p==='messages')setTimeout(loadUserMessages,80);if(p==='services')setTimeout(function(){try{openSearch()}catch(e){}},100);if(p==='managed-services')setTimeout(loadPinnedTools,50);if(p==='badge')setTimeout(loadBadgeStatus,50);}
 closeD();window.scrollTo({top:0,behavior:'smooth'});
 }
-function loadStoryManage(){
+async function loadStoryManage(){
   const box=document.getElementById('storyListBox');
   if(!box)return;
+  box.innerHTML='<p class="text-muted">Loading stories...</p>';
   const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
-  let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+  let stories=[];
+  try{
+    const r=await fetch(SB_URL_V+'a_tuls_stories?select=*&order=created.desc&limit=50',{headers:SB_H_V});
+    if(r.ok) stories=await r.json();
+  }catch(e){}
+  if(!stories.length){
+    try{ stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]'); }catch(e){}
+  }
   if(!stories.length){box.innerHTML='<p class="text-muted">কোনো story নেই</p>';return;}
+  const isAdmin=(s.role==='admin')||(String(s.email||'').toLowerCase()==='gourabmon112233@gmail.com');
   box.innerHTML=stories.map((st,i)=>{
-    const canDel = s.role==='admin' || (st.name===s.username);
-    return '<div class="card mb-2 p-3 d-flex flex-row justify-content-between align-items-start gap-2"><div><div class="fw-bold">'+(st.name||'User')+'</div><div class="small text-muted">'+(st.time||st.created||'')+'</div><div class="mt-1">'+(st.text||'')+'</div></div>'+(canDel?'<button class="btn btn-sm btn-outline-danger" onclick="delStory('+i+')">Delete</button>':'')+'</div>';
+    const name=st.username||st.name||'User';
+    const canDel = isAdmin || String(st.user_id)===String(s.id) || name===(s.username||'');
+    const sid=String(st.id||'');
+    const del = canDel ? '<button class="btn btn-sm btn-outline-danger" onclick="deleteStoryCard(\''+sid+'\',\''+String(st.created||'').replace(/'/g,'')+'\',\''+String(st.text||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')">Delete</button>' : '';
+    return '<div class="card mb-2 p-3 d-flex flex-row justify-content-between align-items-start gap-2"><div><div class="fw-bold">'+_esc(name)+'</div><div class="small text-muted">'+(st.created?new Date(st.created).toLocaleString():'')+'</div><div class="mt-1">'+_esc(st.text||'')+'</div></div>'+del+'</div>';
   }).join('');
 }
 function delStory(i){
@@ -499,7 +522,7 @@ function fillMembershipBox(){
   const pkg=s.package||'Free';
   const exp=s.package_expires?new Date(s.package_expires).toLocaleDateString('en-GB'):'—';
   const map={Free:'৳0',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
-  box.innerHTML='<div class="card p-3 border-0 shadow-sm"><div class="fw-bold fs-5 mb-1">'+_esc(pkg)+' Package</div><div class="text-muted small mb-2">Price: '+(map[pkg]||'—')+'</div><div class="small">মেয়াদ শেষ: <b>'+exp+'</b></div><div class="small mt-1">ইউজার: '+_esc(s.username||'')+'</div></div>';
+  box.innerHTML='<div class="card p-3 border-0 shadow-sm"><div class="fw-bold fs-5 mb-1">'+__esc(pkg)+' Package</div><div class="text-muted small mb-2">Price: '+(map[pkg]||'—')+'</div><div class="small">মেয়াদ শেষ: <b>'+exp+'</b></div><div class="small mt-1">ইউজার: '+_esc(s.username||'')+'</div></div>';
 }
 function updateVaultCount(){
   try{
@@ -562,7 +585,8 @@ function doSearch(){
     <div id="searchResults" style="flex:1;overflow:auto;background:#f8fafc;padding:12px"></div>`;
   document.body.appendChild(overlay);
   document.getElementById('searchClose').onclick=function(){ overlay.remove(); };
-  async function runSearch(){
+  window.openSearch = function openSearch(){ try{ document.querySelector('[data-p=search],.bi[data-p="search"]')?.click(); }catch(e){} /* fallback below */ };
+async function runSearch(){
     const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
     const box=document.getElementById('searchResults');
     let html='';
@@ -636,14 +660,41 @@ function openUserProfile(id, name){
     document.getElementById('searchOverlay')?.remove();
   })();
 }
-function fillMemHistory(){
+async function fillMemHistory(){
   const box=document.getElementById('memHistBox'); if(!box) return;
   const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
-  const pkg=s.package||'Free';
-  const map={Free:'৳0',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
-  const exp=s.package_expires?new Date(s.package_expires).toLocaleDateString('en-GB'):(pkg==='Free'?'—':'Active');
-  box.innerHTML='<div class="li"><div><div class="fw-bold">'+_esc(pkg)+' Package</div><small class="text-muted">'+(map[pkg]||'')+' · মেয়াদ শেষ: '+exp+'</small></div></div>';
+  box.innerHTML='<p class="text-muted">Loading...</p>';
+  let u=null;
+  try{
+    const r=await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id||'')+'&select=*',{headers:SB_H_V});
+    if(r.ok){ const rows=await r.json(); u=rows[0]; }
+  }catch(e){}
+  if(!u) u=s;
+  const pkg=u.package||s.package||'Free';
+  const exp=u.package_expires||s.package_expires||'';
+  const joined=u.created||s.created||'';
+  const map={Free:'৳0','1 Day':'৳20','7 Day':'৳70',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
+  let expTxt='—';
+  let daysLeft='—';
+  if(exp){
+    const ed=new Date(exp);
+    expTxt=ed.toLocaleDateString('en-GB');
+    const diff=Math.ceil((ed-new Date())/86400000);
+    daysLeft = (pkg==='Lifetime') ? 'Lifetime' : (diff>0? diff+' days left' : 'Expired');
+  } else if(pkg==='Lifetime'){ expTxt='Never'; daysLeft='Lifetime'; }
+  box.innerHTML=`
+    <div class="card border-0 shadow-sm p-3 mb-3">
+      <div class="fw-bold fs-5 mb-1">${_esc(pkg)} Package</div>
+      <div class="text-muted small">Price: ${map[pkg]||'—'}</div>
+      <hr>
+      <div class="small mb-1"><b>Purchased / Joined:</b> ${joined?new Date(joined).toLocaleDateString('en-GB'):'—'}</div>
+      <div class="small mb-1"><b>Expires:</b> ${expTxt}</div>
+      <div class="small mb-1"><b>Status:</b> ${daysLeft}</div>
+      <div class="small"><b>User:</b> ${_esc(u.username||s.username||'')}</div>
+    </div>
+    <p class="small text-muted mb-0">Package renew করতে Membership / Add Money থেকে কিনুন। Admin প্যানেল থেকেও আপগ্রেড করা যায়।</p>`;
 }
+
 async function fillDevices(){
   let logs=[];
   try{
@@ -708,7 +759,7 @@ if(sess && sess.role === 'admin' && sess.email === 'gourabmon112233@gmail.com'){
 if(sess){
   const un=sess.username||'User';
   document.querySelectorAll('.drawer-head .fw-bold, .ubar .fw-bold').forEach(el=>{
-    if(el.textContent.includes('Torikul')||el.textContent.includes('Welcome')){
+    if(el.textContent.includes('User')||el.textContent.includes('Welcome')||el.textContent.includes('Torikul')){
       if(el.classList.contains('fs-5')&&el.closest('.ubar')){
         const pkg=sess.package||'Free';
         const isPaid=pkg!=='Free';
@@ -877,7 +928,7 @@ async function renderStories(){
   try{ localStories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]'); }catch(e){ localStories=[]; }
   const deleted = new Set(_deletedStoryIds());
   // filter deleted
-  stories = (stories||[]).filter(s => !deleted.has(_storyKey(s)) && !(s.id && deleted.has('id:'+s.id)));
+  stories = (stories||[]).filter(s => (s.text||'').trim() && !deleted.has(_storyKey(s)) && !(s.id && deleted.has('id:'+s.id)));
   localStories = (localStories||[]).filter(s => !deleted.has(_storyKey(s)) && !(s.id && deleted.has('id:'+s.id)));
   if(!stories.length){
     stories = localStories;
@@ -983,6 +1034,80 @@ async function deleteStoryCard(id, created, text){
   }catch(e){}
   await renderStories();
   alert('Story deleted');
+}
+
+
+
+async function applyBadge(){
+  const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const reason=(document.getElementById('badgeReason')||{}).value||'';
+  const row={user_id:String(s.id||''),username:s.username||'',email:s.email||'',text:'Badge apply: '+(reason||'Please verify me'),msg_type:'badge_request',created:new Date().toISOString()};
+  try{
+    await fetch(SB_URL_V+'a_tuls_messages',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify(row)});
+  }catch(e){}
+  try{
+    let msgs=JSON.parse(localStorage.getItem('a_tuls_messages')||'[]');
+    msgs.unshift(row);
+    localStorage.setItem('a_tuls_messages',JSON.stringify(msgs.slice(0,100)));
+  }catch(e){}
+  // mark pending on user
+  try{
+    if(s.id) await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id),{method:'PATCH',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({badge_status:'pending'})});
+  }catch(e){}
+  alert('Badge request sent to Admin!');
+  loadBadgeStatus();
+}
+async function loadBadgeStatus(){
+  const el=document.getElementById('badgeStatus');
+  if(!el) return;
+  const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  let st='none';
+  try{
+    const r=await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id||'')+'&select=verified,badge_status,role,email',{headers:SB_H_V});
+    if(r.ok){ const rows=await r.json(); if(rows[0]){ if(rows[0].verified||rows[0].role==='admin'||rows[0].email==='gourabmon112233@gmail.com') st='verified'; else st=rows[0].badge_status||'none'; } }
+  }catch(e){}
+  if(st==='verified') el.innerHTML='<span class="badge bg-primary">✓ Verified</span> Your badge is active.';
+  else if(st==='pending') el.innerHTML='⏳ Request pending — Admin confirm করবে।';
+  else el.innerHTML='No active request.';
+}
+function loadPinnedTools(){
+  const box=document.getElementById('pinnedToolsBox');
+  const sel=document.getElementById('pinToolSelect');
+  const catalog=(window.A_TULS_TOOL_CATALOG||[]).filter(t=>t.ready!==false);
+  if(sel){
+    sel.innerHTML=catalog.map(t=>'<option value="'+t.p+'">'+t.n+'</option>').join('');
+  }
+  let pinned=[];
+  try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
+  if(box){
+    if(!pinned.length) box.innerHTML='<p class="text-muted small">কোনো tool pin করা নেই। নিচে থেকে pin করুন — প্রোফাইলে আগে দেখাবে।</p>';
+    else box.innerHTML=pinned.map((p,i)=>{
+      const t=catalog.find(x=>x.p===p)||{n:p};
+      return '<div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2"><span>'+_esc(t.n||p)+'</span><button class="btn btn-sm btn-outline-danger" onclick="unpinTool('+i+')">Unpin</button></div>';
+    }).join('');
+  }
+}
+function pinSelectedTool(){
+  const sel=document.getElementById('pinToolSelect');
+  if(!sel||!sel.value) return;
+  let pinned=[];
+  try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
+  if(pinned.indexOf(sel.value)===-1) pinned.unshift(sel.value);
+  localStorage.setItem('a_tuls_pinned_tools', JSON.stringify(pinned.slice(0,8)));
+  // also cloud
+  try{
+    const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    if(s.id) fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id),{method:'PATCH',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({pinned_tools:pinned.slice(0,8)})});
+  }catch(e){}
+  loadPinnedTools();
+  alert('Pinned! Profile এ আগে দেখাবে।');
+}
+function unpinTool(i){
+  let pinned=[];
+  try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
+  pinned.splice(i,1);
+  localStorage.setItem('a_tuls_pinned_tools', JSON.stringify(pinned));
+  loadPinnedTools();
 }
 
 
@@ -1112,7 +1237,7 @@ async function renderSellers(){
   if(!box) return;
   let users=[];
   try{
-    const r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb&order=created.desc',{headers:SB_H_V});
+    const r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb,role,verified&order=created.desc',{headers:SB_H_V});
     if(r.ok) users=await r.json();
   }catch(e){}
   if(!users||!users.length){
@@ -1140,7 +1265,7 @@ async function renderSellers(){
     return '<div class="card mb-3 p-3" style="cursor:pointer" onclick="openUserProfile(\''+id+'\',\''+un+'\')">'
       +'<div class="d-flex align-items-center gap-3">'
       +pic
-      +'<div><div class="fw-bold">'+esc(u.username||'')+' <span class="badge '+badge+'" style="font-size:.65rem">'+esc(pkg)+'</span></div>'
+      +'<div><div class="fw-bold">'+__esc(u.username||'')+(u.verified||u.role==='admin'||u.email==='gourabmon112233@gmail.com'?' <span class="badge bg-primary" style="font-size:.65rem">✓ Verified</span>':'')+' <span class="badge '+badge+'" style="font-size:.65rem">'+__esc(pkg)+'</span></div>'
       +'<small class="text-muted">Joined: '+(u.created?new Date(u.created).toLocaleDateString():'-')+'</small>'
       +'<div class="small text-primary mt-1"><i class="fas fa-user me-1"></i>Tap to view profile & message</div>'
       +'</div></div></div>';
@@ -1193,7 +1318,7 @@ async function fileExists(url){
   }catch(e){ return false; }
 }
 
-async function loadToolsGrid(){
+async function loadToolsGrid(); try{renderStories()}catch(e){}{
   const grid = document.getElementById('toolsGrid');
   if(!grid) return;
   const catalog = window.A_TULS_TOOL_CATALOG.slice();

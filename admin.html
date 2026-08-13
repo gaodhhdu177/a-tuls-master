@@ -816,6 +816,24 @@ async function loadSupportMsgs(){
 }
 
 
+async function approveBadge(userId, email, username){
+  if(!confirm('Approve Verified badge for '+ (username||email||userId) +'?')) return;
+  try{
+    if(userId){
+      await fetch(SB_URL+'a_tuls_users?id=eq.'+encodeURIComponent(userId), {
+        method:'PATCH', headers:Object.assign({},SB_H,{'Prefer':'return=minimal'}),
+        body: JSON.stringify({verified:true, badge_status:'verified'})
+      });
+    } else if(email){
+      await fetch(SB_URL+'a_tuls_users?email=eq.'+encodeURIComponent(email), {
+        method:'PATCH', headers:Object.assign({},SB_H,{'Prefer':'return=minimal'}),
+        body: JSON.stringify({verified:true, badge_status:'verified'})
+      });
+    }
+  }catch(e){ console.warn(e); }
+  alert('Badge approved! User will see ✓ Verified.');
+  loadSupportMsgs();
+}
 async function replySupportMsg(msgId, email, userId){
   const text = prompt('Reply to user:');
   if(!text || !text.trim()) return;
