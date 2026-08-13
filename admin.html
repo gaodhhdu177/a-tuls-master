@@ -487,6 +487,7 @@ function tab(name){
   if(name==='membership'||name==='api') fillUserSelects();
   if(name==='api') loadApis();
   if(name==='packages') loadPkgPrices();
+  if(name==='support') loadSupportMsgs();
   if(name==='dash'){ loadStats(); loadLoginLogs(); loadAdminMsgs(); }
 }
 
@@ -774,6 +775,42 @@ const DEFAULT_PKG_PRICES = [
   {id:'popular', name:'Popular', duration:'6 Months', old:1800, price:900},
   {id:'premium', name:'Premium', duration:'12 Months', old:3600, price:1800}
 ];
+
+
+async function loadSupportMsgs(){
+  const box = document.getElementById('supportMsgBox');
+  if(!box) return;
+  box.innerHTML = '<p class="text-muted">Loading...</p>';
+  let msgs = [];
+  try{
+    const r = await fetch(SB_URL+'a_tuls_messages?select=*&order=created.desc&limit=100',{headers:SB_H});
+    if(r.ok) msgs = await r.json();
+  }catch(e){ console.warn(e); }
+  if(!msgs || !msgs.length){
+    try{ msgs = JSON.parse(localStorage.getItem('a_tuls_messages')||'[]'); }catch(e){ msgs=[]; }
+  }
+  const badge = document.getElementById('supportBadge');
+  if(badge){
+    if(msgs.length){ badge.style.display='inline'; badge.textContent=String(msgs.length); }
+    else badge.style.display='none';
+  }
+  if(!msgs.length){
+    box.innerHTML = '<p class="text-muted mb-0">No support messages yet. Users send from Dashboard → Live Support.</p>';
+    return;
+  }
+  box.innerHTML = msgs.map(m => {
+    const t = m.created || m.time || '';
+    const who = m.from_user || m.username || 'User';
+    const em = m.email || '';
+    const tx = m.text || m.message || '';
+    return '<div class="border rounded-3 p-3 mb-2 bg-white">'+
+      '<div class="d-flex justify-content-between"><b>'+esc(who)+'</b>'+
+      '<small class="text-muted">'+(t?new Date(t).toLocaleString():'')+'</small></div>'+
+      '<div class="small text-muted">'+esc(em)+'</div>'+
+      '<div class="mt-2">'+esc(tx)+'</div>'+
+      '<div class="small mt-1"><span class="badge bg-secondary">'+(esc(m.msg_type||'support'))+'</span></div></div>';
+  }).join('');
+}
 
 async function loadPkgPrices(){
   let prices = null;

@@ -62,6 +62,8 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 /* Story - modern blue style */
 .story-wrap{background:linear-gradient(160deg,#2563eb,#1d4ed8);border-radius:20px;padding:18px;margin-bottom:16px;color:#fff}
 .story-wrap h6{font-weight:700;margin-bottom:12px;font-size:1rem}
+.sc-del{position:absolute;top:6px;right:6px;background:rgba(239,68,68,.95);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:12px;line-height:1;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center}
+.story-card{position:relative}
 .srow{display:flex;gap:12px;overflow-x:auto;padding:4px 0}
 .si{flex-shrink:0;width:110px}
 .sadd{width:100px;height:120px;border-radius:16px;background:rgba(255,255,255,.15);border:2px dashed rgba(255,255,255,.4);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:.2s}
@@ -828,16 +830,22 @@ async function postS(){
   let _br='Browser';
   if(/Edg\//.test(_ua)) _br='Edge'; else if(/Chrome\//.test(_ua)) _br='Chrome'; else if(/Firefox\//.test(_ua)) _br='Firefox'; else if(/Safari\//.test(_ua)) _br='Safari';
   const row={user_id:String(s.id||''),username:s.username||'User',text:t,package:s.package||'Free',profile_pic:pic,device:_dev+' · '+_br,created:new Date().toISOString()};
+  // Store story without huge base64 (pic resolved from users on render)
+  const cloudRow = {user_id:row.user_id,username:row.username,text:row.text,package:row.package,profile_pic:'',device:row.device||'',created:row.created};
   try{
-    await fetch(SB_URL_V+'a_tuls_stories',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({user_id:row.user_id,username:row.username,text:row.text,package:row.package,profile_pic:pic?pic.substring(0,50000):'',device:row.device||'',created:row.created})});
-  }catch(e){}
+    const r = await fetch(SB_URL_V+'a_tuls_stories',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify(cloudRow)});
+    if(!r.ok) console.warn('story post', r.status, await r.text().catch(()=>''));
+  }catch(e){ console.warn(e); }
   let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
   stories.unshift(row);
-  localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,50)));
+  try{ localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,50))); }catch(e){
+    // localStorage full — keep without pic
+    try{ row.profile_pic=''; stories[0]=row; localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,30))); }catch(e2){}
+  }
   alert('Story posted! Everyone can see it.');
   try{bootstrap.Modal.getInstance(document.getElementById('sm')).hide()}catch(e){}
-  document.getElementById('st').value='';
-  renderStories();
+  try{ document.getElementById('st').value=''; }catch(e){}
+  await renderStories();
 }
 async function renderStories(){
   const row=document.querySelector('.story-wrap .srow');
@@ -847,8 +855,18 @@ async function renderStories(){
     const r=await fetch(SB_URL_V+'a_tuls_stories?select=*&order=created.desc&limit=40',{headers:SB_H_V});
     if(r.ok) stories=await r.json();
   }catch(e){}
-  if(!stories.length){ try{ stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]'); }catch(e){ stories=[]; } }
-  else { try{ localStorage.setItem('a_tuls_stories',JSON.stringify(stories)); }catch(e){} }
+  let localStories=[];
+  try{ localStories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]'); }catch(e){ localStories=[]; }
+  if(!stories.length){ stories = localStories; }
+  else {
+    // merge: local posts not yet in cloud
+    const keys = new Set(stories.map(s => (s.text||'')+'|'+(s.username||'')+'|'+(s.created||'')));
+    localStories.forEach(ls => {
+      const k = (ls.text||'')+'|'+(ls.username||'')+'|'+(ls.created||'');
+      if(!keys.has(k)) stories.unshift(ls);
+    });
+    try{ localStorage.setItem('a_tuls_stories',JSON.stringify(stories.slice(0,50))); }catch(e){}
+  }
 
   let users=[];
   try{
@@ -869,7 +887,9 @@ async function renderStories(){
   if(!stories.length){
     html+='<div class="story-card"><div class="sc-head"><div class="sc-av">A</div><div><div class="sc-name">A-Tuls</div><div class="sc-status">● Status: Paid</div></div></div><div class="sc-text">Welcome! Post your first story.</div></div>';
   }
-  stories.forEach(function(st){
+  const sess = JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const isAdmin = (sess.role==='admin') || (String(sess.email||'').toLowerCase()==='gourabmon112233@gmail.com') || (sess.id==='admin');
+  stories.forEach(function(st, idx){
     const u=byId[String(st.user_id)]||byName[(st.username||'').toLowerCase()]||{};
     const pic=st.profile_pic||u.profile_pic||'';
     const name=st.username||u.username||'User';
@@ -880,7 +900,11 @@ async function renderStories(){
     const av=pic
       ? '<img src="'+pic+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
       : (name[0]||'U').toUpperCase();
+    const own = isAdmin || String(st.user_id)===String(sess.id) || (st.username||'')===(sess.username||'');
+    const delKey = st.id ? ('id:'+st.id) : ('i:'+idx);
+    const delBtn = own ? '<button type="button" class="sc-del" title="Delete story" onclick="event.stopPropagation();deleteStoryCard(\''+String(st.id||'')+'\',\''+_esc(st.created||'')+'\',\''+_esc(st.text||'').replace(/'/g,"")+'\')">×</button>' : '';
     html+='<div class="story-card">'
+      + delBtn
       +'<div class="sc-head"><div class="sc-av">'+av+'</div><div>'
       +'<div class="sc-name">'+_esc(name)+'</div>'
       +'<div class="sc-status">● Status: '+(isPaid?'Paid':'Free')+'</div>'
@@ -891,6 +915,31 @@ async function renderStories(){
   });
   row.innerHTML=html;
 }
+
+async function deleteStoryCard(id, created, text){
+  if(!confirm('Delete this story?')) return;
+  const sess = JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  // Supabase delete
+  try{
+    if(id){
+      await fetch(SB_URL_V+'a_tuls_stories?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:SB_H_V});
+    } else if(created && text){
+      await fetch(SB_URL_V+'a_tuls_stories?created=eq.'+encodeURIComponent(created)+'&text=eq.'+encodeURIComponent(text),{method:'DELETE',headers:SB_H_V});
+    }
+  }catch(e){ console.warn(e); }
+  // local
+  try{
+    let stories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]');
+    stories = stories.filter(s => {
+      if(id && String(s.id)===String(id)) return false;
+      if(created && text && s.created===created && s.text===text) return false;
+      return true;
+    });
+    localStorage.setItem('a_tuls_stories', JSON.stringify(stories));
+  }catch(e){}
+  await renderStories();
+}
+
 
 async function loadDashVaultCloud(){
   const uid=vaultUid(); if(uid==='guest') return;
