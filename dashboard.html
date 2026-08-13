@@ -522,7 +522,7 @@ function fillMembershipBox(){
   const pkg=s.package||'Free';
   const exp=s.package_expires?new Date(s.package_expires).toLocaleDateString('en-GB'):'—';
   const map={Free:'৳0',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
-  box.innerHTML='<div class="card p-3 border-0 shadow-sm"><div class="fw-bold fs-5 mb-1">'+__esc(pkg)+' Package</div><div class="text-muted small mb-2">Price: '+(map[pkg]||'—')+'</div><div class="small">মেয়াদ শেষ: <b>'+exp+'</b></div><div class="small mt-1">ইউজার: '+_esc(s.username||'')+'</div></div>';
+  box.innerHTML='<div class="card p-3 border-0 shadow-sm"><div class="fw-bold fs-5 mb-1">'+_esc(pkg)+' Package</div><div class="text-muted small mb-2">Price: '+(map[pkg]||'—')+'</div><div class="small">মেয়াদ শেষ: <b>'+exp+'</b></div><div class="small mt-1">ইউজার: '+_esc(s.username||'')+'</div></div>';
 }
 function updateVaultCount(){
   try{
@@ -666,33 +666,31 @@ async function fillMemHistory(){
   box.innerHTML='<p class="text-muted">Loading...</p>';
   let u=null;
   try{
-    const r=await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id||'')+'&select=*',{headers:SB_H_V});
+    const ctrl=new AbortController();
+    setTimeout(function(){try{ctrl.abort()}catch(e){}}, 4000);
+    const r=await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id||'')+'&select=*',{headers:SB_H_V, signal:ctrl.signal});
     if(r.ok){ const rows=await r.json(); u=rows[0]; }
   }catch(e){}
+  if(!u){
+    try{
+      const r2=await fetch(SB_URL_V+'a_tuls_users?email=eq.'+encodeURIComponent(s.email||'')+'&select=*',{headers:SB_H_V});
+      if(r2.ok){ const rows=await r2.json(); u=rows[0]; }
+    }catch(e){}
+  }
   if(!u) u=s;
   const pkg=u.package||s.package||'Free';
   const exp=u.package_expires||s.package_expires||'';
   const joined=u.created||s.created||'';
   const map={Free:'৳0','1 Day':'৳20','7 Day':'৳70',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
-  let expTxt='—';
-  let daysLeft='—';
-  if(exp){
+  let expTxt='—', daysLeft='—';
+  if(pkg==='Lifetime' || s.role==='admin'){ expTxt='Never'; daysLeft='Lifetime'; }
+  else if(exp){
     const ed=new Date(exp);
     expTxt=ed.toLocaleDateString('en-GB');
     const diff=Math.ceil((ed-new Date())/86400000);
-    daysLeft = (pkg==='Lifetime') ? 'Lifetime' : (diff>0? diff+' days left' : 'Expired');
-  } else if(pkg==='Lifetime'){ expTxt='Never'; daysLeft='Lifetime'; }
-  box.innerHTML=`
-    <div class="card border-0 shadow-sm p-3 mb-3">
-      <div class="fw-bold fs-5 mb-1">${_esc(pkg)} Package</div>
-      <div class="text-muted small">Price: ${map[pkg]||'—'}</div>
-      <hr>
-      <div class="small mb-1"><b>Purchased / Joined:</b> ${joined?new Date(joined).toLocaleDateString('en-GB'):'—'}</div>
-      <div class="small mb-1"><b>Expires:</b> ${expTxt}</div>
-      <div class="small mb-1"><b>Status:</b> ${daysLeft}</div>
-      <div class="small"><b>User:</b> ${_esc(u.username||s.username||'')}</div>
-    </div>
-    <p class="small text-muted mb-0">Package renew করতে Membership / Add Money থেকে কিনুন। Admin প্যানেল থেকেও আপগ্রেড করা যায়।</p>`;
+    daysLeft = diff>0 ? (diff+' days left') : 'Expired';
+  }
+  box.innerHTML='<div class="card border-0 shadow-sm p-3 mb-3"><div class="fw-bold fs-5 mb-1">'+_esc(pkg)+' Package</div><div class="text-muted small">Price: '+(map[pkg]||'—')+'</div><hr><div class="small mb-1"><b>Purchased / Joined:</b> '+(joined?new Date(joined).toLocaleDateString('en-GB'):'—')+'</div><div class="small mb-1"><b>Expires:</b> '+expTxt+'</div><div class="small mb-1"><b>Status:</b> '+daysLeft+'</div><div class="small"><b>User:</b> '+_esc(u.username||s.username||'')+'</div></div><p class="small text-muted mb-0">Package renew করতে Membership / Add Money থেকে কিনুন।</p>';
 }
 
 async function fillDevices(){
@@ -763,7 +761,7 @@ if(sess){
       if(el.classList.contains('fs-5')&&el.closest('.ubar')){
         const pkg=sess.package||'Free';
         const isPaid=pkg!=='Free';
-        el.innerHTML='Welcome, '+un+' <span class="badge '+(isPaid?'bg-success':'bg-light text-primary')+' rounded-pill" style="font-size:.7rem">'+(sess.role==='admin'?'Admin':pkg)+'</span>';
+        el.innerHTML='Welcome, '+un+' <span class="badge '+(isPaid||sess.role==='admin'?'bg-success':'bg-light text-primary')+' rounded-pill" style="font-size:.7rem">'+(sess.role==='admin'?'Admin':pkg)+'</span>'+(sess.role==='admin'||sess.email==='gourabmon112233@gmail.com'||sess.verified?' <span class="badge bg-primary rounded-pill" style="font-size:.7rem">✓ Verified</span>':'');
       }
       else if(el.closest('.drawer-head')) el.textContent=un;
     }
@@ -923,6 +921,7 @@ async function renderStories(){
   try{
     const r=await fetch(SB_URL_V+'a_tuls_stories?select=*&order=created.desc&limit=40',{headers:SB_H_V});
     if(r.ok) stories=await r.json();
+    else console.warn('stories', r.status);
   }catch(e){}
   let localStories=[];
   try{ localStories=JSON.parse(localStorage.getItem('a_tuls_stories')||'[]'); }catch(e){ localStories=[]; }
@@ -1235,14 +1234,24 @@ function loadProfileFields(){
 async function renderSellers(){
   const box=document.getElementById('sellersList');
   if(!box) return;
+  box.innerHTML='<p class="text-muted text-center py-3">Loading members...</p>';
   let users=[];
   try{
-    const r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb,role,verified&order=created.desc',{headers:SB_H_V});
+    let r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb,role,verified&order=created.desc',{headers:SB_H_V});
+    if(!r.ok) r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb,role&order=created.desc',{headers:SB_H_V});
+    if(!r.ok) r=await fetch(SB_URL_V+'a_tuls_users?select=*&order=created.desc',{headers:SB_H_V});
     if(r.ok) users=await r.json();
-  }catch(e){}
+  }catch(e){ console.warn(e); }
   if(!users||!users.length){
     try{ users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); }catch(e){ users=[]; }
   }
+  // always include current session user if missing
+  try{
+    const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    if(s && s.username && !users.some(u=>String(u.id)===String(s.id)||(u.email&&u.email===s.email))){
+      users.unshift({id:s.id,username:s.username,email:s.email,package:s.package,profile_pic:s.profile_pic||localStorage.getItem('a_tuls_profile_pic'),role:s.role,verified:s.role==='admin'});
+    }
+  }catch(e){}
   if(!users.length){
     box.innerHTML='<div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p></div>';
     return;
@@ -1265,7 +1274,7 @@ async function renderSellers(){
     return '<div class="card mb-3 p-3" style="cursor:pointer" onclick="openUserProfile(\''+id+'\',\''+un+'\')">'
       +'<div class="d-flex align-items-center gap-3">'
       +pic
-      +'<div><div class="fw-bold">'+__esc(u.username||'')+(u.verified||u.role==='admin'||u.email==='gourabmon112233@gmail.com'?' <span class="badge bg-primary" style="font-size:.65rem">✓ Verified</span>':'')+' <span class="badge '+badge+'" style="font-size:.65rem">'+__esc(pkg)+'</span></div>'
+      +'<div><div class="fw-bold">'+_esc(u.username||'')+(u.verified||u.role==='admin'||u.email==='gourabmon112233@gmail.com'?' <span class="badge bg-primary" style="font-size:.65rem">✓ Verified</span>':'')+' <span class="badge '+badge+'" style="font-size:.65rem">'+_esc(pkg)+'</span></div>'
       +'<small class="text-muted">Joined: '+(u.created?new Date(u.created).toLocaleDateString():'-')+'</small>'
       +'<div class="small text-primary mt-1"><i class="fas fa-user me-1"></i>Tap to view profile & message</div>'
       +'</div></div></div>';
@@ -1313,42 +1322,49 @@ window.A_TULS_TOOL_CATALOG = [
 
 async function fileExists(url){
   try{
-    const r = await fetch(url, { method:'GET', cache:'no-store' });
+    const ctrl = new AbortController();
+    const t = setTimeout(function(){ try{ctrl.abort()}catch(e){} }, 1200);
+    const r = await fetch(url, { method:'HEAD', cache:'no-store', signal:ctrl.signal });
+    clearTimeout(t);
     return r.ok;
   }catch(e){ return false; }
 }
 
-async function loadToolsGrid(); try{renderStories()}catch(e){}{
+async function loadToolsGrid(){
   const grid = document.getElementById('toolsGrid');
   if(!grid) return;
-  const catalog = window.A_TULS_TOOL_CATALOG.slice();
-  // Auto-activate: যদি GitHub/host-এ ফাইল থাকে → Ready
-  await Promise.all(catalog.map(async (t) => {
-    if(!t.ready && t.p){
-      const ok = await fileExists(t.p);
-      if(ok) t.ready = true;
+  const catalog = (window.A_TULS_TOOL_CATALOG || []).slice();
+  if(!catalog.length){
+    grid.innerHTML = '<div class="text-center text-muted py-4" style="grid-column:1/-1">No tools configured</div>';
+    return;
+  }
+  function paint(){
+    try{
+      const st = document.getElementById('statTools');
+      if(st) st.textContent = String(catalog.length);
+      grid.innerHTML = catalog.map(function(t){
+        if(t.ready){
+          return '<div class="tcard"><div class="ticon" style="background:'+t.bg+';color:'+t.color+'"><i class="fas '+t.icon+'"></i></div><div class="tinfo"><h6>'+t.n+'</h6><p class="text-muted small mb-2">'+t.desc+'</p><button class="obtn" onclick="openTool(\''+String(t.p||'')+'\')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>';
+        }
+        return '<div class="tcard" style="opacity:.85"><div class="ticon" style="background:'+t.bg+';color:'+t.color+'"><i class="fas '+t.icon+'"></i></div><div class="tinfo"><h6>'+t.n+' <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6><p class="text-muted small mb-2">'+t.desc+'</p><button class="obtn" style="background:#94a3b8" onclick="alert(\'Coming Soon!\')"><i class="fas fa-clock"></i> Coming Soon</button></div></div>';
+      }).join('');
+    }catch(e){ console.warn(e); grid.innerHTML='<p class="text-danger">Tools load error</p>'; }
+  }
+  paint();
+  // optional: mark soon tools ready if file present (non-blocking)
+  try{
+    for (let i=0;i<catalog.length;i++){
+      const t=catalog[i];
+      if(!t.ready && t.p){
+        try{ if(await fileExists(t.p)) { t.ready=true; } }catch(e){}
+      }
     }
-  }));
-  const readyN = catalog.filter(t=>t.ready).length;
-  const st = document.getElementById('statTools');
-  if(st) st.textContent = String(catalog.length);
-
-  grid.innerHTML = catalog.map(t => {
-    if(t.ready){
-      return `<div class="tcard">
-        <div class="ticon" style="background:${t.bg};color:${t.color}"><i class="fas ${t.icon}"></i></div>
-        <div class="tinfo"><h6>${t.n}</h6>
-        <p class="text-muted small mb-2">${t.desc}</p>
-        <button class="obtn" onclick="openTool('${t.p}')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>`;
-    }
-    return `<div class="tcard" style="opacity:.85">
-      <div class="ticon" style="background:${t.bg};color:${t.color}"><i class="fas ${t.icon}"></i></div>
-      <div class="tinfo"><h6>${t.n} <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6>
-      <p class="text-muted small mb-2">${t.desc}</p>
-      <button class="obtn" style="background:#94a3b8" onclick="alert('Coming Soon!\\n\\nGitHub-এ \\'${t.p}\\' ফাইল দিলে Dashboard-এ অটো Ready হবে।')"><i class="fas fa-clock"></i> Coming Soon</button></div></div>`;
-  }).join('');
+    paint();
+  }catch(e){}
 }
-document.addEventListener('DOMContentLoaded', function(){ try{ loadToolsGrid(); }catch(e){} });
+
+document.addEventListener('DOMContentLoaded', function(){ try{ loadToolsGrid(); }catch(e){}
+try{ renderStories(); }catch(e){} });
 // also run if DOM already ready
 try{ loadToolsGrid(); }catch(e){}
 </script>
