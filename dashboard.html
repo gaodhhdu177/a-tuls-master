@@ -2,31 +2,35 @@
 <html lang="en">
 <head>
 <script>
-/* A_TULS_DOMAIN_LOCK + session gate */
+/* A_TULS_DOMAIN_LOCK — official domain only (blocks file://, Acode, localhost copy) */
 (function(){
   try{
     var host = (location.hostname||'').toLowerCase();
-    var ok = !host || host==='localhost' || host==='127.0.0.1' || host.indexOf('onrender.com')>=0 || host.indexOf('a-tuls')>=0 || host.indexOf('github.io')>=0 || host.indexOf('netlify.app')>=0 || host.indexOf('vercel.app')>=0;
-    if(!ok){
-      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0 0 12px">Access Denied</h1><p style="opacity:.9;margin:0 0 8px">This copy of A-Tuls is not authorized on this domain.</p><p style="opacity:.55;margin:0;font-size:.9rem">Official site only.</p></div>';
+    var proto = (location.protocol||'').toLowerCase();
+    var ok = (host === 'a-tuls-master-n0k1.onrender.com');
+    if(proto === 'file:' || !host || !ok){
+      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0 0 12px">Access Denied</h1><p style="opacity:.9;margin:0 0 8px">This page only works on the official A-Tuls domain.</p><p style="opacity:.55;margin:0;font-size:.9rem">https://a-tuls-master-n0k1.onrender.com</p></div>';
       throw new Error('domain-lock');
     }
-  }catch(e){ if(String(e.message||e)==='domain-lock' || (e&&e.message==='domain-lock')) throw e; }
+  }catch(e){ if(String(e.message||e)==='domain-lock'||(e&&e.message==='domain-lock')) throw e; }
   try{
-    var path = (location.pathname||'').toLowerCase();
-    var isPublic = /index\.html|login\.html|signup\.html|membership\.html|logo\.html|demo/.test(path) || path.endsWith('/') || path==='' ;
-    if(!isPublic){
-      var s = null;
-      try{ s = JSON.parse(localStorage.getItem('a_tuls_session')||'null'); }catch(_e){}
-      if(!s || !s.email){
-        alert('Please login first!');
-        location.replace('login.html');
-      }
+    var s = null;
+    try{ s = JSON.parse(localStorage.getItem('a_tuls_session')||'null'); }catch(_e){}
+    if(!s || !s.email){
+      alert('Please login first!');
+      location.replace('login.html');
     }
+  }catch(e){}
+  try{
+    document.addEventListener('contextmenu',function(e){ e.preventDefault(); });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C')) || (e.ctrlKey&&(e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S'))){
+        e.preventDefault(); e.stopPropagation(); return false;
+      }
+    }, true);
   }catch(e){}
 })();
 </script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A-Tuls - Dashboard</title>
@@ -113,9 +117,11 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 .obtn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:none;padding:10px 22px;border-radius:50px;font-weight:600;font-size:.88rem;cursor:pointer;text-decoration:none}
 .obtn:hover{background:#1d4ed8;color:#fff}
 .badge-new{background:#ef4444;color:#fff;font-size:.65rem;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:6px;vertical-align:middle}
-.v-badge{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:20px;margin-left:4px;vertical-align:middle;box-shadow:0 2px 6px rgba(37,99,235,.35)}
-.v-badge i{font-size:.6rem}
-.admin-badge{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:20px;margin-left:4px;vertical-align:middle}
+.v-badge{display:inline-flex;align-items:center;gap:2px;color:#1877f2;font-size:.85rem;font-weight:700;margin-left:4px;vertical-align:middle}
+.v-badge i{font-size:.95rem;color:#1877f2;filter:drop-shadow(0 1px 1px rgba(24,119,242,.35))}
+.admin-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:0;margin-left:6px;vertical-align:middle;line-height:1.05}
+.admin-badge .fb-check{width:16px;height:16px;border-radius:50%;background:#1877f2;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;box-shadow:0 1px 3px rgba(24,119,242,.45)}
+.admin-badge .fb-label{font-size:9px;font-weight:700;color:#1877f2;margin-top:1px;letter-spacing:.2px}
 
 
 /* Vault */
@@ -493,7 +499,7 @@ else if(p==='email-vault'){
   openTool('personal-email-vault.html');
   return;
 }
-else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h; if(k==='messages'||(x&&x.t==='Messages')) setTimeout(loadUserMessages,80);document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);if(p==='membership-history')setTimeout(fillMemHistory,50);if(p==='devices')setTimeout(fillDevices,50);if(p==='messages')setTimeout(loadUserMessages,80);if(p==='services')setTimeout(function(){try{openSearch()}catch(e){}},100);if(p==='managed-services')setTimeout(loadPinnedTools,50);if(p==='badge')setTimeout(loadBadgeStatus,50);}
+else{document.getElementById('v-other').style.display='block';const x=P[p]||{t:p,h:'Coming soon'};document.getElementById('ot').textContent=x.t;document.getElementById('oc').innerHTML=x.h; if(k==='messages'||(x&&x.t==='Messages')) setTimeout(loadUserMessages,80);document.querySelector('.menu a[data-p="'+p+'"]')?.classList.add('active');document.querySelector('.bi[data-p="'+p+'"]')?.classList.add('active');if(p==='sellers')renderSellers();if(p==='edit-profile')setTimeout(fillEditProfile,50);if(p==='profile')setTimeout(fillProfileView,50);if(p==='profile'||p==='edit-profile')setTimeout(loadProfileFields,50);if(p==='stories')setTimeout(loadStoryManage,50);if(p==='membership')setTimeout(fillMembershipBox,50);if(p==='addmoney')setTimeout(syncPackagePrices,100);if(p==='membership-history')setTimeout(fillMemHistory,50);if(p==='devices')setTimeout(fillDevices,50);if(p==='messages')setTimeout(loadUserMessages,80);if(p==='services')setTimeout(function(){try{openSearch()}catch(e){}},100);if(p==='managed-services')setTimeout(loadPinnedTools,50);if(p==='badge')setTimeout(loadBadgeStatus,50);}
 closeD();window.scrollTo({top:0,behavior:'smooth'});
 }
 async function loadStoryManage(){
@@ -543,10 +549,18 @@ function fillMembershipBox(){
 function updateVaultCount(){
   try{
     const K='a_tuls_email_vault';
-    const store=JSON.parse(localStorage.getItem(K)||'{}');
+    let store={};
+    try{ store=JSON.parse(localStorage.getItem(K)||'{}'); }catch(e){}
+    // also try per-user key
+    try{
+      const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+      const uid=s.id||s.email||'guest';
+      const k2='a_tuls_vault_'+uid;
+      const st2=JSON.parse(localStorage.getItem(k2)||'{}');
+      if(Object.keys(st2).length>Object.keys(store).length) store=st2;
+    }catch(e){}
     const n=Object.keys(store).length;
-    const el=document.getElementById('statVault');
-    if(el) el.textContent=String(n);
+    ['statVault','vc'].forEach(function(id){ const el=document.getElementById(id); if(el) el.textContent=String(n); });
   }catch(e){}
 }
 function touchSession(){
@@ -601,7 +615,7 @@ function doSearch(){
     <div id="searchResults" style="flex:1;overflow:auto;background:#f8fafc;padding:12px"></div>`;
   document.body.appendChild(overlay);
   document.getElementById('searchClose').onclick=function(){ overlay.remove(); };
-  window.openSearch = function openSearch(){ try{ document.querySelector('[data-p=search],.bi[data-p="search"]')?.click(); }catch(e){} /* fallback below */ };
+  window.openSearch = doSearch;
 async function runSearch(){
     const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
     const box=document.getElementById('searchResults');
@@ -679,11 +693,32 @@ function openUserProfile(id, name){
 async function fillMemHistory(){
   const box=document.getElementById('memHistBox'); if(!box) return;
   const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const map={Free:'৳0','1 Day':'৳20','1Day':'৳20','7 Day':'৳70','7Day':'৳70',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
+  function paint(u){
+    u=u||s;
+    const pkg=u.package||s.package||'Free';
+    const exp=u.package_expires||s.package_expires||'';
+    const joined=u.created||s.created||'';
+    let expTxt='—', daysLeft='—';
+    if(pkg==='Lifetime' || s.role==='admin'){ expTxt='Never (Lifetime)'; daysLeft='Active · Lifetime'; }
+    else if(exp){
+      const ed=new Date(exp);
+      if(!isNaN(ed.getTime())){
+        expTxt=ed.toLocaleDateString('en-GB')+' '+ed.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+        const diff=Math.ceil((ed-new Date())/86400000);
+        daysLeft = diff>0 ? (diff+' days left · Active') : 'Expired — renew now';
+      }
+    } else if(pkg!=='Free'){ expTxt='Not set — contact Admin'; daysLeft='Active (no expiry date)'; }
+    const price=map[pkg]||map[String(pkg).replace(/\s+/g,'')]||'—';
+    box.innerHTML='<div class="card border-0 shadow-sm p-3 mb-3"><div class="fw-bold fs-5 mb-1">'+_esc(pkg)+' Package</div><div class="text-success fw-bold">Price paid: '+price+'</div><hr class="my-2"><div class="small mb-1"><b>Purchased / Joined:</b> '+(joined?new Date(joined).toLocaleString('en-GB'):'—')+'</div><div class="small mb-1"><b>Expires:</b> '+expTxt+'</div><div class="small mb-1"><b>Status:</b> '+daysLeft+'</div><div class="small"><b>User:</b> '+_esc(u.username||s.username||'')+' · ID: '+_esc(String(u.id||s.id||'-').slice(0,12))+'</div></div><button class="btn btn-p w-100 mb-2" onclick="show(\'addmoney\')">Upgrade / Buy Package</button><p class="small text-muted mb-0">Renew from Membership → Add Money. WhatsApp: +8801336489062</p>';
+  }
   box.innerHTML='<p class="text-muted">Loading...</p>';
+  paint(s); // immediate from session
+  const hardTo=setTimeout(function(){ try{ if(box.innerHTML.indexOf('Loading')>=0) paint(s); }catch(e){} },4000);
   let u=null;
   try{
     const ctrl=new AbortController();
-    setTimeout(function(){try{ctrl.abort()}catch(e){}}, 4000);
+    setTimeout(function(){try{ctrl.abort()}catch(e){}}, 3500);
     const r=await fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id||'')+'&select=*',{headers:SB_H_V, signal:ctrl.signal});
     if(r.ok){ const rows=await r.json(); u=rows[0]; }
   }catch(e){}
@@ -693,20 +728,8 @@ async function fillMemHistory(){
       if(r2.ok){ const rows=await r2.json(); u=rows[0]; }
     }catch(e){}
   }
-  if(!u) u=s;
-  const pkg=u.package||s.package||'Free';
-  const exp=u.package_expires||s.package_expires||'';
-  const joined=u.created||s.created||'';
-  const map={Free:'৳0','1 Day':'৳20','7 Day':'৳70',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
-  let expTxt='—', daysLeft='—';
-  if(pkg==='Lifetime' || s.role==='admin'){ expTxt='Never'; daysLeft='Lifetime'; }
-  else if(exp){
-    const ed=new Date(exp);
-    expTxt=ed.toLocaleDateString('en-GB');
-    const diff=Math.ceil((ed-new Date())/86400000);
-    daysLeft = diff>0 ? (diff+' days left') : 'Expired';
-  }
-  box.innerHTML='<div class="card border-0 shadow-sm p-3 mb-3"><div class="fw-bold fs-5 mb-1">'+_esc(pkg)+' Package</div><div class="text-muted small">Price: '+(map[pkg]||'—')+'</div><hr><div class="small mb-1"><b>Purchased / Joined:</b> '+(joined?new Date(joined).toLocaleDateString('en-GB'):'—')+'</div><div class="small mb-1"><b>Expires:</b> '+expTxt+'</div><div class="small mb-1"><b>Status:</b> '+daysLeft+'</div><div class="small"><b>User:</b> '+_esc(u.username||s.username||'')+'</div></div><p class="small text-muted mb-0">Package renew করতে Membership / Add Money থেকে কিনুন।</p>';
+  clearTimeout(hardTo);
+  paint(u||s);
 }
 
 async function fillDevices(){
@@ -732,19 +755,23 @@ function plusMenu(){
   else if(c==='2'){ msgAdmin(); }
 }
 function msgAdmin(){
-  const t=prompt('Admin কে মেসেজ লিখুন (সমস্যা / অনুরোধ):');
+  const t=prompt('Message to Admin (problem / request):');
   if(!t||!t.trim())return;
   const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+  const row={from:s.username||'User',from_user:s.username||'User',email:s.email||'',text:t.trim(),time:new Date().toISOString(),created:new Date().toISOString(),type:'support',msg_type:'support'};
   let msgs=JSON.parse(localStorage.getItem('a_tuls_admin_msgs')||'[]');
-  msgs.unshift({from:s.username||'User',email:s.email||'',text:t.trim(),time:new Date().toLocaleString(),type:'support'});
+  msgs.unshift(row);
   localStorage.setItem('a_tuls_admin_msgs', JSON.stringify(msgs.slice(0,100)));
-  // also try cloud
   try{
-    const SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-    const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-    fetch(SB_URL+'a_tuls_messages',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({from_user:s.username||'',email:s.email||'',text:t.trim(),msg_type:'support'})});
+    const loc2=JSON.parse(localStorage.getItem('a_tuls_messages')||'[]');
+    loc2.unshift(row);
+    localStorage.setItem('a_tuls_messages', JSON.stringify(loc2.slice(0,100)));
   }catch(e){}
-  alert('মেসেজ Admin-এর কাছে পাঠানো হয়েছে!');
+  try{
+    fetch(SB_URL_V+'a_tuls_messages',{method:'POST',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({from_user:s.username||'',email:s.email||'',text:t.trim(),msg_type:'support',created:new Date().toISOString()})});
+  }catch(e){}
+  alert('Your message has been sent to admin.');
+  try{ loadUserMessages(); }catch(e){}
 }
 
 function doLogout(){
@@ -757,6 +784,30 @@ function doLogout(){
 }
 
 const SB_URL_V='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+
+async function syncPackagePrices(){
+  try{
+    let prices=null;
+    try{ prices=JSON.parse(localStorage.getItem('a_tuls_package_prices')||'null'); }catch(e){}
+    try{
+      const r=await fetch(SB_URL_V+'a_tuls_settings?key=eq.package_prices&select=value',{headers:SB_H_V});
+      if(r.ok){ const rows=await r.json(); if(rows&&rows[0]){ let v=rows[0].value; if(typeof v==='string') try{v=JSON.parse(v)}catch(e){} if(v){ prices=v; localStorage.setItem('a_tuls_package_prices', JSON.stringify(v)); } } }
+    }catch(e){}
+    if(!prices) return;
+    // prices can be array [20,70,150,450,900,1800] or object
+    const order=['1Day','7Day','Basic','Standard','Popular','Premium'];
+    let vals=[];
+    if(Array.isArray(prices)) vals=prices;
+    else if(typeof prices==='object') vals=order.map(function(k){ return prices[k]||prices[k.toLowerCase()]||null; });
+    // update addmoney cards if visible
+    const oc=document.getElementById('oc');
+    if(oc && oc.innerHTML.indexOf('Buy Now')>=0){
+      const nums=oc.querySelectorAll('.fw-bold.text-success, .fw-bold.text-success.fs-4');
+      // rebuild is safer via show if needed — skip visual if complex
+    }
+  }catch(e){}
+}
+
 const SB_KEY_V='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
 const SB_H_V={'apikey':SB_KEY_V,'Authorization':'Bearer '+SB_KEY_V,'Content-Type':'application/json','Prefer':'return=minimal'};
 
@@ -786,13 +837,14 @@ if(sess){
   if(roleEl) roleEl.textContent=(sess.role==='admin'?'Admin':'User')+' • '+(sess.package||'Free');
   const pkgLine=document.getElementById('pkgLine');
   if(pkgLine) pkgLine.textContent='Package: '+(sess.package||'Free')+(sess.role==='admin'?' • Full Access':'');
-  // Dynamic stats
-  const pkgMap={Free:'৳0',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
+  // Dynamic stats — show package price user paid (half prices)
+  const pkgMap={Free:'৳0','1 Day':'৳20','1Day':'৳20','7 Day':'৳70','7Day':'৳70',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
   const sp=document.getElementById('statPkg');
   const si=document.getElementById('statInvest');
   if(sp) sp.textContent=sess.role==='admin'?'Lifetime':(sess.package||'Free');
-  if(si) si.textContent=sess.role==='admin'?'—':(pkgMap[sess.package]||'৳0');
+  if(si) si.textContent=sess.role==='admin'?'—':(pkgMap[sess.package]||pkgMap[String(sess.package||'').replace(/\s+/g,'')]||'৳0');
   if(sp) sp.className='fs-4 fw-bold '+(sess.package&&sess.package!=='Free'||sess.role==='admin'?'text-success':'text-secondary');
+  try{ updateVaultCount(); }catch(e){}
   const av=document.getElementById('dav');
   if(av && !av.querySelector('img')) av.textContent=un.charAt(0).toUpperCase();
   const pc=document.getElementById('pc');
@@ -891,8 +943,9 @@ function nameBadges(u){
   var isAd = u.role==='admin' || String(u.email||'').toLowerCase()==='gourabmon112233@gmail.com' || u.id==='admin';
   var isV = isAd || u.verified===true || u.verified==='true' || u.badge_status==='verified';
   var h = '';
-  if(isAd) h += ' <span class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>';
-  if(isV) h += ' <span class="v-badge"><i class="fas fa-check-circle"></i> Verified</span>';
+  /* Facebook-style blue verified + Admin label under the check */
+  if(isAd) h += ' <span class="admin-badge" title="Admin"><span class="fb-check"><i class="fas fa-check"></i></span><span class="fb-label">Admin</span></span>';
+  else if(isV) h += ' <span class="v-badge" title="Verified"><i class="fas fa-check-circle"></i></span>';
   return h;
 }
 function _esc(t){const d=document.createElement('div');d.textContent=t||'';return d.innerHTML}
@@ -1100,34 +1153,55 @@ async function loadBadgeStatus(){
 function loadPinnedTools(){
   const box=document.getElementById('pinnedToolsBox');
   const sel=document.getElementById('pinToolSelect');
-  const catalog=(window.A_TULS_TOOL_CATALOG||[]).filter(t=>t.ready!==false);
+  let catalog=(window.A_TULS_TOOL_CATALOG||[]).filter(function(t){ return t.ready!==false; });
+  if(!catalog.length){
+    catalog=[
+      {n:'1. Gmail Format Fixer Pro',p:'gmail-format-fixer-pro.html'},
+      {n:'2. Email Report',p:'email-report.html'},
+      {n:'3. IP TimeZone Finder',p:'ip-timezone.html'},
+      {n:'4. Duplicate Checker',p:'duplicate-email-checker.html'},
+      {n:'5. Name Generator',p:'name-generator.html'},
+      {n:'6. Gmail Format Fixer',p:'gmail-format-fixer.html'},
+      {n:'7. Password Generator',p:'password-generator.html'},
+      {n:'8. Easy Email Validator',p:'easy-email-validator.html'},
+      {n:'9. Personal Email Vault',p:'personal-email-vault.html'},
+      {n:'10. Email Data Formatter',p:'email-data-formatter.html'}
+    ];
+  }
   if(sel){
-    sel.innerHTML=catalog.map(t=>'<option value="'+t.p+'">'+t.n+'</option>').join('');
+    sel.innerHTML='<option value="">— Select a tool —</option>'+catalog.map(function(t){ return '<option value="'+t.p+'">'+t.n+'</option>'; }).join('');
   }
   let pinned=[];
   try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
+  try{
+    const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    if(s.pinned_tools && Array.isArray(s.pinned_tools) && s.pinned_tools.length){
+      s.pinned_tools.forEach(function(p){ if(pinned.indexOf(p)===-1) pinned.push(p); });
+    }
+  }catch(e){}
   if(box){
-    if(!pinned.length) box.innerHTML='<p class="text-muted small">কোনো tool pin করা নেই। নিচে থেকে pin করুন — প্রোফাইলে আগে দেখাবে।</p>';
-    else box.innerHTML=pinned.map((p,i)=>{
-      const t=catalog.find(x=>x.p===p)||{n:p};
-      return '<div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2"><span>'+_esc(t.n||p)+'</span><button class="btn btn-sm btn-outline-danger" onclick="unpinTool('+i+')">Unpin</button></div>';
+    if(!pinned.length) box.innerHTML='<p class="text-muted small mb-0">No tools pinned yet. Select a tool below and tap Pin — it will show on your profile first.</p>';
+    else box.innerHTML=pinned.map(function(p,i){
+      const t=catalog.find(function(x){ return x.p===p; })||{n:p,p:p};
+      return '<div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2 bg-white"><span class="small fw-semibold">'+_esc(t.n||p)+'</span><div><button class="btn btn-sm btn-outline-primary me-1" onclick="openTool(\''+(t.p||p)+'\')">Open</button><button class="btn btn-sm btn-outline-danger" onclick="unpinTool('+i+')">Unpin</button></div></div>';
     }).join('');
   }
 }
 function pinSelectedTool(){
   const sel=document.getElementById('pinToolSelect');
-  if(!sel||!sel.value) return;
+  if(!sel||!sel.value){ alert('Select a tool first'); return; }
   let pinned=[];
   try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
   if(pinned.indexOf(sel.value)===-1) pinned.unshift(sel.value);
   localStorage.setItem('a_tuls_pinned_tools', JSON.stringify(pinned.slice(0,8)));
-  // also cloud
   try{
     const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    s.pinned_tools=pinned.slice(0,8);
+    localStorage.setItem('a_tuls_session', JSON.stringify(s));
     if(s.id) fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id),{method:'PATCH',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({pinned_tools:pinned.slice(0,8)})});
   }catch(e){}
   loadPinnedTools();
-  alert('Pinned! Profile এ আগে দেখাবে।');
+  alert('Pinned! This tool will show first on your profile.');
 }
 function unpinTool(i){
   let pinned=[];
@@ -1141,50 +1215,56 @@ function unpinTool(i){
 async function loadUserMessages(){
   const box = document.getElementById('userMsgInbox');
   if(!box) return;
+  const sendBtn = '<button class="btn btn-p btn-sm mt-2" onclick="msgAdmin()"><i class="fas fa-paper-plane me-1"></i> Message Admin</button>';
+  const emptyHtml = '<div class="text-center py-4 text-muted"><i class="fas fa-inbox fa-2x mb-2 opacity-50"></i><p class="mb-1">No messages yet.</p><p class="small mb-0">Use Live Support (+) or the button below to contact admin.</p>'+sendBtn+'</div>';
+  box.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> Loading messages...</p>';
+  // hard timeout → never stuck
+  const hardTo = setTimeout(function(){ try{ if(box && box.innerHTML.indexOf('Loading')>=0) box.innerHTML=emptyHtml; }catch(e){} }, 4500);
   const sess = JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
   const email = (sess.email||'').toLowerCase();
   const uname = sess.username||'';
+  const isAdm = sess.role==='admin' || email==='gourabmon112233@gmail.com';
   let msgs = [];
   try{
-    const r = await fetch(SB_URL_V+'a_tuls_messages?select=*&order=created.desc&limit=80',{headers:SB_H_V});
-    if(r.ok) msgs = await r.json();
+    const loc = JSON.parse(localStorage.getItem('a_tuls_messages')||localStorage.getItem('a_tuls_admin_msgs')||'[]');
+    if(Array.isArray(loc)) msgs = loc.slice();
   }catch(e){}
   try{
-    const loc = JSON.parse(localStorage.getItem('a_tuls_messages')||'[]');
-    // merge
-    const keys = new Set(msgs.map(m => (m.text||'')+'|'+(m.created||m.time||'')));
-    loc.forEach(m => {
-      const k = (m.text||'')+'|'+(m.created||m.time||'');
-      if(!keys.has(k)) msgs.push(m);
+    const ctrl=new AbortController();
+    const to=setTimeout(function(){try{ctrl.abort()}catch(e){}},3500);
+    const r = await fetch(SB_URL_V+'a_tuls_messages?select=*&order=created.desc&limit=100',{headers:SB_H_V,signal:ctrl.signal});
+    clearTimeout(to);
+    if(r.ok){ const cloud = await r.json(); if(Array.isArray(cloud)){
+      const keys = new Set(msgs.map(m => (m.text||'')+'|'+(m.created||m.time||'')));
+      cloud.forEach(m => { const k=(m.text||'')+'|'+(m.created||m.time||''); if(!keys.has(k)) msgs.push(m); });
+    }}
+  }catch(e){ console.warn('msgs',e); }
+  clearTimeout(hardTo);
+  if(!isAdm){
+    msgs = msgs.filter(m => {
+      const em = (m.email||m.to_email||'').toLowerCase();
+      const from = m.from_user||m.username||'';
+      const typ = m.msg_type||'';
+      if(typ==='admin_reply' && (em===email || !em)) return true;
+      if(em===email) return true;
+      if(from===uname) return true;
+      if(m.admin_reply && (em===email || from===uname)) return true;
+      return false;
     });
-  }catch(e){}
-  // filter for this user or admin replies to them
-  msgs = msgs.filter(m => {
-    const em = (m.email||m.to_email||'').toLowerCase();
-    const from = m.from_user||m.username||'';
-    const typ = m.msg_type||'';
-    if(typ==='admin_reply' && (em===email || !em)) return true;
-    if(em===email) return true;
-    if(from===uname) return true;
-    if(m.admin_reply && (em===email || from===uname)) return true;
-    return false;
-  });
-  if(!msgs.length){
-    box.innerHTML = '<p class="text-muted mb-0">No messages yet. Use Live Support (+) to contact admin.</p>';
-    return;
   }
+  if(!msgs.length){ box.innerHTML = emptyHtml; return; }
   box.innerHTML = msgs.map(m => {
-    const isAdmin = (m.msg_type==='admin_reply') || (m.from_user==='Admin');
+    const isAdmin = (m.msg_type==='admin_reply') || (m.from_user==='Admin') || (m.from==='Admin');
     const t = m.created || m.time || '';
-    const who = isAdmin ? 'Admin' : (m.from_user || m.username || 'You');
+    const who = isAdmin ? 'Admin' : (m.from_user || m.from || m.username || 'You');
     const tx = m.text || m.message || '';
-    const reply = m.admin_reply ? '<div class="mt-2 p-2 rounded" style="background:#eff6ff;border-left:3px solid #2563eb"><b style="color:#2563eb">Admin Reply:</b><div>'+_esc(m.admin_reply)+'</div></div>' : '';
+    const reply = m.admin_reply ? '<div class="mt-2 p-2 rounded" style="background:#eff6ff;border-left:3px solid #1877f2"><b style="color:#1877f2">Admin Reply:</b><div>'+_esc(m.admin_reply)+'</div></div>' : '';
     return '<div class="border rounded-3 p-3 mb-2 bg-white">'+
       '<div class="d-flex justify-content-between"><b>'+_esc(who)+'</b><small class="text-muted">'+(t?new Date(t).toLocaleString():'')+'</small></div>'+
       '<div class="mt-1">'+_esc(tx)+'</div>'+ reply +
-      (isAdmin?'<span class="badge bg-primary mt-2">Admin</span>':'')+
+      (isAdmin?'<span class="badge mt-2" style="background:#1877f2">Admin</span>':'')+
       '</div>';
-  }).join('');
+  }).join('') + '<div class="mt-2">'+sendBtn+'</div>';
 }
 
 async function loadDashVaultCloud(){
@@ -1259,54 +1339,67 @@ function loadProfileFields(){
   }
 }
 
+function _paintSellers(users){
+  const box=document.getElementById('sellersList');
+  if(!box) return;
+  if(!users||!users.length){
+    box.innerHTML='<div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p><p class="small">Users appear here after they register.</p></div>';
+    return;
+  }
+  users.sort((a,b)=>{
+    const aa=(a.role==='admin'||String(a.email||'').toLowerCase()==='gourabmon112233@gmail.com')?0:1;
+    const bb=(b.role==='admin'||String(b.email||'').toLowerCase()==='gourabmon112233@gmail.com')?0:1;
+    if(aa!==bb) return aa-bb;
+    return 0;
+  });
+  const seen=new Set();
+  users=users.filter(u=>{
+    const k=String(u.id||'')+'|'+(u.email||'').toLowerCase()+'|'+(u.username||'').toLowerCase();
+    if(seen.has(k)) return false; seen.add(k); return true;
+  });
+  box.innerHTML='<div class="small text-muted mb-2">'+users.length+' members · Admin VIP first</div>'+users.map(u=>{
+    const pkg=u.package||'Free';
+    const isAd=u.role==='admin'||String(u.email||'').toLowerCase()==='gourabmon112233@gmail.com';
+    const badge=isAd?'bg-primary':(pkg==='Free'?'bg-secondary':'bg-success');
+    const pic=u.profile_pic
+      ? '<img src="'+u.profile_pic+'" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid '+(isAd?'#1877f2':'#e2e8f0')+'">'
+      : '<div style="width:52px;height:52px;border-radius:50%;background:'+(isAd?'#1877f2':'#0f766e')+';color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem">'+(String(u.username||'?')[0]||'?').toUpperCase()+'</div>';
+    const id=String(u.id||'').replace(/'/g,"\\'");
+    const un=String(u.username||'').replace(/'/g,"\\'");
+    return '<div class="card mb-2 p-3 border-0 shadow-sm" style="cursor:pointer'+(isAd?';border-left:4px solid #1877f2!important':'')+'" onclick="openUserProfile(\''+id+'\',\''+un+'\')">'
+      +'<div class="d-flex align-items-center gap-3">'
+      +pic
+      +'<div class="flex-grow-1"><div class="fw-bold d-flex align-items-center flex-wrap gap-1">'+_esc(u.username||'User')+nameBadges(u)+' <span class="badge '+badge+'" style="font-size:.65rem">'+(isAd?'VIP Admin':_esc(pkg))+'</span></div>'
+      +'<small class="text-muted">ID: '+_esc(String(u.id||'-').slice(0,12))+' · Joined: '+(u.created?new Date(u.created).toLocaleDateString('en-GB'):'-')+'</small>'
+      +'<div class="small text-primary mt-1"><i class="fas fa-user me-1"></i>Tap to view profile &amp; message</div>'
+      +'</div></div></div>';
+  }).join('');
+}
 async function renderSellers(){
   const box=document.getElementById('sellersList');
   if(!box) return;
-  box.innerHTML='<p class="text-muted text-center py-3">Loading members...</p>';
   let users=[];
-  try{
-    let r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb,role,verified&order=created.desc',{headers:SB_H_V});
-    if(!r.ok) r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb,role&order=created.desc',{headers:SB_H_V});
-    if(!r.ok) r=await fetch(SB_URL_V+'a_tuls_users?select=*&order=created.desc',{headers:SB_H_V});
-    if(r.ok) users=await r.json();
-  }catch(e){ console.warn(e); }
-  if(!users||!users.length){
-    try{ users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); }catch(e){ users=[]; }
-  }
-  // always include current session user if missing
+  // 1) immediate seed: admin VIP + current session (never empty)
   try{
     const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
-    if(s && s.username && !users.some(u=>String(u.id)===String(s.id)||(u.email&&u.email===s.email))){
-      users.unshift({id:s.id,username:s.username,email:s.email,package:s.package,profile_pic:s.profile_pic||localStorage.getItem('a_tuls_profile_pic'),role:s.role,verified:s.role==='admin'});
+    const pic=s.profile_pic||localStorage.getItem('a_tuls_profile_pic')||'';
+    users.push({id:'admin',username:'Gourab',email:'gourabmon112233@gmail.com',package:'Lifetime',role:'admin',verified:true,profile_pic:'',created:'2024-01-01'});
+    if(s && (s.username||s.email) && String(s.email||'').toLowerCase()!=='gourabmon112233@gmail.com'){
+      users.push({id:s.id||'me',username:s.username||'User',email:s.email,package:s.package||'Free',profile_pic:pic,role:s.role||'user',verified:!!s.verified,created:s.created||new Date().toISOString()});
     }
   }catch(e){}
-  if(!users.length){
-    box.innerHTML='<div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p></div>';
-    return;
-  }
-  // Admin first
-  users.sort((a,b)=>{
-    const aa=(a.role==='admin'||a.email==='gourabmon112233@gmail.com')?0:1;
-    const bb=(b.role==='admin'||b.email==='gourabmon112233@gmail.com')?0:1;
-    return aa-bb;
-  });
-  box.innerHTML=users.map(u=>{
-    const pkg=u.package||'Free';
-    const badge=pkg==='Free'?'bg-secondary':'bg-success';
-    const pic=u.profile_pic
-      ? '<img src="'+u.profile_pic+'" style="width:48px;height:48px;border-radius:50%;object-fit:cover">'
-      : '<div style="width:48px;height:48px;border-radius:50%;background:#0f766e;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">'+(u.username||'?')[0]+'</div>';
-    const id=String(u.id||'').replace(/'/g,"\\'");
-    const un=String(u.username||'').replace(/'/g,"\\'");
-    // NO whatsapp/telegram on list — only after profile click
-    return '<div class="card mb-3 p-3" style="cursor:pointer" onclick="openUserProfile(\''+id+'\',\''+un+'\')">'
-      +'<div class="d-flex align-items-center gap-3">'
-      +pic
-      +'<div><div class="fw-bold">'+_esc(u.username||'')+nameBadges(u)+' <span class="badge '+badge+'" style="font-size:.65rem">'+_esc(pkg)+'</span></div>'
-      +'<small class="text-muted">Joined: '+(u.created?new Date(u.created).toLocaleDateString():'-')+'</small>'
-      +'<div class="small text-primary mt-1"><i class="fas fa-user me-1"></i>Tap to view profile & message</div>'
-      +'</div></div></div>';
-  }).join('');
+  try{ const loc=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); if(Array.isArray(loc)) users=users.concat(loc); }catch(e){}
+  _paintSellers(users);
+  // 2) cloud enrich (non-blocking)
+  try{
+    const ctrl=new AbortController();
+    const to=setTimeout(function(){try{ctrl.abort()}catch(e){}},5000);
+    let r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,whatsapp,telegram,fb,role,verified,badge_status&order=created.desc&limit=200',{headers:SB_H_V,signal:ctrl.signal});
+    if(!r.ok) r=await fetch(SB_URL_V+'a_tuls_users?select=id,username,email,package,profile_pic,created,role&order=created.desc&limit=200',{headers:SB_H_V});
+    if(!r.ok) r=await fetch(SB_URL_V+'a_tuls_users?select=*&order=created.desc&limit=200',{headers:SB_H_V});
+    clearTimeout(to);
+    if(r.ok){ const j=await r.json(); if(Array.isArray(j)&&j.length){ users=j.slice(); try{const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}'); if(s&&s.email&&!users.some(u=>(u.email||'').toLowerCase()===String(s.email).toLowerCase())) users.unshift({id:s.id,username:s.username,email:s.email,package:s.package,profile_pic:s.profile_pic,role:s.role,verified:s.verified,created:s.created});}catch(e){} if(!users.some(u=>u.role==='admin'||String(u.email||'').toLowerCase()==='gourabmon112233@gmail.com')) users.unshift({id:'admin',username:'Gourab',email:'gourabmon112233@gmail.com',package:'Lifetime',role:'admin',verified:true,created:'2024-01-01'}); _paintSellers(users); } }
+  }catch(e){ console.warn('sellers cloud',e); }
 }
 
 function render(){const list=document.getElementById('bl');const ids=Object.keys(store).sort((a,b)=>b-a);document.getElementById('vc').textContent=ids.length;if(!ids.length){list.innerHTML='<div class="card text-center text-muted py-5"><i class="far fa-folder-open fa-3x mb-3 opacity-50"></i><p class="mb-0">No files yet</p></div>';return}
