@@ -645,59 +645,116 @@ Paid Package কিনুন।');
     <script>
         const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-        const SB_H = { 'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
+        const SB_H = { 'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY, 'Content-Type': 'application/json' };
+
+        /* ===== Cloud-first vault (same files on every device) ===== */
+        let vaultCache = [];
 
         function vaultUserId(){
           try {
             const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
-            return (s && (s.id || s.email || s.username)) ? String(s.id || s.email || s.username) : 'guest';
+            if(!s) return 'guest';
+            // prefer stable id, then email (lowercase)
+            if(s.id) return String(s.id);
+            if(s.email) return String(s.email).toLowerCase();
+            if(s.username) return String(s.username);
+            return 'guest';
           } catch(e){ return 'guest'; }
         }
+
         function STORAGE_KEY(){ return 'a_tuls_vault_' + vaultUserId(); }
 
-        function getVault() {
-            try {
-                return JSON.parse(localStorage.getItem(STORAGE_KEY())) || [];
-            } catch {
-                return [];
-            }
+        function getVault(){
+          return Array.isArray(vaultCache) ? vaultCache : [];
+        }
+
+        function setLocalCache(data){
+          vaultCache = Array.isArray(data) ? data : [];
+          try{ localStorage.setItem(STORAGE_KEY(), JSON.stringify(vaultCache)); }catch(e){}
         }
 
         async function loadVaultCloud(){
           const uid = vaultUserId();
-          if(uid==='guest') return getVault();
-          try {
-            const r = await fetch(SB_URL+'a_tuls_vault?user_id=eq.'+encodeURIComponent(uid)+'&select=data', { headers: SB_H });
-            if(r.ok){
+          if(uid === 'guest'){
+            try{ vaultCache = JSON.parse(localStorage.getItem(STORAGE_KEY())||'[]'); }catch(e){ vaultCache=[]; }
+            return vaultCache;
+          }
+          // try id + email both keys for old rows
+          const keys = [uid];
+          try{
+            const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+            if(s && s.email && String(s.email).toLowerCase() !== uid) keys.push(String(s.email).toLowerCase());
+            if(s && s.id && String(s.id) !== uid) keys.push(String(s.id));
+          }catch(e){}
+
+          for(const key of keys){
+            try{
+              const r = await fetch(SB_URL+'a_tuls_vault?user_id=eq.'+encodeURIComponent(key)+'&select=user_id,data,updated_at', {
+                headers: Object.assign({}, SB_H, {'Prefer':'return=representation'})
+              });
+              if(!r.ok) continue;
               const rows = await r.json();
-              if(rows && rows[0] && rows[0].data){
-                const data = Array.isArray(rows[0].data) ? rows[0].data : (rows[0].data.files || []);
-                localStorage.setItem(STORAGE_KEY(), JSON.stringify(data));
-                return data;
+              if(rows && rows[0] && rows[0].data != null){
+                let data = rows[0].data;
+                if(typeof data === 'string'){ try{ data = JSON.parse(data); }catch(e){ data = []; } }
+                if(!Array.isArray(data)) data = (data && data.files) ? data.files : [];
+                setLocalCache(data);
+                // normalize to current uid if loaded from email key
+                if(key !== uid){ await saveVaultCloud(data); }
+                return vaultCache;
               }
+            }catch(e){ console.warn('vault load', e); }
+          }
+          // empty in cloud → start empty (still allow offline cache only if cloud empty)
+          try{
+            const local = JSON.parse(localStorage.getItem(STORAGE_KEY())||'[]');
+            if(Array.isArray(local) && local.length){
+              setLocalCache(local);
+              await saveVaultCloud(local); // migrate local → cloud once
+              return vaultCache;
             }
-          } catch(e){ console.warn('vault cloud load', e); }
-          return getVault();
+          }catch(e){}
+          setLocalCache([]);
+          return vaultCache;
         }
 
-        function saveVault(data) {
-            localStorage.setItem(STORAGE_KEY(), JSON.stringify(data));
-            // cloud sync (fire and forget)
-            const uid = vaultUserId();
-            if(uid==='guest') return;
-            const body = JSON.stringify({ user_id: uid, data: data, updated_at: new Date().toISOString() });
-            fetch(SB_URL+'a_tuls_vault?user_id=eq.'+encodeURIComponent(uid), {
-              method: 'PATCH', headers: Object.assign({}, SB_H, {'Prefer':'return=minimal'}), body
-            }).then(async r => {
-              if(r.status === 404 || r.status === 406 || (r.ok && r.headers.get('content-range')==='*/0')){
-                // upsert insert
-                await fetch(SB_URL+'a_tuls_vault', { method:'POST', headers: Object.assign({}, SB_H, {'Prefer':'resolution=merge-duplicates,return=minimal'}), body });
-              } else if(!r.ok){
+        async function saveVaultCloud(data){
+          const uid = vaultUserId();
+          if(uid === 'guest'){
+            setLocalCache(data);
+            return false;
+          }
+          setLocalCache(data);
+          const body = JSON.stringify({
+            user_id: uid,
+            data: data,
+            updated_at: new Date().toISOString()
+          });
+          try{
+            // PATCH existing row
+            const r = await fetch(SB_URL+'a_tuls_vault?user_id=eq.'+encodeURIComponent(uid), {
+              method: 'PATCH',
+              headers: Object.assign({}, SB_H, {'Prefer':'return=minimal'}),
+              body
+            });
+            // if no row updated → INSERT
+            const cr = r.headers.get('content-range') || '';
+            if(!r.ok || cr === '*/0' || r.status === 404 || r.status === 406){
+              const r2 = await fetch(SB_URL+'a_tuls_vault', {
+                method: 'POST',
+                headers: Object.assign({}, SB_H, {'Prefer':'resolution=merge-duplicates,return=minimal'}),
+                body
+              });
+              if(!r2.ok){
+                // last try plain insert
                 await fetch(SB_URL+'a_tuls_vault', { method:'POST', headers: SB_H, body });
               }
-            }).catch(()=>{
-              fetch(SB_URL+'a_tuls_vault', { method:'POST', headers: SB_H, body }).catch(()=>{});
-            });
+            }
+            return true;
+          }catch(e){
+            console.warn('vault save cloud', e);
+            return false;
+          }
         }
 
         function generateId() {
@@ -706,6 +763,7 @@ Paid Package কিনুন।');
 
         function showMessage(text, type = 'success') {
             const box = document.getElementById('messageBox');
+            if(!box) return;
             box.className = `message show ${type}`;
             box.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${text}`;
             clearTimeout(window.msgTimeout);
@@ -724,14 +782,14 @@ Paid Package কিনুন।');
             document.getElementById('fileData').value = '';
         }
 
-        function saveNewFile() {
+        async function saveNewFile() {
             const title = document.getElementById('fileTitle').value.trim();
             const data = document.getElementById('fileData').value.trim();
-
             if (!title) return showMessage('Please enter a file title', 'error');
             if (!data) return showMessage('Please enter some email data', 'error');
+            if(vaultUserId()==='guest') return showMessage('Please login first', 'error');
 
-            const vault = getVault();
+            const vault = getVault().slice();
             vault.unshift({
                 id: generateId(),
                 title,
@@ -739,16 +797,19 @@ Paid Package কিনুন।');
                 created: new Date().toISOString(),
                 updated: new Date().toISOString()
             });
-            saveVault(vault);
+            showMessage('Saving to cloud...');
+            const ok = await saveVaultCloud(vault);
             clearMain();
-            loadVaultCloud().then(function(){ renderVault(); });
-            showMessage('File saved to vault!');
+            renderVault();
+            showMessage(ok ? 'File saved to cloud vault!' : 'Saved locally — cloud sync failed, try again', ok ? 'success' : 'error');
         }
 
         function renderVault() {
             const vault = getVault();
             const container = document.getElementById('vaultContainer');
-            document.getElementById('fileCount').textContent = vault.length + ' file(s)';
+            const fc = document.getElementById('fileCount');
+            if(fc) fc.textContent = vault.length + ' file(s)';
+            if(!container) return;
 
             if (vault.length === 0) {
                 container.innerHTML = `
@@ -761,12 +822,11 @@ Paid Package কিনুন।');
             }
 
             container.innerHTML = vault.map(file => {
-                const lines = file.data.split('\n').filter(l => l.trim()).length;
-                const preview = file.data.split('\n').slice(0, 4).join('\n') + (lines > 4 ? '\n...' : '');
-                const date = new Date(file.updated || file.created).toLocaleDateString('en-GB', {
+                const lines = String(file.data||'').split('\n').filter(l => l.trim()).length;
+                const preview = String(file.data||'').split('\n').slice(0, 4).join('\n') + (lines > 4 ? '\n...' : '');
+                const date = new Date(file.updated || file.created || Date.now()).toLocaleDateString('en-GB', {
                     day: 'numeric', month: 'short', year: 'numeric'
                 });
-
                 return `
                     <div class="vault-item">
                         <div class="vault-header">
@@ -775,18 +835,10 @@ Paid Package কিনুন।');
                                 <div class="vault-meta">${lines} emails • Updated ${date}</div>
                             </div>
                             <div class="vault-actions">
-                                <button class="btn btn-sm btn-secondary" onclick="openEdit('${file.id}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-secondary" onclick="openAppend('${file.id}')">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <button class="btn btn-sm btn-secondary" onclick="copyFile('${file.id}')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteFile('${file.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <button class="btn btn-sm btn-secondary" onclick="openEdit('${file.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-secondary" onclick="openAppend('${file.id}')"><i class="fas fa-plus"></i></button>
+                                <button class="btn btn-sm btn-secondary" onclick="copyFile('${file.id}')"><i class="fas fa-copy"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteFile('${file.id}')"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="vault-preview">${escapeHtml(preview)}</div>
@@ -797,7 +849,7 @@ Paid Package কিনুন।');
 
         function escapeHtml(text) {
             const div = document.createElement('div');
-            div.textContent = text;
+            div.textContent = text || '';
             return div.innerHTML;
         }
 
@@ -810,24 +862,21 @@ Paid Package কিনুন।');
             document.getElementById('editModal').classList.add('show');
         }
 
-        function updateFile() {
+        async function updateFile() {
             const id = document.getElementById('editId').value;
             const title = document.getElementById('editTitle').value.trim();
             const data = document.getElementById('editData').value.trim();
-
             if (!title || !data) return showMessage('Title and data required', 'error');
-
-            const vault = getVault();
+            const vault = getVault().slice();
             const idx = vault.findIndex(f => f.id === id);
             if (idx === -1) return;
-
             vault[idx].title = title;
             vault[idx].data = data;
             vault[idx].updated = new Date().toISOString();
-            saveVault(vault);
+            const ok = await saveVaultCloud(vault);
             closeModal('editModal');
             renderVault();
-            showMessage('File updated!');
+            showMessage(ok ? 'File updated in cloud!' : 'Updated locally — cloud sync failed', ok ? 'success' : 'error');
         }
 
         function openAppend(id) {
@@ -836,52 +885,55 @@ Paid Package কিনুন।');
             document.getElementById('appendModal').classList.add('show');
         }
 
-        function appendToFile() {
+        async function appendToFile() {
             const id = document.getElementById('appendId').value;
             const newData = document.getElementById('appendData').value.trim();
             if (!newData) return showMessage('Nothing to append', 'error');
-
-            const vault = getVault();
+            const vault = getVault().slice();
             const idx = vault.findIndex(f => f.id === id);
             if (idx === -1) return;
-
-            vault[idx].data = vault[idx].data.trim() + '\n' + newData;
+            vault[idx].data = String(vault[idx].data||'').trim() + '\n' + newData;
             vault[idx].updated = new Date().toISOString();
-            saveVault(vault);
+            const ok = await saveVaultCloud(vault);
             closeModal('appendModal');
             renderVault();
-            showMessage('Emails appended!');
+            showMessage(ok ? 'Emails appended to cloud!' : 'Appended locally — cloud sync failed', ok ? 'success' : 'error');
         }
 
         function copyFile(id) {
             const file = getVault().find(f => f.id === id);
             if (!file) return;
-            navigator.clipboard.writeText(file.data).then(() => {
-                showMessage('File content copied!');
-            });
+            navigator.clipboard.writeText(file.data).then(() => showMessage('File content copied!'));
         }
 
-        function deleteFile(id) {
+        async function deleteFile(id) {
             if (!confirm('Are you sure you want to delete this file? This cannot be undone.')) return;
             const vault = getVault().filter(f => f.id !== id);
-            saveVault(vault);
+            const ok = await saveVaultCloud(vault);
             renderVault();
-            showMessage('File deleted');
+            showMessage(ok ? 'File deleted from cloud' : 'Deleted locally — cloud sync failed', ok ? 'success' : 'error');
         }
 
         function closeModal(id) {
             document.getElementById(id).classList.remove('show');
         }
 
-        // Close modal on outside click
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) overlay.classList.remove('show');
             });
         });
 
-        // Initial render
-        renderVault();
-    </script>
+        // Boot: load from DATABASE first, then render (same files every device)
+        (async function initVault(){
+          const container = document.getElementById('vaultContainer');
+          if(container) container.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading vault from cloud...</p></div>';
+          if(vaultUserId()==='guest'){
+            showMessage('Please login to use cloud vault', 'error');
+          }
+          await loadVaultCloud();
+          renderVault();
+        })();
+    </script></script>
 </body>
 </html>
