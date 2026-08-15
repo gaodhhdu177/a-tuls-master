@@ -120,8 +120,9 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 .v-badge{display:inline-flex;align-items:center;gap:2px;color:#1877f2;font-size:.85rem;font-weight:700;margin-left:4px;vertical-align:middle}
 .v-badge i{font-size:.95rem;color:#1877f2;filter:drop-shadow(0 1px 1px rgba(24,119,242,.35))}
 .admin-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:0;margin-left:6px;vertical-align:middle;line-height:1.05}
-.admin-badge .fb-check{width:16px;height:16px;border-radius:50%;background:#1877f2;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;box-shadow:0 1px 3px rgba(24,119,242,.45)}
-.admin-badge .fb-label{font-size:9px;font-weight:700;color:#1877f2;margin-top:1px;letter-spacing:.2px}
+.admin-badge .fb-check{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#1877f2,#0a5dc2);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;box-shadow:0 0 0 2px #fff,0 0 0 4px #fbbf24,0 2px 6px rgba(24,119,242,.5)}
+.admin-badge .fb-label{font-size:9px;font-weight:800;color:#1877f2;margin-top:2px;letter-spacing:.3px;text-transform:uppercase}
+.admin-badge .vip-crown{font-size:10px;color:#f59e0b;line-height:1;margin-bottom:-2px}
 
 
 /* Vault */
@@ -699,18 +700,34 @@ async function fillMemHistory(){
     const pkg=u.package||s.package||'Free';
     const exp=u.package_expires||s.package_expires||'';
     const joined=u.created||s.created||'';
-    let expTxt='—', daysLeft='—';
-    if(pkg==='Lifetime' || s.role==='admin'){ expTxt='Never (Lifetime)'; daysLeft='Active · Lifetime'; }
+    const bought=u.package_started||u.package_bought||u.updated||s.package_started||joined||'';
+    let expTxt='—', daysLeft='—', statusCls='text-secondary';
+    if(pkg==='Lifetime' || (s.role==='admin')){ expTxt='Never (Lifetime)'; daysLeft='Active · Lifetime Access'; statusCls='text-success'; }
     else if(exp){
       const ed=new Date(exp);
       if(!isNaN(ed.getTime())){
         expTxt=ed.toLocaleDateString('en-GB')+' '+ed.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
         const diff=Math.ceil((ed-new Date())/86400000);
-        daysLeft = diff>0 ? (diff+' days left · Active') : 'Expired — renew now';
+        if(diff>0){ daysLeft = diff+' days left · Active'; statusCls='text-success'; }
+        else { daysLeft='Expired — auto Free / renew now'; statusCls='text-danger'; }
       }
-    } else if(pkg!=='Free'){ expTxt='Not set — contact Admin'; daysLeft='Active (no expiry date)'; }
-    const price=map[pkg]||map[String(pkg).replace(/\s+/g,'')]||'—';
-    box.innerHTML='<div class="card border-0 shadow-sm p-3 mb-3"><div class="fw-bold fs-5 mb-1">'+_esc(pkg)+' Package</div><div class="text-success fw-bold">Price paid: '+price+'</div><hr class="my-2"><div class="small mb-1"><b>Purchased / Joined:</b> '+(joined?new Date(joined).toLocaleString('en-GB'):'—')+'</div><div class="small mb-1"><b>Expires:</b> '+expTxt+'</div><div class="small mb-1"><b>Status:</b> '+daysLeft+'</div><div class="small"><b>User:</b> '+_esc(u.username||s.username||'')+' · ID: '+_esc(String(u.id||s.id||'-').slice(0,12))+'</div></div><button class="btn btn-p w-100 mb-2" onclick="show(\'addmoney\')">Upgrade / Buy Package</button><p class="small text-muted mb-0">Renew from Membership → Add Money. WhatsApp: +8801336489062</p>';
+    } else if(pkg!=='Free'){ expTxt='Not set — contact Admin'; daysLeft='Active (no expiry date)'; statusCls='text-warning'; }
+    else { daysLeft='Free plan'; statusCls='text-secondary'; }
+    const price=map[pkg]||map[String(pkg).replace(/\s+/g,'')]||map[String(pkg).toLowerCase()]||'—';
+    const boughtTxt = bought ? new Date(bought).toLocaleString('en-GB') : '—';
+    const joinedTxt = joined ? new Date(joined).toLocaleString('en-GB') : '—';
+    box.innerHTML='<div class="card border-0 shadow-sm p-3 mb-3">'+
+      '<div class="d-flex justify-content-between align-items-start mb-2"><div class="fw-bold fs-5">'+_esc(pkg)+' Package</div><span class="badge '+(pkg==='Free'?'bg-secondary':'bg-success')+'">'+_esc(pkg)+'</span></div>'+
+      '<div class="text-success fw-bold mb-2" style="font-size:1.15rem">Price paid: '+price+'</div>'+
+      '<hr class="my-2">'+
+      '<div class="small mb-2"><i class="fas fa-calendar-plus me-1 text-primary"></i><b>Package set / bought:</b><br><span class="ms-3">'+boughtTxt+'</span></div>'+
+      '<div class="small mb-2"><i class="fas fa-user-plus me-1 text-primary"></i><b>Account joined:</b><br><span class="ms-3">'+joinedTxt+'</span></div>'+
+      '<div class="small mb-2"><i class="fas fa-hourglass-end me-1 text-primary"></i><b>Expires:</b><br><span class="ms-3">'+expTxt+'</span></div>'+
+      '<div class="small mb-2"><i class="fas fa-info-circle me-1 text-primary"></i><b>Status:</b> <span class="'+statusCls+' fw-semibold">'+daysLeft+'</span></div>'+
+      '<div class="small"><i class="fas fa-id-badge me-1 text-primary"></i><b>User:</b> '+_esc(u.username||s.username||'')+' · ID: '+_esc(String(u.id||s.id||'-').slice(0,16))+'</div>'+
+      '</div>'+
+      '<button class="btn btn-p w-100 mb-2" onclick="show(\'addmoney\')">Upgrade / Buy Package</button>'+
+      '<p class="small text-muted mb-0">মেয়াদ শেষ হলে অটো Free হয়ে যাবে। Renew: Membership → Add Money · WhatsApp +8801336489062</p>';
   }
   box.innerHTML='<p class="text-muted">Loading...</p>';
   paint(s); // immediate from session
@@ -837,13 +854,19 @@ if(sess){
   if(roleEl) roleEl.textContent=(sess.role==='admin'?'Admin':'User')+' • '+(sess.package||'Free');
   const pkgLine=document.getElementById('pkgLine');
   if(pkgLine) pkgLine.textContent='Package: '+(sess.package||'Free')+(sess.role==='admin'?' • Full Access':'');
-  // Dynamic stats — show package price user paid (half prices)
+  // Auto-expire paid packages → Free
+  try{ checkPackageExpiry(sess); sess=JSON.parse(localStorage.getItem('a_tuls_session')||'{}'); }catch(e){}
+  // Dynamic stats — show exact package price user paid
   const pkgMap={Free:'৳0','1 Day':'৳20','1Day':'৳20','7 Day':'৳70','7Day':'৳70',Basic:'৳150',Standard:'৳450',Popular:'৳900',Premium:'৳1800',Lifetime:'Lifetime'};
+  function normPkg(p){ p=String(p||'Free').trim(); return p; }
+  const pkgNow = normPkg(sess.package);
+  const pkgKey = pkgNow.replace(/\s+/g,'');
+  const priceTxt = (sess.role==='admin'||pkgNow==='Lifetime') ? '—' : (pkgMap[pkgNow]||pkgMap[pkgKey]||pkgMap[pkgNow.toLowerCase()]||pkgMap[pkgKey.toLowerCase()]||'৳0');
   const sp=document.getElementById('statPkg');
   const si=document.getElementById('statInvest');
-  if(sp) sp.textContent=sess.role==='admin'?'Lifetime':(sess.package||'Free');
-  if(si) si.textContent=sess.role==='admin'?'—':(pkgMap[sess.package]||pkgMap[String(sess.package||'').replace(/\s+/g,'')]||'৳0');
-  if(sp) sp.className='fs-4 fw-bold '+(sess.package&&sess.package!=='Free'||sess.role==='admin'?'text-success':'text-secondary');
+  if(sp) sp.textContent=sess.role==='admin'?'Lifetime':(pkgNow||'Free');
+  if(si) si.textContent=priceTxt;
+  if(sp) sp.className='fs-4 fw-bold '+(pkgNow&&pkgNow!=='Free'||sess.role==='admin'?'text-success':'text-secondary');
   try{ updateVaultCount(); }catch(e){}
   const av=document.getElementById('dav');
   if(av && !av.querySelector('img')) av.textContent=un.charAt(0).toUpperCase();
@@ -938,13 +961,43 @@ function chgPhoto(e){
   reader.readAsDataURL(f);
 }
 
+
+function checkPackageExpiry(sess){
+  try{
+    if(!sess || sess.role==='admin') return sess;
+    var pkg = String(sess.package||'Free');
+    if(pkg==='Free' || pkg==='Lifetime' || !sess.package_expires) return sess;
+    var ed = new Date(sess.package_expires);
+    if(isNaN(ed.getTime())) return sess;
+    if(ed.getTime() <= Date.now()){
+      sess.package = 'Free';
+      sess.package_expires = '';
+      localStorage.setItem('a_tuls_session', JSON.stringify(sess));
+      try{
+        if(sess.id){
+          fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(sess.id),{
+            method:'PATCH',
+            headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),
+            body:JSON.stringify({package:'Free', package_expires:null})
+          });
+        }
+      }catch(e){}
+      try{
+        var sp=document.getElementById('statPkg'); if(sp){ sp.textContent='Free'; sp.className='fs-4 fw-bold text-secondary'; }
+        var si=document.getElementById('statInvest'); if(si) si.textContent='৳0';
+        var pkgLine=document.getElementById('pkgLine'); if(pkgLine) pkgLine.textContent='Package: Free';
+      }catch(e){}
+    }
+  }catch(e){}
+  return sess;
+}
 function nameBadges(u){
   u = u || {};
   var isAd = u.role==='admin' || String(u.email||'').toLowerCase()==='gourabmon112233@gmail.com' || u.id==='admin';
   var isV = isAd || u.verified===true || u.verified==='true' || u.badge_status==='verified';
   var h = '';
-  /* Facebook-style blue verified + Admin label under the check */
-  if(isAd) h += ' <span class="admin-badge" title="Admin"><span class="fb-check"><i class="fas fa-check"></i></span><span class="fb-label">Admin</span></span>';
+  /* Pro VIP Admin: gold ring + blue check + VIP Admin label */
+  if(isAd) h += ' <span class="admin-badge" title="VIP Admin"><span class="vip-crown">👑</span><span class="fb-check"><i class="fas fa-check"></i></span><span class="fb-label">VIP Admin</span></span>';
   else if(isV) h += ' <span class="v-badge" title="Verified"><i class="fas fa-check-circle"></i></span>';
   return h;
 }
@@ -1153,23 +1206,31 @@ async function loadBadgeStatus(){
 function loadPinnedTools(){
   const box=document.getElementById('pinnedToolsBox');
   const sel=document.getElementById('pinToolSelect');
-  let catalog=(window.A_TULS_TOOL_CATALOG||[]).filter(function(t){ return t.ready!==false; });
+  // Always show ALL tools in dropdown (ready + soon)
+  let catalog=(window.A_TULS_TOOL_CATALOG||[]).slice();
   if(!catalog.length){
     catalog=[
-      {n:'1. Gmail Format Fixer Pro',p:'gmail-format-fixer-pro.html'},
-      {n:'2. Email Report',p:'email-report.html'},
-      {n:'3. IP TimeZone Finder',p:'ip-timezone.html'},
-      {n:'4. Duplicate Checker',p:'duplicate-email-checker.html'},
-      {n:'5. Name Generator',p:'name-generator.html'},
-      {n:'6. Gmail Format Fixer',p:'gmail-format-fixer.html'},
-      {n:'7. Password Generator',p:'password-generator.html'},
-      {n:'8. Easy Email Validator',p:'easy-email-validator.html'},
-      {n:'9. Personal Email Vault',p:'personal-email-vault.html'},
-      {n:'10. Email Data Formatter',p:'email-data-formatter.html'}
+      {n:'1. Gmail Format Fixer Pro',p:'gmail-format-fixer-pro.html',ready:true},
+      {n:'2. Email Report',p:'email-report.html',ready:true},
+      {n:'3. IP TimeZone Finder',p:'ip-timezone.html',ready:true},
+      {n:'4. Duplicate Checker',p:'duplicate-email-checker.html',ready:true},
+      {n:'5. Name Generator',p:'name-generator.html',ready:true},
+      {n:'6. Gmail Format Fixer',p:'gmail-format-fixer.html',ready:true},
+      {n:'7. Multiple Password Generator',p:'password-generator.html',ready:true},
+      {n:'8. Easy Email Validator',p:'easy-email-validator.html',ready:true},
+      {n:'9. Personal Email Vault',p:'personal-email-vault.html',ready:true},
+      {n:'10. Email Data Formatter',p:'email-data-formatter.html',ready:true},
+      {n:'11. Gmail Checker',p:'gmail-checker.html',ready:false},
+      {n:'12. 2FA Generator',p:'2fa-generator.html',ready:false},
+      {n:'13. Temp Mail',p:'temp-mail.html',ready:false},
+      {n:'14. IP & VPN Buy/Sell Zone',p:'ip-vpn-zone.html',ready:false},
+      {n:'15. Outside Zone',p:'outside-zone.html',ready:false}
     ];
   }
   if(sel){
-    sel.innerHTML='<option value="">— Select a tool —</option>'+catalog.map(function(t){ return '<option value="'+t.p+'">'+t.n+'</option>'; }).join('');
+    sel.innerHTML='<option value="">— Select a tool —</option>'+catalog.map(function(t){
+      return '<option value="'+t.p+'">'+t.n+(t.ready===false?' (Soon)':'')+'</option>';
+    }).join('');
   }
   let pinned=[];
   try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
@@ -1180,10 +1241,10 @@ function loadPinnedTools(){
     }
   }catch(e){}
   if(box){
-    if(!pinned.length) box.innerHTML='<p class="text-muted small mb-0">No tools pinned yet. Select a tool below and tap Pin — it will show on your profile first.</p>';
-    else box.innerHTML=pinned.map(function(p,i){
+    if(!pinned.length) box.innerHTML='<p class="text-muted small mb-0">No tools pinned yet. Select a tool below and tap <b>Pin to Profile</b> — pinned tools will appear first on Home.</p>';
+    else box.innerHTML='<div class="small text-success mb-2"><i class="fas fa-thumbtack me-1"></i>'+pinned.length+' tool(s) pinned — show first on Home</div>'+pinned.map(function(p,i){
       const t=catalog.find(function(x){ return x.p===p; })||{n:p,p:p};
-      return '<div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2 bg-white"><span class="small fw-semibold">'+_esc(t.n||p)+'</span><div><button class="btn btn-sm btn-outline-primary me-1" onclick="openTool(\''+(t.p||p)+'\')">Open</button><button class="btn btn-sm btn-outline-danger" onclick="unpinTool('+i+')">Unpin</button></div></div>';
+      return '<div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2 bg-white" style="border-left:3px solid #1877f2!important"><span class="small fw-semibold"><i class="fas fa-thumbtack text-primary me-1"></i>'+_esc(t.n||p)+'</span><div><button class="btn btn-sm btn-outline-primary me-1" onclick="openTool(\''+(t.p||p)+'\')">Open</button><button class="btn btn-sm btn-outline-danger" onclick="unpinTool('+i+')">Unpin</button></div></div>';
     }).join('');
   }
 }
@@ -1201,14 +1262,22 @@ function pinSelectedTool(){
     if(s.id) fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id),{method:'PATCH',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({pinned_tools:pinned.slice(0,8)})});
   }catch(e){}
   loadPinnedTools();
-  alert('Pinned! This tool will show first on your profile.');
+  try{ loadToolsGrid(); }catch(e){}
+  alert('Pinned! This tool will show first on Home tools list.');
 }
 function unpinTool(i){
   let pinned=[];
   try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
   pinned.splice(i,1);
   localStorage.setItem('a_tuls_pinned_tools', JSON.stringify(pinned));
+  try{
+    const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    s.pinned_tools=pinned;
+    localStorage.setItem('a_tuls_session', JSON.stringify(s));
+    if(s.id) fetch(SB_URL_V+'a_tuls_users?id=eq.'+encodeURIComponent(s.id),{method:'PATCH',headers:Object.assign({},SB_H_V,{'Prefer':'return=minimal'}),body:JSON.stringify({pinned_tools:pinned})});
+  }catch(e){}
   loadPinnedTools();
+  try{ loadToolsGrid(); }catch(e){}
 }
 
 
@@ -1454,25 +1523,43 @@ async function fileExists(url){
 async function loadToolsGrid(){
   const grid = document.getElementById('toolsGrid');
   if(!grid) return;
-  const catalog = (window.A_TULS_TOOL_CATALOG || []).slice();
+  let catalog = (window.A_TULS_TOOL_CATALOG || []).slice();
   if(!catalog.length){
     grid.innerHTML = '<div class="text-center text-muted py-4" style="grid-column:1/-1">No tools configured</div>';
     return;
+  }
+  // Pinned tools first for this user
+  let pinned=[];
+  try{ pinned=JSON.parse(localStorage.getItem('a_tuls_pinned_tools')||'[]'); }catch(e){}
+  try{
+    const s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}');
+    if(s.pinned_tools && Array.isArray(s.pinned_tools)) s.pinned_tools.forEach(function(p){ if(pinned.indexOf(p)===-1) pinned.push(p); });
+  }catch(e){}
+  if(pinned.length){
+    const pinSet = pinned.slice();
+    catalog.sort(function(a,b){
+      const ai = pinSet.indexOf(a.p); const bi = pinSet.indexOf(b.p);
+      if(ai===-1 && bi===-1) return 0;
+      if(ai===-1) return 1;
+      if(bi===-1) return -1;
+      return ai - bi;
+    });
   }
   function paint(){
     try{
       const st = document.getElementById('statTools');
       if(st) st.textContent = String(catalog.length);
       grid.innerHTML = catalog.map(function(t){
+        const isPinned = pinned.indexOf(t.p)>=0;
+        const pinBadge = isPinned ? ' <span class="badge" style="background:#1877f2;font-size:.65rem"><i class="fas fa-thumbtack"></i> Pinned</span>' : '';
         if(t.ready){
-          return '<div class="tcard"><div class="ticon" style="background:'+t.bg+';color:'+t.color+'"><i class="fas '+t.icon+'"></i></div><div class="tinfo"><h6>'+t.n+'</h6><p class="text-muted small mb-2">'+t.desc+'</p><button class="obtn" onclick="openTool(\''+String(t.p||'')+'\')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>';
+          return '<div class="tcard"'+(isPinned?' style="border:2px solid #1877f2"':'')+'><div class="ticon" style="background:'+t.bg+';color:'+t.color+'"><i class="fas '+t.icon+'"></i></div><div class="tinfo"><h6>'+t.n+pinBadge+'</h6><p class="text-muted small mb-2">'+t.desc+'</p><button class="obtn" onclick="openTool(\''+String(t.p||'')+'\')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>';
         }
         return '<div class="tcard" style="opacity:.85"><div class="ticon" style="background:'+t.bg+';color:'+t.color+'"><i class="fas '+t.icon+'"></i></div><div class="tinfo"><h6>'+t.n+' <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6><p class="text-muted small mb-2">'+t.desc+'</p><button class="obtn" style="background:#94a3b8" onclick="alert(\'Coming Soon!\')"><i class="fas fa-clock"></i> Coming Soon</button></div></div>';
       }).join('');
     }catch(e){ console.warn(e); grid.innerHTML='<p class="text-danger">Tools load error</p>'; }
   }
   paint();
-  // optional: mark soon tools ready if file present (non-blocking)
   try{
     for (let i=0;i<catalog.length;i++){
       const t=catalog[i];
@@ -1484,7 +1571,8 @@ async function loadToolsGrid(){
   }catch(e){}
 }
 
-document.addEventListener('DOMContentLoaded', function(){ try{ loadToolsGrid(); }catch(e){}
+document.addEventListener('DOMContentLoaded', function(){ try{ var _s=JSON.parse(localStorage.getItem('a_tuls_session')||'{}'); checkPackageExpiry(_s); }catch(e){}
+try{ loadToolsGrid(); }catch(e){}
 try{ renderStories(); }catch(e){} });
 // also run if DOM already ready
 try{ loadToolsGrid(); }catch(e){}
