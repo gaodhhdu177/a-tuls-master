@@ -1,55 +1,476 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<script>
-/* A_TULS_DOMAIN_LOCK — official domain only (blocks file://, Acode, localhost copy) */
-(function(){
-  try{
-    var host = (location.hostname||'').toLowerCase();
-    var proto = (location.protocol||'').toLowerCase();
-    var ok = (host === 'a-tuls-master-n0k1.onrender.com');
-    if(proto === 'file:' || !host || !ok){
-      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0 0 12px">Access Denied</h1><p style="opacity:.9;margin:0 0 8px">This page only works on the official A-Tuls domain.</p><p style="opacity:.55;margin:0;font-size:.9rem">https://a-tuls-master-n0k1.onrender.com</p></div>';
-      throw new Error('domain-lock');
-    }
-  }catch(e){ if(String(e.message||e)==='domain-lock'||(e&&e.message==='domain-lock')) throw e; }
-  try{
-    document.addEventListener('contextmenu',function(e){ e.preventDefault(); });
-    document.addEventListener('keydown',function(e){
-      if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C')) || (e.ctrlKey&&(e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S'))){
-        e.preventDefault(); e.stopPropagation(); return false;
-      }
-    }, true);
-  }catch(e){}
-})();
-</script>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Coming Soon | A-Tuls</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0f172a,#1e3a5f);font-family:system-ui,sans-serif;color:#fff;padding:20px}
-.card-c{max-width:420px;width:100%;background:#fff;color:#0f172a;border-radius:1.25rem;padding:2rem;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.35)}
-.badge-s{background:#fef3c7;color:#b45309;font-weight:700;padding:.4rem .8rem;border-radius:999px;font-size:.8rem}
-</style>
-</head>
-<body>
-<div class="card-c">
-  <div class="badge-s mb-3">COMING SOON</div>
-  <h3 class="fw-bold mb-2" id="toolName">This tool</h3>
-  <p class="text-muted mb-4">This tool is not ready yet. It will be available in a few days. Please check back later.</p>
-  <p class="small text-muted mb-4">এই টুলস এখনো তৈরি হয়নি। কিছুদিনের মধ্যে কাজ করবে।</p>
-  <a class="btn btn-primary rounded-pill px-4" href="dashboard.html">← Back to Dashboard</a>
+<!DOCTYPE html><html lang="en" class="scroll-smooth"><head><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-PKNQLD18KQ"></script><script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+gtag('config', 'G-PKNQLD18KQ');</script> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2271700791782142" crossorigin="anonymous"></script> <!-- Dynamic Favicon/Site Icon --> <link rel="icon" href="https://2fa.co.com/wp-content/uploads/2026/03/cropped-2fa-32x32.png" sizes="32x32" /><link rel="icon" href="https://2fa.co.com/wp-content/uploads/2026/03/cropped-2fa-192x192.png" sizes="192x192" /><link rel="apple-touch-icon" href="https://2fa.co.com/wp-content/uploads/2026/03/cropped-2fa-180x180.png" /> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <meta name="description" content="Generate secure 2FA (Two-Factor Authentication) codes instantly with our free, browser-based OTP & TOTP generator. No accounts, no apps—100% private and secure."> <meta name="keywords" content="2fa, totp generator, authenticator online, secure 2fa code, browser authenticator, 2fa live tool"> <title>2FA Auth Code</title> <!-- Tailwind CSS --> <script src="https://cdn.tailwindcss.com"></script> <!-- jsQR Library --> <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script> <!-- Google Fonts: Space Grotesk & JetBrains Mono --> <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"> <script> tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Space Grotesk"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'], }, colors: { brand: { dark: '#07090E', card: '#111622', border: '#1E2638', neon: '#00F0FF', accent: '#7000FF' } }, animation: { 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'float': 'float 6s ease-in-out infinite', 'data-stream': 'dataStream 2.5s ease-in-out infinite', }, keyframes: { float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' }, }, dataStream: { '0%': { transform: 'translateX(-100%)', opacity: '0' }, '50%': { opacity: '1' }, '100%': { transform: 'translateX(100%)', opacity: '0' }, } } } } } </script>
+<style> body { background-color: #07090E; color: #E2E8F0; }
+/* Fixed background glowing elements */ body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(at 10% 10%, rgba(112, 0, 255, 0.12) 0px, transparent 50%), radial-gradient(at 90% 90%, rgba(0, 240, 255, 0.08) 0px, transparent 50%); z-index: -1; pointer-events: none; }
+/* Glassmorphism utilities */ .glass-card { background: rgba(17, 22, 34, 0.75); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); transform: translateZ(0); }
+/* Token specific styling */ .token-text { background: linear-gradient(135deg, #ffffff 30%, #00F0FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 35px rgba(0, 240, 255, 0.35); }
+/* SVG Timer Ring */ .timer-ring-circle { transition: stroke-dashoffset 1s linear, stroke 0.3s ease; transform: rotate(-90deg); transform-origin: 50% 50%; }
+/* Custom Scrollbars */ ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #07090E; } ::-webkit-scrollbar-thumb { background: #1E2638; border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: #334155; }
+.slide-up { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; } @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.pulse-code { animation: codePulse 0.4s ease-out; } @keyframes codePulse { 0% { transform: scale(0.96); opacity: 0.6; filter: brightness(1.4); } 100% { transform: scale(1); opacity: 1; filter: brightness(1); } } </style></head><body class="min-h-screen flex flex-col font-sans antialiased selection:bg-brand-neon selection:text-black">
+<!-- Navigation --> <header class="sticky top-0 z-50 glass-card border-b border-brand-border/40"> <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between"> <a href="https://2fa.co.com" class="flex items-center gap-3 group"> <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-neon to-brand-accent flex items-center justify-center shadow-[0_0_20px_rgba(0,240,255,0.4)] group-hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-shadow"> <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path> </svg> </div> <span class="font-bold text-2xl tracking-tight text-white">2FA Live Code</span> </a> <div class="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-400"> <a href="#how-it-works" class="hover:text-white transition-colors">How it works</a> <a href="#features" class="hover:text-white transition-colors">Features</a> <button onclick="openModal('privacy-modal')" class="hover:text-white transition-colors">Privacy</button> </div> </div> </header>
+<!-- Main App Interface --> <main class="flex-grow flex flex-col items-center px-4 pt-6 pb-12 lg:pt-10 lg:pb-20 relative"> <!-- Adsense Ad Code Placement --> <div class="w-full max-w-5xl mb-6 relative z-20"> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2271700791782142" crossorigin="anonymous"></script><!-- Three --><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2271700791782142" data-ad-slot="4995918170" data-ad-format="auto" data-full-width-responsive="true"></ins><script> (adsbygoogle = window.adsbygoogle || []).push({});</script> </div> <!-- The Tool Card --> <div class="w-full max-w-5xl glass-card rounded-3xl overflow-hidden shadow-2xl slide-up border border-brand-border/80" style="animation-delay: 0.1s;"> <div class="grid grid-cols-1 lg:grid-cols-5 h-full"> <!-- Left: Input & Setup (3 cols) --> <div class="lg:col-span-3 p-6 sm:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-brand-border/50 flex flex-col justify-between"> <div> <div class="flex justify-between items-end mb-3"> <label for="secretKey" class="block text-xs sm:text-sm font-semibold text-brand-neon uppercase tracking-wider">Authentication Secret Key</label> <span id="validation-error" class="text-xs font-medium text-red-400 bg-red-400/10 px-3 py-1 rounded-full hidden border border-red-500/20">Invalid Base32 String</span> </div> <div class="relative group"> <textarea id="secretKey" rows="4" class="w-full bg-black/40 border border-brand-border rounded-2xl p-4 sm:p-5 pr-12 text-white placeholder-slate-600 focus:ring-2 focus:ring-brand-neon/50 focus:border-brand-neon outline-none transition-all resize-none font-mono text-base sm:text-lg shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] group-hover:border-slate-600" placeholder="e.g. GAXG 243E MR2X QZ..." spellcheck="false" autocomplete="off"></textarea> <!-- Clear Button --> <button id="clearBtn" onclick="clearSecret()" class="absolute top-4 right-4 text-slate-500 hover:text-brand-neon transition-colors hidden p-1" title="Clear Secret Key"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> </button> </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6"> <button onclick="handlePaste()" class="flex items-center justify-center gap-2 bg-brand-border/20 hover:bg-brand-border/50 border border-brand-border text-white py-3.5 px-4 rounded-xl transition-all font-medium text-sm shadow-sm"> <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg> Paste Key </button> <div class="relative flex"> <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="processImageUpload(this)"> <button onclick="openCameraScanner()" class="flex-1 flex items-center justify-center gap-2 bg-brand-border/20 hover:bg-brand-border/50 border border-brand-border text-white py-3.5 px-4 rounded-l-xl transition-all font-medium text-sm border-r-0 shadow-sm"> <svg class="w-4 h-4 text-brand-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Scan QR </button> <button onclick="document.getElementById('image-upload').click()" class="flex items-center justify-center bg-brand-border/20 hover:bg-brand-border/50 border border-brand-border text-white py-3.5 px-4 rounded-r-xl transition-all font-medium shadow-sm" title="Upload QR Image"> <svg class="w-4 h-4 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> </button> </div> </div>
 </div>
+<!-- Recent History Section inside left or beneath --> <div id="history-section" class="w-full mt-6 hidden slide-up"> <div class="flex items-center justify-between mb-2"> <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Recent Keys</h4> <button onclick="clearHistory()" class="text-xs text-brand-neon/70 hover:text-brand-neon transition-colors">Clear</button> </div> <div id="history-list" class="space-y-2"> <!-- History items injected via JS --> </div> </div>
+</div>
+<!-- Right: Output Display (2 cols) --> <div class="lg:col-span-2 bg-gradient-to-b from-brand-card/90 to-brand-dark p-6 sm:p-8 lg:p-10 flex flex-col items-center justify-center relative overflow-hidden"> <!-- Decorative background element --> <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-70"></div> <div class="relative z-10 flex flex-col items-center w-full"> <!-- Extraordinary Cyber-Data Countdown --> <div class="w-full mb-6 relative"> <div class="flex items-center justify-between w-full mb-3"> <div class="flex items-center gap-2"> <svg class="w-4 h-4 text-brand-neon animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> <span class="text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-[0.2em] drop-shadow-[0_0_8px_rgba(0,240,255,0.3)]">Active Token</span> </div> <div id="timer-badge" class="bg-brand-neon/10 border border-brand-neon/40 px-3 py-1 rounded-lg flex items-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-colors duration-500"> <div class="relative flex h-2 w-2"> <span id="timer-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-neon opacity-75"></span> <span id="timer-dot" class="relative inline-flex rounded-full h-2 w-2 bg-brand-neon"></span> </div> <span id="countdown-text" class="text-xs sm:text-sm font-mono font-bold text-brand-neon filter drop-shadow-[0_0_5px_currentColor]">30s</span> </div> </div> <!-- Tech Data Buffer Bar --> <div class="relative w-full h-4 sm:h-5 bg-[#05080f] rounded-md border border-brand-border/60 shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)] overflow-hidden"> <div class="absolute inset-0 bg-gradient-to-r from-brand-accent/20 to-brand-neon/20 opacity-30"></div> <div id="progress-bar" class="relative h-full w-full transition-all duration-1000 ease-linear flex justify-end"> <div id="progress-gradient" class="absolute inset-0 bg-gradient-to-r from-brand-accent to-brand-neon transition-colors duration-500"></div> <div class="absolute top-0 bottom-0 left-0 w-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-data-stream"></div> <div id="progress-edge" class="relative h-full w-1 bg-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] transition-colors duration-500"></div> </div> <div class="absolute inset-0 bg-[repeating-linear-gradient(90deg,#05080f,#05080f_3px,transparent_3px,transparent_12px)] pointer-events-none z-10"></div> </div> </div>
+<!-- TOTP Token --> <div class="text-center w-full mb-6"> <div id="totp-output" class="text-3xl sm:text-4xl md:text-5xl font-mono font-bold tracking-widest cursor-text select-all min-h-[70px] sm:min-h-[85px] flex items-center justify-center bg-black/60 border border-brand-border/80 rounded-2xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.6)] w-full"> <span class="text-slate-500">------</span> </div> </div> 
+<!-- Google AdSense Ad code --> <div class="w-full mb-6 relative z-20"> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2271700791782142" crossorigin="anonymous"></script> <!-- One --> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2271700791782142" data-ad-slot="6256321116" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> </div>
+<!-- Action Button --> <button onclick="copyToClipboard()" class="w-full group relative inline-flex items-center justify-center px-6 py-3.5 font-bold text-white transition-all duration-200 bg-gradient-to-r from-brand-neon to-brand-accent rounded-xl hover:shadow-[0_0_25px_rgba(0,240,255,0.4)] hover:-translate-y-0.5 active:translate-y-0"> <span class="absolute inset-0 w-full h-full rounded-xl opacity-20 bg-white"></span> <span class="relative flex items-center gap-2 text-base"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Copy Code </span> </button>
+
+<div class="mt-6 p-4 rounded-xl bg-brand-dark/50 border border-brand-border/50 flex items-start gap-3 w-full text-left"> <svg class="w-4 h-4 text-brand-neon shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <p class="text-[11px] text-slate-400 leading-relaxed">Keys process entirely in-browser. 100% private and secure.</p> </div>
+</div> </div> </div> </div>
+</div>
+
+<div class="text-center mt-12 mb-4 max-w-3xl mx-auto px-4 slide-up" style="animation-delay: 0.2s;"> <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">Generate <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-neon to-brand-accent">2FA Tokens</span> Instantly</h1> <p class="text-slate-300 text-base md:text-lg font-medium mb-4">Your fast, free, and secure alternative to mobile authenticator apps.</p> <p class="text-slate-400 text-sm md:text-base leading-relaxed"> Protect your online accounts easily without reaching for your phone. Whether you lost your device or simply prefer a desktop solution, our online two-factor authentication (TOTP) tool creates your 6-digit login codes in real-time. Everything is processed entirely inside your own browser—meaning your secret keys are <strong>never saved, shared, or sent to any servers</strong>. No sign-ups, no tracking, just instant security you can trust. </p> </div>
+
+<!-- Educational / SEO Section --> <article id="how-it-works" class="w-full max-w-5xl mx-auto px-4 mt-12 slide-up" style="animation-delay: 0.3s;"> <div class="text-center mb-10"> <h2 class="text-2xl md:text-3xl font-bold text-white">Unlock the Future of Security</h2> <div class="w-16 h-1 bg-brand-neon mx-auto mt-3 rounded-full"></div> </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6"> <!-- Feature 1 --> <div class="glass-card p-6 rounded-2xl"> <div class="w-12 h-12 rounded-xl bg-brand-neon/10 flex items-center justify-center mb-5 border border-brand-neon/20"> <svg class="w-6 h-6 text-brand-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg> </div> <h3 class="text-lg font-bold text-white mb-2">What is 2FA?</h3> <p class="text-slate-400 leading-relaxed text-sm">2FA is a web-based <strong>2FA Authenticator</strong> that generates Time-based One-Time Passwords (TOTP). It serves as a direct alternative to mobile apps like <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" rel="noopener noreferrer" class="text-brand-neon hover:text-white transition-colors">Google Authenticator</a> or <a href="https://authy.com/" target="_blank" rel="noopener noreferrer" class="text-brand-neon hover:text-white transition-colors">Authy</a>, right in your browser.</p> </div> <!-- Feature 2 --> <div class="glass-card p-6 rounded-2xl"> <div class="w-12 h-12 rounded-xl bg-brand-accent/10 flex items-center justify-center mb-5 border border-brand-accent/20"> <svg class="w-6 h-6 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg> </div> <h3 class="text-lg font-bold text-white mb-2">Zero-Knowledge Architecture</h3> <p class="text-slate-400 leading-relaxed text-sm">Security is paramount. The <strong>2FA auth code</strong> generation happens 100% locally via Javascript's Web Crypto API. We do not store, log, or track your secret keys. Your data remains completely private.</p> </div> <!-- Feature 3 --> <div class="glass-card p-6 rounded-2xl"> <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-5 border border-blue-500/20"> <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> </div> <h3 class="text-lg font-bold text-white mb-2">Lightning Fast</h3> <p class="text-slate-400 leading-relaxed text-sm">Whether you are pasting a setup key or scanning a <strong>QR code</strong>, 2FA calculates your secure tokens instantaneously. Never miss a login window waiting for your phone again.</p> </div> </div>
+
+<div class="mt-12 glass-card p-6 sm:p-8 md:p-10 rounded-3xl border border-brand-border"> <h3 class="text-xl sm:text-2xl font-bold text-white mb-6 text-center">How does 2FA Authentication work?</h3> <div class="space-y-4 text-slate-300 text-sm leading-relaxed"> <p>Think of Two-Factor Authentication (or <strong>2FA</strong> for short) as an extra lock on your digital front door. Usually, websites only ask for one thing to let you in: a password. But passwords aren't perfect. They can be guessed, stolen by hackers, or accidentally given away in phishing scams. 2FA fixes this by asking for a second piece of proof to make sure it's really you.</p> <p>When you turn on 2FA, websites ask for something you <em>have</em> in addition to your password. Our <strong>2FA live authenticator</strong> handles this by sharing a secret setup key with the website. Using this secret key and the exact current time, both the website and our tool generate the exact same 6-digit <strong>TOTP code</strong> (Time-Based One-Time Password). This secure code changes every 30 seconds. Because it expires so fast, even if a hacker steals your code right now, it will be completely useless to them a minute later!</p> </div> </div>
+
+<div class="mt-10 glass-card p-6 sm:p-8 md:p-10 rounded-3xl border border-brand-border" id="features"> <h3 class="text-xl sm:text-2xl font-bold text-white mb-6">How to use the 2FA Live Generator</h3> <ul class="space-y-4 text-slate-300 text-sm"> <li class="flex items-start gap-3"> <span class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-neon text-black font-bold flex items-center justify-center text-xs">1</span> <p><strong>Obtain your Secret Key:</strong> When enabling Two-Factor Authentication on platforms like Discord, Github, or Crypto exchanges, choose "Authenticator App". If a QR code appears, look for an option to view the text-based setup key.</p> </li> <li class="flex items-start gap-3"> <span class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-neon text-black font-bold flex items-center justify-center text-xs">2</span> <p><strong>Input the Key:</strong> Paste the Base32 formatted secret (e.g., JBSWY3DPEHPK3PXP) into the text area above. Alternatively, use your webcam to scan the provided QR code.</p> </li> <li class="flex items-start gap-3"> <span class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-neon text-black font-bold flex items-center justify-center text-xs">3</span> <p><strong>Retrieve your TOTP:</strong> 2FA will instantly calculate your 6-digit live token. Click the copy button and paste it into the service to complete your login.</p> </li> </ul> </div>
+</article>
+
+<!-- Footer --> <footer class="mt-16 border-t border-brand-border/60 bg-brand-dark/90 backdrop-blur-lg"> <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left"> <div class="flex items-center gap-2"> <span class="text-slate-400 font-mono text-xs">&copy; 2026 <a href="https://2fa.co.com" class="hover:text-brand-neon transition-colors">2FA Live</a>. All rights reserved.</span> </div> <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-slate-400"> <button onclick="openModal('about-modal')" class="hover:text-brand-neon transition-colors">About Us</button> <button onclick="openModal('contact-modal')" class="hover:text-brand-neon transition-colors">Contact Us</button> <button onclick="openModal('privacy-modal')" class="hover:text-brand-neon transition-colors">Privacy Policy</button> <button onclick="openModal('disclaimer-modal')" class="hover:text-brand-neon transition-colors">Disclaimer</button> <button onclick="openModal('terms-modal')" class="hover:text-brand-neon transition-colors">Terms & Conditions</button> </div> </div> </footer>
+
+<!-- Global Toast UI --> <div id="toast-notification" class="fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-all duration-300 pointer-events-none z-[70] opacity-0 translate-y-[-20px] backdrop-blur-md w-[90vw] sm:w-auto max-w-md"> <div id="toast-icon-wrapper" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"></div> <p id="toast-text" class="font-medium text-white text-sm sm:text-base"></p> </div>
+
+<!-- QR Camera Modal --> <div id="camera-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-brand-dark/95 backdrop-blur-md hidden opacity-0 transition-opacity duration-300" onclick="if(event.target === this) closeCameraScanner()"> <div class="relative w-full max-w-lg mx-4 bg-brand-card border border-brand-border rounded-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="camera-modal-content"> <div class="p-4 border-b border-brand-border flex justify-between items-center bg-brand-dark/50"> <h3 class="text-white font-bold flex items-center gap-2 text-sm"> <svg class="w-5 h-5 text-brand-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Scan QR Code </h3> <button onclick="closeCameraScanner()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/15"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> </button> </div> <div class="relative bg-black h-64 sm:h-80 flex items-center justify-center overflow-hidden"> <video id="video-feed" class="absolute inset-0 w-full h-full object-cover" playsinline muted></video> <div class="absolute inset-0 m-12 border-2 border-brand-neon/50 rounded-xl pointer-events-none z-10 flex items-center justify-center"> <div class="w-full h-[2px] bg-brand-neon shadow-[0_0_15px_#00F0FF] absolute top-1/2 transform -translate-y-1/2 animate-[float_2s_ease-in-out_infinite]"></div> </div> <div id="camera-loader" class="text-brand-neon font-mono text-sm animate-pulse z-0 flex flex-col items-center gap-3"> <svg class="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Accessing Camera... </div> </div> <div class="p-4 bg-brand-dark/50 border-t border-brand-border text-center"> <p class="text-xs text-slate-400">Position the 2FA QR code within the frame.</p> </div> </div> </div>
+
+<!-- Generic Modals Setup --> <template id="modal-template"> <div class="fixed inset-0 z-[60] flex items-center justify-center bg-brand-dark/95 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 modal-overlay" onclick="closeSpecificModal(this, event)"> <div class="relative w-full max-w-lg mx-4 bg-brand-card border border-brand-border rounded-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 modal-content flex flex-col max-h-[85vh]"> <div class="p-5 border-b border-brand-border flex justify-between items-center"> <h2 class="text-xl font-bold text-white modal-title">Title</h2> <button onclick="closeSpecificModal(this.closest('.modal-overlay'))" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-white/10 transition-colors"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> </button> </div> <div class="p-6 overflow-y-auto text-slate-300 space-y-4 text-sm leading-relaxed modal-body"></div> <div class="p-4 border-t border-brand-border bg-brand-dark/50 text-right"> <button onclick="closeSpecificModal(this.closest('.modal-overlay'))" class="px-5 py-2 bg-brand-border hover:bg-slate-600 text-white rounded-xl transition-colors text-sm font-medium">Acknowledge</button> </div> </div> </div> </template>
+
+<div id="modal-container"></div>
+
 <script>
-const names={
- 'gmail-checker.html':'Gmail Checker',
- '2fa-generator.html':'2FA Generator',
- 'temp-mail.html':'Temp Mail',
- 'ip-vpn-zone.html':'IP VPN Zone',
- 'outside-zone.html':'Outside Zone'
+const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+let activeSecret = '';
+let generatedCode = '------';
+
+const inputArea = document.getElementById('secretKey');
+const outputDisplay = document.getElementById('totp-output');
+const countdownText = document.getElementById('countdown-text');
+const errorBadge = document.getElementById('validation-error');
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupModals();
+    inputArea.addEventListener('input', handleInput);
+    renderHistory();
+    setInterval(() => {
+        syncTOTP();
+        syncHistoryCodes();
+    }, 1000);
+    syncTOTP();
+    syncHistoryCodes();
+});
+
+function decodeBase32(str) {
+    let val = 0, bits = 0, index = 0;
+    const res = new Uint8Array(Math.ceil(str.length * 5 / 8));
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        const charIndex = BASE32_ALPHABET.indexOf(char);
+        if (charIndex === -1) continue;
+        val = (val << 5) | charIndex;
+        bits += 5;
+        if (bits >= 8) {
+            res[index++] = (val >>> (bits - 8)) & 255;
+            bits -= 8;
+        }
+    }
+    return res.slice(0, index);
+}
+
+async function buildHOTP(secret, counter) {
+    try {
+        const keyData = decodeBase32(secret);
+        const cryptoKey = await window.crypto.subtle.importKey(
+            "raw", keyData, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]
+        );
+        const counterBuffer = new ArrayBuffer(8);
+        const dataView = new DataView(counterBuffer);
+        dataView.setUint32(4, counter, false);
+        dataView.setUint32(0, 0, false);
+        const signature = await window.crypto.subtle.sign("HMAC", cryptoKey, counterBuffer);
+        const hmacArray = new Uint8Array(signature);
+        const offset = hmacArray[hmacArray.length - 1] & 0xf;
+        const binary = ((hmacArray[offset] & 0x7f) << 24) |
+                       ((hmacArray[offset + 1] & 0xff) << 16) |
+                       ((hmacArray[offset + 2] & 0xff) << 8) |
+                       (hmacArray[offset + 3] & 0xff);
+        const token = binary % 1000000;
+        return token.toString().padStart(6, '0');
+    } catch (error) {
+        return null;
+    }
+}
+
+function syncTOTP() {
+    const epoch = Math.floor(Date.now() / 1000);
+    const step = 30;
+    const remaining = step - (epoch % step);
+    updateVisualTimer(remaining, step);
+    if (!activeSecret) {
+        outputDisplay.classList.remove('token-text');
+        outputDisplay.innerHTML = '<span class="text-slate-500">------</span>';
+        return;
+    }
+    const timeCounter = Math.floor(epoch / step);
+    buildHOTP(activeSecret, timeCounter).then(code => {
+        if(code) {
+            const formattedCode = `${code.substring(0,3)} ${code.substring(3)}`;
+            if (generatedCode !== formattedCode) {
+                outputDisplay.classList.add('token-text');
+                generatedCode = formattedCode;
+                outputDisplay.textContent = formattedCode;
+                outputDisplay.classList.remove('pulse-code');
+                void outputDisplay.offsetWidth;
+                outputDisplay.classList.add('pulse-code');
+            }
+        }
+    });
+}
+
+function updateVisualTimer(seconds, total) {
+    const countdownText = document.getElementById('countdown-text');
+    const progressBar = document.getElementById('progress-bar');
+    const timerBadge = document.getElementById('timer-badge');
+    const timerPing = document.getElementById('timer-ping');
+    const timerDot = document.getElementById('timer-dot');
+    const progressGradient = document.getElementById('progress-gradient');
+    const progressEdge = document.getElementById('progress-edge');
+    
+    countdownText.textContent = seconds + 's';
+    const percentage = (seconds / total) * 100;
+    progressBar.style.width = `${percentage}%`;
+
+    if (seconds <= 5) {
+        timerBadge.className = "bg-red-500/10 border border-red-500/40 px-3 py-1 rounded-lg flex items-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.15)] transition-colors duration-500";
+        countdownText.className = "text-xs sm:text-sm font-mono font-bold text-red-400 filter drop-shadow-[0_0_5px_currentColor]";
+        timerPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75";
+        timerDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-400";
+        progressGradient.className = "absolute inset-0 bg-gradient-to-r from-red-600 to-red-400 transition-colors duration-500";
+        progressEdge.className = "relative h-full w-1 bg-red-200 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] transition-colors duration-500 z-0";
+    } else {
+        timerBadge.className = "bg-brand-neon/10 border border-brand-neon/40 px-3 py-1 rounded-lg flex items-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-colors duration-500";
+        countdownText.className = "text-xs sm:text-sm font-mono font-bold text-brand-neon filter drop-shadow-[0_0_5px_currentColor]";
+        timerPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-neon opacity-75";
+        timerDot.className = "relative inline-flex rounded-full h-2 w-2 bg-brand-neon";
+        progressGradient.className = "absolute inset-0 bg-gradient-to-r from-brand-accent to-brand-neon transition-colors duration-500";
+        progressEdge.className = "relative h-full w-1 bg-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] transition-colors duration-500 z-0";
+    }
+}
+
+function handleInput() {
+    const rawVal = inputArea.value.replace(/\s+/g, '').toUpperCase();
+    const clearBtn = document.getElementById('clearBtn');
+    if (inputArea.value.length > 0) {
+        clearBtn.classList.remove('hidden');
+    } else {
+        clearBtn.classList.add('hidden');
+    }
+    const base32Regex = /^[A-Z2-7]+=*$/;
+    if (rawVal.length === 0) {
+        errorBadge.classList.add('hidden');
+        activeSecret = '';
+        syncTOTP();
+        return;
+    }
+    if (base32Regex.test(rawVal) && rawVal.length >= 8) {
+        errorBadge.classList.add('hidden');
+        activeSecret = rawVal;
+        generatedCode = '';
+        saveToHistory(rawVal);
+        syncTOTP();
+    } else {
+        errorBadge.classList.remove('hidden');
+        errorBadge.textContent = rawVal.length < 8 ? "Key too short" : "Invalid Characters";
+        activeSecret = '';
+        syncTOTP();
+    }
+}
+
+function clearSecret() {
+    inputArea.value = '';
+    handleInput();
+    inputArea.focus();
+}
+
+async function handlePaste() {
+    try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+            processExtractedData(text);
+            displayToast("Key pasted from clipboard", "success");
+        }
+    } catch (err) {
+        displayToast("Clipboard access denied. Use Ctrl+V", "error");
+        inputArea.focus();
+    }
+}
+
+function processExtractedData(data) {
+    let secret = data.trim();
+    if (secret.startsWith('otpauth://')) {
+        try {
+            const parsedUrl = new URL(secret);
+            const params = new URLSearchParams(parsedUrl.search);
+            if (params.has('secret')) {
+                secret = params.get('secret');
+            }
+        } catch(e) {}
+    }
+    inputArea.value = secret;
+    handleInput();
+}
+
+function copyToClipboard() {
+    if (!activeSecret) {
+        displayToast("No code to copy", "error");
+        return;
+    }
+    const cleanCode = generatedCode.replace(/\s/g, '');
+    navigator.clipboard.writeText(cleanCode).then(() => {
+        displayToast("Code copied to clipboard!", "success");
+    }).catch(err => {
+        const ta = document.createElement("textarea");
+        ta.value = cleanCode;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        displayToast("Code copied to clipboard!", "success");
+    });
+}
+
+function saveToHistory(secret) {
+    if (!secret) return;
+    let history = JSON.parse(localStorage.getItem('2fa_history') || '[]');
+    history = history.filter(item => item !== secret);
+    history.unshift(secret);
+    history = history.slice(0, 3);
+    localStorage.setItem('2fa_history', JSON.stringify(history));
+    renderHistory();
+}
+
+function clearHistory() {
+    localStorage.removeItem('2fa_history');
+    renderHistory();
+    displayToast("Local cache cleared", "success");
+}
+
+function renderHistory() {
+    const history = JSON.parse(localStorage.getItem('2fa_history') || '[]');
+    const historySection = document.getElementById('history-section');
+    const historyList = document.getElementById('history-list');
+    if (!historySection) return;
+    if (history.length === 0) {
+        historySection.classList.add('hidden');
+        return;
+    }
+    historySection.classList.remove('hidden');
+    historyList.innerHTML = '';
+    history.forEach(secret => {
+        const maskedSecret = secret.substring(0, 4) + ' •••• ' + secret.substring(secret.length - 4);
+        const item = document.createElement('button');
+        item.className = "w-full flex items-center justify-between p-2.5 rounded-xl bg-brand-dark/40 border border-brand-border/60 hover:bg-brand-dark hover:border-brand-neon/50 transition-all text-left group";
+        item.onclick = () => {
+            document.getElementById('secretKey').value = secret;
+            handleInput();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        const codeSpan = document.createElement('span');
+        codeSpan.className = "font-mono font-bold text-brand-neon text-base group-hover:drop-shadow-[0_0_5px_currentColor] transition-all";
+        codeSpan.id = `history-code-${secret}`;
+        codeSpan.textContent = "------";
+
+        const secretSpan = document.createElement('span');
+        secretSpan.className = "text-xs text-slate-400 font-mono flex items-center gap-1.5";
+        secretSpan.innerHTML = `<svg class="w-3 h-3 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg> ${maskedSecret}`;
+        
+        const leftDiv = document.createElement('div');
+        leftDiv.className = "flex flex-col";
+        leftDiv.appendChild(secretSpan);
+        
+        item.appendChild(leftDiv);
+        item.appendChild(codeSpan);
+        historyList.appendChild(item);
+    });
+    syncHistoryCodes();
+}
+
+function syncHistoryCodes() {
+    const history = JSON.parse(localStorage.getItem('2fa_history') || '[]');
+    if (history.length === 0) return;
+    const epoch = Math.floor(Date.now() / 1000);
+    const step = 30;
+    const timeCounter = Math.floor(epoch / step);
+    history.forEach(secret => {
+        buildHOTP(secret, timeCounter).then(code => {
+            if(code) {
+                const el = document.getElementById(`history-code-${secret}`);
+                if(el) {
+                    el.textContent = `${code.substring(0,3)} ${code.substring(3)}`;
+                }
+            }
+        });
+    });
+}
+
+function displayToast(msg, type = "success") {
+    const toast = document.getElementById('toast-notification');
+    const iconWrapper = document.getElementById('toast-icon-wrapper');
+    const text = document.getElementById('toast-text');
+    text.textContent = msg;
+    if (type === "success") {
+        toast.className = "fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 flex items-center gap-3 px-4 sm:px-6 py-3 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-all duration-300 z-[70] backdrop-blur-md bg-green-500/20 border border-green-500/50 w-[90vw] sm:w-auto max-w-md";
+        iconWrapper.className = "w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-green-500/20 text-green-400";
+        iconWrapper.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+    } else {
+        toast.className = "fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 flex items-center gap-3 px-4 sm:px-6 py-3 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-all duration-300 z-[70] backdrop-blur-md bg-red-500/20 border border-red-500/50 w-[90vw] sm:w-auto max-w-md";
+        iconWrapper.className = "w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-red-500/20 text-red-400";
+        iconWrapper.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+    }
+    toast.style.opacity = '1';
+    toast.style.transform = 'translate(-50%, 0)';
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translate(-50%, -20px)';
+    }, 3000);
+}
+
+let streamTrack = null;
+let scanningInterval = null;
+const videoEl = document.getElementById('video-feed');
+const camModal = document.getElementById('camera-modal');
+const camContent = document.getElementById('camera-modal-content');
+
+async function openCameraScanner() {
+    camModal.classList.remove('hidden');
+    setTimeout(() => {
+        camModal.classList.remove('opacity-0');
+        camContent.classList.remove('scale-95');
+    }, 10);
+    document.getElementById('camera-loader').classList.remove('hidden');
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        streamTrack = stream;
+        videoEl.srcObject = stream;
+        videoEl.setAttribute("playsinline", true);
+        await videoEl.play();
+        document.getElementById('camera-loader').classList.add('hidden');
+        scanningInterval = setInterval(scanFrame, 300);
+    } catch (err) {
+        closeCameraScanner();
+        displayToast("Camera unavailable. Try uploading an image.", "error");
+    }
+}
+
+function closeCameraScanner() {
+    camModal.classList.add('opacity-0');
+    camContent.classList.add('scale-95');
+    setTimeout(() => {
+        camModal.classList.add('hidden');
+        if (streamTrack) {
+            streamTrack.getTracks().forEach(t => t.stop());
+            streamTrack = null;
+        }
+        if (scanningInterval) clearInterval(scanningInterval);
+    }, 300);
+}
+
+function scanFrame() {
+    if (videoEl.readyState === videoEl.HAVE_ENOUGH_DATA) {
+        const canvas = document.createElement("canvas");
+        canvas.width = videoEl.videoWidth;
+        canvas.height = videoEl.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const qr = jsQR(imgData.data, imgData.width, imgData.height, { inversionAttempts: "dontInvert" });
+        if (qr && qr.data) {
+            closeCameraScanner();
+            processExtractedData(qr.data);
+            displayToast("QR Code successfully scanned!", "success");
+        }
+    }
+}
+
+function processImageUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const qr = jsQR(imgData.data, imgData.width, imgData.height);
+            if (qr && qr.data) {
+                processExtractedData(qr.data);
+                displayToast("QR Code recognized!", "success");
+            } else {
+                displayToast("No valid QR code found in image.", "error");
+            }
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+}
+
+const modalData = {
+    'about-modal': { title: 'About Us', content: `<p class="mb-3">Hey there! Welcome to <strong>2FA Live</strong>.</p><p class="mb-3">We built this tool because we believe securing your online accounts shouldn't mean being chained to your smartphone. We wanted a fast, beautiful, and completely private way to generate two-factor authentication codes directly from a web browser.</p><p>Our promise to you is simple: <strong>your security keys stay yours.</strong> We never see them, save them, or send them to any servers.</p>` },
+    'contact-modal': { title: 'Contact Us', content: `<p class="mb-3">Need some help or want to share feedback? We'd love to hear from you!</p><p class="mb-3">Since this is a free, privacy-focused tool, you can reach out to us anytime at <span class="text-brand-neon font-mono">support@2fa.co.com</span>.</p><p class="text-red-400 font-semibold border-l-2 border-red-400 pl-3">Important Rule: NEVER share your secret 2FA keys with anyone in an email, not even us!</p>` },
+    'privacy-modal': { title: 'Privacy Policy', content: `<p class="mb-3">We take your privacy very seriously. In fact, our system is built so that we couldn't spy on you even if we wanted to.</p><h4 class="text-white font-bold text-sm mb-1">1. Everything stays on your device</h4><p class="mb-3">When you paste a key or scan a QR code, all the math happens right inside your own browser. No data ever travels across the internet to our servers.</p><h4 class="text-white font-bold text-sm mb-1">2. No tracking, no databases</h4><p>We don't save your secret keys, we don't use sneaky tracking cookies, and we don't know who you are. Once you close your browser tab, your active session data is wiped clean forever.</p>` },
+    'disclaimer-modal': { title: 'Disclaimer', content: `<p class="mb-3">Just a quick heads-up: We provide this tool for free "as is" to help you manage your 2FA codes.</p><p class="mb-3">While we have engineered it to be as safe, private, and reliable as possible, <strong>you are ultimately responsible for keeping your backup codes and secret setup keys safe.</strong></p><p>We cannot be held responsible if you lose access to your accounts. Please always keep a secure, offline backup of your original setup keys!</p>` },
+    'terms-modal': { title: 'Terms & Conditions', content: `<p class="mb-3">By using 2FA Live, you agree to a few simple ground rules.</p><p class="mb-3">You are absolutely welcome to use this tool to protect your personal or work accounts. However, please do not use our site for anything illegal, and do not use it to try to access accounts that don't belong to you.</p><p>We reserve the right to update these terms as the web evolves, but our core commitment to your absolute privacy and security will never change.</p>` }
 };
-const f=(location.pathname.split('/').pop()||'').toLowerCase();
-if(names[f]) document.getElementById('toolName').textContent=names[f];
-</script>
-</body>
-</html>
+
+function setupModals() {
+    const container = document.getElementById('modal-container');
+    const template = document.getElementById('modal-template');
+    for (const [id, data] of Object.entries(modalData)) {
+        const clone = template.content.cloneNode(true);
+        const wrapper = clone.querySelector('.modal-overlay');
+        wrapper.id = id;
+        wrapper.querySelector('.modal-title').textContent = data.title;
+        wrapper.querySelector('.modal-body').innerHTML = data.content;
+        container.appendChild(clone);
+    }
+}
+
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.querySelector('.modal-content').classList.remove('scale-95');
+        }, 10);
+    }
+}
+
+function closeSpecificModal(modalElement, event = null) {
+    if (event && event.target !== modalElement) return;
+    modalElement.classList.add('opacity-0');
+    modalElement.querySelector('.modal-content').classList.add('scale-95');
+    setTimeout(() => {
+        modalElement.classList.add('hidden');
+    }, 300);
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeCameraScanner();
+        document.querySelectorAll('.modal-overlay:not(.hidden)').forEach(modal => {
+            closeSpecificModal(modal);
+        });
+    }
+});
+</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"506aa2dd55614166bd921f6d47fb8f5d","r":1}' crossorigin="anonymous"></script></body></html>
