@@ -811,13 +811,23 @@ Paid Package কিনুন।');
         let lastResult = null;
 
         function normalizeLine(line) {
-            // Keep email + password + recovery + verify + EVERYTHING on ONE line
-            return String(line || '')
+            // Sheets style: email[TAB]password[TAB]recovery[TAB]...
+            var s = String(line || '')
                 .replace(/\r\n/g, ' ')
                 .replace(/[\r\n]+/g, ' ')
-                .replace(/\t+/g, '  ')
-                .replace(/ {3,}/g, '  ')
                 .trim();
+            if (!s) return '';
+            // already tab-separated
+            if (s.indexOf('\t') >= 0) {
+                return s.split(/\t+/).map(function(p){ return p.trim(); }).filter(Boolean).join('\t');
+            }
+            // multi-space or pipe
+            var parts = s.split(/\s{2,}|[|]+/).map(function(p){ return p.trim(); }).filter(Boolean);
+            if (parts.length >= 2) return parts.join('\t');
+            // email + single space + rest
+            var m = s.match(/^(\S*@\S+)\s+(.+)$/);
+            if (m) return m[1] + '\t' + m[2];
+            return s;
         }
 
         // Mobile paste often breaks one row into many lines:
@@ -833,7 +843,7 @@ Paid Package কিনুন।');
                 return /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(s || '');
             }
             for (var i = 0; i < lines.length; i++) {
-                var t = lines[i].replace(/\t+/g, '  ').trim();
+                var t = lines[i].trim();
                 if (!t) continue;
                 if (hasEmail(t)) {
                     if (buf) out.push(buf);
@@ -850,16 +860,18 @@ Paid Package কিনুন।');
 
         function formatNumberedLines(lines) {
             if (!lines || !lines.length) return 'None';
-            // Photo-1 style: "1  email@gmail.com  password  verify  ..."
+            // Display: 1  email@gmail.com   password   recovery  (readable)
+            // Copy uses tabs via formatCopyLines
             var w = String(lines.length).length;
             return lines.map(function(line, i) {
                 var num = String(i + 1);
                 while (num.length < w) num = ' ' + num;
-                return num + '  ' + normalizeLine(line);
+                var row = normalizeLine(line).replace(/\t/g, '   ');
+                return num + '  ' + row;
             }).join('\n');
         }
 
-        // Clipboard: full row (email + password + everything), NO 1,2,3 numbers
+        // Clipboard: TAB separated → paste into Google Sheets as columns
         function formatCopyLines(lines) {
             if (!lines || !lines.length) return '';
             return lines.map(function(line) {

@@ -609,7 +609,7 @@ Paid Package কিনুন।');
                     Paste your email list here
                 </div>
                 <div class="textarea-container">
-                    <textarea id="emailInput" placeholder="example@gmail.com&#10;hello@domain.com&#10;example@gmail.com&#10;test@yahoo.com&#10;..."></textarea>
+                    <textarea id="emailInput" placeholder="email@gmail.com&#9;password&#10;hello@domain.com&#9;pass123&#10;email@gmail.com&#9;password&#10;..."></textarea>
                 </div>
                 <div class="line-info" id="inputCount">0 lines</div>
 
@@ -741,7 +741,41 @@ Paid Package কিনুন।');
             hideMessage();
         });
 
-        // Main Check
+        // Helpers: keep password + full row (Sheets style)
+        function extractEmail(line) {
+            var m = String(line || '').match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+            return m ? m[0].toLowerCase() : null;
+        }
+        function toSheetsRow(line) {
+            // email + password + rest → tab-separated for Google Sheets paste
+            var s = String(line || '').replace(/\r/g, '').trim();
+            if (!s) return '';
+            s = s.replace(/\t+/g, '\t');
+            // if already has tabs, keep
+            if (s.indexOf('\t') >= 0) return s;
+            // split on 2+ spaces or | or :
+            var parts = s.split(/\s{2,}|[|]+/).map(function(p){ return p.trim(); }).filter(Boolean);
+            if (parts.length >= 2) return parts.join('\t');
+            // email then single-space password
+            var m = s.match(/^(\S*@\S+)\s+(.+)$/);
+            if (m) return m[1] + '\t' + m[2];
+            return s;
+        }
+        function mergeBrokenLines(raw) {
+            var lines = String(raw || '').split(/\r?\n/);
+            var out = [], buf = '';
+            function hasEmail(s){ return /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(s||''); }
+            for (var i=0;i<lines.length;i++){
+                var t = lines[i].replace(/\t+/g,'  ').trim();
+                if (!t) continue;
+                if (hasEmail(t)){ if(buf) out.push(buf); buf = t; }
+                else { buf = buf ? (buf + '  ' + t) : t; }
+            }
+            if (buf) out.push(buf);
+            return out;
+        }
+
+        // Main Check — duplicate by EMAIL only, keep full row (password safe)
         checkBtn.addEventListener('click', () => {
             const raw = emailInput.value.trim();
             if (!raw) {
@@ -749,33 +783,35 @@ Paid Package কিনুন।');
                 return;
             }
 
-            let emails = raw.split(/\r?\n/)
-                .map(e => e.trim().toLowerCase())
-                .filter(e => e.length > 0);
-
-            if (emails.length === 0) {
+            const rows = mergeBrokenLines(raw);
+            if (!rows.length) {
                 showMessage('No valid emails found.', 'error');
                 return;
             }
 
-            const countMap = {};
-            emails.forEach(email => {
-                countMap[email] = (countMap[email] || 0) + 1;
+            // email -> { count, firstFullRow }
+            const map = {};
+            const order = [];
+            rows.forEach(function(line){
+                const em = extractEmail(line);
+                if (!em) return;
+                if (!map[em]) {
+                    map[em] = { count: 0, row: toSheetsRow(line) };
+                    order.push(em);
+                }
+                map[em].count += 1;
+                // keep longer row (more fields / password)
+                var cand = toSheetsRow(line);
+                if (cand.length > map[em].row.length) map[em].row = cand;
             });
 
             const unique = [];
             const duplicates = [];
-
-            for (const [email, count] of Object.entries(countMap)) {
-                if (count === 1) {
-                    unique.push(email);
-                } else {
-                    duplicates.push(email + '  × ' + count);
-                }
-            }
-
-            unique.sort();
-            duplicates.sort();
+            order.forEach(function(em){
+                var item = map[em];
+                if (item.count === 1) unique.push(item.row);
+                else duplicates.push(item.row + '\t×' + item.count);
+            });
 
             uniqueList.value = unique.length ? unique.join('\n') : 'None';
             dupList.value = duplicates.length ? duplicates.join('\n') : 'None';
@@ -783,7 +819,7 @@ Paid Package কিনুন।');
             uniqueBadge.textContent = unique.length;
             dupBadge.textContent = duplicates.length;
 
-            document.getElementById('totalCount').textContent = emails.length;
+            document.getElementById('totalCount').textContent = rows.length;
             document.getElementById('uniqueCount').textContent = unique.length;
             document.getElementById('dupCount').textContent = duplicates.length;
 
@@ -793,7 +829,7 @@ Paid Package কিনুন।');
             if (duplicates.length === 0) {
                 showMessage('Perfect! No duplicate emails found.', 'success');
             } else {
-                showMessage(`Found ${duplicates.length} duplicate email(s).`, 'info');
+                showMessage('Found ' + duplicates.length + ' duplicate email(s). Passwords kept.', 'info');
             }
         });
 
