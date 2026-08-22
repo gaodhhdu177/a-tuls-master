@@ -63,12 +63,15 @@
     var r=document.documentElement;
     r.style.setProperty('--bg',t.bg);
     r.style.setProperty('--panel',t.panel);
+    r.style.setProperty('--card',t.panel);
     r.style.setProperty('--a',t.a);
     r.style.setProperty('--b',t.b);
     r.style.setProperty('--txt',t.txt);
     r.style.setProperty('--p',t.a);
     r.style.setProperty('--pd',t.b);
-    try{ document.body.style.background=t.bg; }catch(e){}
+    r.style.setProperty('--blue',t.a);
+    r.style.setProperty('--teal',t.b);
+    try{ document.body.style.background=t.bg; document.body.style.color=t.txt; }catch(e){}
     localStorage.setItem('a_tuls_theme', id);
   }
   async function loadRemote(){
@@ -81,7 +84,7 @@
         var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
         if(row.key==='site_theme') applyTheme(String(v||'midnight'));
         if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
-        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||''));
+        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||'150'));
         if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
       });
     }catch(e){}
@@ -89,10 +92,9 @@
   var local=localStorage.getItem('a_tuls_theme')||'midnight';
   applyTheme(local);
   loadRemote();
-  setInterval(loadRemote, 60000);
+  setInterval(loadRemote, 45000);
 })();
 </script>
-
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -605,10 +607,13 @@ const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'a
 
 async function sbGet(table, qs){
   try{
-    const r = await fetch(SB_URL+table+(qs||''), {headers:SB_H});
-    if(!r.ok) throw new Error(r.status);
+    const ctrl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(function(){ try{ctrl.abort()}catch(e){} }, 8000) : null;
+    const r = await fetch(SB_URL + table + (qs||''), { headers: SB_H, signal: ctrl ? ctrl.signal : undefined });
+    if(timer) clearTimeout(timer);
+    if(!r.ok){ console.warn('SB get', table, r.status); return null; }
     return await r.json();
-  }catch(e){ console.warn('SB get',table,e); return null; }
+  }catch(e){ console.warn('SB get', table, e); return null; }
 }
 async function sbPost(table, row){
   try{
@@ -665,12 +670,14 @@ function tab(name){
 }
 
 async function getUsers(){
-  const cloud = await sbGet('a_tuls_users','?select=*&order=created.desc');
-  if(cloud && Array.isArray(cloud)){
-    localStorage.setItem('a_tuls_users', JSON.stringify(cloud));
-    return cloud;
-  }
-  return JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
+  try{
+    const cloud = await sbGet('a_tuls_users','?select=*&order=created.desc');
+    if(cloud && Array.isArray(cloud)){
+      try{ localStorage.setItem('a_tuls_users', JSON.stringify(cloud)); }catch(e){}
+      return cloud;
+    }
+  }catch(e){ console.warn('getUsers cloud', e); }
+  try{ return JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); }catch(e){ return []; }
 }
 async function saveUsers(u){
   localStorage.setItem('a_tuls_users', JSON.stringify(u));
@@ -681,10 +688,13 @@ async function loadLoginLogs(){
   if(!el)return;
   let logs=[];
   try{
-    const r=await fetch(SB_URL+'a_tuls_login_logs?select=*&order=time.desc&limit=80',{headers:SB_H});
+    const ctrl=new AbortController();
+    const tm=setTimeout(function(){try{ctrl.abort()}catch(e){}},8000);
+    const r=await fetch(SB_URL+'a_tuls_login_logs?select=*&order=time.desc&limit=80',{headers:SB_H,signal:ctrl.signal});
+    clearTimeout(tm);
     if(r.ok) logs=await r.json();
-  }catch(e){}
-  if(!logs.length) logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+  }catch(e){ console.warn('login logs',e); }
+  try{ if(!logs.length) logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]'); }catch(e){ logs=[]; }
   if(!logs.length){ el.innerHTML='<p class="text-muted">No login activity yet</p>'; return; }
   el.innerHTML=logs.slice(0,80).map(l=>{
     const meta=[l.device,l.browser,l.os].filter(Boolean).join(' · ')||'Unknown';
@@ -897,13 +907,18 @@ function logout(){
 async function loadUltraTracking(){
   const box=document.getElementById('ultraTrackBox');
   if(!box) return;
+  try {
   let users = await getUsers();
   let logs = [];
   try{
-    const r=await fetch(SB_URL+'a_tuls_login_logs?select=*&order=time.desc&limit=200',{headers:SB_H});
+    const ctrl=new AbortController();
+    const tm=setTimeout(function(){try{ctrl.abort()}catch(e){}},8000);
+    const r=await fetch(SB_URL+'a_tuls_login_logs?select=*&order=time.desc&limit=200',{headers:SB_H,signal:ctrl.signal});
+    clearTimeout(tm);
     if(r.ok) logs=await r.json();
-  }catch(e){}
+  }catch(e){ console.warn(e); }
   if(!logs.length){ try{ logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]'); }catch(e){} }
+  if(!logs.length && box){ /* continue with users only */ }
   const blocked = JSON.parse(localStorage.getItem('a_tuls_blocked_devices')||'{}');
   let html = '<div class="small mb-2 text-muted">Total Users: <b>'+users.length+'</b> · Login rows: <b>'+logs.length+'</b> · Devices tracked below</div>';
   users.forEach(u=>{
@@ -937,6 +952,7 @@ async function loadUltraTracking(){
     html += '</div>';
   });
   box.innerHTML = html || '<p class="text-muted">No data</p>';
+  } catch(e){ console.warn(e); if(box) box.innerHTML='<p class="text-muted">Tracking unavailable</p>'; }
 }
 function toggleBlockDevice(key){
   const blocked=JSON.parse(localStorage.getItem('a_tuls_blocked_devices')||'{}');
@@ -944,6 +960,8 @@ function toggleBlockDevice(key){
   localStorage.setItem('a_tuls_blocked_devices', JSON.stringify(blocked));
   loadUltraTracking();
   alert(blocked[key]?'Device blocked':'Device unblocked');
+}
+}catch(e){ console.warn(e); if(box) box.innerHTML='<p class="text-muted">Tracking unavailable</p>'; }
 }
 
 
@@ -1174,18 +1192,24 @@ async function loadAdminSiteSettings(){
 }
 
 async function bootAdmin(){
-  try{ await loadAdminSiteSettings(); }catch(e){}
-
-  await loadPkgPrices();
-  await loadStats();
-  await loadUsers();
-  await loadLoginLogs();
-  loadAdminMsgs();
-  loadSupportMsgs();
-  try{loadBadgeRequests()}catch(e){}
-  await loadUltraTracking();
+  try{ await loadAdminSiteSettings(); }catch(e){ console.warn(e); }
+  try{ await loadPkgPrices(); }catch(e){ console.warn(e); }
+  try{ await loadStats(); }catch(e){ console.warn(e); }
+  try{ await loadUsers(); }catch(e){
+    console.warn(e);
+    var dash=document.getElementById('dashUsersBody');
+    var body=document.getElementById('usersBody');
+    if(dash) dash.innerHTML='<tr><td colspan="5" class="text-center text-muted py-3">No users yet</td></tr>';
+    if(body) body.innerHTML='<tr><td colspan="6" class="text-center text-muted py-4">No users yet — they appear after Signup</td></tr>';
+  }
+  try{ await loadLoginLogs(); }catch(e){ console.warn(e); }
+  try{ loadAdminMsgs(); }catch(e){}
+  try{ loadSupportMsgs(); }catch(e){}
+  try{ loadBadgeRequests(); }catch(e){}
+  try{ await loadUltraTracking(); }catch(e){ console.warn(e); }
 }
 bootAdmin();
+
 </script>
 
 </body>
