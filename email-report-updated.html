@@ -234,13 +234,11 @@
             white-space: pre;
             overflow-x: auto;
             overflow-y: auto;
-            word-break: keep-all;
+            word-break: normal;
             overflow-wrap: normal;
-            word-wrap: normal;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 12.5px;
-            line-height: 1.7;
-            -webkit-overflow-scrolling: touch;
+            font-size: 13px;
+            line-height: 1.55;
         }
 
         .btn-row-sm {
@@ -526,23 +524,7 @@
             gap: 8px;
         }
         .footer-note i { color: #14b8a6; }
-    
-        /* A-TULS REPORT DISPLAY FIX — Photo-1 style, one line per email */
-        .output-textarea {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
-            font-size: 13px !important;
-            line-height: 1.65 !important;
-            white-space: pre !important;
-            overflow-x: auto !important;
-            word-break: normal !important;
-            overflow-wrap: normal !important;
-            tab-size: 4;
-            letter-spacing: 0;
-        }
-        .result-body .textarea-container {
-            overflow-x: auto;
-        }
-</style>
+    </style>
 
 </head>
 <body>
@@ -633,7 +615,7 @@ Paid Package কিনুন।');
                             Main Email List <span class="required">*</span>
                         </div>
                         <div class="textarea-container">
-                            <textarea id="mainEmails" class="main-textarea" placeholder="email@gmail.com&#9;password&#9;recovery codes&#9;VERIFY&#10;email2@gmail.com&#9;pass123&#9;codes&#9;VERIFY"></textarea>
+                            <textarea id="mainEmails" class="main-textarea" placeholder="email@gmail.com    password&#10;email2@gmail.com   pass123"></textarea>
                         </div>
                         <div class="btn-row-sm">
                             <button class="btn btn-sm btn-paste" id="pasteMain"><i class="fas fa-paste"></i> Paste</button>
@@ -647,7 +629,7 @@ Paid Package কিনুন।');
                             Report Email List <span class="required">*</span>
                         </div>
                         <div class="textarea-container">
-                            <textarea id="reportEmails" class="main-textarea" placeholder="email@gmail.com&#9;password&#9;recovery codes&#9;VERIFY&#10;email2@gmail.com&#9;pass123&#9;codes&#9;VERIFY"></textarea>
+                            <textarea id="reportEmails" class="main-textarea" placeholder="email@gmail.com    password&#10;email2@gmail.com   pass123"></textarea>
                         </div>
                         <div class="btn-row-sm">
                             <button class="btn btn-sm btn-paste" id="pasteReport"><i class="fas fa-paste"></i> Paste</button>
@@ -797,56 +779,30 @@ Paid Package কিনুন।');
         let lastResult = null;
 
         function normalizeLine(line) {
-            // Keep email + password + recovery + status on ONE line (Photo-1 style)
-            // Tabs → 2 spaces so columns stay readable; never break into multiple lines
+            // Keep email + password + recovery + everything on ONE line
             return String(line || '')
                 .replace(/\r\n/g, ' ')
                 .replace(/[\r\n]+/g, ' ')
-                .replace(/\t+/g, '  ')
-                .replace(/ {3,}/g, '  ')
+                .replace(/[ \t]+/g, ' ')
                 .trim();
         }
 
         function formatNumberedLines(lines) {
             if (!lines || !lines.length) return 'None';
-            // Display only (Photo-1 style): "1  email@gmail.com  password  recovery  VERIFY"
-            // Line numbers are visual only — never included in copy
-            var w = String(lines.length).length;
             return lines.map(function(line, i) {
-                var num = String(i + 1);
-                while (num.length < w) num = ' ' + num;
-                return num + '  ' + normalizeLine(line);
+                var full = normalizeLine(line);
+                // Photo-1 style: "1  email@gmail.com  password recovery..."
+                return (i + 1) + '  ' + full;
             }).join('\n');
-        }
-
-        // Plain lines for clipboard: full row data, NO line numbers (1,2,3...)
-        // Example copy:
-        // stevenjacobsjacobs055@gmail.com  bL9e73tRR5  tl3a 7so3 ...  VERIFY
-        function formatCopyLines(lines) {
-            if (!lines || !lines.length) return '';
-            return lines.map(function(line) {
-                return normalizeLine(line);
-            }).filter(Boolean).join('\n');
-        }
-
-        // Strip leading "1  " / "12 " numbers if someone copies from textarea manually
-        function stripLineNumbers(text) {
-            if (!text || text === 'None') return '';
-            return text.split(/\r?\n/).map(function(line) {
-                return line.replace(/^\s*\d+[\).:\-\s]+/, '').trim();
-            }).filter(Boolean).join('\n');
         }
 
 
 
         function extractEmail(line) {
-            const trimmed = String(line || '').trim();
+            const trimmed = line.trim();
             if (!trimmed) return null;
-            // Match first email anywhere at start / after number
-            var m = trimmed.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-            if (m) return m[0].toLowerCase();
-            const parts = trimmed.split(/[\s\t:|]+/);
-            const email = (parts[0] || '').toLowerCase();
+            const parts = trimmed.split(/[\s\t:]+/);
+            const email = parts[0].toLowerCase();
             if (email.includes('@')) return email;
             return null;
         }
@@ -933,44 +889,22 @@ Paid Package কিনুন।');
                 found: found.length,
                 good: good.length,
                 unknown: unknown.length,
-                payment: (good.length * price).toFixed(2),
-                foundLines: found.slice(),
-                goodLines: good.slice(),
-                unknownLines: unknown.slice()
+                payment: (good.length * price).toFixed(2)
             };
 
             showMessage(`Report generated! Found: ${found.length} | Good: ${good.length}`, 'success');
         });
 
-        document.getElementById('copyFound').onclick = function() {
-            var text = (lastResult && lastResult.foundLines)
-                ? formatCopyLines(lastResult.foundLines)
-                : stripLineNumbers(outputFound.value);
-            copyText(text, 'Found');
-        };
-        document.getElementById('copyGood').onclick = function() {
-            var text = (lastResult && lastResult.goodLines)
-                ? formatCopyLines(lastResult.goodLines)
-                : stripLineNumbers(outputGood.value);
-            copyText(text, 'Good');
-        };
-        document.getElementById('copyUnknown').onclick = function() {
-            var text = (lastResult && lastResult.unknownLines)
-                ? formatCopyLines(lastResult.unknownLines)
-                : stripLineNumbers(outputUnknown.value);
-            copyText(text, 'Unknown');
-        };
+        document.getElementById('copyFound').onclick = () => copyText(outputFound.value, 'Found');
+        document.getElementById('copyGood').onclick = () => copyText(outputGood.value, 'Good');
+        document.getElementById('copyUnknown').onclick = () => copyText(outputUnknown.value, 'Unknown');
 
-        // Works on all phones + desktop — copies ONLY email + data (no 1,2,3 numbers)
         function copyText(text, label) {
             if (!text || text === 'None') return showMessage('Nothing to copy.', 'error');
-            // Safety: never copy line numbers
-            text = stripLineNumbers(text);
-            if (!text) return showMessage('Nothing to copy.', 'error');
-
-            if (navigator.clipboard && window.isSecureContext) {
+            // Phone + desktop copy
+            if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(function() {
-                    showMessage(label + ' copied — emails + data only (no 1,2,3 numbers)!', 'success');
+                    showMessage(label + ' copied!', 'success');
                 }).catch(function() { fallbackCopy(text, label); });
             } else {
                 fallbackCopy(text, label);
@@ -979,24 +913,16 @@ Paid Package কিনুন।');
         function fallbackCopy(text, label) {
             var ta = document.createElement('textarea');
             ta.value = text;
-            ta.setAttribute('readonly', '');
             ta.style.position = 'fixed';
-            ta.style.top = '0';
-            ta.style.left = '0';
-            ta.style.width = '1px';
-            ta.style.height = '1px';
-            ta.style.padding = '0';
-            ta.style.border = 'none';
-            ta.style.opacity = '0';
+            ta.style.left = '-9999px';
             document.body.appendChild(ta);
             ta.focus();
             ta.select();
-            ta.setSelectionRange(0, text.length);
             try {
-                var ok = document.execCommand('copy');
-                showMessage(ok ? (label + ' copied (no line numbers)!') : 'Copy failed — long-press the box.', ok ? 'success' : 'error');
+                document.execCommand('copy');
+                showMessage(label + ' copied!', 'success');
             } catch (e) {
-                showMessage('Copy failed — long-press the box and copy.', 'error');
+                showMessage('Copy failed — long-press and copy manually.', 'error');
             }
             document.body.removeChild(ta);
         }

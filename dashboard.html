@@ -1,38 +1,42 @@
 <!DOCTYPE html>
+<!-- A-Tuls proprietary client · a_tuls namespace only · no third-party tool branding -->
 <html lang="en">
 <head>
 <script>
-/* A_TULS_DOMAIN_LOCK — Render + Cloudflare + Netlify + Vercel */
+/* A_TULS_DOMAIN_LOCK — ON */
 (function(){
   try{
-    var host = (location.hostname||'').toLowerCase();
-    var proto = (location.protocol||'').toLowerCase();
-    var ok = (
-      host === 'a-tuls-master-n0k1.onrender.com' ||
-      host.endsWith('.onrender.com') ||
-      host.endsWith('.pages.dev') ||
-      host.endsWith('.netlify.app') ||
-      host.endsWith('.vercel.app') || host.endsWith('.workers.dev')
+    var host=(location.hostname||'').toLowerCase();
+    var proto=(location.protocol||'').toLowerCase();
+    var ok=(
+      host==='a-tuls-master-n0k1.onrender.com'||
+      host.endsWith('.onrender.com')||
+      host.endsWith('.pages.dev')||
+      host.endsWith('.netlify.app')||
+      host.endsWith('.vercel.app')||
+      host.endsWith('.workers.dev')
     );
-    if(proto === 'file:' || !host || !ok){
-      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0">Access Denied</h1></div>';
+    if(proto==='file:'||!host||!ok){
+      document.documentElement.innerHTML='<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center"><h1 style="margin:0;font-size:1.75rem">Access Denied</h1></div>';
       throw new Error('domain-lock');
     }
-  }catch(e){ if(String(e.message||e)==='domain-lock'||(e&&e.message==='domain-lock')) throw e; }
+  }catch(e){ if(String(e.message||e)==='domain-lock') throw e; }
   try{
-    document.addEventListener('contextmenu',function(e){ e.preventDefault(); });
+    document.addEventListener('contextmenu',function(e){e.preventDefault();return false},true);
     document.addEventListener('keydown',function(e){
-      if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C')) || (e.ctrlKey&&(e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S'))){
-        e.preventDefault(); e.stopPropagation(); return false;
-      }
-    }, true);
-  }catch(e){}
+      var k=e.key||'';
+      if(k==='F12'){e.preventDefault();return false}
+      if(e.ctrlKey&&e.shiftKey&&/^[ijcIJC]$/.test(k)){e.preventDefault();return false}
+      if(e.ctrlKey&&/^[usUS]$/.test(k)){e.preventDefault();return false}
+    },true);
+  }catch(err){}
 })();
 </script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A-Tuls - Dashboard</title>
-<meta name="theme-color" content="#027478">
+<title>A-Tuls · Ultra Dashboard</title>
+<meta name="theme-color" content="#0b1020">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -133,6 +137,109 @@ body{background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;padding-b
 .btn-p:hover{background:var(--pd);color:#fff}
 .li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9}
 .la{width:44px;height:44px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+
+/* ===== A-Tuls Ultra Dashboard Theme 2026 ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+:root{
+  --p:#6366f1; --pd:#4f46e5; --blue:#6366f1; --teal:#22d3ee;
+  --bg:#0b1020; --panel:#12182b; --card:#161d33; --line:rgba(255,255,255,.08);
+  --txt:#e8ecf8; --mut:#94a3b8;
+}
+body{
+  background: radial-gradient(900px 420px at 0% 0%, #1e1b4b 0%, transparent 55%),
+              radial-gradient(700px 380px at 100% 0%, #0f172a 0%, transparent 50%),
+              #0b1020 !important;
+  font-family:'Outfit',system-ui,sans-serif !important;
+  color:var(--txt) !important;
+  padding-bottom:90px;
+}
+.container{max-width:980px}
+.header{
+  background:rgba(18,24,43,.85)!important;
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  box-shadow:none!important;
+}
+.logo{color:#c7d2fe!important}
+.icon-btn{color:#94a3b8!important}
+.drawer{
+  background:linear-gradient(180deg,#12182b,#0b1020)!important;
+  color:var(--txt);
+  border-right:1px solid var(--line);
+}
+.drawer a, .menu a, .drawer .nav-link{
+  color:#cbd5e1!important; border-radius:12px; margin:4px 8px;
+}
+.drawer a:hover, .menu a.active, .drawer a.active{
+  background:rgba(99,102,241,.18)!important; color:#e0e7ff!important;
+}
+.card, .tool-card, .stat-card, .box, .panel, .content-card{
+  background:var(--card)!important;
+  border:1px solid var(--line)!important;
+  border-radius:18px!important;
+  color:var(--txt)!important;
+  box-shadow:0 12px 40px rgba(0,0,0,.25)!important;
+}
+.form-control, .form-select, input, textarea, select{
+  background:#0f1528!important; border:1px solid var(--line)!important;
+  color:var(--txt)!important; border-radius:12px!important;
+}
+.form-control:focus, .form-select:focus{
+  border-color:#6366f1!important; box-shadow:0 0 0 3px rgba(99,102,241,.25)!important;
+}
+.btn-p, .btn-primary, button.btn-p{
+  background:linear-gradient(135deg,#6366f1,#8b5cf6)!important;
+  border:none!important; color:#fff!important; border-radius:12px!important;
+  font-weight:700!important; box-shadow:0 8px 24px rgba(99,102,241,.3)!important;
+}
+.text-muted, .small, label, .form-label{color:#94a3b8!important}
+h1,h2,h3,h4,h5,h6,.page-title,#ot{color:#eef2ff!important}
+.bottom-nav, .bi-nav, .bottom-bar{
+  background:rgba(18,24,43,.92)!important; border-top:1px solid var(--line)!important;
+  backdrop-filter:blur(12px);
+}
+.badge{border-radius:999px!important}
+#atulsFreeBanner{
+  background:linear-gradient(135deg,rgba(52,211,153,.2),rgba(99,102,241,.15))!important;
+  border:1px solid rgba(52,211,153,.4)!important;
+  color:#d1fae5!important;
+}
+.list-group-item{background:transparent!important;color:var(--txt)!important;border-color:var(--line)!important}
+table{color:var(--txt)!important}
+.modal-content{background:var(--card)!important;color:var(--txt)!important;border:1px solid var(--line)!important}
+
+
+/* A-Tuls ultra polish v2 */
+.header .logo span, .logo{letter-spacing:-.02em}
+#ot{font-weight:800!important;font-size:1.25rem!important;letter-spacing:-.02em}
+#oc p, #oc .text-muted{line-height:1.55!important}
+#oc .card, #oc .tool-card{transition:transform .15s,border-color .15s}
+#oc .card:hover, #oc .tool-card:hover{transform:translateY(-2px);border-color:rgba(99,102,241,.4)!important}
+
+
+/* A-Tuls classic logo */
+.nav-logo{
+  width:40px;height:40px;border-radius:50%;position:relative;
+  display:inline-flex;justify-content:center;align-items:center;
+  background:radial-gradient(circle,#10294b 0%,#06101f 45%,#010308 100%);
+  border:2.5px solid #ffc62b;box-shadow:0 0 10px #00aaff,0 0 18px rgba(0,140,255,.35);flex-shrink:0;
+}
+.nav-logo:before{content:"";position:absolute;width:30px;height:30px;border-radius:50%;border:1.5px solid #00b7ff;box-shadow:0 0 6px #009dff}
+.nav-logo .crown{position:absolute;top:1px;font-size:9px;color:#ffd329;text-shadow:0 0 4px #ff9d00;line-height:1}
+.nav-logo .letter{font-family:Georgia,serif;font-size:18px;font-weight:bold;font-style:italic;color:#fff;text-shadow:1px 1px 0 #006cff,-1px -1px 0 #00c8ff;line-height:1;position:relative;top:1px}
+.nav-logo .orbit{position:absolute;width:28px;height:10px;border:2px solid #00baff;border-right-color:#ffc62b;border-radius:50%;transform:rotate(-15deg);top:14px}
+.logo-text{font-weight:800;background:linear-gradient(90deg,#38bdf8,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+
+/* A-Tuls dashboard animations */
+@keyframes atulsFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes atulsPulse{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,.45)}50%{box-shadow:0 0 0 10px rgba(99,102,241,0)}}
+#oc .card, #oc .tool-card, #oc .tcard, .card, .stat-card{
+  animation:atulsFadeUp .45s ease both;
+}
+#atulsAiFab{animation:atulsPulse 2.2s infinite}
+.drawer.open{transition:left .28s cubic-bezier(.2,.8,.2,1)}
+
 </style>
 
 <script>
@@ -265,9 +372,15 @@ window.A_TULS_DB = {
 })();
 </script>
 
+
 </head>
 
 <body>
+<div id="atulsFreeBanner" style="margin:10px 12px 0;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(52,211,153,.2),rgba(99,102,241,.15));border:1px solid rgba(52,211,153,.35);color:#d1fae5;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<span style="background:#22c55e;color:#052e16;font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:999px">ALL FREE</span>
+<span>A-Tuls — all tools free. Need an API code? <a href="https://wa.me/8801336489062?text=Hello Admin,%0A%0AI would like to request an API code to create my A-Tuls account.%0A%0APlease share a valid signup API key.%0A%0AThank you." target="_blank" style="color:#86efac">Message Admin</a></span>
+</div>
+
 
 
 
@@ -724,8 +837,8 @@ async function fillMemHistory(){
       '<div class="small mb-2"><i class="fas fa-info-circle me-1 text-primary"></i><b>Status:</b> <span class="'+statusCls+' fw-semibold">'+daysLeft+'</span></div>'+
       '<div class="small"><i class="fas fa-id-badge me-1 text-primary"></i><b>User:</b> '+_esc(u.username||s.username||'')+' · ID: '+_esc(String(u.id||s.id||'-').slice(0,16))+'</div>'+
       '</div>'+
-      '<button class="btn btn-p w-100 mb-2" onclick="show(\'addmoney\')">Upgrade / Buy Package</button>'+
-      '<p class="small text-muted mb-0">মেয়াদ শেষ হলে অটো Free হয়ে যাবে। Renew: Membership → Add Money · WhatsApp +8801336489062</p>';
+      '<button class="btn btn-p w-100 mb-2" onclick="show(\'addmoney\')">Message Admin (Free access)</button>'+
+      '<p class="small text-muted mb-0">সব টুল ফ্রি। সাহায্য লাগলে Admin কে মেসেজ করো: WhatsApp +8801336489062</p>';
   }
   box.innerHTML='<p class="text-muted">Loading...</p>';
   paint(s); // immediate from session
@@ -1619,6 +1732,102 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 });
+</script>
+
+
+
+<style>
+/* A-Tuls Site AI — no external API */
+#atulsAiFab{position:fixed;right:16px;bottom:90px;z-index:120;width:56px;height:56px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;font-size:1.35rem;box-shadow:0 10px 28px rgba(99,102,241,.45);display:grid;place-items:center}
+#atulsAiPanel{position:fixed;right:12px;bottom:156px;z-index:121;width:min(360px,calc(100vw - 24px));height:min(500px,72vh);background:#12182b;border:1px solid rgba(255,255,255,.1);border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+#atulsAiPanel.open{display:flex}
+#atulsAiHead{padding:12px 14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:space-between}
+#atulsAiHead strong{font-size:.95rem}
+#atulsAiHead button{background:0;border:0;color:#fff;font-size:1.1rem;cursor:pointer}
+#atulsAiMsgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.atuls-bubble{max-width:92%;padding:10px 12px;border-radius:14px;font-size:.86rem;line-height:1.5}
+.atuls-bubble.bot{align-self:flex-start;background:#1e293b;color:#e2e8f0;border:1px solid rgba(255,255,255,.06)}
+.atuls-bubble.me{align-self:flex-end;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+#atulsAiForm{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,.08);background:#0b1020}
+#atulsAiForm input{flex:1;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:#161d33;color:#eef2ff;padding:10px 12px;font-size:.9rem;outline:0}
+#atulsAiForm button{border:0;border-radius:12px;padding:0 14px;cursor:pointer;font-weight:700;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff}
+.atuls-quick{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 10px}
+.atuls-quick button{border:1px solid rgba(255,255,255,.12);background:#1e293b;color:#cbd5e1;border-radius:999px;padding:5px 10px;font-size:.72rem;cursor:pointer}
+</style>
+<button type="button" id="atulsAiFab" title="A-Tuls AI" aria-label="AI"><i class="fas fa-robot"></i></button>
+<div id="atulsAiPanel">
+  <div id="atulsAiHead">
+    <div><strong><i class="fas fa-robot"></i> A-Tuls AI</strong><div style="font-size:.72rem;opacity:.9">Answers about this site</div></div>
+    <button type="button" id="atulsAiClose">✕</button>
+  </div>
+  <div id="atulsAiMsgs"></div>
+  <div class="atuls-quick" id="atulsAiQuick"></div>
+  <form id="atulsAiForm"><input id="atulsAiInput" placeholder="Type your question..." autocomplete="off"><button type="submit">Send</button></form>
+</div>
+
+
+
+<script>
+/* A-Tuls Site AI — English */
+(function(){
+  var fab=document.getElementById('atulsAiFab');
+  var panel=document.getElementById('atulsAiPanel');
+  var msgs=document.getElementById('atulsAiMsgs');
+  var form=document.getElementById('atulsAiForm');
+  var input=document.getElementById('atulsAiInput');
+  var closeBtn=document.getElementById('atulsAiClose');
+  var quick=document.getElementById('atulsAiQuick');
+  if(!fab||!panel) return;
+  var WA_API = "https://wa.me/8801336489062?text=Hello Admin,%0A%0AI would like to request an API code to create my A-Tuls account.%0A%0APlease share a valid signup API key.%0A%0AThank you.";
+  var QA=[
+    {k:['hello','hi','hey','salam'],a:'Hello! I am <b>A-Tuls AI</b>. Ask about the site, tools, login/signup, or Admin support.'},
+    {k:['free','package','price','payment','cost','paid'],a:'All tools on <b>A-Tuls are free</b>. No package purchase required. For help: Admin WhatsApp <b>+8801336489062</b>.'},
+    {k:['signup','register','api','code','key','account'],a:'To register you need an <b>API code</b> from Admin.<br>Tap <b>Request API code</b> to send a ready English message on WhatsApp, then open Register and create your account.<br><a href="'+WA_API+'" target="_blank" style="color:#93c5fd">Request API code (WhatsApp)</a>'},
+    {k:['login','password','sign in'],a:'Open the <b>Login</b> page and enter your email and password. If you forgot them, message Admin: <b>+8801336489062</b>.'},
+    {k:['tool','tools','feature','15'],a:'<b>Ready (10):</b> Gmail Format Fixer Pro, Email Report, Personal Email Vault, Gmail Format Fixer, Easy Validator, Duplicate Checker, Data Formatter, Password Generator, Name Generator, IP Timezone.<br><b>Coming soon (5):</b> Gmail Checker, 2FA, Temp Mail, IP/VPN Zone, Outside Zone.'},
+    {k:['vault','storage'],a:'<b>Personal Email Vault</b> saves your email lists in the cloud — only your account can access them.'},
+    {k:['report'],a:'<b>Email Report</b> shows totals, valid counts, duplicates and format summary for your lists.'},
+    {k:['duplicate'],a:'<b>Duplicate Email Checker</b> removes repeated emails and returns a clean unique list.'},
+    {k:['admin','whatsapp','support','contact','number','help'],a:'Admin WhatsApp: <b>+8801336489062</b><br>For API codes use this ready message link:<br><a href="'+WA_API+'" target="_blank" style="color:#93c5fd">Request API code</a>'},
+    {k:['dashboard','how','start','use'],a:'1) Request API from Admin → 2) Register or Login → 3) Open Dashboard → Services to use tools.'}
+  ];
+  function add(role,text){
+    var d=document.createElement('div');
+    d.className='atuls-bubble '+(role==='me'?'me':'bot');
+    d.innerHTML=String(text);
+    msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+  }
+  function answer(q){
+    q=(q||'').toLowerCase();
+    var best=null,score=0;
+    for(var i=0;i<QA.length;i++){
+      var s=0; for(var j=0;j<QA[i].k.length;j++){ if(q.indexOf(QA[i].k[j])!==-1) s++; }
+      if(s>score){ score=s; best=QA[i].a; }
+    }
+    return best || 'I can help with: <b>free tools, signup/API, login, tools list, vault, admin</b>. Or message Admin: <b>+8801336489062</b>';
+  }
+  function send(text){
+    text=(text||'').trim(); if(!text) return;
+    add('me',text);
+    setTimeout(function(){ add('bot', answer(text)); }, 220);
+  }
+  fab.onclick=function(){
+    panel.classList.add('open');
+    if(!msgs.childNodes.length) add('bot','Hello! I am <b>A-Tuls AI</b>. Ask anything about this site.');
+  };
+  if(closeBtn) closeBtn.onclick=function(){ panel.classList.remove('open'); };
+  if(form) form.onsubmit=function(e){ e.preventDefault(); var v=input.value; input.value=''; send(v); };
+  if(quick){
+    quick.innerHTML='';
+    ['Is it free?','How to signup?','List tools','Request API','Admin contact'].forEach(function(x){
+      var b=document.createElement('button'); b.type='button'; b.textContent=x; b.onclick=function(){ send(x); }; quick.appendChild(b);
+    });
+  }
+  // head subtitle English
+  var head=document.querySelector('#atulsAiHead div div');
+  if(head) head.textContent='Answers about this site';
+  if(input) input.placeholder='Type your question...';
+})();
 </script>
 
 </body>

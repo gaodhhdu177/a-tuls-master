@@ -1,38 +1,50 @@
 <!DOCTYPE html>
+<!-- A-Tuls proprietary client · a_tuls namespace only · no third-party tool branding -->
 <html lang="en">
 <head>
 <script>
-/* A_TULS_DOMAIN_LOCK — Render + Cloudflare + Netlify + Vercel */
+/* A_TULS_DOMAIN_LOCK — ON */
 (function(){
   try{
-    var host = (location.hostname||'').toLowerCase();
-    var proto = (location.protocol||'').toLowerCase();
-    var ok = (
-      host === 'a-tuls-master-n0k1.onrender.com' ||
-      host.endsWith('.onrender.com') ||
-      host.endsWith('.pages.dev') ||
-      host.endsWith('.netlify.app') ||
-      host.endsWith('.vercel.app') || host.endsWith('.workers.dev')
+    var host=(location.hostname||'').toLowerCase();
+    var proto=(location.protocol||'').toLowerCase();
+    var ok=(
+      host==='a-tuls-master-n0k1.onrender.com'||
+      host.endsWith('.onrender.com')||
+      host.endsWith('.pages.dev')||
+      host.endsWith('.netlify.app')||
+      host.endsWith('.vercel.app')||
+      host.endsWith('.workers.dev')
     );
-    if(proto === 'file:' || !host || !ok){
-      document.documentElement.innerHTML = '<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><h1 style="font-size:1.75rem;margin:0">Access Denied</h1></div>';
+    if(proto==='file:'||!host||!ok){
+      document.documentElement.innerHTML='<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center"><h1 style="margin:0;font-size:1.75rem">Access Denied</h1></div>';
       throw new Error('domain-lock');
     }
-  }catch(e){ if(String(e.message||e)==='domain-lock'||(e&&e.message==='domain-lock')) throw e; }
+  }catch(e){ if(String(e.message||e)==='domain-lock') throw e; }
   try{
-    document.addEventListener('contextmenu',function(e){ e.preventDefault(); });
+    document.addEventListener('contextmenu',function(e){e.preventDefault();return false},true);
     document.addEventListener('keydown',function(e){
-      if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C')) || (e.ctrlKey&&(e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S'))){
-        e.preventDefault(); e.stopPropagation(); return false;
-      }
-    }, true);
-  }catch(e){}
+      var k=e.key||'';
+      if(k==='F12'){e.preventDefault();return false}
+      if(e.ctrlKey&&e.shiftKey&&/^[ijcIJC]$/.test(k)){e.preventDefault();return false}
+      if(e.ctrlKey&&/^[usUS]$/.test(k)){e.preventDefault();return false}
+    },true);
+    document.addEventListener('copy',function(e){
+      try{
+        var t=e.target,ok=t&&(/^(TEXTAREA|INPUT)$/.test(t.tagName)||(t.closest&&t.closest('textarea,input,pre,.api-key,#apiNewKey,[data-copy="1"]')));
+        if(ok) return;
+        var s=window.getSelection?String(window.getSelection()):'';
+        if(s&&s.length>4000) e.preventDefault();
+      }catch(err){}
+    },true);
+  }catch(err){}
 })();
 </script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel | A-Tuls</title>
-<meta name="theme-color" content="#0f766e">
+<title>A-Tuls · Ultra Admin</title>
+<meta name="theme-color" content="#0b1020">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -68,6 +80,34 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;color:var(--dar
   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
   .overlay.show{display:block}
 }
+
+/* ===== A-Tuls Ultra Admin Theme 2026 ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+:root{--p:#8b5cf6;--pd:#7c3aed;--bg:#070b16;--card:#12182b;--line:rgba(255,255,255,.08);--txt:#eef2ff;--mut:#94a3b8}
+body{
+  background:radial-gradient(800px 400px at 10% -10%,#4c1d95 0%,transparent 50%),#070b16!important;
+  font-family:'Outfit',system-ui,sans-serif!important;color:var(--txt)!important;
+}
+.header, nav, .navbar{
+  background:rgba(12,16,32,.9)!important;border-bottom:1px solid var(--line)!important;
+  backdrop-filter:blur(12px);
+}
+.card, .panel, .box, .stat{
+  background:var(--card)!important;border:1px solid var(--line)!important;
+  border-radius:16px!important;color:var(--txt)!important;
+}
+.form-control, input, select, textarea{
+  background:#0c1222!important;border:1px solid var(--line)!important;color:var(--txt)!important;border-radius:12px!important;
+}
+.btn-primary, .btn-p{
+  background:linear-gradient(135deg,#8b5cf6,#6366f1)!important;border:none!important;border-radius:12px!important;font-weight:700!important;
+}
+table{color:var(--txt)!important}
+.table{--bs-table-bg:transparent;--bs-table-color:var(--txt)}
+.text-muted{color:var(--mut)!important}
+h1,h2,h3,h4,h5{color:#f5f3ff!important}
+.list-group-item{background:transparent!important;color:var(--txt)!important;border-color:var(--line)!important}
+
 </style>
 
 <script>
@@ -199,6 +239,7 @@ window.A_TULS_DB = {
   };
 })();
 </script>
+
 
 </head>
 <body>
@@ -374,36 +415,52 @@ window.A_TULS_DB = {
 
     <!-- API -->
     <div id="tab-api" style="display:none">
-      <div class="card-box">
-        <h6 class="fw-bold mb-3">Generate API Key</h6>
-        <div class="row g-2 mb-3">
+      <div class="card-box api-hero">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+          <div>
+            <h5 class="fw-bold mb-1" style="letter-spacing:-.02em"><i class="fas fa-key me-2" style="color:#a78bfa"></i>API Keys</h5>
+            <p class="small mb-0" style="color:#94a3b8">Signup invite / access keys · works on all devices via Supabase</p>
+          </div>
+          <span class="badge" style="background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.35);padding:8px 12px;border-radius:999px;font-weight:700">A-Tuls Admin</span>
+        </div>
+        <div class="row g-3 mb-3">
           <div class="col-md-4">
+            <label class="form-label small fw-semibold">User / Invite</label>
             <select class="form-select" id="apiUser"><option value="">Invite Code (for Signup) / Select user</option></select>
           </div>
           <div class="col-md-3">
+            <label class="form-label small fw-semibold">Type</label>
             <select class="form-select" id="apiType">
               <option value="free">Free API (view only)</option>
               <option value="paid">Paid API (full use)</option>
             </select>
           </div>
           <div class="col-md-2">
+            <label class="form-label small fw-semibold">Validity</label>
             <select class="form-select" id="apiDays">
               <option value="1">1 Day</option>
               <option value="7">7 Days</option>
               <option value="30">30 Days</option>
               <option value="90">90 Days</option>
-              <option value="180">180 Days</option>
-              <option value="365">365 Days</option>
+              <option value="365">1 Year</option>
             </select>
           </div>
-          <div class="col-md-3">
-            <button class="btn btn-p w-100" onclick="genApi()"><i class="fas fa-key me-1"></i> Generate</button>
+          <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-p w-100" onclick="genApi()"><i class="fas fa-magic me-1"></i> Generate Key</button>
           </div>
         </div>
-        <p class="small text-muted mb-2"><strong>Free API</strong> = view only. <strong>Paid API</strong> = full use.</p>
-        <p class="small text-success mb-3">✅ With Supabase cloud on, API works on <strong>all browsers/devices</strong>. Create tables per <code>SUPABASE-SETUP.md</code> first.</p>
-        <div class="table-responsive">
-          <table class="table table-hover">
+        <div class="api-tips mb-3">
+          <div><strong>Free API</strong> — view / limited</div>
+          <div><strong>Paid API</strong> — full tools use</div>
+          <div>এক API = এক Signup · ইউজারকে কী কপি করে দাও</div>
+        </div>
+        <div id="apiNewBox" class="api-new-box" style="display:none">
+          <div class="small mb-1" style="color:#86efac;font-weight:700">New key created — copy now</div>
+          <div class="api-key" id="apiNewKey"></div>
+          <button type="button" class="btn btn-sm btn-outline-light mt-2" onclick="navigator.clipboard.writeText(document.getElementById('apiNewKey').innerText);this.innerText='Copied!'"><i class="fas fa-copy me-1"></i>Copy</button>
+        </div>
+        <div class="table-responsive mt-3">
+          <table class="table table-hover align-middle">
             <thead><tr><th>User</th><th>Type</th><th>API Key</th><th>Expires</th><th></th></tr></thead>
             <tbody id="apiBody"><tr><td colspan="5" class="text-center text-muted py-3">No keys yet</td></tr></tbody>
           </table>
@@ -413,7 +470,8 @@ window.A_TULS_DB = {
 
     
     <!-- PACKAGES (editable prices) -->
-    <div id="tab-packages" style="display:none">
+    
+<div id="tab-packages" style="display:none">
       <div class="card-box mb-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h6 class="fw-bold mb-0">Package Prices (Admin can change)</h6>
@@ -675,6 +733,8 @@ async function delUser(id){
 }
 
 async function genApi(){
+  /* A-Tuls admin API generate */
+
   const id=document.getElementById('apiUser').value;
   const days=+document.getElementById('apiDays').value;
   const type=document.getElementById('apiType').value||'free';
@@ -695,6 +755,11 @@ async function genApi(){
   let keys=JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
   keys.unshift({userId:userId,username:username,key,type,expires:exp.toISOString(),created:row.created});
   localStorage.setItem('a_tuls_api_keys',JSON.stringify(keys));
+  try{
+    var nb=document.getElementById('apiNewBox'); var nk=document.getElementById('apiNewKey');
+    if(nb&&nk&&row&&row.key){ nk.textContent=row.key; nb.style.display='block'; }
+  }catch(e){}
+
   loadApis();loadStats();
   if(saved){
     alert((type==='paid'?'Paid':'Free')+' API Key (Cloud):\n'+key+'\n\n✅ Works on all devices!\nGive this code on the Signup page.');
