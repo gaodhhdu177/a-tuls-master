@@ -55,12 +55,15 @@
     var r=document.documentElement;
     r.style.setProperty('--bg',t.bg);
     r.style.setProperty('--panel',t.panel);
+    r.style.setProperty('--card',t.panel);
     r.style.setProperty('--a',t.a);
     r.style.setProperty('--b',t.b);
     r.style.setProperty('--txt',t.txt);
     r.style.setProperty('--p',t.a);
     r.style.setProperty('--pd',t.b);
-    try{ document.body.style.background=t.bg; }catch(e){}
+    r.style.setProperty('--blue',t.a);
+    r.style.setProperty('--teal',t.b);
+    try{ document.body.style.background=t.bg; document.body.style.color=t.txt; }catch(e){}
     localStorage.setItem('a_tuls_theme', id);
   }
   async function loadRemote(){
@@ -73,7 +76,7 @@
         var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
         if(row.key==='site_theme') applyTheme(String(v||'midnight'));
         if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
-        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||''));
+        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||'150'));
         if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
       });
     }catch(e){}
@@ -81,10 +84,9 @@
   var local=localStorage.getItem('a_tuls_theme')||'midnight';
   applyTheme(local);
   loadRemote();
-  setInterval(loadRemote, 60000);
+  setInterval(loadRemote, 45000);
 })();
 </script>
-
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -292,6 +294,86 @@ table{color:var(--txt)!important}
 }
 #atulsAiFab{animation:atulsPulse 2.2s infinite}
 .drawer.open{transition:left .28s cubic-bezier(.2,.8,.2,1)}
+
+
+
+/* ===== A-Tuls Live Dashboard Motion Pack ===== */
+@keyframes atulsFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes atulsPop{0%{transform:scale(.92);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes atulsGlow{0%,100%{box-shadow:0 0 0 0 rgba(56,189,248,.35)}50%{box-shadow:0 0 24px 2px rgba(167,139,250,.35)}}
+@keyframes atulsFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes atulsShine{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+@keyframes atulsPulseSoft{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+.header .nav-logo{animation:atulsFloat 3.2s ease-in-out infinite}
+.ubar, .welcome-bar, .story-wrap{
+  animation:atulsFadeUp .5s ease both;
+}
+.story-wrap{
+  background:linear-gradient(120deg,var(--a,#38bdf8),var(--b,#a78bfa),var(--a,#38bdf8))!important;
+  background-size:200% 200%!important;
+  animation:atulsShine 7s ease infinite, atulsFadeUp .5s ease both!important;
+  border-radius:22px!important;
+}
+
+/* Stats tiles */
+.stat-tile, .dash-stat, .grid-stats > div, .stats-row > div{
+  animation:atulsPop .45s ease both;
+  transition:transform .2s, border-color .2s, box-shadow .2s;
+}
+.stat-tile:nth-child(1),.dash-stat:nth-child(1){animation-delay:.05s}
+.stat-tile:nth-child(2),.dash-stat:nth-child(2){animation-delay:.1s}
+.stat-tile:nth-child(3),.dash-stat:nth-child(3){animation-delay:.15s}
+.stat-tile:nth-child(4),.dash-stat:nth-child(4){animation-delay:.2s}
+.stat-tile:hover, .dash-stat:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.25)}
+
+/* Tool cards — premium */
+.tcard, .tool-card, #oc .card{
+  position:relative;overflow:hidden;
+  border-radius:22px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.02))!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.2)!important;
+  animation:atulsFadeUp .55s ease both;
+  transition:transform .25s ease, border-color .25s, box-shadow .25s!important;
+}
+.tcard:hover, .tool-card:hover, #oc .card:hover{
+  transform:translateY(-4px) scale(1.01);
+  border-color:color-mix(in srgb, var(--a,#6366f1) 60%, white)!important;
+  box-shadow:0 16px 40px rgba(99,102,241,.25)!important;
+}
+.tcard::after, .tool-card::after{
+  content:"";position:absolute;inset:-40% auto auto -40%;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(56,189,248,.18),transparent 70%);pointer-events:none;
+}
+.tcard h5, .tool-card h5, #oc .card h5{font-weight:800!important;letter-spacing:-.02em}
+.tcard p, .tool-card p{line-height:1.55!important}
+
+/* Open Application button */
+.tcard .btn, .tool-card .btn, .btn-open, a.btn-p, .btn-p{
+  border-radius:999px!important;
+  padding:10px 18px!important;
+  font-weight:700!important;
+  background:linear-gradient(135deg,var(--a,#6366f1),var(--b,#a855f7))!important;
+  border:none!important;
+  box-shadow:0 8px 22px rgba(99,102,241,.35)!important;
+  transition:transform .15s, filter .15s!important;
+}
+.tcard .btn:hover, .btn-p:hover{transform:translateY(-1px);filter:brightness(1.08)}
+
+/* Icon bubble on tools */
+.tcard .tool-ico, .tool-card .icon-wrap, .tcard .ico{
+  width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(167,139,250,.2));
+  animation:atulsPulseSoft 2.8s ease-in-out infinite;
+}
+
+#atulsAiFab{animation:atulsGlow 2.4s ease-in-out infinite}
+#atulsFreeBanner{animation:atulsFadeUp .4s ease both}
+
+/* Bottom nav soft */
+.bnav{backdrop-filter:blur(14px);background:rgba(12,16,32,.92)!important}
+.fab{animation:atulsPulseSoft 2.5s ease-in-out infinite}
 
 </style>
 
@@ -557,7 +639,7 @@ window.A_TULS_DB = {
 <div class="ta-wrap"><div class="ln" id="mln">1</div><textarea id="ed" class="nta form-control" placeholder="email@gmail.com&#9;password" required></textarea></div></div>
 <div class="d-flex gap-2">
 <button type="button" class="btn btn-secondary" onclick="pMain()"><i class="fas fa-paste"></i></button>
-<button type="submit" class="btn btn-p flex-grow-1"><i class="fas fa-plus me-2"></i>Create File</button>
+<button type="submit" class="btn btn-p btn-open flex-grow-1"><i class="fas fa-plus me-2"></i>Create File</button>
 <button type="button" class="btn btn-danger" onclick="cMain()">Clear</button>
 </div>
 </form>
@@ -578,20 +660,20 @@ window.A_TULS_DB = {
 <div class="modal fade" id="sm" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
 <div class="modal-header"><h5 class="modal-title fw-bold" style="color:var(--p)">Post a Story</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
 <div class="modal-body"><textarea class="form-control" id="st" rows="3" placeholder="What's on your mind..."></textarea></div>
-<div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button><button class="btn btn-p btn-sm" onclick="postS()">Post Story</button></div>
+<div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button><button class="btn btn-p btn-open btn-sm" onclick="postS()">Post Story</button></div>
 </div></div></div>
 
 <!-- Vault modals -->
 <div class="modal fade" id="am" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
 <div class="modal-header"><h5 class="modal-title fw-bold">Add New Emails</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
 <div class="modal-body"><div class="ta-wrap"><div class="ln" id="aln">1</div><textarea id="ad" class="nta form-control" rows="8"></textarea></div></div>
-<div class="modal-footer"><button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button><button class="btn btn-p rounded-pill px-4" onclick="sApp()">Add</button></div>
+<div class="modal-footer"><button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button><button class="btn btn-p btn-open rounded-pill px-4" onclick="sApp()">Add</button></div>
 </div></div></div>
 
 <div class="modal fade" id="vm" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content">
 <div class="modal-header"><h5 class="modal-title fw-bold">View / Edit</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
 <div class="modal-body"><input type="text" id="vt" class="form-control mb-3"><div class="ta-wrap"><div class="ln" id="vln">1</div><textarea id="vd" class="nta form-control" rows="12"></textarea></div></div>
-<div class="modal-footer"><button class="btn btn-danger rounded-pill" data-bs-dismiss="modal">Close</button><button class="btn btn-p rounded-pill px-4" onclick="sView()">Save</button></div>
+<div class="modal-footer"><button class="btn btn-danger rounded-pill" data-bs-dismiss="modal">Close</button><button class="btn btn-p btn-open rounded-pill px-4" onclick="sView()">Save</button></div>
 </div></div></div>
 
 <div class="modal fade" id="dm" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content text-center p-3">
@@ -613,19 +695,19 @@ const P={
 messages:{t:'Messages',h:'<div id="userMsgInbox"><p class="text-muted">Loading messages...</p></div>'},
 addmoney:{t:'Add Money / Packages',h:'<div class="row g-3"><div class="col-6"><div class="border rounded-3 p-3 text-center border-warning"><div class="text-muted small"><s>৳50</s></div><div class="fw-bold text-success fs-4">৳20</div><small>1 Day · Very Low</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+1Day+20\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center border-info"><div class="text-muted small"><s>৳150</s></div><div class="fw-bold text-success fs-4">৳70</div><small>7 Day · Medium</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+7Day+70\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳300</s></div><div class="fw-bold text-success fs-4">৳150</div><small>Basic · 1 Month</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Basic+150\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center border-success"><div class="text-muted small"><s>৳900</s></div><div class="fw-bold text-success fs-4">৳450</div><small>Standard · 3 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Standard+450\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳1,800</s></div><div class="fw-bold text-success fs-4">৳900</div><small>Popular · 6 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Popular+900\')">Buy Now</button></div></div><div class="col-6"><div class="border rounded-3 p-3 text-center"><div class="text-muted small"><s>৳3,600</s></div><div class="fw-bold text-success fs-4">৳1,800</div><small>Premium · 12 Months</small><button class="btn btn-sm btn-p w-100 mt-2" onclick="window.open(\'https://wa.me/8801336489062?text=Buy+Premium+1800\')">Buy Now</button></div></div></div>'},
 sellers:{t:'Explore Sellers',h:'<div id="sellersList"><div class="text-center py-5 text-muted"><i class="fas fa-users fa-3x mb-3 opacity-50"></i><p class="mb-1 fw-bold">No members yet</p><p class="small mb-0">Users appear here after they register.</p></div></div>'},
-services:{t:'Explore Services',h:'<p class="text-muted mb-2">Search tools & users</p><button class="btn btn-p w-100" onclick="openSearch()"><i class="fas fa-search me-1"></i> Open Search</button>'},
-'create-service':{t:'Create Service',h:'<div class="mb-3"><label class="form-label">Title</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label">Price</label><input type="number" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Service created\')">Create</button>'},
-'managed-services':{t:'Managed Services',h:'<div id="pinnedToolsBox"><p class="text-muted">Loading...</p></div><hr><p class="small fw-bold">Pin a tool to your profile</p><select id="pinToolSelect" class="form-select mb-2"></select><button class="btn btn-p w-100" onclick="pinSelectedTool()">Pin to Profile</button>'},
-membership:{t:'Paid Membership',h:'<div id="memBox"><p>Loading...</p></div><button class="btn btn-p btn-sm mt-2" onclick="go(\'addmoney\')">Upgrade / Buy</button>'},
+services:{t:'Explore Services',h:'<p class="text-muted mb-2">Search tools & users</p><button class="btn btn-p btn-open w-100" onclick="openSearch()"><i class="fas fa-search me-1"></i> Open Search</button>'},
+'create-service':{t:'Create Service',h:'<div class="mb-3"><label class="form-label">Title</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label">Price</label><input type="number" class="form-control"></div><button class="btn btn-p btn-open w-100" onclick="alert(\'Service created\')">Create</button>'},
+'managed-services':{t:'Managed Services',h:'<div id="pinnedToolsBox"><p class="text-muted">Loading...</p></div><hr><p class="small fw-bold">Pin a tool to your profile</p><select id="pinToolSelect" class="form-select mb-2"></select><button class="btn btn-p btn-open w-100" onclick="pinSelectedTool()">Pin to Profile</button>'},
+membership:{t:'Paid Membership',h:'<div id="memBox"><p>Loading...</p></div><button class="btn btn-p btn-open btn-sm mt-2" onclick="go(\'addmoney\')">Upgrade / Buy</button>'},
 'membership-history':{t:'Membership History',h:'<div id="memHistBox"><p class="text-muted">Loading...</p></div>'},
-badge:{t:'Apply for Badge',h:'<div class="card p-3 border-0 shadow-sm"><p class="mb-2">Verified badge পেতে Apply করুন। Admin approve করলে নামের পাশে <span class="badge bg-primary">✓ Verified</span> দেখাবে।</p><textarea id="badgeReason" class="form-control mb-2" rows="3" placeholder="কেন badge চান? (optional)"></textarea><button class="btn btn-p w-100" onclick="applyBadge()">Apply Now</button><div id="badgeStatus" class="small text-muted mt-2"></div></div>'},
+badge:{t:'Apply for Badge',h:'<div class="card p-3 border-0 shadow-sm"><p class="mb-2">Verified badge পেতে Apply করুন। Admin approve করলে নামের পাশে <span class="badge bg-primary">✓ Verified</span> দেখাবে।</p><textarea id="badgeReason" class="form-control mb-2" rows="3" placeholder="কেন badge চান? (optional)"></textarea><button class="btn btn-p btn-open w-100" onclick="applyBadge()">Apply Now</button><div id="badgeStatus" class="small text-muted mt-2"></div></div>'},
 profile:{t:'My Profile',h:'<div id="profileView"><div class="text-center mb-3"><div class="pc mx-auto mb-2" style="width:80px;height:80px;font-size:2rem" id="pvAv">U</div><h5 id="pvName">User</h5><span class="badge bg-success" id="pvPkg">Free</span></div><p class="mb-1"><strong>Gmail:</strong> <span id="pvGmail">-</span></p><p class="mb-1"><strong>WhatsApp:</strong> <span id="pvWa">-</span></p><p class="mb-1"><strong>Telegram:</strong> <span id="pvTg">-</span></p><p class="mb-1"><strong>Facebook:</strong> <span id="pvFb">-</span></p><p class="mb-0"><strong>Package:</strong> <span id="pvPackage">Free</span></p></div>'},
-'edit-profile':{t:'Edit Profile',h:'<div class="mb-3 text-center"><div class="pc mx-auto mb-2" style="width:80px;height:80px" onclick="document.getElementById(\'pi\').click()" id="epAv">T</div><small class="text-muted">Click photo to change</small></div><div class="mb-2"><label class="form-label">Name</label><input class="form-control" id="epName"></div><div class="mb-2"><label class="form-label">Gmail</label><input type="email" class="form-control" id="epGmail" placeholder="name@gmail.com"></div><div class="mb-2"><label class="form-label">WhatsApp</label><input class="form-control" id="epWa" placeholder="01XXXXXXXXX"></div><div class="mb-2"><label class="form-label">Telegram</label><input class="form-control" id="epTg" placeholder="@username"></div><div class="mb-3"><label class="form-label">Facebook URL</label><input class="form-control" id="epFb" placeholder="https://facebook.com/..."></div><button class="btn btn-p w-100" onclick="saveProfile()">Save Profile</button>'},
+'edit-profile':{t:'Edit Profile',h:'<div class="mb-3 text-center"><div class="pc mx-auto mb-2" style="width:80px;height:80px" onclick="document.getElementById(\'pi\').click()" id="epAv">T</div><small class="text-muted">Click photo to change</small></div><div class="mb-2"><label class="form-label">Name</label><input class="form-control" id="epName"></div><div class="mb-2"><label class="form-label">Gmail</label><input type="email" class="form-control" id="epGmail" placeholder="name@gmail.com"></div><div class="mb-2"><label class="form-label">WhatsApp</label><input class="form-control" id="epWa" placeholder="01XXXXXXXXX"></div><div class="mb-2"><label class="form-label">Telegram</label><input class="form-control" id="epTg" placeholder="@username"></div><div class="mb-3"><label class="form-label">Facebook URL</label><input class="form-control" id="epFb" placeholder="https://facebook.com/..."></div><button class="btn btn-p btn-open w-100" onclick="saveProfile()">Save Profile</button>'},
 stories:{t:'Manage Stories',h:'<div id="storyManageList"><p class="text-muted small mb-2">নিজের story ডিলিট করতে পারেন। Admin সব ডিলিট করতে পারে।</p><div id="storyListBox">Loading...</div></div>'},
-transfer:{t:'Money Transfer',h:'<div class="mb-3"><label class="form-label">Receiver Email</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Amount (BDT)</label><input type="number" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Sent\')">Send Money</button>'},
+transfer:{t:'Money Transfer',h:'<div class="mb-3"><label class="form-label">Receiver Email</label><input class="form-control"></div><div class="mb-3"><label class="form-label">Amount (BDT)</label><input type="number" class="form-control"></div><button class="btn btn-p btn-open w-100" onclick="alert(\'Sent\')">Send Money</button>'},
 withdrawal:{t:'Withdrawal History',h:'<p class="text-muted">No withdrawal history yet.</p>'},
 security:{t:'Security',h:'<p><strong>Last Login:</strong> Today</p><p><strong>Devices:</strong> 2 active</p>'},
-'change-password':{t:'Change Password',h:'<div class="mb-3"><label class="form-label">Current Password</label><input type="password" class="form-control"></div><div class="mb-3"><label class="form-label">New Password</label><input type="password" class="form-control"></div><button class="btn btn-p w-100" onclick="alert(\'Changed\')">Update</button>'},
+'change-password':{t:'Change Password',h:'<div class="mb-3"><label class="form-label">Current Password</label><input type="password" class="form-control"></div><div class="mb-3"><label class="form-label">New Password</label><input type="password" class="form-control"></div><button class="btn btn-p btn-open w-100" onclick="alert(\'Changed\')">Update</button>'},
 'delete-account':{t:'Delete Account',h:'<p class="text-danger fw-bold">⚠️ Account delete সুরক্ষিত</p><p class="small text-muted mb-3">আপনার অ্যাকাউন্ট ডিলিট করতে Admin-এর অনুমতি লাগবে। ইচ্ছামতো ডিলিট করা যাবে না।</p><p class="small">Delete request পাঠাতে WhatsApp করুন অথবা Admin-কে মেসেজ দিন।</p><button class="btn btn-outline-danger w-100" onclick="alert(\'Delete request Admin-এর কাছে পাঠানো হয়েছে। Admin approve করলেই ডিলিট হবে।\')">Request Account Delete</button>'},
 devices:{t:'Associated Devices',h:'<div id="devicesBox"><p class="text-muted">Loading devices...</p></div>'}
 };
@@ -847,7 +929,7 @@ function openUserProfile(id, name){
       <div class="d-grid gap-2">
         ${wa?`<a class="btn btn-success" href="https://wa.me/${wa}" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>`:''}
         ${tg?`<a class="btn btn-info text-white" href="https://t.me/${tg}" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>`:''}
-        <button class="btn btn-primary" onclick="alert('Message sent to admin queue');document.getElementById('userProfOverlay')?.remove()"><i class="fas fa-envelope"></i> Send Message</button>
+        <button class="btn btn-p btn-openrimary" onclick="alert('Message sent to admin queue');document.getElementById('userProfOverlay')?.remove()"><i class="fas fa-envelope"></i> Send Message</button>
       </div>
     </div>`;
     document.body.appendChild(ov);
@@ -890,7 +972,7 @@ async function fillMemHistory(){
       '<div class="small mb-2"><i class="fas fa-info-circle me-1 text-primary"></i><b>Status:</b> <span class="'+statusCls+' fw-semibold">'+daysLeft+'</span></div>'+
       '<div class="small"><i class="fas fa-id-badge me-1 text-primary"></i><b>User:</b> '+_esc(u.username||s.username||'')+' · ID: '+_esc(String(u.id||s.id||'-').slice(0,16))+'</div>'+
       '</div>'+
-      '<button class="btn btn-p w-100 mb-2" onclick="show(\'addmoney\')">Message Admin (Free access)</button>'+
+      '<button class="btn btn-p btn-open w-100 mb-2" onclick="show(\'addmoney\')">Message Admin (Free access)</button>'+
       '<p class="small text-muted mb-0">সব টুল ফ্রি। সাহায্য লাগলে Admin কে মেসেজ করো: WhatsApp +8801336489062</p>';
   }
   box.innerHTML='<p class="text-muted">Loading...</p>';
@@ -1448,7 +1530,7 @@ function unpinTool(i){
 async function loadUserMessages(){
   const box = document.getElementById('userMsgInbox');
   if(!box) return;
-  const sendBtn = '<button class="btn btn-p btn-sm mt-2" onclick="msgAdmin()"><i class="fas fa-paper-plane me-1"></i> Message Admin</button>';
+  const sendBtn = '<button class="btn btn-p btn-open btn-sm mt-2" onclick="msgAdmin()"><i class="fas fa-paper-plane me-1"></i> Message Admin</button>';
   const emptyHtml = '<div class="text-center py-4 text-muted"><i class="fas fa-inbox fa-2x mb-2 opacity-50"></i><p class="mb-1">No messages yet.</p><p class="small mb-0">Use Live Support (+) or the button below to contact admin.</p>'+sendBtn+'</div>';
   box.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> Loading messages...</p>';
   // hard timeout → never stuck
@@ -1820,8 +1902,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+
+
+
 <script>
-/* A-Tuls Site AI — English */
+/* A-Tuls Site AI — BN + EN */
 (function(){
   var fab=document.getElementById('atulsAiFab');
   var panel=document.getElementById('atulsAiPanel');
@@ -1831,55 +1916,80 @@ document.addEventListener('DOMContentLoaded', function(){
   var closeBtn=document.getElementById('atulsAiClose');
   var quick=document.getElementById('atulsAiQuick');
   if(!fab||!panel) return;
-  var WA_API = "https://wa.me/8801336489062?text=Hello Admin,%0A%0AI would like to request an API code to create my A-Tuls account.%0A%0APlease share a valid signup API key.%0A%0AThank you.";
-  var QA=[
-    {k:['hello','hi','hey','salam'],a:'Hello! I am <b>A-Tuls AI</b>. Ask about the site, tools, login/signup, or Admin support.'},
-    {k:['free','package','price','payment','cost','paid'],a:'All tools on <b>A-Tuls are free</b>. No package purchase required. For help: Admin WhatsApp <b>+8801336489062</b>.'},
-    {k:['signup','register','api','code','key','account'],a:'To register you need an <b>API code</b> from Admin.<br>Tap <b>Request API code</b> to send a ready English message on WhatsApp, then open Register and create your account.<br><a href="'+WA_API+'" target="_blank" style="color:#93c5fd">Request API code (WhatsApp)</a>'},
-    {k:['login','password','sign in'],a:'Open the <b>Login</b> page and enter your email and password. If you forgot them, message Admin: <b>+8801336489062</b>.'},
-    {k:['tool','tools','feature','15'],a:'<b>Ready (10):</b> Gmail Format Fixer Pro, Email Report, Personal Email Vault, Gmail Format Fixer, Easy Validator, Duplicate Checker, Data Formatter, Password Generator, Name Generator, IP Timezone.<br><b>Coming soon (5):</b> Gmail Checker, 2FA, Temp Mail, IP/VPN Zone, Outside Zone.'},
-    {k:['vault','storage'],a:'<b>Personal Email Vault</b> saves your email lists in the cloud — only your account can access them.'},
-    {k:['report'],a:'<b>Email Report</b> shows totals, valid counts, duplicates and format summary for your lists.'},
-    {k:['duplicate'],a:'<b>Duplicate Email Checker</b> removes repeated emails and returns a clean unique list.'},
-    {k:['admin','whatsapp','support','contact','number','help'],a:'Admin WhatsApp: <b>+8801336489062</b><br>For API codes use this ready message link:<br><a href="'+WA_API+'" target="_blank" style="color:#93c5fd">Request API code</a>'},
-    {k:['dashboard','how','start','use'],a:'1) Request API from Admin → 2) Register or Login → 3) Open Dashboard → Services to use tools.'}
-  ];
-  function add(role,text){
+  var WA='https://wa.me/8801336489062?text='+encodeURIComponent('Hello Admin,\n\nI would like to request an API code to create my A-Tuls account.\n\nPlease share a valid signup API key.\n\nThank you.');
+  function isBn(s){ return /[\u0980-\u09FF]/.test(s||''); }
+  var EN={
+    hi:'Hello! I am <b>A-Tuls AI</b>. Ask about tools, signup, login, or Admin.',
+    free:'All tools are <b>free</b>. No package required. Admin: <b>+8801336489062</b>',
+    signup:'Need an <b>API code</b> from Admin, then Register.<br><a href="'+WA+'" target="_blank" style="color:#93c5fd">Request API code</a>',
+    login:'Open Login → email + password. Forgot? Message Admin.',
+    tools:'<b>Ready:</b> Format Fixer Pro, Email Report, Vault, Format Fixer, Validator, Duplicate Checker, Data Formatter, Password Gen, Name Gen, IP Timezone.<br><b>Soon:</b> Gmail Checker, 2FA, Temp Mail, IP/VPN, Outside Zone.',
+    vault:'Personal Email Vault stores your lists in the cloud — only your account.',
+    admin:'Admin WhatsApp <b>+8801336489062</b> · <a href="'+WA+'" target="_blank" style="color:#93c5fd">Request API</a>',
+    fall:'Ask: free, signup, tools, vault, admin.'
+  };
+  var BN={
+    hi:'হ্যালো! আমি <b>A-Tuls AI</b>। টুলস, সাইনআপ, লগইন বা Admin নিয়ে জিজ্ঞাসা করো।',
+    free:'সব টুল <b>ফ্রি</b>। প্যাকেজ লাগবে না। Admin: <b>+8801336489062</b>',
+    signup:'Admin থেকে <b>API Code</b> নাও, তারপর Register করো।<br><a href="'+WA+'" target="_blank" style="color:#93c5fd">API কোড রিকোয়েস্ট</a>',
+    login:'Login পেজে email + password দাও। ভুলে গেলে Admin কে মেসেজ করো।',
+    tools:'<b>Ready:</b> Format Fixer Pro, Email Report, Vault, Format Fixer, Validator, Duplicate, Formatter, Password, Name, IP Timezone।<br><b>শীঘ্রই:</b> Gmail Checker, 2FA, Temp Mail, IP/VPN, Outside Zone।',
+    vault:'Personal Email Vault — তোমার লিস্ট ক্লাউডে, শুধু তোমার অ্যাকাউন্ট।',
+    admin:'Admin WhatsApp <b>+8801336489062</b>',
+    fall:'লিখো: ফ্রি, সাইনআপ, টুলস, vault, admin।'
+  };
+  function pick(q){
+    var L=isBn(q)?BN:EN;
+    q=(q||'').toLowerCase();
+    if(/hello|hi|hey|হাই|হ্যালো|সালাম/.test(q)) return L.hi;
+    if(/free|ফ্রি|package|প্যাকেজ|price|দাম/.test(q)) return L.free;
+    if(/signup|register|api|সাইন|রেজিস্টার|কোড/.test(q)) return L.signup;
+    if(/login|লগইন|password|পাসওয়ার্ড/.test(q)) return L.login;
+    if(/tool|টুল|feature|১৫|15/.test(q)) return L.tools;
+    if(/vault|ভল্ট/.test(q)) return L.vault;
+    if(/admin|whatsapp|সাপোর্ট|support|নম্বর/.test(q)) return L.admin;
+    return L.fall;
+  }
+  function add(role,html){
     var d=document.createElement('div');
     d.className='atuls-bubble '+(role==='me'?'me':'bot');
-    d.innerHTML=String(text);
-    msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
-  }
-  function answer(q){
-    q=(q||'').toLowerCase();
-    var best=null,score=0;
-    for(var i=0;i<QA.length;i++){
-      var s=0; for(var j=0;j<QA[i].k.length;j++){ if(q.indexOf(QA[i].k[j])!==-1) s++; }
-      if(s>score){ score=s; best=QA[i].a; }
-    }
-    return best || 'I can help with: <b>free tools, signup/API, login, tools list, vault, admin</b>. Or message Admin: <b>+8801336489062</b>';
+    d.innerHTML=html; msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
   }
   function send(text){
     text=(text||'').trim(); if(!text) return;
-    add('me',text);
-    setTimeout(function(){ add('bot', answer(text)); }, 220);
+    add('me', text.replace(/</g,'&lt;'));
+    setTimeout(function(){ add('bot', pick(text)); }, 220);
   }
-  fab.onclick=function(){
-    panel.classList.add('open');
-    if(!msgs.childNodes.length) add('bot','Hello! I am <b>A-Tuls AI</b>. Ask anything about this site.');
-  };
+  fab.onclick=function(){ panel.classList.add('open'); if(!msgs.childNodes.length) add('bot', EN.hi+'<br><br>'+BN.hi); };
   if(closeBtn) closeBtn.onclick=function(){ panel.classList.remove('open'); };
   if(form) form.onsubmit=function(e){ e.preventDefault(); var v=input.value; input.value=''; send(v); };
-  if(quick){
-    quick.innerHTML='';
-    ['Is it free?','How to signup?','List tools','Request API','Admin contact'].forEach(function(x){
+  if(quick){ quick.innerHTML='';
+    ['Is it free? / ফ্রি?','Signup / সাইনআপ','Tools / টুলস','Request API','Admin'].forEach(function(x){
       var b=document.createElement('button'); b.type='button'; b.textContent=x; b.onclick=function(){ send(x); }; quick.appendChild(b);
     });
   }
-  // head subtitle English
-  var head=document.querySelector('#atulsAiHead div div');
-  if(head) head.textContent='Answers about this site';
-  if(input) input.placeholder='Type your question...';
+  var sub=document.querySelector('#atulsAiHead div div'); if(sub) sub.textContent='Bangla + English · site help';
+  if(input) input.placeholder='Ask in Bangla or English...';
+})();
+</script>
+
+
+<script>
+/* A-Tuls live card stagger */
+(function(){
+  function stagger(){
+    try{
+      var cards=document.querySelectorAll('.tcard, .tool-card, #oc .card, .stat-tile');
+      cards.forEach(function(el,i){ el.style.animationDelay=(Math.min(i,12)*0.05)+'s'; });
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', stagger);
+  setInterval(stagger, 2000);
+  // observe page swaps
+  var oc=document.getElementById('oc');
+  if(oc && window.MutationObserver){
+    new MutationObserver(stagger).observe(oc,{childList:true,subtree:true});
+  }
 })();
 </script>
 
