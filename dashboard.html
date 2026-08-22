@@ -427,6 +427,39 @@ table{color:var(--txt)!important}
   box-shadow:0 8px 20px rgba(0,0,0,.2);
 }
 
+
+:root{ --bg:#030b16; --a:#00e5ff; --b:#3a86ff; --txt:#f0f6fc; --mut:#8b949e; }
+body{
+  background-color:var(--bg)!important;
+  background-image:
+    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--a) 12%, transparent), transparent 28%),
+    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--b) 12%, transparent), transparent 28%)!important;
+  color:var(--txt);
+}
+.atuls-live-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.atuls-live-bg .orb{
+  position:absolute; border-radius:50%; filter:blur(60px); opacity:.35;
+  animation:orbMove 12s ease-in-out infinite alternate;
+}
+.atuls-live-bg .orb1{ width:420px;height:420px; left:-80px; top:10%; background:var(--a); }
+.atuls-live-bg .orb2{ width:360px;height:360px; right:-60px; bottom:15%; background:var(--b); animation-duration:15s; animation-direction:alternate-reverse; }
+.atuls-live-bg .grid{
+  position:absolute; inset:0; opacity:.12;
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:48px 48px;
+  animation:gridShift 20s linear infinite;
+}
+@keyframes orbMove{ from{ transform:translate(0,0) scale(1);} to{ transform:translate(40px,30px) scale(1.15);} }
+@keyframes gridShift{ from{ background-position:0 0;} to{ background-position:48px 48px;} }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:none;} }
+.logo-img-main{
+  width:48px; height:48px; border-radius:50%; object-fit:cover;
+  border:2px solid color-mix(in srgb, var(--a) 40%, transparent);
+  box-shadow:0 0 16px color-mix(in srgb, var(--a) 35%, transparent);
+}
+
 </style>
 
 <script>
@@ -563,8 +596,9 @@ window.A_TULS_DB = {
 </head>
 
 <body>
+<div class="atuls-live-bg" aria-hidden="true"><div class="grid"></div><div class="orb orb1"></div><div class="orb orb2"></div></div>
 <div id="atulsFreeBanner" style="margin:10px 12px 0;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(52,211,153,.2),rgba(99,102,241,.15));border:1px solid rgba(52,211,153,.35);color:#d1fae5;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-<span style="background:#22c55e;color:#052e16;font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:999px">ALL FREE</span>
+<span style="background:#22c55e;color:#052e16;font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:999px">ALL FREE</span> · <a href="uid-checker.html" style="color:#67e8f9">UID</a> · <a href="ai-website.html" style="color:#67e8f9">AI Web</a> · <a href="bio-link.html" style="color:#67e8f9">Bio Link</a>
 <span>A-Tuls — all tools free. Need an API code? <a href="https://wa.me/8801336489062?text=Hello Admin,%0A%0AI would like to request an API code to create my A-Tuls account.%0A%0APlease share a valid signup API key.%0A%0AThank you." target="_blank" style="color:#86efac">Message Admin</a></span>
 </div>
 

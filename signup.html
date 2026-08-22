@@ -63,12 +63,15 @@
     var r=document.documentElement;
     r.style.setProperty('--bg',t.bg);
     r.style.setProperty('--panel',t.panel);
+    r.style.setProperty('--card',t.panel);
     r.style.setProperty('--a',t.a);
     r.style.setProperty('--b',t.b);
     r.style.setProperty('--txt',t.txt);
     r.style.setProperty('--p',t.a);
     r.style.setProperty('--pd',t.b);
-    try{ document.body.style.background=t.bg; }catch(e){}
+    r.style.setProperty('--blue',t.a);
+    r.style.setProperty('--teal',t.b);
+    try{ document.body.style.background=t.bg; document.body.style.color=t.txt; }catch(e){}
     localStorage.setItem('a_tuls_theme', id);
   }
   async function loadRemote(){
@@ -81,7 +84,7 @@
         var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
         if(row.key==='site_theme') applyTheme(String(v||'midnight'));
         if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
-        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||''));
+        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||'150'));
         if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
       });
     }catch(e){}
@@ -89,10 +92,9 @@
   var local=localStorage.getItem('a_tuls_theme')||'midnight';
   applyTheme(local);
   loadRemote();
-  setInterval(loadRemote, 60000);
+  setInterval(loadRemote, 45000);
 })();
 </script>
-
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -157,6 +159,39 @@ input:focus, select:focus{border-color:var(--acc); box-shadow:0 0 0 3px rgba(99,
   background:rgba(34,197,94,.12); color:#4ade80; border:1px solid rgba(34,197,94,.25);
   font-size:.72rem; font-weight:700; padding:4px 10px; border-radius:999px;
 }
+
+:root{ --bg:#030b16; --a:#00e5ff; --b:#3a86ff; --txt:#f0f6fc; --mut:#8b949e; }
+body{
+  background-color:var(--bg)!important;
+  background-image:
+    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--a) 12%, transparent), transparent 28%),
+    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--b) 12%, transparent), transparent 28%)!important;
+  color:var(--txt);
+}
+.atuls-live-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.atuls-live-bg .orb{
+  position:absolute; border-radius:50%; filter:blur(60px); opacity:.35;
+  animation:orbMove 12s ease-in-out infinite alternate;
+}
+.atuls-live-bg .orb1{ width:420px;height:420px; left:-80px; top:10%; background:var(--a); }
+.atuls-live-bg .orb2{ width:360px;height:360px; right:-60px; bottom:15%; background:var(--b); animation-duration:15s; animation-direction:alternate-reverse; }
+.atuls-live-bg .grid{
+  position:absolute; inset:0; opacity:.12;
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:48px 48px;
+  animation:gridShift 20s linear infinite;
+}
+@keyframes orbMove{ from{ transform:translate(0,0) scale(1);} to{ transform:translate(40px,30px) scale(1.15);} }
+@keyframes gridShift{ from{ background-position:0 0;} to{ background-position:48px 48px;} }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:none;} }
+.logo-img-main{
+  width:48px; height:48px; border-radius:50%; object-fit:cover;
+  border:2px solid color-mix(in srgb, var(--a) 40%, transparent);
+  box-shadow:0 0 16px color-mix(in srgb, var(--a) 35%, transparent);
+}
+
 </style>
 <script>
 /* ===== A-Tuls Database: Supabase (primary) =====
@@ -290,9 +325,10 @@ window.A_TULS_DB = {
 
 </head>
 <body>
+<div class="atuls-live-bg" aria-hidden="true"><div class="grid"></div><div class="orb orb1"></div><div class="orb orb2"></div></div>
 <div class="shell">
   <div class="brand">
-    <div class="mark">A</div>
+    <img src="logo.png" alt="A-Tuls" style="width:72px;height:72px;border-radius:50%;display:block;margin:0 auto 12px;border:2px solid rgba(0,229,255,.35)">
     <h1>Create A-Tuls account</h1>
     <p>Join the tools community</p>
     <div class="pill"><i class="fas fa-gift"></i> Free registration with API code</div>

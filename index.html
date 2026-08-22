@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- A-Tuls proprietary -->
 <html lang="en">
 <head>
 <script>
@@ -14,235 +13,178 @@
       throw new Error('domain-lock');
     }
   }catch(e){ if(String(e.message||e)==='domain-lock') throw e; }
-  try{
-    document.addEventListener('contextmenu',function(e){e.preventDefault();return false},true);
-    document.addEventListener('keydown',function(e){
-      var k=e.key||'';
-      if(k==='F12'){e.preventDefault();return false}
-      if(e.ctrlKey&&e.shiftKey&&/^[ijcIJC]$/.test(k)){e.preventDefault();return false}
-      if(e.ctrlKey&&/^[usUS]$/.test(k)){e.preventDefault();return false}
-    },true);
-  }catch(err){}
 })();
 </script>
 
 <script>
-/* A-Tuls live theme + settings from Supabase */
+/* A-Tuls live theme */
 (function(){
   var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
   var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
   var THEMES={
-    midnight:{bg:'#050816',panel:'#0e1428',a:'#38bdf8',b:'#a78bfa',txt:'#eef2ff'},
-    ocean:{bg:'#02141f',panel:'#0a2433',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
-    forest:{bg:'#06140f',panel:'#0c241c',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
-    sunset:{bg:'#1a0b10',panel:'#2a1218',a:'#fb7185',b:'#fbbf24',txt:'#fff1f2'},
-    royal:{bg:'#0c0a1a',panel:'#16122e',a:'#a78bfa',b:'#e879f9',txt:'#f5f3ff'},
-    slate:{bg:'#0f172a',panel:'#1e293b',a:'#94a3b8',b:'#64748b',txt:'#f8fafc'},
-    crimson:{bg:'#14060a',panel:'#240c12',a:'#f43f5e',b:'#fb7185',txt:'#fff1f2'},
-    amber:{bg:'#140e04',panel:'#241a0a',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb'},
-    mint:{bg:'#041412',panel:'#0a2420',a:'#2dd4bf',b:'#5eead4',txt:'#f0fdfa'},
-    graphite:{bg:'#0a0a0b',panel:'#171717',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
+    midnight:{bg:'#030b16',a:'#00e5ff',b:'#3a86ff',txt:'#f0f6fc'},
+    ocean:{bg:'#02141f',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
+    forest:{bg:'#06140f',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
+    sunset:{bg:'#1a0b10',a:'#fb7185',b:'#fbbf24',txt:'#fff1f2'},
+    royal:{bg:'#0c0a1a',a:'#a78bfa',b:'#e879f9',txt:'#f5f3ff'},
+    slate:{bg:'#0f172a',a:'#94a3b8',b:'#64748b',txt:'#f8fafc'},
+    crimson:{bg:'#14060a',a:'#f43f5e',b:'#fb7185',txt:'#fff1f2'},
+    amber:{bg:'#140e04',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb'},
+    mint:{bg:'#041412',a:'#2dd4bf',b:'#5eead4',txt:'#f0fdfa'},
+    graphite:{bg:'#0a0a0b',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
   };
   function applyTheme(id){
     var t=THEMES[id]||THEMES.midnight;
     var r=document.documentElement;
-    r.style.setProperty('--bg',t.bg);
-    r.style.setProperty('--panel',t.panel);
-    r.style.setProperty('--a',t.a);
-    r.style.setProperty('--b',t.b);
-    r.style.setProperty('--txt',t.txt);
-    r.style.setProperty('--p',t.a);
-    r.style.setProperty('--pd',t.b);
-    try{ document.body.style.background=t.bg; }catch(e){}
+    r.style.setProperty('--bg',t.bg); r.style.setProperty('--a',t.a); r.style.setProperty('--b',t.b); r.style.setProperty('--txt',t.txt);
+    r.style.setProperty('--p',t.a); r.style.setProperty('--primary-accent',t.a);
+    try{ document.body.style.backgroundColor=t.bg; }catch(e){}
     localStorage.setItem('a_tuls_theme', id);
   }
   async function loadRemote(){
     try{
       var h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
-      var r=await fetch(SB_URL+"a_tuls_settings?or=(key.eq.site_theme,key.eq.site_notice,key.eq.paid_api_price,key.eq.site_time_note)&select=key,value",{headers:h});
+      var r=await fetch(SB_URL+"a_tuls_settings?key=eq.site_theme&select=value",{headers:h});
       if(!r.ok) return;
       var rows=await r.json();
-      (rows||[]).forEach(function(row){
-        var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
-        if(row.key==='site_theme') applyTheme(String(v||'midnight'));
-        if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
-        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||''));
-        if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
-      });
+      if(rows&&rows[0]){ var v=rows[0].value; if(typeof v==='object'&&v) v=v.v||v.id||''; applyTheme(String(v||'midnight')); }
     }catch(e){}
   }
-  var local=localStorage.getItem('a_tuls_theme')||'midnight';
-  applyTheme(local);
-  loadRemote();
-  setInterval(loadRemote, 60000);
+  applyTheme(localStorage.getItem('a_tuls_theme')||'midnight');
+  loadRemote(); setInterval(loadRemote,60000);
 })();
 </script>
-
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A-Tuls · Free Smart Tools</title>
-<meta name="theme-color" content="#050816">
+<meta name="theme-color" content="#030b16">
+<link rel="icon" href="logo.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
-:root{--bg:#050816;--panel:#0e1428;--line:rgba(255,255,255,.09);--txt:#eef2ff;--mut:#9aa3c0;--a:#38bdf8;--b:#a78bfa;--g:#34d399}
+
+:root{ --bg:#030b16; --a:#00e5ff; --b:#3a86ff; --txt:#f0f6fc; --mut:#8b949e; }
+body{
+  background-color:var(--bg)!important;
+  background-image:
+    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--a) 12%, transparent), transparent 28%),
+    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--b) 12%, transparent), transparent 28%)!important;
+  color:var(--txt);
+}
+.atuls-live-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.atuls-live-bg .orb{
+  position:absolute; border-radius:50%; filter:blur(60px); opacity:.35;
+  animation:orbMove 12s ease-in-out infinite alternate;
+}
+.atuls-live-bg .orb1{ width:420px;height:420px; left:-80px; top:10%; background:var(--a); }
+.atuls-live-bg .orb2{ width:360px;height:360px; right:-60px; bottom:15%; background:var(--b); animation-duration:15s; animation-direction:alternate-reverse; }
+.atuls-live-bg .grid{
+  position:absolute; inset:0; opacity:.12;
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:48px 48px;
+  animation:gridShift 20s linear infinite;
+}
+@keyframes orbMove{ from{ transform:translate(0,0) scale(1);} to{ transform:translate(40px,30px) scale(1.15);} }
+@keyframes gridShift{ from{ background-position:0 0;} to{ background-position:48px 48px;} }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:none;} }
+.logo-img-main{
+  width:48px; height:48px; border-radius:50%; object-fit:cover;
+  border:2px solid color-mix(in srgb, var(--a) 40%, transparent);
+  box-shadow:0 0 16px color-mix(in srgb, var(--a) 35%, transparent);
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--txt);line-height:1.55}
-.wrap{max-width:1100px;margin:0 auto;padding:0 18px}
-nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:rgba(5,8,22,.82);border-bottom:1px solid var(--line)}
-nav .in{display:flex;align-items:center;justify-content:space-between;padding:12px 0;gap:10px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--txt);font-weight:800}
-.nav-logo{width:40px;height:40px;border-radius:50%;position:relative;display:inline-flex;justify-content:center;align-items:center;background:radial-gradient(circle,#10294b 0%,#06101f 45%,#010308 100%);border:2.5px solid #ffc62b;box-shadow:0 0 10px #00aaff}
-.nav-logo:before{content:"";position:absolute;width:30px;height:30px;border-radius:50%;border:1.5px solid #00b7ff}
-.nav-logo .crown{position:absolute;top:1px;font-size:9px;color:#ffd329}
-.nav-logo .letter{font-family:Georgia,serif;font-size:18px;font-weight:bold;font-style:italic;color:#fff;text-shadow:1px 1px 0 #006cff;position:relative;top:1px}
-.nav-logo .orbit{position:absolute;width:28px;height:10px;border:2px solid #00baff;border-right-color:#ffc62b;border-radius:50%;transform:rotate(-15deg);top:14px}
-.nav-a{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.nav-a a{text-decoration:none;color:var(--mut);font-size:.86rem;font-weight:600;padding:8px 14px;border-radius:999px;transition:.2s}
-.nav-a a:hover{color:#fff;background:rgba(255,255,255,.06)}
-.nav-a a.login{border:1px solid rgba(56,189,248,.4);color:#7dd3fc}
-.nav-a a.reg{background:linear-gradient(135deg,var(--a),#818cf8);color:#041018;box-shadow:0 6px 20px rgba(56,189,248,.3)}
-.hero{padding:48px 0 32px;text-align:center}
-.pill{display:inline-flex;gap:8px;align-items:center;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.35);color:var(--g);padding:6px 12px;border-radius:999px;font-size:.78rem;font-weight:700;margin-bottom:14px}
-.hero h1{font-size:clamp(1.7rem,4.5vw,2.6rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
-.hero h1 span{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{max-width:560px;margin:0 auto 20px;color:var(--mut)}
-.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.cta a{text-decoration:none;padding:12px 20px;border-radius:14px;font-weight:700}
-.cta .p{background:linear-gradient(135deg,var(--a),#818cf8);color:#041018}
-.cta .g{border:1px solid var(--line);color:var(--txt)}
-.sec{padding:28px 0}
-.sec h2{text-align:center;font-size:1.35rem;font-weight:800;margin-bottom:6px}
-.sec .sub{text-align:center;color:var(--mut);margin-bottom:20px;font-size:.92rem}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.step{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
-.step .n{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),var(--b));color:#041018;font-weight:800;margin-bottom:10px}
-.step h3{font-size:1rem;margin-bottom:6px}
-.step p{font-size:.86rem;color:var(--mut)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;transition:.2s}
-.card:hover{border-color:rgba(56,189,248,.4);transform:translateY(-2px)}
-.card .top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.card .num{width:28px;height:28px;border-radius:8px;background:rgba(56,189,248,.15);color:var(--a);display:grid;place-items:center;font-size:.75rem;font-weight:800}
-.card h3{font-size:.95rem;margin:0}
-.card p{font-size:.8rem;color:var(--mut)}
-.tag{display:inline-block;margin-top:8px;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:999px}
-.tag.ready{background:rgba(52,211,153,.15);color:#4ade80}
-.tag.soon{background:rgba(251,191,36,.12);color:#fbbf24}
-.free{margin:16px 0 36px;padding:24px;border-radius:20px;text-align:center;background:linear-gradient(135deg,rgba(52,211,153,.12),rgba(56,189,248,.08));border:1px solid rgba(52,211,153,.28)}
-.wa{display:inline-flex;gap:8px;align-items:center;background:#25D366;color:#042;text-decoration:none;font-weight:800;padding:12px 18px;border-radius:14px;margin:8px 6px 0}
-footer{border-top:1px solid var(--line);padding:22px 0;text-align:center;color:var(--mut);font-size:.82rem}
-footer a{color:var(--a);text-decoration:none;margin:0 8px}
+body{font-family:Outfit,system-ui,sans-serif;min-height:100vh;position:relative}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(3,11,22,.85);border-bottom:1px solid rgba(0,229,255,.15);padding:10px 0}
+nav .in{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:800;letter-spacing:.04em}
+.nav-a a{text-decoration:none;color:var(--mut);font-weight:600;padding:8px 14px;border-radius:999px;font-size:.88rem}
+.nav-a a.reg{background:linear-gradient(135deg,var(--a),var(--b));color:#031018}
+.hero{text-align:center;padding:56px 0 36px;animation:fadeUp .7s ease both}
+.hero h1{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;background:linear-gradient(135deg,#fff,var(--a));-webkit-background-clip:text;background-clip:text;color:transparent;margin:12px 0}
+.hero p{color:var(--mut);max-width:560px;margin:0 auto 18px;line-height:1.6}
+.badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0 22px}
+.badges span{padding:8px 14px;border-radius:999px;font-size:.78rem;font-weight:800;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.08);color:var(--a)}
+.cta a{display:inline-block;margin:6px;padding:12px 20px;border-radius:14px;font-weight:800;text-decoration:none}
+.cta .p{background:linear-gradient(135deg,var(--a),var(--b));color:#031018}
+.cta .g{border:1px solid rgba(255,255,255,.15);color:#fff}
+.sec{padding:28px 0;position:relative;z-index:1}
+.sec h2{text-align:center;margin-bottom:8px;font-size:1.35rem}
+.sec .sub{text-align:center;color:var(--mut);margin-bottom:18px;font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:rgba(10,25,47,.7);border:1px solid rgba(0,229,255,.15);border-radius:18px;padding:18px;animation:fadeUp .6s ease both;transition:.25s}
+.card:hover{transform:translateY(-4px);border-color:var(--a);box-shadow:0 12px 32px rgba(0,229,255,.15)}
+.card h3{font-size:.98rem;margin:8px 0 6px}
+.card p{font-size:.82rem;color:var(--mut);line-height:1.5}
+.card .tag{display:inline-block;margin-top:10px;font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:999px;background:rgba(0,229,255,.12);color:var(--a)}
+.social{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:28px 0 12px}
+.social a{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:2px solid rgba(0,229,255,.35);color:var(--a);text-decoration:none;background:rgba(5,15,29,.9);transition:.25s}
+.social a:hover{box-shadow:0 0 20px rgba(0,229,255,.4);transform:scale(1.08)}
+footer{text-align:center;padding:24px;color:var(--mut);font-size:.82rem;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06)}
+footer a{color:var(--a);margin:0 8px;text-decoration:none}
 </style>
 </head>
 <body>
+<div class="atuls-live-bg" aria-hidden="true"><div class="grid"></div><div class="orb orb1"></div><div class="orb orb2"></div></div>
 <nav><div class="wrap in">
-  <a class="logo" href="index.html">
-    <div class="nav-logo"><div class="crown">♛</div><div class="letter">A</div><div class="orbit"></div></div>
-    A-Tuls
-  </a>
+  <a class="logo" href="index.html"><img class="logo-img-main" src="logo.png" alt="A-Tuls"> A-TULS</a>
   <div class="nav-a">
-    <a href="#how">How it works</a>
-    <a href="#tools">15 Tools</a>
-    <a class="login" href="login.html"><i class="fas fa-right-to-bracket"></i> Login</a>
-    <a class="reg" href="signup.html"><i class="fas fa-user-plus"></i> Register</a>
+    <a href="#tools">Tools</a>
+    <a href="login.html">Login</a>
+    <a class="reg" href="signup.html">Register</a>
   </div>
 </div></nav>
 
 <section class="hero wrap">
-  <div class="pill"><i class="fas fa-unlock"></i> ALL FREE · No package required</div>
-  <h1>Welcome to <span>A-Tuls</span> Community</h1>
-  <p>Smart tools. Faster workflow. Real results — 15 tools in one dashboard. Use Login or Register from the menu to get started.</p>
+  <img class="logo-img-main" src="logo.png" alt="A-Tuls" style="width:88px;height:88px;margin:0 auto 8px;display:block">
+  <div class="badges">
+    <span>100% Free</span>
+    <span>VIEW Tools</span>
+    <span>Free Website</span>
+    <span>AI Support</span>
+  </div>
+  <h1>A-Tuls Community</h1>
+  <p>Smart email tools, vault, generators & more — free workspace with live theme and support.</p>
   <div class="cta">
     <a class="p" href="signup.html">Create free account</a>
     <a class="g" href="login.html">Login</a>
   </div>
 </section>
 
-<section class="wrap sec" id="how">
-  <h2>How it works</h2>
-  <p class="sub">Start in 3 simple steps</p>
-  <div class="steps">
-    <div class="step"><div class="n">1</div><h3>Request API & Register</h3><p>Message Admin for an API code, then open Register and create your account.</p></div>
-    <div class="step"><div class="n">2</div><h3>Open Dashboard</h3><p>Access all tools, Vault, reports, and AI support from one place.</p></div>
-    <div class="step"><div class="n">3</div><h3>Need help?</h3><p>Contact Admin on WhatsApp for API codes or support anytime.</p></div>
-  </div>
-</section>
-
 <section class="wrap sec" id="tools">
-  <h2>15 Tools — Overview</h2>
-  <p class="sub">10 Ready · 5 Coming Soon</p>
+  <h2>Tools</h2>
+  <p class="sub">Ready tools + new extras</p>
   <div class="grid">
-    <div class="card"><div class="top"><span class="num">1</span><h3>Gmail Format Fixer Pro</h3></div><p>Clean and organize email:password lists with All / Good / D / Duplicate tabs. Fast on large lists.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">2</span><h3>Email Report</h3></div><p>Build summaries: totals, valid, duplicates and format-based stats for your lists.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">3</span><h3>Personal Email Vault</h3></div><p>Secure cloud storage per user — same data on every device. Only you can manage your files.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">4</span><h3>Gmail Format Fixer</h3></div><p>Lightweight fix for spaces, tabs and colons into standard email:password format.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">5</span><h3>Easy Email Validator</h3></div><p>Check syntax and format. Remove invalid addresses for a production-ready list.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">6</span><h3>Duplicate Email Checker</h3></div><p>Scan large lists for duplicates and export a unique, clean dataset.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">7</span><h3>Email Data Formatter</h3></div><p>Convert tab, comma, space or colon data into one format. Easy export and copy.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">8</span><h3>Password Generator</h3></div><p>Generate multiple strong random passwords in one click.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">9</span><h3>Name & Recovery Generator</h3></div><p>Random names, usernames and recovery-related text for quick setup.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">10</span><h3>IP Timezone Finder</h3></div><p>IP location, timezone, country and network info in real time.</p><span class="tag ready">Ready</span></div>
-    <div class="card"><div class="top"><span class="num">11</span><h3>Gmail Checker</h3></div><p>Advanced Gmail status checker — coming soon.</p><span class="tag soon">Coming Soon</span></div>
-    <div class="card"><div class="top"><span class="num">12</span><h3>2FA Generator</h3></div><p>Generate 2FA / OTP codes — coming soon.</p><span class="tag soon">Coming Soon</span></div>
-    <div class="card"><div class="top"><span class="num">13</span><h3>Temp Mail</h3></div><p>Temporary disposable email — coming soon.</p><span class="tag soon">Coming Soon</span></div>
-    <div class="card"><div class="top"><span class="num">14</span><h3>IP & VPN Zone</h3></div><p>IP / VPN marketplace zone — coming soon.</p><span class="tag soon">Coming Soon</span></div>
-    <div class="card"><div class="top"><span class="num">15</span><h3>Outside Zone</h3></div><p>Extra community tools zone — coming soon.</p><span class="tag soon">Coming Soon</span></div>
+    <div class="card"><h3>Gmail Format Fixer Pro</h3><p>Clean email:password lists fast.</p><span class="tag">Ready</span></div>
+    <div class="card"><h3>Email Report</h3><p>Totals, valid, duplicates summary.</p><span class="tag">Ready</span></div>
+    <div class="card"><h3>Personal Email Vault</h3><p>Cloud save per account.</p><span class="tag">Ready</span></div>
+    <div class="card"><h3>UID Checker</h3><p>Check and validate UID formats quickly.</p><span class="tag">New</span></div>
+    <div class="card"><h3>AI Website</h3><p>AI-assisted mini site builder helper.</p><span class="tag">New</span></div>
+    <div class="card"><h3>Bio Link Website</h3><p>Create a simple bio link page layout.</p><span class="tag">New</span></div>
+    <div class="card"><h3>Duplicate Checker</h3><p>Remove repeated emails.</p><span class="tag">Ready</span></div>
+    <div class="card"><h3>Password Generator</h3><p>Strong random passwords.</p><span class="tag">Ready</span></div>
+    <div class="card"><h3>IP Timezone</h3><p>Location & timezone lookup.</p><span class="tag">Ready</span></div>
   </div>
 </section>
 
-<section class="wrap">
-  <div class="free">
-    <h2>All tools are free</h2>
-    <p style="color:var(--mut);margin:8px 0 4px;max-width:480px;margin-left:auto;margin-right:auto">No package required. To get a signup <b>API code</b>, message Admin with the ready English text below.</p>
-    <a class="wa" href="https://wa.me/8801336489062?text=Hello Admin,%0A%0AI would like to request an API code to create my A-Tuls account.%0A%0APlease share a valid signup API key.%0A%0AThank you." target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Request API code (Admin)</a>
-    <a class="wa" href="https://wa.me/8801336489062" target="_blank" rel="noopener" style="background:#128C7E"><i class="fab fa-whatsapp"></i> Message Admin</a>
+<section class="wrap sec">
+  <h2>Connect</h2>
+  <p class="sub">Support & community</p>
+  <div class="social">
+    <a href="https://wa.me/8801336489062" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://wa.me/8801336489062?text=Hello%20Admin%2C%0A%0AI%20would%20like%20to%20request%20an%20API%20code." target="_blank" title="API request"><i class="fas fa-key"></i></a>
+    <a href="login.html" title="Login"><i class="fas fa-right-to-bracket"></i></a>
   </div>
 </section>
-<footer><div class="wrap"><strong style="color:#fff">A-Tuls</strong> Community<br>
-<a href="index.html">Home</a><a href="login.html">Login</a><a href="signup.html">Register</a>
-<a href="https://wa.me/8801336489062?text=Hello Admin,%0A%0AI would like to request an API code to create my A-Tuls account.%0A%0APlease share a valid signup API key.%0A%0AThank you." target="_blank">Request API</a></div></footer>
 
-<style>
-#atulsIndexAiFab{position:fixed;right:16px;bottom:20px;z-index:80;width:54px;height:54px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(135deg,#38bdf8,#818cf8);color:#041018;font-size:1.25rem;box-shadow:0 10px 28px rgba(56,189,248,.35)}
-#atulsIndexAi{position:fixed;right:12px;bottom:84px;z-index:81;width:min(340px,calc(100vw - 24px));max-height:70vh;background:#0e1428;border:1px solid rgba(255,255,255,.1);border-radius:18px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.4)}
-#atulsIndexAi.open{display:flex}
-#atulsIndexAi .hd{padding:12px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;display:flex;justify-content:space-between;align-items:center}
-#atulsIndexAi .bd{padding:12px;overflow-y:auto;flex:1;font-size:.86rem;line-height:1.5;color:#e2e8f0}
-#atulsIndexAi .ft{padding:10px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-wrap:wrap;gap:6px}
-#atulsIndexAi .ft button{border:1px solid rgba(255,255,255,.12);background:#1e293b;color:#cbd5e1;border-radius:999px;padding:6px 10px;font-size:.72rem;cursor:pointer}
-</style>
-<button type="button" id="atulsIndexAiFab" aria-label="Help"><i class="fas fa-circle-question"></i></button>
-<div id="atulsIndexAi">
-  <div class="hd"><strong>Registration Help</strong><button type="button" id="atulsIndexAiX" style="background:0;border:0;color:#fff;font-size:1.1rem;cursor:pointer">✕</button></div>
-  <div class="bd" id="atulsIndexAiBd">Hi! I only help with <b>how to register</b> on A-Tuls. Tap a question below.</div>
-  <div class="ft" id="atulsIndexAiFt"></div>
-</div>
-<script>
-(function(){
-  var fab=document.getElementById('atulsIndexAiFab');
-  var box=document.getElementById('atulsIndexAi');
-  var bd=document.getElementById('atulsIndexAiBd');
-  var ft=document.getElementById('atulsIndexAiFt');
-  var x=document.getElementById('atulsIndexAiX');
-  if(!fab) return;
-  var WA='https://wa.me/8801336489062?text='+encodeURIComponent('Hello Admin,\n\nI would like to request an API code to create my A-Tuls account.\n\nPlease share a valid signup API key.\n\nThank you.');
-  var ans={
-    'How do I register?':'1) Message Admin for an <b>API code</b>.<br>2) Open <b>Register</b>.<br>3) Enter username, email, API code, password.<br>4) Submit — you will enter the dashboard.',
-    'Where is API code?':'API code comes from <b>Admin only</b>. Use the green <b>Request API code</b> button or WhatsApp Admin.',
-    'Request API message':'A ready English WhatsApp message is prepared for you.<br><a href="'+WA+'" target="_blank" style="color:#7dd3fc">Open WhatsApp → Request API</a>',
-    'After register?':'After successful signup you are logged in and can use all free tools from the Dashboard.'
-  };
-  Object.keys(ans).forEach(function(k){
-    var b=document.createElement('button'); b.type='button'; b.textContent=k;
-    b.onclick=function(){ bd.innerHTML=ans[k]; };
-    ft.appendChild(b);
-  });
-  fab.onclick=function(){ box.classList.add('open'); };
-  x.onclick=function(){ box.classList.remove('open'); };
-})();
-</script>
-
+<footer>
+  <img src="logo.png" alt="" style="width:36px;height:36px;border-radius:50%;vertical-align:middle;margin-right:6px">
+  <strong style="color:#fff">A-Tuls</strong> · Free tools<br>
+  <a href="index.html">Home</a><a href="login.html">Login</a><a href="signup.html">Register</a>
+</footer>
 </body>
 </html>

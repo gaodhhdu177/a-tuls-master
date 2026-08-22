@@ -63,12 +63,15 @@
     var r=document.documentElement;
     r.style.setProperty('--bg',t.bg);
     r.style.setProperty('--panel',t.panel);
+    r.style.setProperty('--card',t.panel);
     r.style.setProperty('--a',t.a);
     r.style.setProperty('--b',t.b);
     r.style.setProperty('--txt',t.txt);
     r.style.setProperty('--p',t.a);
     r.style.setProperty('--pd',t.b);
-    try{ document.body.style.background=t.bg; }catch(e){}
+    r.style.setProperty('--blue',t.a);
+    r.style.setProperty('--teal',t.b);
+    try{ document.body.style.background=t.bg; document.body.style.color=t.txt; }catch(e){}
     localStorage.setItem('a_tuls_theme', id);
   }
   async function loadRemote(){
@@ -81,7 +84,7 @@
         var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
         if(row.key==='site_theme') applyTheme(String(v||'midnight'));
         if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
-        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||''));
+        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||'150'));
         if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
       });
     }catch(e){}
@@ -89,10 +92,9 @@
   var local=localStorage.getItem('a_tuls_theme')||'midnight';
   applyTheme(local);
   loadRemote();
-  setInterval(loadRemote, 60000);
+  setInterval(loadRemote, 45000);
 })();
 </script>
-
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
