@@ -961,9 +961,6 @@ function toggleBlockDevice(key){
   loadUltraTracking();
   alert(blocked[key]?'Device blocked':'Device unblocked');
 }
-}catch(e){ console.warn(e); if(box) box.innerHTML='<p class="text-muted">Tracking unavailable</p>'; }
-}
-
 
 const DEFAULT_PKG_PRICES = [
   {id:'1day', name:'1 Day', duration:'1 Day', old:50, price:20},
@@ -1164,7 +1161,7 @@ function renderThemeGrid(){
   const colors={midnight:'#38bdf8',ocean:'#22d3ee',forest:'#34d399',sunset:'#fb7185',royal:'#a78bfa',slate:'#94a3b8',crimson:'#f43f5e',amber:'#fbbf24',mint:'#2dd4bf',graphite:'#a3a3a3'};
   box.innerHTML=ATULS_THEMES.map(function(id){
     const on=id===selectedTheme?'border:2px solid #a78bfa':'border:1px solid rgba(255,255,255,.12)';
-    return '<div class="col-6 col-md-3"><button type="button" class="w-100 text-start p-2 rounded-3" style="background:#12182b;'+on+';color:#e2e8f0" onclick="selectedTheme=''+id+'';renderThemeGrid()"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+(colors[id]||'#fff')+';margin-right:8px"></span>'+id+'</button></div>';
+    return '<div class="col-6 col-md-3"><button type="button" class="w-100 text-start p-2 rounded-3" style="background:#12182b;'+on+';color:#e2e8f0" onclick="selectedTheme=\''+id+'\';renderThemeGrid()"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+(colors[id]||'#fff')+';margin-right:8px"></span>'+id+'</button></div>';
   }).join('');
 }
 async function upsertSetting(key,value){
