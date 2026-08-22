@@ -26,6 +26,59 @@
 })();
 </script>
 
+<script>
+/* A-Tuls live theme + settings from Supabase */
+(function(){
+  var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+  var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+  var THEMES={
+    midnight:{bg:'#050816',panel:'#0e1428',a:'#38bdf8',b:'#a78bfa',txt:'#eef2ff'},
+    ocean:{bg:'#02141f',panel:'#0a2433',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
+    forest:{bg:'#06140f',panel:'#0c241c',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
+    sunset:{bg:'#1a0b10',panel:'#2a1218',a:'#fb7185',b:'#fbbf24',txt:'#fff1f2'},
+    royal:{bg:'#0c0a1a',panel:'#16122e',a:'#a78bfa',b:'#e879f9',txt:'#f5f3ff'},
+    slate:{bg:'#0f172a',panel:'#1e293b',a:'#94a3b8',b:'#64748b',txt:'#f8fafc'},
+    crimson:{bg:'#14060a',panel:'#240c12',a:'#f43f5e',b:'#fb7185',txt:'#fff1f2'},
+    amber:{bg:'#140e04',panel:'#241a0a',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb'},
+    mint:{bg:'#041412',panel:'#0a2420',a:'#2dd4bf',b:'#5eead4',txt:'#f0fdfa'},
+    graphite:{bg:'#0a0a0b',panel:'#171717',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
+  };
+  function applyTheme(id){
+    var t=THEMES[id]||THEMES.midnight;
+    var r=document.documentElement;
+    r.style.setProperty('--bg',t.bg);
+    r.style.setProperty('--panel',t.panel);
+    r.style.setProperty('--a',t.a);
+    r.style.setProperty('--b',t.b);
+    r.style.setProperty('--txt',t.txt);
+    r.style.setProperty('--p',t.a);
+    r.style.setProperty('--pd',t.b);
+    try{ document.body.style.background=t.bg; }catch(e){}
+    localStorage.setItem('a_tuls_theme', id);
+  }
+  async function loadRemote(){
+    try{
+      var h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+      var r=await fetch(SB_URL+"a_tuls_settings?or=(key.eq.site_theme,key.eq.site_notice,key.eq.paid_api_price,key.eq.site_time_note)&select=key,value",{headers:h});
+      if(!r.ok) return;
+      var rows=await r.json();
+      (rows||[]).forEach(function(row){
+        var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
+        if(row.key==='site_theme') applyTheme(String(v||'midnight'));
+        if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
+        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||''));
+        if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
+      });
+    }catch(e){}
+  }
+  var local=localStorage.getItem('a_tuls_theme')||'midnight';
+  applyTheme(local);
+  loadRemote();
+  setInterval(loadRemote, 60000);
+})();
+</script>
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A-Tuls · Free Smart Tools</title>
@@ -150,5 +203,46 @@ footer a{color:var(--a);text-decoration:none;margin:0 8px}
 <footer><div class="wrap"><strong style="color:#fff">A-Tuls</strong> Community<br>
 <a href="index.html">Home</a><a href="login.html">Login</a><a href="signup.html">Register</a>
 <a href="https://wa.me/8801336489062?text=Hello Admin,%0A%0AI would like to request an API code to create my A-Tuls account.%0A%0APlease share a valid signup API key.%0A%0AThank you." target="_blank">Request API</a></div></footer>
+
+<style>
+#atulsIndexAiFab{position:fixed;right:16px;bottom:20px;z-index:80;width:54px;height:54px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(135deg,#38bdf8,#818cf8);color:#041018;font-size:1.25rem;box-shadow:0 10px 28px rgba(56,189,248,.35)}
+#atulsIndexAi{position:fixed;right:12px;bottom:84px;z-index:81;width:min(340px,calc(100vw - 24px));max-height:70vh;background:#0e1428;border:1px solid rgba(255,255,255,.1);border-radius:18px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.4)}
+#atulsIndexAi.open{display:flex}
+#atulsIndexAi .hd{padding:12px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;display:flex;justify-content:space-between;align-items:center}
+#atulsIndexAi .bd{padding:12px;overflow-y:auto;flex:1;font-size:.86rem;line-height:1.5;color:#e2e8f0}
+#atulsIndexAi .ft{padding:10px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-wrap:wrap;gap:6px}
+#atulsIndexAi .ft button{border:1px solid rgba(255,255,255,.12);background:#1e293b;color:#cbd5e1;border-radius:999px;padding:6px 10px;font-size:.72rem;cursor:pointer}
+</style>
+<button type="button" id="atulsIndexAiFab" aria-label="Help"><i class="fas fa-circle-question"></i></button>
+<div id="atulsIndexAi">
+  <div class="hd"><strong>Registration Help</strong><button type="button" id="atulsIndexAiX" style="background:0;border:0;color:#fff;font-size:1.1rem;cursor:pointer">✕</button></div>
+  <div class="bd" id="atulsIndexAiBd">Hi! I only help with <b>how to register</b> on A-Tuls. Tap a question below.</div>
+  <div class="ft" id="atulsIndexAiFt"></div>
+</div>
+<script>
+(function(){
+  var fab=document.getElementById('atulsIndexAiFab');
+  var box=document.getElementById('atulsIndexAi');
+  var bd=document.getElementById('atulsIndexAiBd');
+  var ft=document.getElementById('atulsIndexAiFt');
+  var x=document.getElementById('atulsIndexAiX');
+  if(!fab) return;
+  var WA='https://wa.me/8801336489062?text='+encodeURIComponent('Hello Admin,\n\nI would like to request an API code to create my A-Tuls account.\n\nPlease share a valid signup API key.\n\nThank you.');
+  var ans={
+    'How do I register?':'1) Message Admin for an <b>API code</b>.<br>2) Open <b>Register</b>.<br>3) Enter username, email, API code, password.<br>4) Submit — you will enter the dashboard.',
+    'Where is API code?':'API code comes from <b>Admin only</b>. Use the green <b>Request API code</b> button or WhatsApp Admin.',
+    'Request API message':'A ready English WhatsApp message is prepared for you.<br><a href="'+WA+'" target="_blank" style="color:#7dd3fc">Open WhatsApp → Request API</a>',
+    'After register?':'After successful signup you are logged in and can use all free tools from the Dashboard.'
+  };
+  Object.keys(ans).forEach(function(k){
+    var b=document.createElement('button'); b.type='button'; b.textContent=k;
+    b.onclick=function(){ bd.innerHTML=ans[k]; };
+    ft.appendChild(b);
+  });
+  fab.onclick=function(){ box.classList.add('open'); };
+  x.onclick=function(){ box.classList.remove('open'); };
+})();
+</script>
+
 </body>
 </html>
