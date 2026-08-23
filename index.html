@@ -9,182 +9,248 @@
     var proto=(location.protocol||'').toLowerCase();
     var ok=(host==='a-tuls-master-n0k1.onrender.com'||host.endsWith('.onrender.com')||host.endsWith('.pages.dev')||host.endsWith('.netlify.app')||host.endsWith('.vercel.app')||host.endsWith('.workers.dev'));
     if(proto==='file:'||!host||!ok){
-      document.documentElement.innerHTML='<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center"><h1 style="margin:0;font-size:1.75rem">Access Denied</h1></div>';
+      document.documentElement.innerHTML='<div style="font-family:system-ui;padding:48px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center"><h1>Access Denied</h1></div>';
       throw new Error('domain-lock');
     }
   }catch(e){ if(String(e.message||e)==='domain-lock') throw e; }
 })();
 </script>
 
-<script>
-/* A-Tuls live theme */
-(function(){
-  var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-  var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-  var THEMES={
-    midnight:{bg:'#030b16',a:'#00e5ff',b:'#3a86ff',txt:'#f0f6fc'},
-    ocean:{bg:'#02141f',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
-    forest:{bg:'#06140f',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
-    sunset:{bg:'#1a0b10',a:'#fb7185',b:'#fbbf24',txt:'#fff1f2'},
-    royal:{bg:'#0c0a1a',a:'#a78bfa',b:'#e879f9',txt:'#f5f3ff'},
-    slate:{bg:'#0f172a',a:'#94a3b8',b:'#64748b',txt:'#f8fafc'},
-    crimson:{bg:'#14060a',a:'#f43f5e',b:'#fb7185',txt:'#fff1f2'},
-    amber:{bg:'#140e04',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb'},
-    mint:{bg:'#041412',a:'#2dd4bf',b:'#5eead4',txt:'#f0fdfa'},
-    graphite:{bg:'#0a0a0b',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
-  };
-  function applyTheme(id){
-    var t=THEMES[id]||THEMES.midnight;
-    var r=document.documentElement;
-    r.style.setProperty('--bg',t.bg); r.style.setProperty('--a',t.a); r.style.setProperty('--b',t.b); r.style.setProperty('--txt',t.txt);
-    r.style.setProperty('--p',t.a); r.style.setProperty('--primary-accent',t.a);
-    try{ document.body.style.backgroundColor=t.bg; }catch(e){}
-    localStorage.setItem('a_tuls_theme', id);
-  }
-  async function loadRemote(){
-    try{
-      var h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
-      var r=await fetch(SB_URL+"a_tuls_settings?key=eq.site_theme&select=value",{headers:h});
-      if(!r.ok) return;
-      var rows=await r.json();
-      if(rows&&rows[0]){ var v=rows[0].value; if(typeof v==='object'&&v) v=v.v||v.id||''; applyTheme(String(v||'midnight')); }
-    }catch(e){}
-  }
-  applyTheme(localStorage.getItem('a_tuls_theme')||'midnight');
-  loadRemote(); setInterval(loadRemote,60000);
-})();
-</script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A-Tuls · Free Smart Tools</title>
-<meta name="theme-color" content="#030b16">
+<title>A-Tuls · Home</title>
 <link rel="icon" href="logo.png" type="image/png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-
-:root{ --bg:#030b16; --a:#00e5ff; --b:#3a86ff; --txt:#f0f6fc; --mut:#8b949e; }
-body{
-  background-color:var(--bg)!important;
-  background-image:
-    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--a) 12%, transparent), transparent 28%),
-    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--b) 12%, transparent), transparent 28%)!important;
-  color:var(--txt);
-}
-.atuls-live-bg{
-  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
-}
-.atuls-live-bg .orb{
-  position:absolute; border-radius:50%; filter:blur(60px); opacity:.35;
-  animation:orbMove 12s ease-in-out infinite alternate;
-}
-.atuls-live-bg .orb1{ width:420px;height:420px; left:-80px; top:10%; background:var(--a); }
-.atuls-live-bg .orb2{ width:360px;height:360px; right:-60px; bottom:15%; background:var(--b); animation-duration:15s; animation-direction:alternate-reverse; }
-.atuls-live-bg .grid{
-  position:absolute; inset:0; opacity:.12;
-  background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
-  background-size:48px 48px;
-  animation:gridShift 20s linear infinite;
-}
-@keyframes orbMove{ from{ transform:translate(0,0) scale(1);} to{ transform:translate(40px,30px) scale(1.15);} }
-@keyframes gridShift{ from{ background-position:0 0;} to{ background-position:48px 48px;} }
-@keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:none;} }
-.logo-img-main{
-  width:48px; height:48px; border-radius:50%; object-fit:cover;
-  border:2px solid color-mix(in srgb, var(--a) 40%, transparent);
-  box-shadow:0 0 16px color-mix(in srgb, var(--a) 35%, transparent);
-}
-
+:root{--a:#00e5ff;--bg:#030b16;--txt:#f0f6fc;--mut:#8b949e}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Outfit,system-ui,sans-serif;min-height:100vh;position:relative}
-.wrap{max-width:1100px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
-nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(3,11,22,.85);border-bottom:1px solid rgba(0,229,255,.15);padding:10px 0}
-nav .in{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:800;letter-spacing:.04em}
-.nav-a a{text-decoration:none;color:var(--mut);font-weight:600;padding:8px 14px;border-radius:999px;font-size:.88rem}
-.nav-a a.reg{background:linear-gradient(135deg,var(--a),var(--b));color:#031018}
-.hero{text-align:center;padding:56px 0 36px;animation:fadeUp .7s ease both}
-.hero h1{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;background:linear-gradient(135deg,#fff,var(--a));-webkit-background-clip:text;background-clip:text;color:transparent;margin:12px 0}
-.hero p{color:var(--mut);max-width:560px;margin:0 auto 18px;line-height:1.6}
-.badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0 22px}
-.badges span{padding:8px 14px;border-radius:999px;font-size:.78rem;font-weight:800;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.08);color:var(--a)}
-.cta a{display:inline-block;margin:6px;padding:12px 20px;border-radius:14px;font-weight:800;text-decoration:none}
-.cta .p{background:linear-gradient(135deg,var(--a),var(--b));color:#031018}
-.cta .g{border:1px solid rgba(255,255,255,.15);color:#fff}
-.sec{padding:28px 0;position:relative;z-index:1}
-.sec h2{text-align:center;margin-bottom:8px;font-size:1.35rem}
-.sec .sub{text-align:center;color:var(--mut);margin-bottom:18px;font-size:.92rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-.card{background:rgba(10,25,47,.7);border:1px solid rgba(0,229,255,.15);border-radius:18px;padding:18px;animation:fadeUp .6s ease both;transition:.25s}
-.card:hover{transform:translateY(-4px);border-color:var(--a);box-shadow:0 12px 32px rgba(0,229,255,.15)}
-.card h3{font-size:.98rem;margin:8px 0 6px}
-.card p{font-size:.82rem;color:var(--mut);line-height:1.5}
-.card .tag{display:inline-block;margin-top:10px;font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:999px;background:rgba(0,229,255,.12);color:var(--a)}
-.social{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:28px 0 12px}
-.social a{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:2px solid rgba(0,229,255,.35);color:var(--a);text-decoration:none;background:rgba(5,15,29,.9);transition:.25s}
-.social a:hover{box-shadow:0 0 20px rgba(0,229,255,.4);transform:scale(1.08)}
-footer{text-align:center;padding:24px;color:var(--mut);font-size:.82rem;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06)}
+body{font-family:Outfit,system-ui,sans-serif;background:#030b16;color:var(--txt);min-height:100vh;overflow-x:hidden}
+
+.spooky-house{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
+.content-circle{position:absolute;width:100%;height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,rgba(0,40,80,.4) 0%,transparent 60%)}
+.hill{position:absolute;width:160vw;height:42vh;bottom:-12vh;left:-30vw;border-radius:50% 50% 0 0;background:linear-gradient(to top,#000 60%,#0a0a12);z-index:3;box-shadow:0 -20px 60px rgba(0,0,0,.8)}
+.house{position:absolute;width:140px;height:170px;background:#050508;left:50%;margin-left:-70px;bottom:28vh;transform:rotate(4deg) scale(1.15);transform-origin:bottom center;z-index:2;filter:drop-shadow(0 -8px 25px rgba(0,229,255,.35));animation:pulseDropShadow 2.5s infinite alternate}
+@keyframes pulseDropShadow{0%{filter:drop-shadow(0 -5px 15px rgba(0,229,255,.25))}100%{filter:drop-shadow(0 -8px 30px rgba(0,229,255,.65))}}
+.house:before{content:"";position:absolute;width:0;height:0;border-bottom:35px solid #050508;border-right:55px solid transparent;left:130px;top:75px;transform:rotate(5deg)}
+.house:after{content:"";position:absolute;width:6px;height:70px;background:#050508;left:165px;top:105px}
+.porch{position:absolute;width:35px;height:110px;background:#050508;left:-25px;top:60px;transform:rotate(-9deg)}
+.porch:before{content:"";position:absolute;width:0;height:0;border-bottom:22px solid #050508;border-left:45px solid transparent;left:-40px;top:50px}
+.porch:after{content:"";position:absolute;width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-bottom:32px solid #050508;left:-6px;top:-28px}
+.first-floor{position:absolute;transform:rotate(-9deg);background:#050508;width:6px;height:50px;left:-42px;top:135px}
+.first-floor:before{content:"";position:absolute;background:#050508;width:95px;height:100px;top:-160px;left:55px}
+.first-floor:after{content:"";position:absolute;border-left:58px solid transparent;border-right:58px solid transparent;border-bottom:55px solid #050508;top:-214px;left:45px}
+.second-floor{position:absolute;background:#050508;width:40px;height:110px;transform:rotate(3deg);top:-75px;left:75px}
+.second-floor:before{content:"";position:absolute;background:#050508;width:22px;height:110px;left:38px;top:42px;transform:rotate(-3deg)}
+.second-floor:after{content:"";position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:32px solid #050508;top:10px;left:16px}
+.roof{position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:32px solid #050508;left:72px;top:-105px}
+.door{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);width:32px;height:55px;transform:rotate(-5deg);border-radius:32px 32px 0 0;box-shadow:inset -12px 6px rgba(0,0,0,.5),0 0 20px rgba(0,229,255,.9);top:100px;left:48px}
+.door:before{content:"";position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:32px 32px 0 0;box-shadow:inset -6px 3px rgba(0,0,0,.5),0 0 12px rgba(0,229,255,.8);width:22px;height:32px;left:-45px;transform:rotate(-3deg)}
+.door:after{content:"";position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);box-shadow:inset -6px 3px rgba(0,0,0,.5),0 0 12px rgba(0,229,255,.8);border-radius:32px 32px 0 0;width:22px;height:32px;left:50px;transform:rotate(3deg)}
+.small-windows{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:30px 30px 0 0;width:14px;height:26px;left:110px;top:-22px;box-shadow:-22px -42px #00e5ff,0 0 12px rgba(0,229,255,.6)}
+.big-window{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:30px 30px 0 0;transform:rotate(-6deg);width:34px;height:44px;top:-38px;left:12px;box-shadow:0 0 20px rgba(0,229,255,.7)}
+.moon{position:absolute;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e8f4ff,#a0c4e8 60%,#6a9cc8);z-index:1;right:8vw;top:10vh;box-shadow:0 0 40px rgba(0,229,255,.35)}
+.stars{position:absolute;width:100%;height:100%;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.6;animation:twinkle 3s infinite ease-in-out alternate}
+.star:nth-child(1){left:10%;top:15%}
+.star:nth-child(2){left:25%;top:8%;width:3px;height:3px}
+.star:nth-child(3){left:40%;top:22%}
+.star:nth-child(4){left:60%;top:12%}
+.star:nth-child(5){left:75%;top:18%}
+.star:nth-child(6){left:85%;top:30%}
+.star:nth-child(7){left:5%;top:35%}
+.star:nth-child(8){left:92%;top:8%;width:3px;height:3px}
+@keyframes twinkle{0%{opacity:.3}100%{opacity:1;transform:scale(1.3)}}
+.fireflies{position:absolute;width:100%;height:100%;z-index:5}
+.firefly{position:absolute;width:5px;height:5px;background:#00e5ff;border-radius:50%;box-shadow:0 0 12px #00e5ff;animation:float 7s infinite ease-in-out alternate}
+.firefly:nth-child(1){left:12%;bottom:18vh;animation-duration:5.5s}
+.firefly:nth-child(2){left:30%;bottom:48vh}
+.firefly:nth-child(3){left:70%;bottom:28vh}
+.firefly:nth-child(4){left:82%;bottom:55vh}
+.firefly:nth-child(5){left:50%;bottom:38vh}
+.firefly:nth-child(6){left:20%;bottom:60vh}
+@keyframes float{0%{transform:translate(0,0) scale(.7);opacity:.2}100%{transform:translate(25px,-50px) scale(1.5);opacity:1}}
+.butterfly-fly{position:fixed;z-index:40;pointer-events:none;width:70px;height:70px;animation:bfPath 18s linear infinite;filter:drop-shadow(0 8px 14px rgba(0,229,255,.4))}
+.butterfly-fly svg{height:100%}
+.butterfly-fly svg:nth-child(1){transform-origin:center right;animation:wing 0.45s ease-in-out infinite}
+.butterfly-fly svg:nth-child(2){height:50%}
+.butterfly-fly svg:nth-child(3){transform-origin:center left;animation:wing 0.45s ease-in-out infinite}
+@keyframes wing{0%,100%{transform:rotateY(0)}50%{transform:rotateY(65deg)}}
+@keyframes bfPath{
+  0%{transform:translate(-10vw,20vh) rotate(10deg)}
+  25%{transform:translate(40vw,35vh) rotate(-5deg)}
+  50%{transform:translate(90vw,15vh) rotate(8deg)}
+  75%{transform:translate(50vw,55vh) rotate(-12deg)}
+  100%{transform:translate(-10vw,20vh) rotate(10deg)}
+}
+
+.page{position:relative;z-index:2}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 16px 80px}
+.hero img.logo{width:96px;height:96px;border-radius:50%;border:2px solid rgba(0,229,255,.4);box-shadow:0 0 28px rgba(0,229,255,.35);margin-bottom:14px}
+.hero h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:.06em;
+  background:linear-gradient(135deg,#fff,var(--a));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(0,229,255,.2)}
+.hero p{color:var(--mut);max-width:480px;margin:12px auto 20px;line-height:1.6}
+.hero .btns a{display:inline-block;margin:6px;padding:12px 22px;border-radius:14px;font-weight:800;text-decoration:none}
+.hero .btns .p{background:linear-gradient(135deg,#00e5ff,#3a86ff);color:#031018}
+.hero .btns .g{border:1px solid rgba(255,255,255,.2);color:#fff}
+.scroll-hint{margin-top:28px;color:var(--a);font-size:.85rem;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px);opacity:.6}}
+.section{padding:40px 16px;max-width:1000px;margin:0 auto}
+.section h2{text-align:center;margin-bottom:8px;font-size:1.4rem}
+.section .sub{text-align:center;color:var(--mut);margin-bottom:20px;font-size:.9rem}
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tcard{display:block;text-decoration:none;color:inherit;background:rgba(10,25,47,.72);border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;padding:16px;transition:.25s;backdrop-filter:blur(8px)}
+.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0 12px 28px rgba(0,229,255,.15)}
+.tcard b{display:block;margin-bottom:6px;font-size:.95rem}
+.tcard span{font-size:.8rem;color:var(--mut)}
+footer{text-align:center;padding:28px 16px 40px;color:var(--mut);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
 footer a{color:var(--a);margin:0 8px;text-decoration:none}
+.nav-top{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:10px 16px;
+  background:rgba(3,11,22,.7);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,229,255,.12)}
+.nav-top a{color:#fff;text-decoration:none;font-weight:700;font-size:.9rem}
+.nav-top .r a{margin-left:10px;padding:8px 12px;border-radius:999px}
+.nav-top .r .reg{background:linear-gradient(135deg,#00e5ff,#3a86ff);color:#031018}
 </style>
 </head>
 <body>
-<div class="atuls-live-bg" aria-hidden="true"><div class="grid"></div><div class="orb orb1"></div><div class="orb orb2"></div></div>
-<nav><div class="wrap in">
-  <a class="logo" href="index.html"><img class="logo-img-main" src="logo.png" alt="A-Tuls"> A-TULS</a>
-  <div class="nav-a">
-    <a href="#tools">Tools</a>
-    <a href="login.html">Login</a>
-    <a class="reg" href="signup.html">Register</a>
-  </div>
-</div></nav>
 
-<section class="hero wrap">
-  <img class="logo-img-main" src="logo.png" alt="A-Tuls" style="width:88px;height:88px;margin:0 auto 8px;display:block">
-  <div class="badges">
-    <span>100% Free</span>
-    <span>VIEW Tools</span>
-    <span>Free Website</span>
-    <span>AI Support</span>
+<div class="spooky-house" aria-hidden="true">
+  <div class="content-circle">
+    <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+    <div class="moon"></div>
+    <div class="hill"></div>
+    <div class="house">
+      <div class="porch"></div><div class="first-floor"></div><div class="second-floor"></div><div class="roof"></div>
+      <div class="door"></div><div class="small-windows"></div><div class="big-window"></div>
+    </div>
+    <div class="fireflies"><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div></div>
   </div>
-  <h1>A-Tuls Community</h1>
-  <p>Smart email tools, vault, generators & more — free workspace with live theme and support.</p>
-  <div class="cta">
-    <a class="p" href="signup.html">Create free account</a>
-    <a class="g" href="login.html">Login</a>
-  </div>
-</section>
+</div>
 
-<section class="wrap sec" id="tools">
-  <h2>Tools</h2>
-  <p class="sub">Ready tools + new extras</p>
-  <div class="grid">
-    <div class="card"><h3>Gmail Format Fixer Pro</h3><p>Clean email:password lists fast.</p><span class="tag">Ready</span></div>
-    <div class="card"><h3>Email Report</h3><p>Totals, valid, duplicates summary.</p><span class="tag">Ready</span></div>
-    <div class="card"><h3>Personal Email Vault</h3><p>Cloud save per account.</p><span class="tag">Ready</span></div>
-    <div class="card"><h3>UID Checker</h3><p>Check and validate UID formats quickly.</p><span class="tag">New</span></div>
-    <div class="card"><h3>AI Website</h3><p>AI-assisted mini site builder helper.</p><span class="tag">New</span></div>
-    <div class="card"><h3>Bio Link Website</h3><p>Create a simple bio link page layout.</p><span class="tag">New</span></div>
-    <div class="card"><h3>Duplicate Checker</h3><p>Remove repeated emails.</p><span class="tag">Ready</span></div>
-    <div class="card"><h3>Password Generator</h3><p>Strong random passwords.</p><span class="tag">Ready</span></div>
-    <div class="card"><h3>IP Timezone</h3><p>Location & timezone lookup.</p><span class="tag">Ready</span></div>
-  </div>
-</section>
 
-<section class="wrap sec">
-  <h2>Connect</h2>
-  <p class="sub">Support & community</p>
-  <div class="social">
-    <a href="https://wa.me/8801336489062" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    <a href="https://wa.me/8801336489062?text=Hello%20Admin%2C%0A%0AI%20would%20like%20to%20request%20an%20API%20code." target="_blank" title="API request"><i class="fas fa-key"></i></a>
-    <a href="login.html" title="Login"><i class="fas fa-right-to-bracket"></i></a>
-  </div>
-</section>
+<div class="butterfly-fly" aria-hidden="true">
+  <svg viewBox="0 0 50 50" fill="#00e5ff"><path d="M25 5 C15 15, 5 25, 15 35 C20 40, 25 30, 25 25 C25 30, 30 40, 35 35 C45 25, 35 15, 25 5 Z"/></svg>
+  <svg viewBox="0 0 20 40" fill="#00e5ff"><ellipse cx="10" cy="20" rx="4" ry="18"/></svg>
+  <svg viewBox="0 0 50 50" fill="#00e5ff"><path d="M25 5 C35 15, 45 25, 35 35 C30 40, 25 30, 25 25 C25 30, 20 40, 15 35 C5 25, 15 15, 25 5 Z"/></svg>
+</div>
 
-<footer>
-  <img src="logo.png" alt="" style="width:36px;height:36px;border-radius:50%;vertical-align:middle;margin-right:6px">
-  <strong style="color:#fff">A-Tuls</strong> · Free tools<br>
-  <a href="index.html">Home</a><a href="login.html">Login</a><a href="signup.html">Register</a>
-</footer>
+<div class="nav-top">
+  <a href="index.html"><img src="logo.png" alt="" style="width:32px;height:32px;border-radius:50%;vertical-align:middle;margin-right:6px">A-Tuls</a>
+  <div class="r"><a href="login.html">Login</a><a class="reg" href="signup.html">Register</a></div>
+</div>
+<div class="page">
+  <section class="hero">
+    <img class="logo" src="logo.png" alt="A-Tuls">
+    <h1>A-TULS</h1>
+    <p>Free smart tools community · email, vault, generators & more</p>
+    <div class="btns">
+      <a class="p" href="signup.html">Create free account</a>
+      <a class="g" href="login.html">Login</a>
+    </div>
+    <div class="scroll-hint">↓ Scroll for all 18 tools</div>
+  </section>
+
+  <section class="section" id="tools">
+    <h2>All Tools (18)</h2>
+    <p class="sub">Login to open applications from Dashboard</p>
+    <div class="tools"><a class="tcard" href="gmail-format-fixer-pro.html"><b>1. Gmail Format Fixer Pro</b><span>Clean email:password lists.</span></a><a class="tcard" href="email-report.html"><b>2. Email Report</b><span>Found vs Good report.</span></a><a class="tcard" href="personal-email-vault.html"><b>3. Personal Email Vault</b><span>Cloud list storage.</span></a><a class="tcard" href="gmail-format-fixer.html"><b>4. Gmail Format Fixer</b><span>Light format fix.</span></a><a class="tcard" href="easy-email-validator.html"><b>5. Easy Email Validator</b><span>Syntax validation.</span></a><a class="tcard" href="duplicate-email-checker.html"><b>6. Duplicate Email Checker</b><span>Remove duplicates.</span></a><a class="tcard" href="email-data-formatter.html"><b>7. Email Data Formatter</b><span>CSV / list convert.</span></a><a class="tcard" href="password-generator.html"><b>8. Password Generator</b><span>Strong passwords.</span></a><a class="tcard" href="name-generator.html"><b>9. Name Generator</b><span>Names & recovery text.</span></a><a class="tcard" href="ip-timezone.html"><b>10. IP Timezone Finder</b><span>Location & timezone.</span></a><a class="tcard" href="gmail-checker.html"><b>11. Gmail Checker</b><span>Coming soon.</span></a><a class="tcard" href="2fa-generator.html"><b>12. 2FA Generator</b><span>Coming soon.</span></a><a class="tcard" href="temp-mail.html"><b>13. Temp Mail</b><span>Coming soon.</span></a><a class="tcard" href="ip-vpn-zone.html"><b>14. IP & VPN Zone</b><span>Coming soon.</span></a><a class="tcard" href="outside-zone.html"><b>15. Outside Zone</b><span>Coming soon.</span></a><a class="tcard" href="uid-checker.html"><b>16. UID Checker</b><span>Validate UIDs.</span></a><a class="tcard" href="ai-website.html"><b>17. AI Website</b><span>Site idea helper.</span></a><a class="tcard" href="bio-link.html"><b>18. Bio Link Website</b><span>Bio link page.</span></a></div>
+  </section>
+
+  <section class="section">
+    <h2>Weather</h2>
+    <p class="sub">Live-style widget</p>
+    
+<style>
+.weather-widget{width:100%;max-width:380px;margin:0 auto;height:230px;border-radius:28px;position:relative;
+  background:linear-gradient(145deg,rgba(16,25,45,.85),rgba(8,14,25,.92));backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 50px rgba(0,0,0,.55),0 0 40px rgba(0,229,255,.12);
+  overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:22px}
+.widget-background{position:absolute;inset:0;opacity:.5}
+.widget-background::before,.widget-background::after{content:'';position:absolute;border-radius:50%;filter:blur(40px);animation:meshMove 9s ease-in-out infinite alternate}
+.widget-background::before{width:180px;height:180px;background:#00e5ff;top:-50px;right:-40px;opacity:.3}
+.widget-background::after{width:200px;height:200px;background:#3a86ff;bottom:-70px;left:-50px;opacity:.22;animation-delay:-4s}
+@keyframes meshMove{to{transform:translate(-30px,30px) scale(1.12)}}
+.w-content{display:flex;justify-content:space-between;z-index:1}
+.temp-value{font-size:56px;font-weight:200;letter-spacing:-2px}
+.w-loc{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:rgba(255,255,255,.1);padding:6px 12px;border-radius:20px;margin-top:10px}
+.w-icon{width:80px;height:80px;position:relative;animation:iconFloat 4s ease-in-out infinite alternate}
+@keyframes iconFloat{to{transform:translateY(6px)}}
+.sun{position:absolute;top:4px;right:4px;width:40px;height:40px;background:linear-gradient(135deg,#FFDE00,#FF7B00);border-radius:50%;box-shadow:0 0 28px rgba(255,123,0,.7);animation:sunSpin 20s linear infinite}
+@keyframes sunSpin{to{transform:rotate(360deg)}}
+.cloud-front{position:absolute;top:36px;left:2px;width:64px;height:22px;background:linear-gradient(180deg,#fff,#E0E6ED);border-radius:20px}
+.cloud-front::before{content:'';position:absolute;top:-14px;left:10px;width:28px;height:28px;background:#fff;border-radius:50%}
+.cloud-front::after{content:'';position:absolute;top:-18px;right:12px;width:32px;height:32px;background:#fff;border-radius:50%}
+.w-status{font-size:12px;font-weight:700;color:#00e5ff;letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;text-align:center}
+.w-bottom{display:flex;justify-content:space-between;z-index:1;background:rgba(0,0,0,.25);padding:10px 16px;border-radius:16px;font-size:12px;color:rgba(255,255,255,.75)}
+</style>
+<div class="weather-widget">
+  <div class="widget-background"></div>
+  <div class="w-content">
+    <div>
+      <div class="temp-value">28°</div>
+      <div class="w-loc">📍 Dhaka, BD</div>
+    </div>
+    <div style="text-align:center">
+      <div class="w-icon"><div class="sun"></div><div class="cloud-front"></div></div>
+      <div class="w-status">Partly Cloudy</div>
+    </div>
+  </div>
+  <div class="w-bottom"><span>💧 65%</span><span>💨 12 km/h</span><span>☀ UV 5</span></div>
+</div>
+
+  </section>
+
+  <section class="section">
+    <h2>Connect</h2>
+    <p class="sub">Social media</p>
+    
+<style>
+.social-card{width:100%;max-width:520px;margin:0 auto;background:#050f1d;border-radius:22px;box-shadow:0 25px 60px rgba(0,0,0,.65);border:1px solid rgba(0,229,255,.12);padding:2rem 1rem 1.5rem}
+.social-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.tooltip-container{position:relative}
+.tooltip-container.youtube{--c:#ff0000}.tooltip-container.facebook{--c:#1877f2}.tooltip-container.tiktok{--c:#00f2fe}
+.tooltip-container.instagram{--c:#e1306c}.tooltip-container.whatsapp{--c:#25D366}.tooltip-container.telegram{--c:#0088cc}
+.tooltip-container.discord{--c:#5865F2}.tooltip-container.twitter{--c:#fff}
+.icon .layer{width:46px;height:46px;border:2.5px solid var(--c);border-radius:50%;box-shadow:0 0 12px var(--c);display:flex;align-items:center;justify-content:center;background:#050f1d;position:relative;transition:.3s}
+.icon:hover .layer{transform:rotate(-30deg) skew(14deg);box-shadow:0 0 26px var(--c)}
+.layer svg{width:20px;height:20px;fill:var(--c);z-index:2}
+.layer span{position:absolute;inset:0;border:1px solid var(--c);border-radius:50%;pointer-events:none}
+.icon:hover .layer span:nth-child(2){transform:translate(4px,-4px);opacity:.5}
+.icon:hover .layer span:nth-child(3){transform:translate(8px,-8px);opacity:.7}
+.tooltip{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 10px);opacity:0;visibility:hidden;transition:.25s;background:#02070f;border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.1);white-space:nowrap;z-index:20}
+.tooltip-container:hover .tooltip{opacity:1;visibility:visible}
+.tooltip-name{font-size:13px;font-weight:700;color:#fff}.tooltip-about{font-size:11px;color:#aaa}
+</style>
+<div class="social-card">
+  <div class="social-links">
+    <div class="tooltip-container youtube"><div class="tooltip"><div class="tooltip-name">YouTube</div><div class="tooltip-about">@mrgourabtv</div></div>
+      <a class="icon" href="https://youtube.com/@mrgourabtv" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div></a></div>
+    <div class="tooltip-container tiktok"><div class="tooltip"><div class="tooltip-name">TikTok</div><div class="tooltip-about">@gourab1234565</div></div>
+      <a class="icon" href="https://tiktok.com/@gourab1234565" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></div></a></div>
+    <div class="tooltip-container facebook"><div class="tooltip"><div class="tooltip-name">Facebook</div><div class="tooltip-about">Gourab Mondal</div></div>
+      <a class="icon" href="https://www.facebook.com/share/1C23Jg6RHt/" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div></a></div>
+    <div class="tooltip-container instagram"><div class="tooltip"><div class="tooltip-name">Instagram</div><div class="tooltip-about">@gourab112233</div></div>
+      <a class="icon" href="https://instagram.com/gourab112233" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></a></div>
+    <div class="tooltip-container whatsapp"><div class="tooltip"><div class="tooltip-name">WhatsApp</div><div class="tooltip-about">01336-489062</div></div>
+      <a class="icon" href="https://wa.me/8801336489062" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div></a></div>
+    <div class="tooltip-container telegram"><div class="tooltip"><div class="tooltip-name">Telegram</div><div class="tooltip-about">@gourab123456</div></div>
+      <a class="icon" href="https://t.me/gourab123456" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.458.02.889-.15 1.976-.896 6.786-.896 6.786-.189.658-.962.65-.962.65l-2.266-.742s.68-.55.74-.85c.04-.2-.14-.46-.14-.46l-1.63-1.55s-.3-.26-.04-.56c.34-.38 2.2-2.12 2.2-2.12s.1-.1-.06-.18c-.18-.1-.46.04-.46.04l-2.96 1.9s-.24.15-.55.02c-.3-.13-.54-.4-.54-.4l-2.36-.74s-.36-.14-.35-.48c.01-.34.4-.52.4-.52l9.5-3.7s.4-.15.6-.02z"/></svg></div></a></div>
+  </div>
+</div>
+
+  </section>
+
+  <footer>
+    <img src="logo.png" alt="" style="width:36px;height:36px;border-radius:50%;vertical-align:middle"> <strong style="color:#fff">A-Tuls</strong><br>
+    <a href="index.html">Home</a><a href="login.html">Login</a><a href="signup.html">Register</a>
+    <a href="https://wa.me/8801336489062" target="_blank">Admin</a>
+  </footer>
+</div>
 </body>
 </html>
