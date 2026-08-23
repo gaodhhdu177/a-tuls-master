@@ -257,6 +257,43 @@ body{
 
 body{background:#030b16!important;position:relative}
 .wrap,.card,.panel{position:relative;z-index:2}
+
+/* Butterfly (menu icon area) */
+.butterfly-loader{--sizeLoader:36px;display:flex;position:relative;width:var(--sizeLoader);height:var(--sizeLoader);filter:drop-shadow(0 0 8px rgba(0,229,255,.45))}
+.butterfly-loader svg:nth-child(1){height:100%;transform-origin:center right;animation:wing .5s ease-in-out infinite;fill:#00e5ff}
+.butterfly-loader svg:nth-child(2){height:50%;fill:#3a86ff}
+.butterfly-loader svg:nth-child(3){height:100%;transform-origin:center left;animation:wing .5s ease-in-out infinite;fill:#00e5ff}
+@keyframes wing{50%{transform:rotateY(60deg)}}
+/* APK shiny mini for ham button */
+.loader-apk-mini{position:relative;width:28px;height:28px;transform:scale(.55);transform-origin:center}
+.loader-apk-mini .p1,.loader-apk-mini .p2{position:absolute;background:#00e5ff;overflow:hidden}
+.loader-apk-mini .p1{width:40px;height:40px;clip-path:polygon(0 10%,70% 90%,40% 90%,0 45%)}
+.loader-apk-mini .p2{width:44px;height:38px;clip-path:polygon(100% 10%,100% 45%,83% 65%,55% 65%)}
+.loader-apk-mini .sh{position:absolute;top:0;left:0;opacity:.7;background:#fff;width:8px;height:40px;animation:shiny-1 1.5s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes shiny-1{0%{transform:translateX(-10px) skewX(-20deg)}100%{transform:translateX(50px) skewX(-20deg)}}
+/* Geometric spinner */
+.loader-yasin{width:48px;aspect-ratio:1.154;position:relative;margin:0 auto;
+  background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);
+  animation:l27-0 1.5s infinite cubic-bezier(.3,1,0,1);filter:drop-shadow(0 0 12px rgba(0,229,255,.55))}
+.loader-yasin:before,.loader-yasin:after{content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27-1 1.5s infinite}
+.loader-yasin:after{--s:-1}
+@keyframes l27-0{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+@keyframes l27-1{0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}}
+/* Hourglass */
+.hourglassBackground{position:relative;background:rgba(10,25,47,.9);height:110px;width:110px;border-radius:50%;margin:0 auto;border:1px solid rgba(0,229,255,.25)}
+.hourglassContainer{position:absolute;top:24px;left:32px;width:46px;height:62px;animation:hourglassRotate 2s ease-in infinite;transform-style:preserve-3d;perspective:1000px}
+@keyframes hourglassRotate{0%{transform:rotateX(0)}50%,100%{transform:rotateX(180deg)}}
+.hourglassGlass{position:absolute;top:28px;left:18px;width:8px;height:5px;background:#999;opacity:.5}
+.hourglassGlass:before,.hourglassGlass:after{content:'';position:absolute;background:#999;left:-15px;width:38px;height:24px}
+.hourglassGlass:before{top:-24px;border-radius:0 0 22px 22px}
+.hourglassGlass:after{bottom:-24px;border-radius:22px 22px 0 0}
+.hourglassSandStream:before{content:'';position:absolute;left:21px;width:3px;background:#00e5ff;animation:sandStream1 2s ease-in infinite}
+@keyframes sandStream1{0%{height:0;top:30px}50%{height:0;top:40px}60%{height:30px;top:8px}100%{height:0;top:8px}}
+.hourglassSand:before{content:'';position:absolute;left:6px;top:8px;width:34px;background:#00e5ff;border-radius:3px 3px 24px 24px;animation:sandFillup 2s ease-in infinite}
+@keyframes sandFillup{0%{opacity:0;height:0}60%{opacity:1;height:0}100%{opacity:1;height:14px}}
+.full-loader{position:fixed;inset:0;z-index:9999;background:rgba(3,11,22,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:#8b949e;font-size:.9rem}
+.full-loader.show{display:flex}
+
 </style>
 <script>
 /* ===== A-Tuls Database: Supabase (primary) =====
@@ -551,6 +588,18 @@ async function handleLogin(e) {
   try{ await pushLoginLog(sess); }catch(ex){}
   window.location.href = (sess.role === 'admin') ? 'admin.html' : 'dashboard.html';
 }
+</script>
+
+<div class="full-loader" id="loginLoader"><div class="loader-yasin"></div><div>Signing in…</div></div>
+<script>
+(function(){
+  var form=document.querySelector('form');
+  if(!form) return;
+  form.addEventListener('submit', function(){
+    var el=document.getElementById('loginLoader');
+    if(el) el.classList.add('show');
+  }, true);
+})();
 </script>
 </body>
 </html>
