@@ -18,123 +18,179 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A-Tuls</title>
-<link rel="icon" href="logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>A-Tuls · Home</title>
+<link rel="icon" href="logo.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--a:#00e5ff;--b:#3a86ff;--bg:#030b16;--txt:#f0f6fc;--mut:#8b949e;--primary-accent:#00e5ff;--primary-rgb:0,229,255}
+:root{--a:#00e5ff;--bg:#030b16;--txt:#f0f6fc;--mut:#8b949e}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:Outfit,system-ui,sans-serif;background:#030b16;color:var(--txt);min-height:100vh;overflow-x:hidden;
-  background-image:radial-gradient(circle at 15% 50%,rgba(0,229,255,.08),transparent 25%),radial-gradient(circle at 85% 30%,rgba(58,134,255,.08),transparent 25%)}
+body{font-family:Outfit,system-ui,sans-serif;background:#030b16;color:var(--txt);min-height:100vh;overflow-x:hidden}
 
-/* Butterfly (menu icon area) */
-.butterfly-loader{--sizeLoader:36px;display:flex;position:relative;width:var(--sizeLoader);height:var(--sizeLoader);filter:drop-shadow(0 0 8px rgba(0,229,255,.45))}
-.butterfly-loader svg:nth-child(1){height:100%;transform-origin:center right;animation:wing .5s ease-in-out infinite;fill:#00e5ff}
+.spooky-house{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
+.content-circle{position:absolute;width:100%;height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,rgba(0,40,80,.4) 0%,transparent 60%)}
+.hill{position:absolute;width:160vw;height:42vh;bottom:-12vh;left:-30vw;border-radius:50% 50% 0 0;background:linear-gradient(to top,#000 60%,#0a0a12);z-index:3;box-shadow:0 -20px 60px rgba(0,0,0,.8)}
+.house{position:absolute;width:140px;height:170px;background:#050508;left:50%;margin-left:-70px;bottom:28vh;transform:rotate(4deg) scale(1.15);transform-origin:bottom center;z-index:2;filter:drop-shadow(0 -8px 25px rgba(0,229,255,.35));animation:pulseDropShadow 2.5s infinite alternate}
+@keyframes pulseDropShadow{0%{filter:drop-shadow(0 -5px 15px rgba(0,229,255,.25))}100%{filter:drop-shadow(0 -8px 30px rgba(0,229,255,.65))}}
+.house:before{content:"";position:absolute;width:0;height:0;border-bottom:35px solid #050508;border-right:55px solid transparent;left:130px;top:75px;transform:rotate(5deg)}
+.house:after{content:"";position:absolute;width:6px;height:70px;background:#050508;left:165px;top:105px}
+.porch{position:absolute;width:35px;height:110px;background:#050508;left:-25px;top:60px;transform:rotate(-9deg)}
+.porch:before{content:"";position:absolute;width:0;height:0;border-bottom:22px solid #050508;border-left:45px solid transparent;left:-40px;top:50px}
+.porch:after{content:"";position:absolute;width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-bottom:32px solid #050508;left:-6px;top:-28px}
+.first-floor{position:absolute;transform:rotate(-9deg);background:#050508;width:6px;height:50px;left:-42px;top:135px}
+.first-floor:before{content:"";position:absolute;background:#050508;width:95px;height:100px;top:-160px;left:55px}
+.first-floor:after{content:"";position:absolute;border-left:58px solid transparent;border-right:58px solid transparent;border-bottom:55px solid #050508;top:-214px;left:45px}
+.second-floor{position:absolute;background:#050508;width:40px;height:110px;transform:rotate(3deg);top:-75px;left:75px}
+.second-floor:before{content:"";position:absolute;background:#050508;width:22px;height:110px;left:38px;top:42px;transform:rotate(-3deg)}
+.second-floor:after{content:"";position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:32px solid #050508;top:10px;left:16px}
+.roof{position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:32px solid #050508;left:72px;top:-105px}
+.door{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);width:32px;height:55px;transform:rotate(-5deg);border-radius:32px 32px 0 0;box-shadow:inset -12px 6px rgba(0,0,0,.5),0 0 20px rgba(0,229,255,.9);top:100px;left:48px}
+.door:before{content:"";position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:32px 32px 0 0;box-shadow:inset -6px 3px rgba(0,0,0,.5),0 0 12px rgba(0,229,255,.8);width:22px;height:32px;left:-45px;transform:rotate(-3deg)}
+.door:after{content:"";position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);box-shadow:inset -6px 3px rgba(0,0,0,.5),0 0 12px rgba(0,229,255,.8);border-radius:32px 32px 0 0;width:22px;height:32px;left:50px;transform:rotate(3deg)}
+.small-windows{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:30px 30px 0 0;width:14px;height:26px;left:110px;top:-22px;box-shadow:-22px -42px #00e5ff,0 0 12px rgba(0,229,255,.6)}
+.big-window{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:30px 30px 0 0;transform:rotate(-6deg);width:34px;height:44px;top:-38px;left:12px;box-shadow:0 0 20px rgba(0,229,255,.7)}
+.moon{position:absolute;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e8f4ff,#a0c4e8 60%,#6a9cc8);z-index:1;right:8vw;top:10vh;box-shadow:0 0 40px rgba(0,229,255,.35)}
+.stars{position:absolute;width:100%;height:100%;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.6;animation:twinkle 3s infinite ease-in-out alternate}
+.star:nth-child(1){left:10%;top:15%}
+.star:nth-child(2){left:25%;top:8%;width:3px;height:3px}
+.star:nth-child(3){left:40%;top:22%}
+.star:nth-child(4){left:60%;top:12%}
+.star:nth-child(5){left:75%;top:18%}
+.star:nth-child(6){left:85%;top:30%}
+.star:nth-child(7){left:5%;top:35%}
+.star:nth-child(8){left:92%;top:8%;width:3px;height:3px}
+@keyframes twinkle{0%{opacity:.3}100%{opacity:1;transform:scale(1.3)}}
+.fireflies{position:absolute;width:100%;height:100%;z-index:5}
+.firefly{position:absolute;width:5px;height:5px;background:#00e5ff;border-radius:50%;box-shadow:0 0 12px #00e5ff;animation:float 7s infinite ease-in-out alternate}
+.firefly:nth-child(1){left:12%;bottom:18vh;animation-duration:5.5s}
+.firefly:nth-child(2){left:30%;bottom:48vh}
+.firefly:nth-child(3){left:70%;bottom:28vh}
+.firefly:nth-child(4){left:82%;bottom:55vh}
+.firefly:nth-child(5){left:50%;bottom:38vh}
+.firefly:nth-child(6){left:20%;bottom:60vh}
+@keyframes float{0%{transform:translate(0,0) scale(.7);opacity:.2}100%{transform:translate(25px,-50px) scale(1.5);opacity:1}}
+.butterfly-fly{position:fixed;z-index:40;pointer-events:none;width:70px;height:70px;animation:bfPath 18s linear infinite;filter:drop-shadow(0 8px 14px rgba(0,229,255,.4))}
+.butterfly-fly svg{height:100%}
+.butterfly-fly svg:nth-child(1){transform-origin:center right;animation:wing 0.45s ease-in-out infinite}
+.butterfly-fly svg:nth-child(2){height:50%}
+.butterfly-fly svg:nth-child(3){transform-origin:center left;animation:wing 0.45s ease-in-out infinite}
+@keyframes wing{0%,100%{transform:rotateY(0)}50%{transform:rotateY(65deg)}}
+@keyframes bfPath{
+  0%{transform:translate(-10vw,20vh) rotate(10deg)}
+  25%{transform:translate(40vw,35vh) rotate(-5deg)}
+  50%{transform:translate(90vw,15vh) rotate(8deg)}
+  75%{transform:translate(50vw,55vh) rotate(-12deg)}
+  100%{transform:translate(-10vw,20vh) rotate(10deg)}
+}
+
+.page{position:relative;z-index:2}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 16px 80px}
+.hero img.logo{width:96px;height:96px;border-radius:50%;border:2px solid rgba(0,229,255,.4);box-shadow:0 0 28px rgba(0,229,255,.35);margin-bottom:14px}
+.hero h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:.06em;
+  background:linear-gradient(135deg,#fff,var(--a));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(0,229,255,.2)}
+.hero p{color:var(--mut);max-width:480px;margin:12px auto 20px;line-height:1.6}
+.hero .btns a{display:inline-block;margin:6px;padding:12px 22px;border-radius:14px;font-weight:800;text-decoration:none}
+.hero .btns .p{background:linear-gradient(135deg,#00e5ff,#3a86ff);color:#031018}
+.hero .btns .g{border:1px solid rgba(255,255,255,.2);color:#fff}
+.scroll-hint{margin-top:28px;color:var(--a);font-size:.85rem;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px);opacity:.6}}
+.section{padding:40px 16px;max-width:1000px;margin:0 auto}
+.section h2{text-align:center;margin-bottom:8px;font-size:1.4rem}
+.section .sub{text-align:center;color:var(--mut);margin-bottom:20px;font-size:.9rem}
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tcard{display:block;text-decoration:none;color:inherit;background:rgba(10,25,47,.72);border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;padding:16px;transition:.25s;backdrop-filter:blur(8px)}
+.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0 12px 28px rgba(0,229,255,.15)}
+.tcard b{display:block;margin-bottom:6px;font-size:.95rem}
+.tcard span{font-size:.8rem;color:var(--mut)}
+footer{text-align:center;padding:28px 16px 40px;color:var(--mut);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
+footer a{color:var(--a);margin:0 8px;text-decoration:none}
+.nav-top{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:10px 16px;
+  background:rgba(3,11,22,.7);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,229,255,.12)}
+.nav-top a{color:#fff;text-decoration:none;font-weight:700;font-size:.9rem}
+.nav-top .r a{margin-left:10px;padding:8px 12px;border-radius:999px}
+.nav-top .r .reg{background:linear-gradient(135deg,#00e5ff,#3a86ff);color:#031018}
+
+/* ===== Live loaders + hamburger menu ===== */
+.butterfly-loader{--sizeLoader:56px;display:flex;position:relative;width:var(--sizeLoader);height:var(--sizeLoader);margin:18px auto 0;filter:drop-shadow(0 8px 12px rgba(0,229,255,.4))}
+.butterfly-loader svg:nth-child(1){height:100%;transform-origin:center right;animation:wingHam .5s ease-in-out infinite;fill:#00e5ff}
 .butterfly-loader svg:nth-child(2){height:50%;fill:#3a86ff}
-.butterfly-loader svg:nth-child(3){height:100%;transform-origin:center left;animation:wing .5s ease-in-out infinite;fill:#00e5ff}
-@keyframes wing{50%{transform:rotateY(60deg)}}
-/* APK shiny mini for ham button */
+.butterfly-loader svg:nth-child(3){height:100%;transform-origin:center left;animation:wingHam .5s ease-in-out infinite;fill:#00e5ff}
+@keyframes wingHam{50%{transform:rotateY(60deg)}}
 .loader-apk-mini{position:relative;width:28px;height:28px;transform:scale(.55);transform-origin:center}
 .loader-apk-mini .p1,.loader-apk-mini .p2{position:absolute;background:#00e5ff;overflow:hidden}
 .loader-apk-mini .p1{width:40px;height:40px;clip-path:polygon(0 10%,70% 90%,40% 90%,0 45%)}
 .loader-apk-mini .p2{width:44px;height:38px;clip-path:polygon(100% 10%,100% 45%,83% 65%,55% 65%)}
-.loader-apk-mini .sh{position:absolute;top:0;left:0;opacity:.7;background:#fff;width:8px;height:40px;animation:shiny-1 1.5s cubic-bezier(.4,0,.2,1) infinite}
-@keyframes shiny-1{0%{transform:translateX(-10px) skewX(-20deg)}100%{transform:translateX(50px) skewX(-20deg)}}
-/* Geometric spinner */
-.loader-yasin{width:48px;aspect-ratio:1.154;position:relative;margin:0 auto;
+.loader-apk-mini .sh{position:absolute;top:0;left:0;opacity:.7;background:#fff;width:8px;height:40px;animation:shiny1 1.5s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes shiny1{0%{transform:translateX(-10px) skewX(-20deg)}100%{transform:translateX(50px) skewX(-20deg)}}
+.loader-yasin{width:44px;aspect-ratio:1.154;position:relative;margin:0 auto;
   background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);
-  animation:l27-0 1.5s infinite cubic-bezier(.3,1,0,1);filter:drop-shadow(0 0 12px rgba(0,229,255,.55))}
-.loader-yasin:before,.loader-yasin:after{content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27-1 1.5s infinite}
+  animation:l27a 1.5s infinite cubic-bezier(.3,1,0,1);filter:drop-shadow(0 0 12px rgba(0,229,255,.55))}
+.loader-yasin:before,.loader-yasin:after{content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27b 1.5s infinite}
 .loader-yasin:after{--s:-1}
-@keyframes l27-0{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
-@keyframes l27-1{0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}}
-/* Hourglass */
-.hourglassBackground{position:relative;background:rgba(10,25,47,.9);height:110px;width:110px;border-radius:50%;margin:0 auto;border:1px solid rgba(0,229,255,.25)}
-.hourglassContainer{position:absolute;top:24px;left:32px;width:46px;height:62px;animation:hourglassRotate 2s ease-in infinite;transform-style:preserve-3d;perspective:1000px}
-@keyframes hourglassRotate{0%{transform:rotateX(0)}50%,100%{transform:rotateX(180deg)}}
-.hourglassGlass{position:absolute;top:28px;left:18px;width:8px;height:5px;background:#999;opacity:.5}
-.hourglassGlass:before,.hourglassGlass:after{content:'';position:absolute;background:#999;left:-15px;width:38px;height:24px}
-.hourglassGlass:before{top:-24px;border-radius:0 0 22px 22px}
-.hourglassGlass:after{bottom:-24px;border-radius:22px 22px 0 0}
-.hourglassSandStream:before{content:'';position:absolute;left:21px;width:3px;background:#00e5ff;animation:sandStream1 2s ease-in infinite}
-@keyframes sandStream1{0%{height:0;top:30px}50%{height:0;top:40px}60%{height:30px;top:8px}100%{height:0;top:8px}}
-.hourglassSand:before{content:'';position:absolute;left:6px;top:8px;width:34px;background:#00e5ff;border-radius:3px 3px 24px 24px;animation:sandFillup 2s ease-in infinite}
-@keyframes sandFillup{0%{opacity:0;height:0}60%{opacity:1;height:0}100%{opacity:1;height:14px}}
-.full-loader{position:fixed;inset:0;z-index:9999;background:rgba(3,11,22,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:#8b949e;font-size:.9rem}
-.full-loader.show{display:flex}
-
-.spooky-house{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.hill{position:absolute;width:160vw;height:42vh;bottom:-12vh;left:-30vw;border-radius:50% 50% 0 0;background:linear-gradient(to top,#000 60%,#0a0a12);z-index:3}
-.house{position:absolute;width:130px;height:160px;background:#050508;left:50%;margin-left:-65px;bottom:27vh;transform:rotate(4deg) scale(1.15);z-index:2;
-  filter:drop-shadow(0 -8px 22px rgba(0,229,255,.4));animation:ph 2.8s ease-in-out infinite alternate}
-@keyframes ph{to{filter:drop-shadow(0 -8px 30px rgba(0,229,255,.75))}}
-.door{position:absolute;width:30px;height:50px;left:46px;top:95px;border-radius:30px 30px 0 0;background:linear-gradient(180deg,#00e5ff,#00b8d4);box-shadow:0 0 18px rgba(0,229,255,.9)}
-.win{position:absolute;width:30px;height:40px;left:12px;top:-34px;border-radius:28px 28px 0 0;background:linear-gradient(180deg,#00e5ff,#00b8d4);box-shadow:0 0 16px rgba(0,229,255,.7)}
-.moon{position:absolute;width:110px;height:110px;border-radius:50%;right:9vw;top:11vh;background:radial-gradient(circle at 35% 35%,#e8f4ff,#8eb4d8);box-shadow:0 0 36px rgba(0,229,255,.3)}
-.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.6}
-.page{position:relative;z-index:2}
-.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
-  background:rgba(3,11,22,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,229,255,.15)}
-.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800}
-.brand img{width:42px;height:42px;border-radius:50%;border:2px solid rgba(0,229,255,.35)}
-.ham{width:48px;height:48px;border-radius:14px;border:1px solid rgba(0,229,255,.25);background:rgba(5,15,29,.9);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;gap:2px;box-shadow:0 0 14px rgba(0,229,255,.15)}
+@keyframes l27a{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+@keyframes l27b{0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}}
+.ham{width:48px;height:48px;border-radius:14px;border:1px solid rgba(0,229,255,.3);background:rgba(5,15,29,.95);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 14px rgba(0,229,255,.2)}
 .drawer-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:80;opacity:0;visibility:hidden;transition:.25s}
 .drawer-bg.show{opacity:1;visibility:visible}
-.drawer{position:fixed;top:0;right:0;width:min(300px,90vw);height:100%;background:#050f1d;z-index:90;transform:translateX(105%);
-  transition:transform .28s ease;border-left:1px solid rgba(0,229,255,.2);padding:22px 16px;box-shadow:-16px 0 40px rgba(0,0,0,.5)}
+.drawer{position:fixed;top:0;right:0;width:min(310px,92vw);height:100%;background:#050f1d;z-index:90;
+  transform:translateX(105%);transition:transform .28s ease;border-left:1px solid rgba(0,229,255,.2);padding:18px 14px 28px;
+  box-shadow:-16px 0 40px rgba(0,0,0,.5);overflow:auto}
 .drawer.open{transform:none}
-.drawer-load{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;gap:12px;color:var(--mut);font-size:.85rem}
+.drawer-load{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;gap:12px;color:#8b949e;font-size:.85rem}
 .drawer-body{display:none}
 .drawer-body.ready{display:block}
-.drawer h4{font-size:.72rem;color:var(--mut);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
-.drawer a{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:14px;text-decoration:none;font-weight:700;margin-bottom:8px}
+.drawer h4{font-size:.7rem;color:#8b949e;letter-spacing:.1em;text-transform:uppercase;margin:12px 0 10px}
+.drawer a.login,.drawer a.signup{display:flex;align-items:center;gap:10px;padding:13px 12px;border-radius:14px;text-decoration:none;font-weight:700;margin-bottom:8px}
 .drawer a.login{color:#3b82f6;background:rgba(59,130,246,.1)}
 .drawer a.signup{color:#22c55e;background:rgba(34,197,94,.1)}
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
-.hero img{width:100px;height:100px;border-radius:50%;border:2px solid rgba(0,229,255,.4);box-shadow:0 0 30px rgba(0,229,255,.35);margin-bottom:12px}
-.hero h1{font-family:Orbitron,sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--a);letter-spacing:4px;text-shadow:0 0 18px rgba(0,229,255,.4)}
-.hero .fly{margin-top:28px}
-.section{padding:36px 16px;max-width:980px;margin:0 auto}
-.section h2{text-align:center;font-family:Orbitron,sans-serif;font-size:1.1rem;color:var(--a);letter-spacing:2px;margin-bottom:16px}
-.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.tcard{text-align:left;width:100%;background:rgba(5,15,29,.75);border:1px solid rgba(0,229,255,.18);border-radius:18px;padding:16px;
-  cursor:pointer;color:inherit;font:inherit;transition:.25s}
-.tcard:hover{border-color:var(--a);box-shadow:0 12px 28px rgba(0,229,255,.12);transform:translateY(-2px)}
-.tcard b{display:block;font-size:.92rem;margin-bottom:6px}
-.tcard .st{font-size:.66rem;font-weight:800;color:var(--a)}
-.tcard .st.soon{color:#fbbf24}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:flex-end;justify-content:center}
-.overlay.show{display:flex}
-.panel{width:100%;max-width:440px;background:#050f1d;border:1px solid rgba(0,229,255,.3);border-radius:20px 20px 0 0;padding:22px 18px 28px;position:relative}
-.panel .x{position:absolute;right:14px;top:12px;border:0;background:0;color:#fff;font-size:1.3rem;cursor:pointer}
-.panel .badge{font-size:.68rem;font-weight:800;padding:3px 10px;border-radius:999px;background:rgba(0,229,255,.15);color:var(--a)}
-.panel .badge.soon{background:rgba(251,191,36,.15);color:#fbbf24}
-.panel h3{margin:10px 0 8px;font-size:1.15rem}
-.panel p{color:#c5d0dc;line-height:1.65;font-size:.9rem}
-.weather-box{max-width:360px;margin:0 auto;border-radius:24px;padding:20px;background:rgba(5,15,29,.85);border:1px solid rgba(255,255,255,.1)}
-.social{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.social a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:2px solid rgba(0,229,255,.35);color:var(--a);text-decoration:none;font-size:.7rem;font-weight:800;background:#050f1d}
-footer{text-align:center;padding:24px;color:var(--mut);font-size:.8rem;border-top:1px solid rgba(255,255,255,.06)}
+.drawer .mt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  color:#e2e8f0;border-radius:12px;padding:10px 12px;margin:0 0 6px;cursor:pointer;font:inherit;font-size:.82rem}
+.drawer .mt:hover{border-color:rgba(0,229,255,.35)}
+.drawer .mt small{display:block;color:#8b949e;font-size:.7rem;margin-top:2px}
+button.tcard{width:100%;text-align:left;font:inherit;cursor:pointer;color:inherit;background:rgba(10,25,47,.72);border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;padding:16px;transition:.25s;backdrop-filter:blur(8px)}
+button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0 12px 28px rgba(0,229,255,.15)}
+.detail-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.detail-ov.show{display:flex}
+.detail-panel{width:100%;max-width:440px;background:#050f1d;border:1px solid rgba(0,229,255,.3);border-radius:20px 20px 0 0;padding:22px 18px 28px;position:relative}
+.detail-panel .x{position:absolute;right:14px;top:10px;border:0;background:0;color:#fff;font-size:1.3rem;cursor:pointer}
+.detail-panel .badge{font-size:.68rem;font-weight:800;padding:3px 10px;border-radius:999px;background:rgba(0,229,255,.15);color:#00e5ff}
+.detail-panel .badge.soon{background:rgba(251,191,36,.15);color:#fbbf24}
+.detail-panel h3{margin:10px 0 8px;font-size:1.1rem}
+.detail-panel p{color:#c5d0dc;line-height:1.65;font-size:.9rem}
+
 </style>
 </head>
 <body>
+
 <div class="spooky-house" aria-hidden="true">
-  <div class="star" style="left:12%;top:14%"></div><div class="star" style="left:28%;top:9%"></div>
-  <div class="star" style="left:55%;top:16%"></div><div class="star" style="left:78%;top:11%"></div>
-  <div class="moon"></div><div class="hill"></div>
-  <div class="house"><div class="door"></div><div class="win"></div></div>
+  <div class="content-circle">
+    <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+    <div class="moon"></div>
+    <div class="hill"></div>
+    <div class="house">
+      <div class="porch"></div><div class="first-floor"></div><div class="second-floor"></div><div class="roof"></div>
+      <div class="door"></div><div class="small-windows"></div><div class="big-window"></div>
+    </div>
+    <div class="fireflies"><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div></div>
+  </div>
 </div>
 
-<header class="topbar">
-  <a class="brand" href="#top"><img src="logo.png" alt="">A-Tuls</a>
+
+<div class="butterfly-fly" aria-hidden="true">
+  <svg viewBox="0 0 50 50" fill="#00e5ff"><path d="M25 5 C15 15, 5 25, 15 35 C20 40, 25 30, 25 25 C25 30, 30 40, 35 35 C45 25, 35 15, 25 5 Z"/></svg>
+  <svg viewBox="0 0 20 40" fill="#00e5ff"><ellipse cx="10" cy="20" rx="4" ry="18"/></svg>
+  <svg viewBox="0 0 50 50" fill="#00e5ff"><path d="M25 5 C35 15, 45 25, 35 35 C30 40, 25 30, 25 25 C25 30, 20 40, 15 35 C5 25, 15 15, 25 5 Z"/></svg>
+</div>
+
+<div class="nav-top">
+  <a href="index.html"><img src="logo.png" alt="" style="width:32px;height:32px;border-radius:50%;vertical-align:middle;margin-right:6px">A-Tuls</a>
   <button type="button" class="ham" id="hamBtn" aria-label="Menu" title="Menu">
     <div class="loader-apk-mini"><div class="p1"><div class="sh"></div></div><div class="p2"></div></div>
   </button>
-</header>
-
+</div>
 <div class="drawer-bg" id="drawerBg"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-load" id="drawerLoad">
@@ -142,106 +198,202 @@ footer{text-align:center;padding:24px;color:var(--mut);font-size:.8rem;border-to
     <span>Loading menu…</span>
   </div>
   <div class="drawer-body" id="drawerBody">
-    <h4>Main menu</h4>
-    <a class="login" href="login.html"><i class="fas fa-right-to-bracket"></i> Login</a>
-    <a class="signup" href="signup.html"><i class="fas fa-user-plus"></i> Signup</a>
+    <h4>Account</h4>
+    <a class="login" href="login.html">→ Login</a>
+    <a class="signup" href="signup.html">＋ Signup</a>
+    <h4>Tools (details)</h4>
+    <div id="menuTools"></div>
   </div>
 </aside>
-
-<div class="page" id="top">
+<div class="detail-ov" id="detailOv">
+  <div class="detail-panel">
+    <button type="button" class="x" id="detailX">×</button>
+    <span class="badge" id="dBadge">Ready</span>
+    <h3 id="dTitle"></h3>
+    <p id="dDesc"></p>
+  </div>
+</div>
+<div class="page">
   <section class="hero">
-    <img src="logo.png" alt="A-Tuls">
+    <img class="logo" src="logo.png" alt="A-Tuls">
     <h1>A-TULS</h1>
-    <div class="fly butterfly-loader" style="--sizeLoader:56px;margin-top:24px">
+    <p>Free smart tools community · email, vault, generators & more</p>
+    <div class="btns">
+      <a class="p" href="signup.html">Create free account</a>
+      <a class="g" href="login.html">Login</a>
+    </div>
+    <div class="butterfly-loader">
       <svg viewBox="0 0 50 50"><path d="M25 30 L25 10 C25 5 15 0 10 10 C5 20 15 30 25 30 Z"></path></svg>
       <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"></circle></svg>
       <svg viewBox="0 0 50 50"><path d="M25 30 L25 10 C25 5 35 0 40 10 C45 20 35 30 25 30 Z"></path></svg>
     </div>
+    <div class="scroll-hint">↓ Scroll for all 18 tools</div>
   </section>
 
   <section class="section" id="tools">
-    <h2>TOOLS</h2>
+    <h2>All Tools (18)</h2>
+    <p class="sub">Login to open applications from Dashboard</p>
     <div class="tools" id="toolGrid"></div>
   </section>
 
-  <section class="section" id="weather">
-    <h2>WEATHER</h2>
-    <div class="weather-box">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><div style="font-size:48px;font-weight:200">28°</div><div style="color:var(--mut);font-size:.85rem">📍 Dhaka, BD</div></div>
-        <div style="color:var(--a);font-weight:700;font-size:.75rem">PARTLY CLOUDY</div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:.8rem;color:var(--mut)"><span>💧 65%</span><span>💨 12 km/h</span><span>☀ UV 5</span></div>
+  <section class="section">
+    <h2>Weather</h2>
+    <p class="sub">Live-style widget</p>
+    
+<style>
+.weather-widget{width:100%;max-width:380px;margin:0 auto;height:230px;border-radius:28px;position:relative;
+  background:linear-gradient(145deg,rgba(16,25,45,.85),rgba(8,14,25,.92));backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 50px rgba(0,0,0,.55),0 0 40px rgba(0,229,255,.12);
+  overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:22px}
+.widget-background{position:absolute;inset:0;opacity:.5}
+.widget-background::before,.widget-background::after{content:'';position:absolute;border-radius:50%;filter:blur(40px);animation:meshMove 9s ease-in-out infinite alternate}
+.widget-background::before{width:180px;height:180px;background:#00e5ff;top:-50px;right:-40px;opacity:.3}
+.widget-background::after{width:200px;height:200px;background:#3a86ff;bottom:-70px;left:-50px;opacity:.22;animation-delay:-4s}
+@keyframes meshMove{to{transform:translate(-30px,30px) scale(1.12)}}
+.w-content{display:flex;justify-content:space-between;z-index:1}
+.temp-value{font-size:56px;font-weight:200;letter-spacing:-2px}
+.w-loc{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:rgba(255,255,255,.1);padding:6px 12px;border-radius:20px;margin-top:10px}
+.w-icon{width:80px;height:80px;position:relative;animation:iconFloat 4s ease-in-out infinite alternate}
+@keyframes iconFloat{to{transform:translateY(6px)}}
+.sun{position:absolute;top:4px;right:4px;width:40px;height:40px;background:linear-gradient(135deg,#FFDE00,#FF7B00);border-radius:50%;box-shadow:0 0 28px rgba(255,123,0,.7);animation:sunSpin 20s linear infinite}
+@keyframes sunSpin{to{transform:rotate(360deg)}}
+.cloud-front{position:absolute;top:36px;left:2px;width:64px;height:22px;background:linear-gradient(180deg,#fff,#E0E6ED);border-radius:20px}
+.cloud-front::before{content:'';position:absolute;top:-14px;left:10px;width:28px;height:28px;background:#fff;border-radius:50%}
+.cloud-front::after{content:'';position:absolute;top:-18px;right:12px;width:32px;height:32px;background:#fff;border-radius:50%}
+.w-status{font-size:12px;font-weight:700;color:#00e5ff;letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;text-align:center}
+.w-bottom{display:flex;justify-content:space-between;z-index:1;background:rgba(0,0,0,.25);padding:10px 16px;border-radius:16px;font-size:12px;color:rgba(255,255,255,.75)}
+</style>
+<div class="weather-widget">
+  <div class="widget-background"></div>
+  <div class="w-content">
+    <div>
+      <div class="temp-value">28°</div>
+      <div class="w-loc">📍 Dhaka, BD</div>
     </div>
-  </section>
-
-  <section class="section" id="social">
-    <h2>SOCIAL</h2>
-    <div class="social">
-      <a href="https://youtube.com/@mrgourabtv" target="_blank" rel="noopener">YT</a>
-      <a href="https://tiktok.com/@gourab1234565" target="_blank" rel="noopener">TT</a>
-      <a href="https://www.facebook.com/share/1C23Jg6RHt/" target="_blank" rel="noopener">FB</a>
-      <a href="https://instagram.com/gourab112233" target="_blank" rel="noopener">IG</a>
-      <a href="https://wa.me/8801336489062" target="_blank" rel="noopener">WA</a>
-      <a href="https://t.me/gourab123456" target="_blank" rel="noopener">TG</a>
+    <div style="text-align:center">
+      <div class="w-icon"><div class="sun"></div><div class="cloud-front"></div></div>
+      <div class="w-status">Partly Cloudy</div>
     </div>
-  </section>
-  <footer><img src="logo.png" width="32" height="32" style="border-radius:50%;vertical-align:middle" alt=""> A-Tuls</footer>
+  </div>
+  <div class="w-bottom"><span>💧 65%</span><span>💨 12 km/h</span><span>☀ UV 5</span></div>
 </div>
 
-<div class="overlay" id="overlay">
-  <div class="panel">
-    <button type="button" class="x" id="closePanel">×</button>
-    <span class="badge" id="pBadge">Ready</span>
-    <h3 id="pTitle"></h3>
-    <p id="pDesc"></p>
+  </section>
+
+  <section class="section">
+    <h2>Connect</h2>
+    <p class="sub">Social media</p>
+    
+<style>
+.social-card{width:100%;max-width:520px;margin:0 auto;background:#050f1d;border-radius:22px;box-shadow:0 25px 60px rgba(0,0,0,.65);border:1px solid rgba(0,229,255,.12);padding:2rem 1rem 1.5rem}
+.social-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.tooltip-container{position:relative}
+.tooltip-container.youtube{--c:#ff0000}.tooltip-container.facebook{--c:#1877f2}.tooltip-container.tiktok{--c:#00f2fe}
+.tooltip-container.instagram{--c:#e1306c}.tooltip-container.whatsapp{--c:#25D366}.tooltip-container.telegram{--c:#0088cc}
+.tooltip-container.discord{--c:#5865F2}.tooltip-container.twitter{--c:#fff}
+.icon .layer{width:46px;height:46px;border:2.5px solid var(--c);border-radius:50%;box-shadow:0 0 12px var(--c);display:flex;align-items:center;justify-content:center;background:#050f1d;position:relative;transition:.3s}
+.icon:hover .layer{transform:rotate(-30deg) skew(14deg);box-shadow:0 0 26px var(--c)}
+.layer svg{width:20px;height:20px;fill:var(--c);z-index:2}
+.layer span{position:absolute;inset:0;border:1px solid var(--c);border-radius:50%;pointer-events:none}
+.icon:hover .layer span:nth-child(2){transform:translate(4px,-4px);opacity:.5}
+.icon:hover .layer span:nth-child(3){transform:translate(8px,-8px);opacity:.7}
+.tooltip{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 10px);opacity:0;visibility:hidden;transition:.25s;background:#02070f;border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.1);white-space:nowrap;z-index:20}
+.tooltip-container:hover .tooltip{opacity:1;visibility:visible}
+.tooltip-name{font-size:13px;font-weight:700;color:#fff}.tooltip-about{font-size:11px;color:#aaa}
+</style>
+<div class="social-card">
+  <div class="social-links">
+    <div class="tooltip-container youtube"><div class="tooltip"><div class="tooltip-name">YouTube</div><div class="tooltip-about">@mrgourabtv</div></div>
+      <a class="icon" href="https://youtube.com/@mrgourabtv" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div></a></div>
+    <div class="tooltip-container tiktok"><div class="tooltip"><div class="tooltip-name">TikTok</div><div class="tooltip-about">@gourab1234565</div></div>
+      <a class="icon" href="https://tiktok.com/@gourab1234565" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></div></a></div>
+    <div class="tooltip-container facebook"><div class="tooltip"><div class="tooltip-name">Facebook</div><div class="tooltip-about">Gourab Mondal</div></div>
+      <a class="icon" href="https://www.facebook.com/share/1C23Jg6RHt/" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div></a></div>
+    <div class="tooltip-container instagram"><div class="tooltip"><div class="tooltip-name">Instagram</div><div class="tooltip-about">@gourab112233</div></div>
+      <a class="icon" href="https://instagram.com/gourab112233" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></a></div>
+    <div class="tooltip-container whatsapp"><div class="tooltip"><div class="tooltip-name">WhatsApp</div><div class="tooltip-about">01336-489062</div></div>
+      <a class="icon" href="https://wa.me/8801336489062" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div></a></div>
+    <div class="tooltip-container telegram"><div class="tooltip"><div class="tooltip-name">Telegram</div><div class="tooltip-about">@gourab123456</div></div>
+      <a class="icon" href="https://t.me/gourab123456" target="_blank" rel="noopener"><div class="layer"><span></span><span></span><span></span>
+      <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.458.02.889-.15 1.976-.896 6.786-.896 6.786-.189.658-.962.65-.962.65l-2.266-.742s.68-.55.74-.85c.04-.2-.14-.46-.14-.46l-1.63-1.55s-.3-.26-.04-.56c.34-.38 2.2-2.12 2.2-2.12s.1-.1-.06-.18c-.18-.1-.46.04-.46.04l-2.96 1.9s-.24.15-.55.02c-.3-.13-.54-.4-.54-.4l-2.36-.74s-.36-.14-.35-.48c.01-.34.4-.52.4-.52l9.5-3.7s.4-.15.6-.02z"/></svg></div></a></div>
   </div>
 </div>
 
-<script>
-var TOOLS=[{t:'Gmail Format Fixer Pro',s:'Ready',d:'Cleans large email:password lists. Open from Dashboard after Login.'},
-{t:'Email Report',s:'Ready',d:'Totals, valid, duplicates and format summary from Dashboard.'},
-{t:'Personal Email Vault',s:'Ready',d:'Cloud list storage under your account after Login.'},
-{t:'Gmail Format Fixer',s:'Ready',d:'Light cleaner into standard email:password lines.'},
-{t:'Easy Email Validator',s:'Ready',d:'Syntax check for invalid addresses.'},
-{t:'Duplicate Email Checker',s:'Ready',d:'Find and remove repeated emails.'},
-{t:'Email Data Formatter',s:'Ready',d:'Normalize mixed separators to one format.'},
-{t:'Password Generator',s:'Ready',d:'Generate strong random passwords.'},
-{t:'Name & Recovery Generator',s:'Ready',d:'Random names and recovery-style text.'},
-{t:'IP Timezone Finder',s:'Ready',d:'IP location and timezone lookup.'},
-{t:'Gmail Checker',s:'Coming Soon',d:'Advanced Gmail status checker planned later.'},
-{t:'2FA Generator',s:'Coming Soon',d:'OTP / 2FA helper planned later.'},
-{t:'Temp Mail',s:'Coming Soon',d:'Temporary email on the roadmap.'},
-{t:'IP & VPN Zone',s:'Coming Soon',d:'Future IP/VPN zone.'},
-{t:'Outside Zone',s:'Coming Soon',d:'Extra community tools later.'},
-{t:'UID Checker',s:'Ready',d:'Validate UID-like strings after Login.'},
-{t:'AI Website',s:'Ready',d:'Simple website idea outline helper.'},
-{t:'Bio Link Website',s:'Ready',d:'Bio-link style preview helper.'}];
-var grid=document.getElementById('toolGrid'), overlay=document.getElementById('overlay');
-TOOLS.forEach(function(x,i){
-  var b=document.createElement('button'); b.type='button'; b.className='tcard';
-  b.innerHTML='<b>'+(i+1)+'. '+x.t+'</b><span class="st '+(x.s==='Coming Soon'?'soon':'')+'">'+x.s+'</span>';
-  b.onclick=function(e){ e.preventDefault();
-    document.getElementById('pTitle').textContent=x.t;
-    document.getElementById('pDesc').textContent=x.d;
-    var bd=document.getElementById('pBadge'); bd.textContent=x.s; bd.className='badge'+(x.s==='Coming Soon'?' soon':'');
-    overlay.classList.add('show');
-  };
-  grid.appendChild(b);
-});
-document.getElementById('closePanel').onclick=function(){ overlay.classList.remove('show'); };
-overlay.onclick=function(e){ if(e.target===overlay) overlay.classList.remove('show'); };
+  </section>
 
-var ham=document.getElementById('hamBtn'), drawer=document.getElementById('drawer'), bg=document.getElementById('drawerBg');
-var loadEl=document.getElementById('drawerLoad'), bodyEl=document.getElementById('drawerBody');
-function closeDrawer(){ drawer.classList.remove('open'); bg.classList.remove('show'); }
-ham.onclick=function(){
-  if(drawer.classList.contains('open')){ closeDrawer(); return; }
-  loadEl.style.display='flex'; bodyEl.classList.remove('ready');
-  drawer.classList.add('open'); bg.classList.add('show');
-  setTimeout(function(){ loadEl.style.display='none'; bodyEl.classList.add('ready'); }, 900);
-};
-bg.onclick=closeDrawer;
+  <footer>
+    <img src="logo.png" alt="" style="width:36px;height:36px;border-radius:50%;vertical-align:middle"> <strong style="color:#fff">A-Tuls</strong><br>
+    <a href="index.html">Home</a><a href="login.html">Login</a><a href="signup.html">Register</a>
+    <a href="https://wa.me/8801336489062" target="_blank">Admin</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var TOOLS=[
+    {t:"Gmail Format Fixer Pro",s:"Ready",d:"Cleans large email:password lists. Open from Dashboard after Login."},
+    {t:"Email Report",s:"Ready",d:"Totals, valid, duplicates and format summary from Dashboard."},
+    {t:"Personal Email Vault",s:"Ready",d:"Cloud list storage under your account after Login."},
+    {t:"Gmail Format Fixer",s:"Ready",d:"Light cleaner into standard email:password lines."},
+    {t:"Easy Email Validator",s:"Ready",d:"Syntax check for invalid addresses."},
+    {t:"Duplicate Email Checker",s:"Ready",d:"Find and remove repeated emails."},
+    {t:"Email Data Formatter",s:"Ready",d:"Normalize mixed separators to one format."},
+    {t:"Password Generator",s:"Ready",d:"Generate strong random passwords."},
+    {t:"Name Generator",s:"Ready",d:"Random names and recovery-style text."},
+    {t:"IP Timezone Finder",s:"Ready",d:"IP location and timezone lookup."},
+    {t:"Gmail Checker",s:"Coming Soon",d:"Advanced Gmail status checker planned later."},
+    {t:"2FA Generator",s:"Coming Soon",d:"OTP / 2FA helper planned later."},
+    {t:"Temp Mail",s:"Coming Soon",d:"Temporary email on the roadmap."},
+    {t:"IP & VPN Zone",s:"Coming Soon",d:"Future IP/VPN zone."},
+    {t:"Outside Zone",s:"Coming Soon",d:"Extra community tools later."},
+    {t:"UID Checker",s:"Ready",d:"Validate UID-like strings after Login."},
+    {t:"AI Website",s:"Ready",d:"Simple website idea outline helper."},
+    {t:"Bio Link Website",s:"Ready",d:"Bio-link style preview helper."}
+  ];
+  function openDetail(x){
+    document.getElementById('dTitle').textContent=x.t;
+    document.getElementById('dDesc').textContent=x.d;
+    var b=document.getElementById('dBadge');
+    b.textContent=x.s;
+    b.className='badge'+(x.s==='Coming Soon'?' soon':'');
+    document.getElementById('detailOv').classList.add('show');
+  }
+  var grid=document.getElementById('toolGrid');
+  var menu=document.getElementById('menuTools');
+  TOOLS.forEach(function(x,i){
+    var btn=document.createElement('button');
+    btn.type='button';
+    btn.className='tcard';
+    btn.innerHTML='<b>'+(i+1)+'. '+x.t+'</b><span>'+x.s+' · tap for details</span>';
+    btn.onclick=function(e){ e.preventDefault(); openDetail(x); };
+    if(grid) grid.appendChild(btn);
+    var m=document.createElement('button');
+    m.type='button';
+    m.className='mt';
+    m.innerHTML=(i+1)+'. '+x.t+'<small>'+x.s+'</small>';
+    m.onclick=function(){ openDetail(x); };
+    if(menu) menu.appendChild(m);
+  });
+  document.getElementById('detailX').onclick=function(){ document.getElementById('detailOv').classList.remove('show'); };
+  document.getElementById('detailOv').onclick=function(e){ if(e.target.id==='detailOv') e.currentTarget.classList.remove('show'); };
+
+  var ham=document.getElementById('hamBtn'), drawer=document.getElementById('drawer'), bg=document.getElementById('drawerBg');
+  var loadEl=document.getElementById('drawerLoad'), bodyEl=document.getElementById('drawerBody');
+  function closeD(){ drawer.classList.remove('open'); bg.classList.remove('show'); }
+  ham.onclick=function(){
+    if(drawer.classList.contains('open')){ closeD(); return; }
+    loadEl.style.display='flex'; bodyEl.classList.remove('ready');
+    drawer.classList.add('open'); bg.classList.add('show');
+    setTimeout(function(){ loadEl.style.display='none'; bodyEl.classList.add('ready'); }, 900);
+  };
+  bg.onclick=closeD;
+})();
 </script>
+
 </body>
 </html>
