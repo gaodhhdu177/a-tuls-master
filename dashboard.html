@@ -530,6 +530,12 @@ html[data-theme="gray"]{--a:#94a3b8;--bg:#1e293b}
 .tools-grid, #toolsGrid{display:grid!important;grid-template-columns:1fr!important;gap:14px!important}
 .tool-premium{position:relative}
 
+
+#dashBot{width:64px!important;height:64px!important;border-radius:50%!important;background:linear-gradient(145deg,#1a0a12,#0b0d18)!important;
+  border:2px solid #ff3366!important;box-shadow:0 0 24px rgba(255,0,51,.45)!important;font-size:28px!important}
+.menu-geo{width:16px;height:16px;display:inline-block;margin-right:6px;background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);animation:spinGeo .9s linear infinite;vertical-align:middle}
+@keyframes spinGeo{to{transform:rotate(360deg)}}
+
 </style>
 
 <script>
@@ -2217,6 +2223,42 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   setInterval(restyleStories, 3000);
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(restyleStories, 600); });
+})();
+</script>
+
+
+<script>
+(function(){
+  var faces=['😊','😄','😆','🤔','😎','😌','😢','😠'];
+  var fi=0;
+  setInterval(function(){ fi=(fi+1)%faces.length; var el=document.getElementById('dashBot'); if(el) el.textContent=faces[fi]; }, 4000);
+  window.__A_TULS_AI_ANS=function(q){
+    var b=/[\u0980-\u09FF]/.test(q||''); q=(q||'').toLowerCase();
+    if(/uid/.test(q)) return b?'UID Checker (১৬): Dashboard → OPEN':'UID Checker (16): Dashboard → OPEN';
+    if(/ai web|ai website|এআই/.test(q)) return b?'AI Website (১৭): OPEN = পূর্ণ AI চ্যাট':'AI Website (17): OPEN = full AI chat';
+    if(/bio/.test(q)) return b?'Bio Link (১৮): OPEN করো':'Bio Link (18): OPEN';
+    if(/tool|টুল|কত|কয়/.test(q)) return b?'মোট ১৮ টুল। Ready টুলে OPEN চাপো।':'18 tools. OPEN on ready tools.';
+    if(/vault|ভল্ট/.test(q)) return b?'Email Vault টুল #9 বা মেনু থেকে।':'Email Vault tool #9 or menu.';
+    if(/logout|লগআউট/.test(q)) return b?'Logout = Hourglass তারপর বের।':'Logout shows Hourglass then exit.';
+    if(/admin|api/.test(q)) return b?'API: WhatsApp +8801336489062':'API: WhatsApp +8801336489062';
+    return b?'জিজ্ঞাসা: টুলস, UID, AI Website, Bio, Vault, Admin।':'Ask: tools, UID, AI Website, Bio, Vault, Admin.';
+  };
+  var form=document.getElementById('dashAiForm');
+  if(form&&!form.__hooked){ form.__hooked=true;
+    form.addEventListener('submit',function(e){ e.preventDefault(); e.stopPropagation();
+      var inp=document.getElementById('dashAiIn'), msgs=document.getElementById('dashAiMsgs');
+      if(!inp||!msgs)return; var v=inp.value.trim(); if(!v)return; inp.value='';
+      var me=document.createElement('div'); me.className='da-row me'; me.textContent=v; msgs.appendChild(me);
+      setTimeout(function(){ var bot=document.createElement('div'); bot.className='da-row bot'; bot.textContent=window.__A_TULS_AI_ANS(v); msgs.appendChild(bot); msgs.scrollTop=msgs.scrollHeight; },180);
+    },true);
+  }
+  document.querySelectorAll('.side a, .sidebar a, nav a, .offcanvas a').forEach(function(a){
+    a.addEventListener('click',function(){ if(a.querySelector('.menu-geo'))return; var s=document.createElement('span'); s.className='menu-geo'; a.prepend(s); setTimeout(function(){try{s.remove()}catch(e){}},700); });
+  });
+  document.querySelectorAll('div,section').forEach(function(el){
+    var t=(el.textContent||'').replace(/\s+/g,' ').trim();
+    if(t.indexOf('ALL FREE')>=0 && t.indexOf('UID')>=0 && t.length<220 && el.children.length<10) el.style.display='none';
+  });
 })();
 </script>
 
