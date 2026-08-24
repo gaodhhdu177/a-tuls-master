@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- A-Tuls proprietary client · a_tuls namespace only · no third-party tool branding -->
-<html lang="bn">
+<html data-theme="basic" lang="bn">
 <head>
 <script>
 /* A_TULS_DOMAIN_LOCK — ON */
@@ -420,7 +420,9 @@ window.A_TULS_DB = {
 })();
 </script>
 
-</head>
+<script>
+(function(){ try{ document.documentElement.setAttribute('data-theme', localStorage.getItem('a_tuls_theme')||'basic'); }catch(e){} })();
+</script></head>
 <body>
 
 <div class="spooky-house" aria-hidden="true">
@@ -660,5 +662,19 @@ function togglePass(id, btn){
   });
 })();
 </script>
+
+<script>
+(function(){
+  function hideReg(){ var el=document.getElementById('regLoader'); if(el) el.classList.remove('show'); }
+  var obs=new MutationObserver(function(){
+    var err=document.querySelector('.error,.err,[class*="error"],.text-danger,.alert-danger');
+    if(err && (err.textContent||'').trim().length>2) hideReg();
+  });
+  obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+  var _alert=window.alert;
+  window.alert=function(m){ hideReg(); return _alert.apply(this, arguments); };
+})();
+</script>
+
 </body>
 </html>

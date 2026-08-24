@@ -111,6 +111,37 @@ footer a{color:var(--a);margin:0 8px;text-decoration:none}
 .nav-top .r a{margin-left:10px;padding:8px 12px;border-radius:999px}
 .nav-top .r .reg{background:linear-gradient(135deg,#00e5ff,#3a86ff);color:#031018}
 
+
+/* 5 themes: basic blue black white gray */
+html[data-theme="basic"]{--a:#00e5ff;--b:#3a86ff;--bg:#030b16;--txt:#f0f6fc;--mut:#8b949e;--card:rgba(10,25,47,.75)}
+html[data-theme="blue"]{--a:#38bdf8;--b:#2563eb;--bg:#0a1628;--txt:#e0f2fe;--mut:#7dd3fc;--card:rgba(15,40,80,.8)}
+html[data-theme="black"]{--a:#a3a3a3;--b:#525252;--bg:#000;--txt:#fafafa;--mut:#a3a3a3;--card:rgba(24,24,27,.9)}
+html[data-theme="white"]{--a:#0284c7;--b:#0369a1;--bg:#f8fafc;--txt:#0f172a;--mut:#64748b;--card:rgba(255,255,255,.95)}
+html[data-theme="gray"]{--a:#94a3b8;--b:#64748b;--bg:#1e293b;--txt:#f1f5f9;--mut:#94a3b8;--card:rgba(30,41,59,.9)}
+html[data-theme="white"] body{background:#f8fafc!important;color:#0f172a!important}
+html[data-theme="white"] .nav-top,html[data-theme="white"] .drawer{background:rgba(255,255,255,.95)!important;color:#0f172a}
+html[data-theme="white"] .tcard,html[data-theme="white"] button.tcard{background:#fff!important;border-color:#e2e8f0!important;color:#0f172a}
+body{background:var(--bg)!important;color:var(--txt)!important;transition:background .35s,color .35s}
+/* Emotion robot */
+#emoBot{position:fixed;right:14px;bottom:18px;z-index:75;width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(145deg,#0b1220,#050f1d);border:2px solid var(--a);box-shadow:0 0 20px color-mix(in srgb,var(--a) 40%,transparent);
+  cursor:pointer;display:grid;place-items:center;animation:botFloat 3s ease-in-out infinite}
+@keyframes botFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#emoBot .face{font-size:28px;line-height:1;transition:.3s}
+#aiChat{position:fixed;right:12px;bottom:92px;z-index:76;width:min(320px,calc(100vw - 24px));max-height:55vh;display:none;flex-direction:column;
+  background:#0b1220;border:1px solid color-mix(in srgb,var(--a) 40%,transparent);border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.5)}
+#aiChat.open{display:flex}
+#aiChat .hd{padding:10px 12px;background:linear-gradient(135deg,var(--a),var(--b));color:#031018;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+#aiMsgs{flex:1;overflow:auto;padding:10px;font-size:.82rem;line-height:1.45}
+.ai-row{margin:6px 0;padding:8px 10px;border-radius:12px;max-width:95%}
+.ai-row.bot{background:rgba(255,255,255,.06);color:var(--txt)}
+.ai-row.me{background:linear-gradient(135deg,var(--a),var(--b));color:#031018;margin-left:auto}
+#aiForm{display:flex;gap:6px;padding:8px;border-top:1px solid rgba(255,255,255,.08)}
+#aiForm input{flex:1;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#050f1d;color:var(--txt);padding:8px}
+#aiForm button{border:0;border-radius:10px;padding:0 12px;font-weight:800;background:linear-gradient(135deg,var(--a),var(--b));color:#031018;cursor:pointer}
+.admin-info{margin-top:16px;padding:12px;border-radius:12px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);font-size:.8rem;color:var(--mut);line-height:1.5}
+.admin-info a{color:var(--a);font-weight:700}
+
 /* ===== Live loaders + hamburger menu ===== */
 .butterfly-loader{--sizeLoader:56px;display:flex;position:relative;width:var(--sizeLoader);height:var(--sizeLoader);margin:18px auto 0;filter:drop-shadow(0 8px 12px rgba(0,229,255,.4))}
 .butterfly-loader svg:nth-child(1){height:100%;transform-origin:center right;animation:wingHam .5s ease-in-out infinite;fill:#00e5ff}
@@ -201,8 +232,16 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
     <h4>Account</h4>
     <a class="login" href="login.html">→ Login</a>
     <a class="signup" href="signup.html">＋ Signup</a>
-    <h4>Tools (details)</h4>
+    <h4>Tools</h4>
     <div id="menuTools"></div>
+    <h4>Admin information</h4>
+    <div class="admin-info">
+      WhatsApp: <a href="https://wa.me/8801336489062" target="_blank">+880 1336-489062</a><br>
+      For API code / paid access message Admin.<br>
+      Site: A-Tuls — all tools free with account.
+    </div>
+    <h4>Helper AI</h4>
+    <button type="button" class="mt" id="openAiFromMenu" style="background:linear-gradient(135deg,var(--a),var(--b));color:#031018;font-weight:800">Open AI Helper 🤖</button>
   </div>
 </aside>
 <div class="detail-ov" id="detailOv">
@@ -392,6 +431,70 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
     setTimeout(function(){ loadEl.style.display='none'; bodyEl.classList.add('ready'); }, 900);
   };
   bg.onclick=closeD;
+})();
+</script>
+
+
+<button type="button" id="emoBot" title="AI Helper" aria-label="AI"><span class="face" id="emoFace">😊</span></button>
+<div id="aiChat">
+  <div class="hd"><span>A-Tuls Robot</span><button type="button" id="aiClose" style="border:0;background:0;font-weight:800;cursor:pointer">×</button></div>
+  <div id="aiMsgs"></div>
+  <form id="aiForm"><input id="aiIn" placeholder="EN / বাংলা..." autocomplete="off"><button type="submit">Go</button></form>
+</div>
+
+
+<script>
+/* Theme sync + emotion robot + AI */
+(function(){
+  var THEMES=['basic','blue','black','white','gray'];
+  function applyTheme(id){
+    if(THEMES.indexOf(id)<0) id='basic';
+    document.documentElement.setAttribute('data-theme', id);
+    try{ localStorage.setItem('a_tuls_theme', id); }catch(e){}
+  }
+  applyTheme(localStorage.getItem('a_tuls_theme')||'basic');
+  // pull from supabase settings if available
+  try{
+    var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+    var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+    fetch(SB_URL+'a_tuls_settings?key=eq.site_theme&select=value',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}})
+      .then(function(r){return r.ok?r.json():[]}).then(function(rows){
+        if(rows&&rows[0]){ var v=rows[0].value; if(typeof v==='object') v=v.v||v.id||'basic'; applyTheme(String(v||'basic')); }
+      }).catch(function(){});
+  }catch(e){}
+
+  var faces=['😊','😄','😆','😢','😭','😠','😡','😌','🤔','😎'];
+  var fi=0;
+  setInterval(function(){
+    fi=(fi+1)%faces.length;
+    var el=document.getElementById('emoFace');
+    if(el) el.textContent=faces[fi];
+  }, 4000);
+
+  function bn(s){ return /[\u0980-\u09FF]/.test(s||''); }
+  function ans(q){
+    var b=bn(q); q=(q||'').toLowerCase();
+    if(/tool|টুল|কী কী/.test(q)) return b?'হোমে টুল কার্ডে ট্যাপ করলে শুধু বিস্তারিত দেখায়। অ্যাপ চালাতে Login → Dashboard → Open Application।':'Tool cards show details only. To run apps: Login → Dashboard → Open Application.';
+    if(/signup|register|api|কোড|সাইন/.test(q)) return b?'Admin WhatsApp +8801336489062 থেকে API কোড নিয়ে Signup করো।':'Get API code from Admin WhatsApp +8801336489062, then Signup.';
+    if(/login|লগইন|ঢুক/.test(q)) return b?'☰ মেনু → Login। Email + password দাও। ভুল হলে error দেখাবে।':'☰ menu → Login. Use email + password. Wrong details show an error.';
+    if(/admin|whatsapp|সাপোর্ট/.test(q)) return b?'Admin: WhatsApp +8801336489062':'Admin WhatsApp: +8801336489062';
+    if(/theme|থিম|রঙ/.test(q)) return b?'থিম Admin Settings থেকে বদলানো যায় (Basic/Blue/Black/White/Gray)।':'Themes (Basic/Blue/Black/White/Gray) can be changed from Admin Settings.';
+    if(/free|ফ্রি/.test(q)) return b?'সব টুল অ্যাকাউন্ট দিয়ে ফ্রি।':'All tools are free with an account.';
+    return b?'জিজ্ঞাসা করতে পারো: টুলস, সাইনআপ, লগইন, API, Admin, থিম।':'Ask about: tools, signup, login, API, Admin, theme.';
+  }
+  var chat=document.getElementById('aiChat'), msgs=document.getElementById('aiMsgs');
+  function add(role,t){ var d=document.createElement('div'); d.className='ai-row '+role; d.textContent=t; msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight; }
+  function openChat(){ chat.classList.add('open'); if(!msgs.childNodes.length) add('bot','Hi! A-Tuls Robot — ask in English or বাংলা.'); }
+  document.getElementById('emoBot').onclick=openChat;
+  var oam=document.getElementById('openAiFromMenu');
+  if(oam) oam.onclick=function(){ openChat(); };
+  document.getElementById('aiClose').onclick=function(){ chat.classList.remove('open'); };
+  document.getElementById('aiForm').onsubmit=function(e){
+    e.preventDefault();
+    var v=document.getElementById('aiIn').value.trim(); if(!v) return;
+    document.getElementById('aiIn').value='';
+    add('me', v); setTimeout(function(){ add('bot', ans(v)); }, 200);
+  };
 })();
 </script>
 

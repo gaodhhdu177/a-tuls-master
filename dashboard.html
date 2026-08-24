@@ -460,6 +460,76 @@ body{
   box-shadow:0 0 16px color-mix(in srgb, var(--a) 35%, transparent);
 }
 
+
+/* Profile story cards + tool premium + loaders */
+.story-profile-card{position:relative;width:140px;min-height:180px;border-radius:18px;overflow:hidden;
+  background:linear-gradient(145deg,#050f1d,#02070f);border:1px solid rgba(0,229,255,.2);flex-shrink:0;text-align:center;padding:12px 8px}
+.story-profile-card img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #00e5ff;margin:8px auto 6px;display:block}
+.story-profile-card .nm{font-size:.78rem;font-weight:800;color:#fff}
+.story-profile-card .sub{font-size:.65rem;color:#00e5ff}
+.tool-premium{position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(160deg,#050f1d,#02070f);
+  border:1px solid rgba(0,229,255,.2);padding:20px 16px;margin-bottom:14px;text-align:center}
+.tool-premium .ribbon{position:absolute;top:0;left:0;width:90px;height:90px;overflow:hidden;pointer-events:none}
+.tool-premium .ribbon span{position:absolute;display:block;width:140px;padding:6px 0;background:linear-gradient(90deg,#3a86ff,#00e5ff);
+  color:#02070f;font-weight:800;font-size:.62rem;letter-spacing:.1em;left:-38px;top:18px;transform:rotate(-45deg)}
+.tool-premium h5{margin:10px 0 6px;font-size:1rem}
+.tool-premium .open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:10px 18px;border-radius:12px;
+  background:linear-gradient(90deg,#00e5ff,#3a86ff);color:#02070f;font-weight:800;border:0;cursor:pointer;text-decoration:none}
+.loader-yasin{width:36px;aspect-ratio:1.154;margin:8px auto;background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);
+  animation:l27x 1.5s infinite cubic-bezier(.3,1,0,1);filter:drop-shadow(0 0 10px rgba(0,229,255,.5))}
+.loader-yasin:before,.loader-yasin:after{content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27y 1.5s infinite}
+.loader-yasin:after{--s:-1}
+@keyframes l27x{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+@keyframes l27y{0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}}
+.full-loader{position:fixed;inset:0;z-index:9999;background:rgba(3,11,22,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#8b949e}
+.full-loader.show{display:flex}
+#dashBot{position:fixed;right:14px;bottom:80px;z-index:70;width:56px;height:56px;border-radius:50%;border:2px solid #00e5ff;
+  background:#0b1220;display:grid;place-items:center;cursor:pointer;font-size:24px;animation:botFloat 3s ease-in-out infinite;box-shadow:0 0 16px rgba(0,229,255,.35)}
+@keyframes botFloat{50%{transform:translateY(-6px)}}
+#dashAi{position:fixed;right:12px;bottom:148px;z-index:71;width:min(300px,calc(100vw - 24px));max-height:45vh;display:none;flex-direction:column;
+  background:#0b1220;border:1px solid rgba(0,229,255,.3);border-radius:14px;overflow:hidden}
+#dashAi.open{display:flex}
+#dashAi .hd{padding:8px 10px;background:linear-gradient(135deg,#00e5ff,#3a86ff);color:#031018;font-weight:800;display:flex;justify-content:space-between}
+#dashAiMsgs{flex:1;overflow:auto;padding:8px;font-size:.8rem}
+.da-row{margin:5px 0;padding:7px 9px;border-radius:10px}
+.da-row.bot{background:rgba(255,255,255,.06)}
+.da-row.me{background:linear-gradient(135deg,#00e5ff,#3a86ff);color:#031018}
+#dashAiForm{display:flex;gap:6px;padding:8px;border-top:1px solid rgba(255,255,255,.08)}
+#dashAiForm input{flex:1;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#050f1d;color:#fff;padding:7px}
+#dashAiForm button{border:0;border-radius:8px;padding:0 10px;font-weight:800;background:linear-gradient(135deg,#00e5ff,#3a86ff);cursor:pointer}
+html[data-theme="basic"]{--a:#00e5ff;--bg:#030b16}
+html[data-theme="blue"]{--a:#38bdf8;--bg:#0a1628}
+html[data-theme="black"]{--a:#a3a3a3;--bg:#000}
+html[data-theme="white"]{--a:#0284c7;--bg:#f8fafc}
+html[data-theme="gray"]{--a:#94a3b8;--bg:#1e293b}
+
+
+/* Profile-style story cards */
+.story-wrap{background:linear-gradient(160deg,#0a1628 0%,#030b16 50%,#0c1a2e 100%)!important;border:1px solid rgba(0,229,255,.2)!important;
+  box-shadow:0 12px 40px rgba(0,0,0,.35)!important;position:relative;overflow:hidden}
+.story-wrap::before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:8%;top:10%;
+  background:radial-gradient(circle at 35% 35%,#e8f4ff,#6a9cc8);opacity:.35;pointer-events:none}
+.story-wrap .srow{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;align-items:stretch}
+.story-profile-card{position:relative;width:148px;min-width:148px;min-height:200px;border-radius:20px;flex-shrink:0;
+  background:linear-gradient(145deg,#050f1d,#02070f);border:1px solid rgba(0,229,255,.25);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);text-align:center;padding:14px 10px 12px;color:#fff}
+.story-profile-card .ring{width:64px;height:64px;margin:6px auto 8px;border-radius:50%;padding:3px;
+  background:conic-gradient(from 0deg,#00e5ff,transparent 55%,#00e5ff);animation:spinRing 3.5s linear infinite}
+@keyframes spinRing{to{transform:rotate(360deg)}}
+.story-profile-card .ring img,.story-profile-card .ring .avletter{
+  width:100%;height:100%;border-radius:50%;object-fit:cover;background:#050f1d;display:grid;place-items:center;
+  border:2px solid #050f1d;font-weight:800;color:#00e5ff}
+.story-profile-card .nm{font-size:.8rem;font-weight:800;letter-spacing:.02em}
+.story-profile-card .sub{font-size:.68rem;color:#00e5ff;margin:2px 0 6px}
+.story-profile-card .txt{font-size:.72rem;color:#94a3b8;line-height:1.35;max-height:2.6em;overflow:hidden}
+.story-profile-card .ribbon-mini{position:absolute;top:0;left:0;width:70px;height:70px;overflow:hidden;pointer-events:none}
+.story-profile-card .ribbon-mini span{position:absolute;display:block;width:100px;padding:4px 0;background:linear-gradient(90deg,#3a86ff,#00e5ff);
+  color:#02070f;font-weight:800;font-size:.55rem;left:-28px;top:14px;transform:rotate(-45deg)}
+.sadd{min-width:72px;height:200px;border:2px dashed rgba(0,229,255,.35);border-radius:20px;display:grid;place-items:center;
+  color:#00e5ff;cursor:pointer;background:rgba(0,229,255,.05)}
+.tools-grid, #toolsGrid{display:grid!important;grid-template-columns:1fr!important;gap:14px!important}
+.tool-premium{position:relative}
+
 </style>
 
 <script>
@@ -1556,7 +1626,10 @@ function loadPinnedTools(){
       {n:'12. 2FA Generator',p:'2fa-generator.html',ready:false},
       {n:'13. Temp Mail',p:'temp-mail.html',ready:false},
       {n:'14. IP & VPN Buy/Sell Zone',p:'ip-vpn-zone.html',ready:false},
-      {n:'15. Outside Zone',p:'outside-zone.html',ready:false}
+      {n:'15. Outside Zone',p:'outside-zone.html',ready:false},
+      {n:'16. UID Checker',p:'uid-checker.html',ready:true,desc:'Validate UID strings',icon:'fa-fingerprint',bg:'rgba(0,229,255,.12)',color:'#00e5ff'},
+      {n:'17. AI Website',p:'ai-website.html',ready:true,desc:'Website idea helper',icon:'fa-globe',bg:'rgba(58,134,255,.12)',color:'#3a86ff'},
+      {n:'18. Bio Link Website',p:'bio-link.html',ready:true,desc:'Bio link page helper',icon:'fa-link',bg:'rgba(34,197,94,.12)',color:'#22c55e'}
     ];
   }
   if(sel){
@@ -1885,7 +1958,15 @@ async function loadToolsGrid(){
         const isPinned = pinned.indexOf(t.p)>=0;
         const pinBadge = isPinned ? ' <span class="badge" style="background:#1877f2;font-size:.65rem"><i class="fas fa-thumbtack"></i> Pinned</span>' : '';
         if(t.ready){
-          return '<div class="tcard"'+(isPinned?' style="border:2px solid #1877f2"':'')+'><div class="ticon" style="background:'+t.bg+';color:'+t.color+'"><i class="fas '+t.icon+'"></i></div><div class="tinfo"><h6>'+t.n+pinBadge+'</h6><p class="text-muted small mb-2">'+t.desc+'</p><button class="obtn" onclick="openTool(\''+String(t.p||'')+'\')"><i class="fas fa-arrow-right"></i> Open Application</button></div></div>';
+          var ribbon = isPinned ? 'PIN' : 'FREE';
+          return '<div class="tool-premium tcard"'+(isPinned?' style="border:2px solid #1877f2"':'')+'>'+
+            '<div class="ribbon"><span>'+ribbon+'</span></div>'+
+            '<div class="ticon" style="background:'+(t.bg||'rgba(0,229,255,.12)')+';color:'+(t.color||'#00e5ff')+';margin:12px auto;width:56px;height:56px;border-radius:50%;display:grid;place-items:center"><i class="fas '+(t.icon||'fa-wrench')+'"></i></div>'+
+            '<h5 style="color:#fff;font-weight:800">'+t.n+pinBadge+'</h5>'+
+            '<p class="text-muted small mb-2" style="color:#8b949e!important">'+(t.desc||'')+'</p>'+
+            '<div class="loader-yasin" style="position:relative;width:28px;height:32px;opacity:.85"></div>'+
+            '<button class="open-btn obtn" onclick="openTool(\''+String(t.p||'')+'\')">OPEN <i class="fas fa-external-link-alt"></i></button>'+
+            '</div>';
         }
         return '<div class="tcard" style="opacity:.85"><div class="ticon" style="background:'+t.bg+';color:'+t.color+'"><i class="fas '+t.icon+'"></i></div><div class="tinfo"><h6>'+t.n+' <span class="badge bg-warning text-dark" style="font-size:.65rem">Soon</span></h6><p class="text-muted small mb-2">'+t.desc+'</p><button class="obtn" style="background:#94a3b8" onclick="alert(\'Coming Soon!\')"><i class="fas fa-clock"></i> Coming Soon</button></div></div>';
       }).join('');
@@ -2076,6 +2157,66 @@ document.addEventListener('DOMContentLoaded', function(){
   if(oc && window.MutationObserver){
     new MutationObserver(stagger).observe(oc,{childList:true,subtree:true});
   }
+})();
+</script>
+
+
+<script>
+/* Upgrade story cards + ensure 18 tools catalog */
+(function(){
+  // Expand global catalog if short
+  var extra = [
+    {n:'16. UID Checker',p:'uid-checker.html',ready:true,desc:'Validate UID strings',icon:'fa-fingerprint',bg:'rgba(0,229,255,.12)',color:'#00e5ff'},
+    {n:'17. AI Website',p:'ai-website.html',ready:true,desc:'Website idea helper',icon:'fa-globe',bg:'rgba(58,134,255,.12)',color:'#3a86ff'},
+    {n:'18. Bio Link Website',p:'bio-link.html',ready:true,desc:'Bio link page helper',icon:'fa-link',bg:'rgba(34,197,94,.12)',color:'#22c55e'}
+  ];
+  function ensureCatalog(){
+    if(!window.A_TULS_TOOL_CATALOG) window.A_TULS_TOOL_CATALOG=[];
+    var paths = window.A_TULS_TOOL_CATALOG.map(function(t){return t.p;});
+    extra.forEach(function(t){ if(paths.indexOf(t.p)===-1) window.A_TULS_TOOL_CATALOG.push(t); });
+  }
+  ensureCatalog();
+  if(typeof loadToolsGrid==='function'){ try{ loadToolsGrid(); }catch(e){} }
+
+  function restyleStories(){
+    var row=document.querySelector('.story-wrap .srow');
+    if(!row) return;
+    row.querySelectorAll('.story-card').forEach(function(card){
+      if(card.classList.contains('story-profile-card')) return;
+      card.classList.add('story-profile-card');
+      var img=card.querySelector('img');
+      var nameEl=card.querySelector('.sc-name, .nm, b, strong');
+      var textEl=card.querySelector('.sc-text, .txt, p');
+      var statusEl=card.querySelector('.sc-status');
+      var name=nameEl?nameEl.textContent.trim():'User';
+      var text=textEl?textEl.textContent.trim():'';
+      var status=statusEl?statusEl.textContent.trim():'';
+      var pic=img?img.getAttribute('src'):'';
+      var del=card.querySelector('.sc-del');
+      var delHtml=del?del.outerHTML:'';
+      var av = pic
+        ? '<div class="ring"><img src="'+pic+'" alt=""></div>'
+        : '<div class="ring"><div class="avletter">'+(name[0]||'U').toUpperCase()+'</div></div>';
+      card.innerHTML = '<div class="ribbon-mini"><span>STORY</span></div>'+av+
+        '<div class="nm">'+name.replace(/</g,'&lt;')+'</div>'+
+        '<div class="sub">'+(status||'Member').replace(/</g,'&lt;')+'</div>'+
+        '<div class="txt">'+(text||'').replace(/</g,'&lt;')+'</div>'+delHtml;
+    });
+  }
+  // run after stories render
+  var _rs = window.renderStories;
+  if(typeof _rs === 'function'){
+    window.renderStories = async function(){
+      var r = _rs.apply(this, arguments);
+      if(r && typeof r.then==='function') await r;
+      setTimeout(restyleStories, 50);
+      setTimeout(restyleStories, 400);
+      setTimeout(restyleStories, 1200);
+      return r;
+    };
+  }
+  setInterval(restyleStories, 3000);
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(restyleStories, 600); });
 })();
 </script>
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- A-Tuls proprietary client · a_tuls namespace only · no third-party tool branding -->
-<html lang="bn">
+<html data-theme="basic" lang="bn">
 <head>
 <script>
 /* A_TULS_DOMAIN_LOCK — ON */
@@ -425,7 +425,9 @@ window.A_TULS_DB = {
 })();
 </script>
 
-</head>
+<script>
+(function(){ try{ var t=localStorage.getItem('a_tuls_theme')||'basic'; document.documentElement.setAttribute('data-theme',t);}catch(e){} })();
+</script></head>
 <body>
 
 <div class="spooky-house" aria-hidden="true">
@@ -601,5 +603,25 @@ async function handleLogin(e) {
   }, true);
 })();
 </script>
+
+<script>
+(function(){
+  function hideLoginLoader(){
+    var el=document.getElementById('loginLoader');
+    if(el) el.classList.remove('show');
+  }
+  // hide when any error text appears
+  var obs=new MutationObserver(function(){
+    var err=document.querySelector('.error,.err,[class*="error"],.text-danger,.alert-danger');
+    if(err && (err.textContent||'').trim().length>2) hideLoginLoader();
+  });
+  obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+  document.addEventListener('click', function(){ setTimeout(hideLoginLoader, 800); });
+  // if invalid credentials alert or text
+  var _alert=window.alert;
+  window.alert=function(m){ hideLoginLoader(); return _alert.apply(this, arguments); };
+})();
+</script>
+
 </body>
 </html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        :root {
+            --primary-accent: #00e5ff;
+            --primary-rgb: 0, 229, 255;
+            --secondary-accent: #3a86ff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #030b16;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            padding: 40px 20px;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(0, 229, 255, 0.05), transparent 40%),
+                radial-gradient(circle at 75% 75%, rgba(58, 134, 255, 0.05), transparent 40%);
+        }
+
+        .feature-card {
+            position: relative;
+            width: 290px;
+            height: 380px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+        }
+
+        .border-wrapper {
+            position: absolute;
+            inset: 0;
+            border-radius: 30px;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .card-border-animation {
+            position: absolute;
+            width: 170%;
+            height: 170%;
+            top: -35%; left: -35%;
+            background: linear-gradient(90deg, transparent, var(--secondary-accent), var(--primary-accent), var(--secondary-accent), transparent);
+            animation: rotation_481 2800ms infinite linear reverse;
+        }
+
+        @keyframes rotation_481 {
+            0% { transform: rotateZ(0deg); }
+            100% { transform: rotateZ(360deg); }
+        }
+
+        .card-inner {
+            position: absolute;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            background: linear-gradient(145deg, #050f1d, #02070f);
+            border-radius: 28px;
+            border: 1px solid rgba(var(--primary-rgb), 0.12);
+            box-shadow: inset 0 0 35px rgba(var(--primary-rgb), 0.06);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2.2rem 1.5rem;
+            overflow: hidden;
+        }
+
+        /* Perfect corner ribbon - matches original AURA FFX style */
+        .ribbon {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            pointer-events: none;
+            border-top-left-radius: 28px;
+        }
+
+        .ribbon span {
+            position: absolute;
+            display: block;
+            width: 190px;
+            padding: 9px 0;
+            background: linear-gradient(90deg, #3a86ff, #00e5ff, #3a86ff);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.45);
+            color: #02070f;
+            font-weight: 800;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            left: -50px;
+            top: 26px;
+            transform: rotate(-45deg);
+            z-index: 2;
+        }
+
+        .ribbon::before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            box-shadow: 120px -120px #005a77;
+            background: linear-gradient(45deg, #005a77 0%, #003a55 100%);
+        }
+
+        .profile-pic-wrap {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 18px;
+            z-index: 2;
+        }
+
+        .profile-pic-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--primary-accent), transparent 55%, var(--primary-accent));
+            animation: spinRing 3.5s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes spinRing {
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #050f1d;
+            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 4px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .card-sub {
+            color: var(--primary-accent);
+            font-size: 0.95rem;
+            margin-bottom: 18px;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        .loader-apk-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90px;
+            margin: 8px 0 12px;
+        }
+
+        .loader-apk {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            transform: scale(0.4);
+            transform-origin: center;
+        }
+
+        .loader-apk .pattern-1,
+        .loader-apk .pattern-2 {
+            position: absolute;
+            background-color: var(--primary-accent);
+            overflow: hidden;
+            will-change: transform;
+        }
+
+        .loader-apk .pattern-1 {
+            width: 200px;
+            height: 200px;
+            clip-path: polygon(0 10%, 70% 90%, 40% 90%, 0 45%);
+        }
+
+        .loader-apk .pattern-2 {
+            width: 220px;
+            height: 190px;
+            clip-path: polygon(100% 10%, 100% 45%, 83% 65%, 55% 65%);
+        }
+
+        .loader-apk .pattern-1-shade,
+        .loader-apk .pattern-2-shade {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.75;
+            z-index: 10;
+            background-color: white;
+            width: 22px;
+            height: 200px;
+            will-change: transform;
+        }
+
+        .loader-apk .pattern-1-shade {
+            animation: shiny-1 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .loader-apk .pattern-2-shade {
+            animation: shiny-2 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes shiny-1 {
+            0% { transform: translateX(-40px) skewX(-20deg); }
+            100% { transform: translateX(240px) skewX(-20deg); }
+        }
+
+        @keyframes shiny-2 {
+            0% { transform: translateX(240px) skewX(20deg); }
+            100% { transform: translateX(-40px) skewX(20deg); }
+        }
+
+        .status {
+            color: var(--primary-accent);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="feature-card">
+        <div class="border-wrapper">
+            <div class="card-border-animation"></div>
+        </div>
+        
+        <div class="ribbon">
+            <span>PRO</span>
+        </div>
+        
+        <div class="card-inner">
+            <div class="profile-pic-wrap">
+                <img src="https://i.postimg.cc/zDHzK7T4/Screenshot-20260823-005834.png" alt="Profile" class="profile-pic">
+            </div>
+            
+            <h2 class="card-title">GOURAB</h2>
+            <p class="card-sub">@gourab</p>
+            
+            <div class="loader-apk-wrapper">
+                <div class="loader-apk">
+                    <div class="pattern-1">
+                        <div class="pattern-1-shade"></div>
+                    </div>
+                    <div class="pattern-2">
+                        <div class="pattern-2-shade"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="status">Profile Active</p>
+        </div>
+    </div>
+</body>
+</html>

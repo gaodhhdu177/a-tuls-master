@@ -264,6 +264,19 @@ body{
   box-shadow:0 0 16px color-mix(in srgb, var(--a) 35%, transparent);
 }
 
+
+.loader-apk-mini{position:relative;width:22px;height:22px;display:inline-block;vertical-align:middle;transform:scale(.5);transform-origin:left center}
+.loader-apk-mini .p1{width:36px;height:36px;background:#00e5ff;clip-path:polygon(0 10%,70% 90%,40% 90%,0 45%);position:absolute}
+.loader-yasin-sm{display:inline-block;width:18px;aspect-ratio:1.154;background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);animation:l27x 1.5s infinite cubic-bezier(.3,1,0,1);vertical-align:middle;margin-right:6px}
+@keyframes l27x{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+.theme-pick{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.theme-pick button{border:2px solid transparent;border-radius:12px;padding:12px 6px;cursor:pointer;font-size:.72rem;font-weight:700;color:#fff}
+.theme-pick button.active{border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,.4)}
+.theme-pick .t-basic{background:#030b16}.theme-pick .t-blue{background:#0a1628}.theme-pick .t-black{background:#111}
+.theme-pick .t-white{background:#e2e8f0;color:#0f172a}.theme-pick .t-gray{background:#334155}
+.full-loader{position:fixed;inset:0;z-index:9999;background:rgba(3,11,22,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#8b949e}
+.full-loader.show{display:flex}
+
 </style>
 
 <script>
@@ -1309,6 +1322,73 @@ async function bootAdmin(){
 }
 bootAdmin();
 
+</script>
+
+
+<div class="full-loader" id="adminLogoutLoader"><div style="font-size:36px">⏳</div><div>Logging out…</div></div>
+<script>
+(function(){
+  var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+  var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+  function saveTheme(id){
+    localStorage.setItem('a_tuls_theme', id);
+    document.documentElement.setAttribute('data-theme', id);
+    document.querySelectorAll('.theme-pick button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-t')===id); });
+    fetch(SB_URL+'a_tuls_settings?key=eq.site_theme',{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({value:{v:id}})
+    }).catch(function(){});
+    // upsert if missing
+    fetch(SB_URL+'a_tuls_settings',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key:'site_theme',value:{v:id}})
+    }).catch(function(){});
+  }
+  function injectThemeUI(){
+    var host=document.querySelector('#settings, .settings, [data-page="settings"]') || document.body;
+    if(document.getElementById('themePickBox')) return;
+    var box=document.createElement('div');
+    box.id='themePickBox';
+    box.innerHTML='<h4 style="margin:16px 0 8px;color:#e2e8f0">Site theme (5)</h4><div class="theme-pick">'+
+      '<button type="button" class="t-basic" data-t="basic">Basic</button>'+
+      '<button type="button" class="t-blue" data-t="blue">Blue</button>'+
+      '<button type="button" class="t-black" data-t="black">Black</button>'+
+      '<button type="button" class="t-white" data-t="white">White</button>'+
+      '<button type="button" class="t-gray" data-t="gray">Gray</button></div>'+
+      '<p style="font-size:.78rem;color:#94a3b8">Applies to Index, Login, Signup, Dashboard for all users (synced).</p>';
+    // try append near settings
+    var settings=document.getElementById('settings');
+    if(settings) settings.appendChild(box); else {
+      var card=document.querySelector('.card-box, .card, main');
+      if(card) card.appendChild(box); else document.body.appendChild(box);
+    }
+    var cur=localStorage.getItem('a_tuls_theme')||'basic';
+    box.querySelectorAll('button[data-t]').forEach(function(b){
+      if(b.getAttribute('data-t')===cur) b.classList.add('active');
+      b.onclick=function(){ saveTheme(b.getAttribute('data-t')); };
+    });
+  }
+  setTimeout(injectThemeUI, 800);
+  setTimeout(injectThemeUI, 2000);
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('a,button');
+    if(!t) return;
+    if(/logout/i.test((t.textContent||'')+(t.getAttribute('onclick')||''))){
+      var el=document.getElementById('adminLogoutLoader');
+      if(el) el.classList.add('show');
+    }
+  }, true);
+  // mark menu items with tiny spinner class on click
+  document.querySelectorAll('.side a, .sidebar a, nav a').forEach(function(a){
+    a.addEventListener('click', function(){
+      var s=document.createElement('span'); s.className='loader-yasin-sm'; s.style.display='inline-block';
+      if(!a.querySelector('.loader-yasin-sm')) a.prepend(s);
+      setTimeout(function(){ try{ s.remove(); }catch(e){} }, 600);
+    });
+  });
+})();
 </script>
 
 </body>
