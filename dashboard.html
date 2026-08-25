@@ -536,6 +536,70 @@ html[data-theme="gray"]{--a:#94a3b8;--bg:#1e293b}
 .menu-geo{width:16px;height:16px;display:inline-block;margin-right:6px;background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);animation:spinGeo .9s linear infinite;vertical-align:middle}
 @keyframes spinGeo{to{transform:rotate(360deg)}}
 
+
+/* Shared Geometric Spinner (menu load) */
+.geo-spinner-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px}
+.loader-yasin,.geo-spin{
+  width:42px;aspect-ratio:1.154;position:relative;margin:0 auto;
+  background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);
+  animation:l27-0 1.5s infinite cubic-bezier(0.3,1,0,1);
+  filter:drop-shadow(0 0 12px rgba(0,229,255,.55));
+}
+.loader-yasin:before,.loader-yasin:after,.geo-spin:before,.geo-spin:after{
+  content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27-1 1.5s infinite;
+}
+.loader-yasin:after,.geo-spin:after{--s:-1}
+@keyframes l27-0{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+@keyframes l27-1{
+  0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}
+  30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}
+  100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}
+}
+.menu-load-overlay{
+  position:absolute;inset:0;z-index:20;background:rgba(5,15,29,.92);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#8b949e;font-size:.85rem;
+}
+.menu-load-overlay.show{display:flex}
+.full-load-ov{
+  position:fixed;inset:0;z-index:99999;background:rgba(3,11,22,.94);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#8b949e;
+}
+.full-load-ov.show{display:flex}
+/* Profile: only RING spins, photo static */
+.profile-pic-wrap,.story-profile-card .ring,.sc-av-ring{
+  position:relative;
+}
+.profile-pic-wrap::before,.story-profile-card .ring::before,.sc-av-ring::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  background:conic-gradient(from 0deg,#00e5ff,transparent 55%,#00e5ff);
+  animation:spinRingOnly 3.5s linear infinite;z-index:-1;
+}
+@keyframes spinRingOnly{to{transform:rotate(360deg)}}
+.profile-pic-wrap img,.story-profile-card .ring img,.sc-av-ring img{
+  animation:none!important;transform:none!important;
+}
+/* Robot face (not emoji) */
+.robot-face{
+  width:56px;height:56px;border-radius:16px;position:relative;
+  background:linear-gradient(160deg,#0b1220,#050f1d);
+  border:2px solid #00e5ff;box-shadow:0 0 18px rgba(0,229,255,.4);
+  display:flex;align-items:center;justify-content:center;
+}
+.robot-face .eye{width:8px;height:8px;border-radius:50%;background:#00e5ff;position:absolute;top:18px;
+  box-shadow:0 0 8px #00e5ff;animation:blink 4s infinite}
+.robot-face .eye.l{left:14px}.robot-face .eye.r{right:14px}
+.robot-face .mouth{position:absolute;bottom:12px;width:18px;height:6px;border-radius:0 0 10px 10px;
+  border:2px solid #00e5ff;border-top:0;transition:.25s}
+.robot-face.happy .mouth{height:8px;border-radius:0 0 12px 12px}
+.robot-face.sad .mouth{height:6px;border-radius:12px 12px 0 0;bottom:10px;transform:scaleY(-1)}
+.robot-face.mad .mouth{width:14px;height:3px;border-radius:2px;border:0;background:#ff4d79;bottom:14px}
+.robot-face.think .mouth{width:10px;height:10px;border-radius:50%;border:2px solid #00e5ff;background:transparent;bottom:10px}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}}
+#dashBot.robot-bot,#emoBot.robot-bot{
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  width:auto!important;height:auto!important;font-size:0!important;padding:0;
+}
+
 </style>
 
 <script>
@@ -2201,7 +2265,7 @@ document.addEventListener('DOMContentLoaded', function(){
       var del=card.querySelector('.sc-del');
       var delHtml=del?del.outerHTML:'';
       var av = pic
-        ? '<div class="ring"><img src="'+pic+'" alt=""></div>'
+        ? '<div class="ring" style="animation:none"><img src="'+pic+'" alt="" style="animation:none;transform:none"></div>'
         : '<div class="ring"><div class="avletter">'+(name[0]||'U').toUpperCase()+'</div></div>';
       card.innerHTML = '<div class="ribbon-mini"><span>STORY</span></div>'+av+
         '<div class="nm">'+name.replace(/</g,'&lt;')+'</div>'+
@@ -2259,6 +2323,142 @@ document.addEventListener('DOMContentLoaded', function(){
     var t=(el.textContent||'').replace(/\s+/g,' ').trim();
     if(t.indexOf('ALL FREE')>=0 && t.indexOf('UID')>=0 && t.length<220 && el.children.length<10) el.style.display='none';
   });
+})();
+</script>
+
+
+<div class="full-load-ov" id="geoToolLoad"><div class="geo-spin"></div><div>Opening tool…</div></div>
+<div class="full-load-ov" id="geoLogoutLoad"><div class="geo-spin"></div><div>Logging out…</div></div>
+
+
+<script>
+(function(){
+  /* Robot emotions (face classes, not emoji) */
+  var moods=['','happy','sad','mad','think'];
+  var mi=0;
+  setInterval(function(){
+    mi=(mi+1)%moods.length;
+    var f=document.getElementById('dashRobotFace');
+    if(f){ f.className='robot-face '+(moods[mi]||''); }
+  }, 4000);
+
+  /* Sidebar / hamburger menu load — Geometric Spinner */
+  function attachMenuLoad(){
+    var toggles=document.querySelectorAll('[data-bs-toggle="offcanvas"], .navbar-toggler, #menuBtn, .menu-toggle, button.ham, [aria-label="Menu"], .sidebar-toggle');
+    toggles.forEach(function(btn){
+      if(btn.__geo) return; btn.__geo=true;
+      btn.addEventListener('click', function(){
+        setTimeout(function(){
+          var panels=document.querySelectorAll('.offcanvas, .sidebar, #sideMenu, .drawer, nav.side');
+          panels.forEach(function(p){
+            if(p.querySelector('.menu-load-overlay')) return;
+            var ov=document.createElement('div');
+            ov.className='menu-load-overlay show';
+            ov.innerHTML='<div class="geo-spin"></div><span>Loading menu…</span>';
+            if(getComputedStyle(p).position==='static') p.style.position='relative';
+            p.appendChild(ov);
+            setTimeout(function(){ ov.classList.remove('show'); setTimeout(function(){ try{ov.remove()}catch(e){} }, 300); }, 900);
+          });
+        }, 30);
+      });
+    });
+  }
+  attachMenuLoad();
+  setTimeout(attachMenuLoad, 1000);
+
+  /* Tool OPEN → geometric load */
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('button,a');
+    if(!t) return;
+    var tx=(t.textContent||'')+(t.getAttribute('onclick')||'')+(t.href||'');
+    if(/open application|\bopen\b/i.test(t.textContent||'') && (t.onclick || /openTool/i.test(tx))){
+      var el=document.getElementById('geoToolLoad');
+      if(el){ el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 800); }
+    }
+  }, true);
+
+  /* Logout → geometric */
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('a,button');
+    if(!t) return;
+    if(/logout/i.test((t.textContent||'')+(t.getAttribute('onclick')||'')+(t.href||''))){
+      var el=document.getElementById('geoLogoutLoad');
+      if(el) el.classList.add('show');
+    }
+  }, true);
+
+  /* AI answers for every tool */
+  window.__A_TULS_AI_ANS = function(q){
+    var b=/[\u0980-\u09FF]/.test(q||''); q=(q||'').toLowerCase();
+    var tools={
+      'gmail format fixer pro': b?'Gmail Format Fixer Pro: বড় email:password লিস্ট পরিষ্কার করে All/Good/Duplicate আলাদা করে। Dashboard → OPEN।':'Gmail Format Fixer Pro: cleans email:password lists into All/Good/Duplicate. Dashboard → OPEN.',
+      'email report': b?'Email Report: Found vs Good রিপোর্ট। OPEN চাপো।':'Email Report: Found vs Good summary. Tap OPEN.',
+      'uid': b?'UID Checker: UID স্ট্রিং যাচাই। টুল ১৬ → OPEN।':'UID Checker: validate UID strings. Tool 16 → OPEN.',
+      'ai website': b?'AI Website: পূর্ণ AI চ্যাট ও ইমেজ। টুল ১৭ → OPEN।':'AI Website: full AI chat & images. Tool 17 → OPEN.',
+      'bio': b?'Bio Link Website: বায়ো লিংক প্রিভিউ। টুল ১৮ → OPEN।':'Bio Link: link page preview. Tool 18 → OPEN.',
+      'vault': b?'Personal Email Vault: ক্লাউডে লিস্ট সেভ। টুল ৯ বা মেনু।':'Personal Email Vault: cloud list storage. Tool 9 or menu.',
+      'password': b?'Password Generator: শক্ত পাসওয়ার্ড তৈরি। OPEN।':'Password Generator: strong passwords. OPEN.',
+      'duplicate': b?'Duplicate Email Checker: ডুপ্লিকেট ইমেইল সরায়।':'Duplicate Email Checker: removes repeated emails.',
+      'timezone': b?'IP Timezone Finder: IP থেকে লোকেশন/টাইমজোন।':'IP Timezone Finder: location from IP.',
+      'logout': b?'Logout চাপলে Geometric লোড দেখিয়ে বের করে।':'Logout shows Geometric loader then exits.'
+    };
+    for(var k in tools){ if(q.indexOf(k)>=0) return tools[k]; }
+    if(/tool|টুল|কী কী|কত/.test(q)) return b?'১৮টি টুল আছে। নাম বলো — কীভাবে কাজ করে বলব। Ready টুলে OPEN চাপো।':'There are 18 tools. Name one — I will explain how it works. OPEN ready tools.';
+    if(/admin|api/.test(q)) return b?'API কোড: WhatsApp +8801336489062':'API code: WhatsApp +8801336489062';
+    return b?'টুলের নাম বলো (যেমন UID, AI Website, Vault) — ব্যাখ্যা দিব।':'Say a tool name (UID, AI Website, Vault) for how-to.';
+  };
+})();
+</script>
+
+
+<script>
+/* Strong menu geo load for #dt #bm + offcanvas */
+(function(){
+  function showMenuGeo(){
+    var targets = document.querySelectorAll('#sideMenu, .offcanvas, .sidebar, #sidebar, .drawer, nav.side, .sidenav');
+    if(!targets.length){
+      // create floating overlay center
+      var ov = document.getElementById('geoMenuFloat');
+      if(!ov){
+        ov=document.createElement('div');
+        ov.id='geoMenuFloat';
+        ov.className='full-load-ov show';
+        ov.innerHTML='<div class="geo-spin"></div><div>Loading menu…</div>';
+        document.body.appendChild(ov);
+      } else ov.classList.add('show');
+      setTimeout(function(){ ov.classList.remove('show'); }, 900);
+      return;
+    }
+    targets.forEach(function(p){
+      var ov=p.querySelector('.menu-load-overlay');
+      if(!ov){
+        ov=document.createElement('div');
+        ov.className='menu-load-overlay';
+        ov.innerHTML='<div class="geo-spin"></div><span>Loading menu…</span>';
+        if(getComputedStyle(p).position==='static') p.style.position='relative';
+        p.appendChild(ov);
+      }
+      ov.classList.add('show');
+      setTimeout(function(){ ov.classList.remove('show'); }, 900);
+    });
+  }
+  ['dt','bm'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el && !el.__geo2){ el.__geo2=true; el.addEventListener('click', function(){ setTimeout(showMenuGeo, 20); }); }
+  });
+  document.querySelectorAll('[data-bs-toggle="offcanvas"], .navbar-toggler, .fa-bars').forEach(function(el){
+    var btn = el.closest('button,a') || el;
+    if(btn.__geo2) return; btn.__geo2=true;
+    btn.addEventListener('click', function(){ setTimeout(showMenuGeo, 20); });
+  });
+
+  // Profile ring only — kill any animation on story/profile images
+  var style=document.createElement('style');
+  style.textContent='.story-card img, .story-profile-card img, .sc-av img, .profile-pic, .welcome img, .avatar img{animation:none!important;transform:none!important}'+
+    '.story-profile-card .ring, .profile-pic-wrap, .sc-av-ring{position:relative}'+
+    '.story-profile-card .ring::before, .profile-pic-wrap::before{content:"";position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(from 0deg,#00e5ff,transparent 55%,#00e5ff);animation:spinRingOnly 3.5s linear infinite;z-index:0}'+
+    '@keyframes spinRingOnly{to{transform:rotate(360deg)}}';
+  document.head.appendChild(style);
 })();
 </script>
 

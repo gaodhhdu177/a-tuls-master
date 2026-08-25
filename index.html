@@ -192,6 +192,70 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
 .detail-panel h3{margin:10px 0 8px;font-size:1.1rem}
 .detail-panel p{color:#c5d0dc;line-height:1.65;font-size:.9rem}
 
+
+/* Shared Geometric Spinner (menu load) */
+.geo-spinner-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px}
+.loader-yasin,.geo-spin{
+  width:42px;aspect-ratio:1.154;position:relative;margin:0 auto;
+  background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);
+  animation:l27-0 1.5s infinite cubic-bezier(0.3,1,0,1);
+  filter:drop-shadow(0 0 12px rgba(0,229,255,.55));
+}
+.loader-yasin:before,.loader-yasin:after,.geo-spin:before,.geo-spin:after{
+  content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27-1 1.5s infinite;
+}
+.loader-yasin:after,.geo-spin:after{--s:-1}
+@keyframes l27-0{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+@keyframes l27-1{
+  0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}
+  30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}
+  100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}
+}
+.menu-load-overlay{
+  position:absolute;inset:0;z-index:20;background:rgba(5,15,29,.92);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#8b949e;font-size:.85rem;
+}
+.menu-load-overlay.show{display:flex}
+.full-load-ov{
+  position:fixed;inset:0;z-index:99999;background:rgba(3,11,22,.94);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#8b949e;
+}
+.full-load-ov.show{display:flex}
+/* Profile: only RING spins, photo static */
+.profile-pic-wrap,.story-profile-card .ring,.sc-av-ring{
+  position:relative;
+}
+.profile-pic-wrap::before,.story-profile-card .ring::before,.sc-av-ring::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  background:conic-gradient(from 0deg,#00e5ff,transparent 55%,#00e5ff);
+  animation:spinRingOnly 3.5s linear infinite;z-index:-1;
+}
+@keyframes spinRingOnly{to{transform:rotate(360deg)}}
+.profile-pic-wrap img,.story-profile-card .ring img,.sc-av-ring img{
+  animation:none!important;transform:none!important;
+}
+/* Robot face (not emoji) */
+.robot-face{
+  width:56px;height:56px;border-radius:16px;position:relative;
+  background:linear-gradient(160deg,#0b1220,#050f1d);
+  border:2px solid #00e5ff;box-shadow:0 0 18px rgba(0,229,255,.4);
+  display:flex;align-items:center;justify-content:center;
+}
+.robot-face .eye{width:8px;height:8px;border-radius:50%;background:#00e5ff;position:absolute;top:18px;
+  box-shadow:0 0 8px #00e5ff;animation:blink 4s infinite}
+.robot-face .eye.l{left:14px}.robot-face .eye.r{right:14px}
+.robot-face .mouth{position:absolute;bottom:12px;width:18px;height:6px;border-radius:0 0 10px 10px;
+  border:2px solid #00e5ff;border-top:0;transition:.25s}
+.robot-face.happy .mouth{height:8px;border-radius:0 0 12px 12px}
+.robot-face.sad .mouth{height:6px;border-radius:12px 12px 0 0;bottom:10px;transform:scaleY(-1)}
+.robot-face.mad .mouth{width:14px;height:3px;border-radius:2px;border:0;background:#ff4d79;bottom:14px}
+.robot-face.think .mouth{width:10px;height:10px;border-radius:50%;border:2px solid #00e5ff;background:transparent;bottom:10px}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}}
+#dashBot.robot-bot,#emoBot.robot-bot{
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  width:auto!important;height:auto!important;font-size:0!important;padding:0;
+}
+
 </style>
 </head>
 <body>
@@ -225,7 +289,7 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
 <div class="drawer-bg" id="drawerBg"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-load" id="drawerLoad">
-    <div class="loader-yasin"></div>
+    <div class="loader-yasin geo-spin"></div>
     <span>Loading menu…</span>
   </div>
   <div class="drawer-body" id="drawerBody">
@@ -435,7 +499,7 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
 </script>
 
 
-<button type="button" id="emoBot" title="AI Helper" aria-label="AI"><span class="face" id="emoFace">😊</span></button>
+<button type="button" id="emoBot" class="robot-bot" title="AI Helper"><div class="robot-face" id="idxRobotFace"><span class="eye l"></span><span class="eye r"></span><span class="mouth"></span></div></button>
 <div id="aiChat">
   <div class="hd"><span>A-Tuls Robot</span><button type="button" id="aiClose" style="border:0;background:0;font-weight:800;cursor:pointer">×</button></div>
   <div id="aiMsgs"></div>

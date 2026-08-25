@@ -277,6 +277,70 @@ body{
 .full-loader{position:fixed;inset:0;z-index:9999;background:rgba(3,11,22,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#8b949e}
 .full-loader.show{display:flex}
 
+
+/* Shared Geometric Spinner (menu load) */
+.geo-spinner-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px}
+.loader-yasin,.geo-spin{
+  width:42px;aspect-ratio:1.154;position:relative;margin:0 auto;
+  background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);
+  animation:l27-0 1.5s infinite cubic-bezier(0.3,1,0,1);
+  filter:drop-shadow(0 0 12px rgba(0,229,255,.55));
+}
+.loader-yasin:before,.loader-yasin:after,.geo-spin:before,.geo-spin:after{
+  content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27-1 1.5s infinite;
+}
+.loader-yasin:after,.geo-spin:after{--s:-1}
+@keyframes l27-0{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+@keyframes l27-1{
+  0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}
+  30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}
+  100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}
+}
+.menu-load-overlay{
+  position:absolute;inset:0;z-index:20;background:rgba(5,15,29,.92);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#8b949e;font-size:.85rem;
+}
+.menu-load-overlay.show{display:flex}
+.full-load-ov{
+  position:fixed;inset:0;z-index:99999;background:rgba(3,11,22,.94);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#8b949e;
+}
+.full-load-ov.show{display:flex}
+/* Profile: only RING spins, photo static */
+.profile-pic-wrap,.story-profile-card .ring,.sc-av-ring{
+  position:relative;
+}
+.profile-pic-wrap::before,.story-profile-card .ring::before,.sc-av-ring::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  background:conic-gradient(from 0deg,#00e5ff,transparent 55%,#00e5ff);
+  animation:spinRingOnly 3.5s linear infinite;z-index:-1;
+}
+@keyframes spinRingOnly{to{transform:rotate(360deg)}}
+.profile-pic-wrap img,.story-profile-card .ring img,.sc-av-ring img{
+  animation:none!important;transform:none!important;
+}
+/* Robot face (not emoji) */
+.robot-face{
+  width:56px;height:56px;border-radius:16px;position:relative;
+  background:linear-gradient(160deg,#0b1220,#050f1d);
+  border:2px solid #00e5ff;box-shadow:0 0 18px rgba(0,229,255,.4);
+  display:flex;align-items:center;justify-content:center;
+}
+.robot-face .eye{width:8px;height:8px;border-radius:50%;background:#00e5ff;position:absolute;top:18px;
+  box-shadow:0 0 8px #00e5ff;animation:blink 4s infinite}
+.robot-face .eye.l{left:14px}.robot-face .eye.r{right:14px}
+.robot-face .mouth{position:absolute;bottom:12px;width:18px;height:6px;border-radius:0 0 10px 10px;
+  border:2px solid #00e5ff;border-top:0;transition:.25s}
+.robot-face.happy .mouth{height:8px;border-radius:0 0 12px 12px}
+.robot-face.sad .mouth{height:6px;border-radius:12px 12px 0 0;bottom:10px;transform:scaleY(-1)}
+.robot-face.mad .mouth{width:14px;height:3px;border-radius:2px;border:0;background:#ff4d79;bottom:14px}
+.robot-face.think .mouth{width:10px;height:10px;border-radius:50%;border:2px solid #00e5ff;background:transparent;bottom:10px}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}}
+#dashBot.robot-bot,#emoBot.robot-bot{
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  width:auto!important;height:auto!important;font-size:0!important;padding:0;
+}
+
 </style>
 
 <script>
@@ -1387,6 +1451,74 @@ bootAdmin();
       if(!a.querySelector('.loader-yasin-sm')) a.prepend(s);
       setTimeout(function(){ try{ s.remove(); }catch(e){} }, 600);
     });
+  });
+})();
+</script>
+
+
+<div class="full-load-ov" id="geoAdminLogout"><div class="geo-spin"></div><div>Logging out…</div></div>
+<script>
+(function(){
+  function attach(){
+    document.querySelectorAll('[data-bs-toggle="offcanvas"], .navbar-toggler, #menuBtn, .menu-toggle, [aria-label="Menu"]').forEach(function(btn){
+      if(btn.__geo) return; btn.__geo=true;
+      btn.addEventListener('click', function(){
+        setTimeout(function(){
+          document.querySelectorAll('.offcanvas, .sidebar, #sideMenu, nav.side, .drawer').forEach(function(p){
+            if(p.querySelector('.menu-load-overlay')) return;
+            var ov=document.createElement('div');
+            ov.className='menu-load-overlay show';
+            ov.innerHTML='<div class="geo-spin"></div><span>Loading menu…</span>';
+            if(getComputedStyle(p).position==='static') p.style.position='relative';
+            p.appendChild(ov);
+            setTimeout(function(){ ov.classList.remove('show'); setTimeout(function(){try{ov.remove()}catch(e){}},300); }, 900);
+          });
+        }, 30);
+      });
+    });
+  }
+  attach(); setTimeout(attach, 800);
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('a,button');
+    if(!t) return;
+    if(/logout/i.test((t.textContent||'')+(t.getAttribute('onclick')||''))){
+      var el=document.getElementById('geoAdminLogout');
+      if(el) el.classList.add('show');
+    }
+  }, true);
+})();
+</script>
+
+<script>
+(function(){
+  function showMenuGeo(){
+    var targets=document.querySelectorAll('.sidebar, #sidebar, .offcanvas, nav.side, .sidenav, .drawer');
+    if(!targets.length){
+      var ov=document.getElementById('geoAdminMenuFloat');
+      if(!ov){ ov=document.createElement('div'); ov.id='geoAdminMenuFloat'; ov.className='full-load-ov show';
+        ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(3,11,22,.94);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#8b949e';
+        ov.innerHTML='<div class="geo-spin" style="width:42px;aspect-ratio:1.154;background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);animation:l27-0 1.5s infinite cubic-bezier(.3,1,0,1)"></div><div>Loading menu…</div>';
+        document.body.appendChild(ov);
+      } else { ov.style.display='flex'; }
+      setTimeout(function(){ ov.style.display='none'; }, 900);
+      return;
+    }
+    targets.forEach(function(p){
+      var ov=p.querySelector('.menu-load-overlay');
+      if(!ov){ ov=document.createElement('div'); ov.className='menu-load-overlay show';
+        ov.style.cssText='position:absolute;inset:0;z-index:20;background:rgba(5,15,29,.92);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#8b949e';
+        ov.innerHTML='<div class="geo-spin" style="width:42px;aspect-ratio:1.154;background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);animation:l27-0 1.5s infinite cubic-bezier(.3,1,0,1)"></div><span>Loading menu…</span>';
+        if(getComputedStyle(p).position==='static') p.style.position='relative';
+        p.appendChild(ov);
+      }
+      ov.style.display='flex';
+      setTimeout(function(){ ov.style.display='none'; }, 900);
+    });
+  }
+  document.querySelectorAll('[data-bs-toggle="offcanvas"], .navbar-toggler, .fa-bars, #menuBtn, .menu-toggle').forEach(function(el){
+    var btn=el.closest('button,a')||el;
+    if(btn.__geoA) return; btn.__geoA=true;
+    btn.addEventListener('click', function(){ setTimeout(showMenuGeo, 20); });
   });
 })();
 </script>
