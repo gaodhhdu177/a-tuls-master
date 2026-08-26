@@ -289,6 +289,9 @@ body{background:#030b16!important;position:relative}
 .full-loader{position:fixed;inset:0;z-index:9999;background:rgba(3,11,22,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:#8b949e;font-size:.9rem}
 .full-loader.show{display:flex}
 
+
+@keyframes loginFade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.signup-card,.card,form{animation:loginFade .55s ease both}
 </style>
 <script>
 /* ===== A-Tuls Database: Supabase (primary) =====
@@ -676,5 +679,17 @@ function togglePass(id, btn){
 })();
 </script>
 
+
+<script>
+(function(){
+  // show trial package hint if select exists
+  var sel=document.querySelector('select[name="package"], #package, #pkg');
+  if(sel && !sel.querySelector('[value="free_trial"]')){
+    var o=document.createElement('option');
+    o.value='free_trial'; o.textContent='1 Month Free Trial';
+    sel.insertBefore(o, sel.firstChild);
+  }
+})();
+</script>
 </body>
 </html>

@@ -429,6 +429,19 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
 
   </section>
 
+  
+  <section class="section" id="packages">
+    <h2>Packages</h2>
+    <p class="sub">Free trial + paid plans · Admin can disable trial</p>
+    <div class="pkg-row">
+      <div class="pkg-card trial"><b>1 Month Free Trial</b><span>৳0 · Admin controllable</span></div>
+      <div class="pkg-card"><b>Basic</b><span>৳150</span></div>
+      <div class="pkg-card"><b>Pro</b><span>৳900</span></div>
+      <div class="pkg-card"><b>Lifetime</b><span>৳1800</span></div>
+    </div>
+    <p class="sub">API code for signup · Message Admin on WhatsApp</p>
+  </section>
+
   <footer>
     <img src="logo.png" alt="" style="width:36px;height:36px;border-radius:50%;vertical-align:middle"> <strong style="color:#fff">A-Tuls</strong><br>
     <a href="index.html">Home</a><a href="login.html">Login</a><a href="signup.html">Register</a>
@@ -561,6 +574,38 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
   };
 })();
 </script>
+
+
+<script>
+(function(){
+  var moods=['','happy','sad','mad','think'], mi=0;
+  setInterval(function(){
+    mi=(mi+1)%moods.length;
+    var f=document.getElementById('idxRobotFace');
+    if(f) f.className='robot-face '+(moods[mi]||'');
+  }, 3500);
+  var bot=document.getElementById('emoBot');
+  if(bot && !document.getElementById('idxRobotFace')){
+    bot.innerHTML='<div class="robot-face" id="idxRobotFace"><span class="eye l"></span><span class="eye r"></span><span class="mouth"></span></div>';
+    bot.classList.add('robot-bot');
+  }
+})();
+</script>
+<style>
+.robot-face{width:54px;height:54px;border-radius:14px;position:relative;background:linear-gradient(160deg,#0b1220,#050f1d);border:2px solid #00e5ff;box-shadow:0 0 16px rgba(0,229,255,.45)}
+.robot-face .eye{width:7px;height:7px;border-radius:50%;background:#00e5ff;position:absolute;top:16px;box-shadow:0 0 6px #00e5ff;animation:blink 4s infinite}
+.robot-face .eye.l{left:12px}.robot-face .eye.r{right:12px}
+.robot-face .mouth{position:absolute;bottom:11px;left:50%;transform:translateX(-50%);width:16px;height:5px;border-radius:0 0 8px 8px;border:2px solid #00e5ff;border-top:0}
+.robot-face.happy .mouth{height:7px}
+.robot-face.sad .mouth{transform:translateX(-50%) scaleY(-1);bottom:9px}
+.robot-face.mad .mouth{width:12px;height:2px;border:0;background:#ff4d79;border-radius:2px}
+.robot-face.think .mouth{width:8px;height:8px;border-radius:50%;border:2px solid #00e5ff;background:0}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.15)}}
+.pkg-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
+.pkg-card{background:rgba(10,25,47,.8);border:1px solid rgba(0,229,255,.2);border-radius:14px;padding:14px 16px;min-width:140px;text-align:center}
+.pkg-card b{display:block;color:#00e5ff;margin-bottom:4px}
+.pkg-card.trial{border-color:rgba(34,197,94,.4)}
+</style>
 
 </body>
 </html>

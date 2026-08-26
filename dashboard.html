@@ -2462,5 +2462,84 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+
+<script>
+(function(){
+  function goAI(){ window.location.href = 'ai-website.html'; }
+  var bot = document.getElementById('dashBot');
+  if(bot){
+    bot.onclick = goAI;
+    bot.title = 'Open A-TULS AI';
+  }
+  // also purple floating robot if any
+  document.querySelectorAll('.robot-btn, [title*="AI"], .fab-ai').forEach(function(el){
+    if(el.id==='dashBot') return;
+    el.addEventListener('click', function(e){ if(!el.closest('a[href]')){ e.preventDefault(); goAI(); }});
+  });
+
+  // Robot face moods
+  var moods = ['','happy','sad','mad','think'];
+  var mi = 0;
+  setInterval(function(){
+    mi = (mi+1)%moods.length;
+    var f = document.getElementById('dashRobotFace');
+    if(f) f.className = 'robot-face ' + (moods[mi]||'');
+  }, 3500);
+
+  // Profile: only ring spins
+  var st = document.createElement('style');
+  st.textContent = `
+    .story-card img, .story-profile-card img, .sc-av img, .profile-pic, .avatar img, .welcome img {
+      animation: none !important; transform: none !important;
+    }
+    .profile-pic-wrap, .story-profile-card .ring, .sc-av-ring {
+      position: relative; display: inline-block;
+    }
+    .profile-pic-wrap::before, .story-profile-card .ring::before {
+      content: ""; position: absolute; inset: -4px; border-radius: 50%;
+      background: conic-gradient(from 0deg, #00e5ff, transparent 55%, #00e5ff);
+      animation: spinRingOnly 3.2s linear infinite; z-index: 0; pointer-events: none;
+    }
+    @keyframes spinRingOnly { to { transform: rotate(360deg); } }
+    .robot-face {
+      width: 54px; height: 54px; border-radius: 14px; position: relative;
+      background: linear-gradient(160deg, #0b1220, #050f1d);
+      border: 2px solid #00e5ff; box-shadow: 0 0 16px rgba(0,229,255,.45);
+    }
+    .robot-face .eye { width: 7px; height: 7px; border-radius: 50%; background: #00e5ff;
+      position: absolute; top: 16px; box-shadow: 0 0 6px #00e5ff; animation: blink 4s infinite; }
+    .robot-face .eye.l { left: 12px; } .robot-face .eye.r { right: 12px; }
+    .robot-face .mouth { position: absolute; bottom: 11px; left: 50%; transform: translateX(-50%);
+      width: 16px; height: 5px; border-radius: 0 0 8px 8px; border: 2px solid #00e5ff; border-top: 0; }
+    .robot-face.happy .mouth { height: 7px; }
+    .robot-face.sad .mouth { transform: translateX(-50%) scaleY(-1); bottom: 9px; }
+    .robot-face.mad .mouth { width: 12px; height: 2px; border: 0; background: #ff4d79; border-radius: 2px; }
+    .robot-face.think .mouth { width: 8px; height: 8px; border-radius: 50%; border: 2px solid #00e5ff; background: 0; }
+    @keyframes blink { 0%,90%,100%{transform:scaleY(1)} 93%{transform:scaleY(.15)} }
+  `;
+  document.head.appendChild(st);
+
+  // Ensure robot has face structure
+  if(bot && !document.getElementById('dashRobotFace')){
+    bot.innerHTML = '<div class="robot-face" id="dashRobotFace"><span class="eye l"></span><span class="eye r"></span><span class="mouth"></span></div>';
+    bot.classList.add('robot-bot');
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  // Admin can disable via localStorage a_tuls_trial_off = '1' or settings
+  window.A_TULS_TRIAL_ENABLED = localStorage.getItem('a_tuls_trial_off') !== '1';
+  window.A_TULS_PACKAGES = [
+    {id:'free_trial', name:'1 Month Free Trial', days:30, price:0, extra:true},
+    {id:'basic', name:'Basic', days:30, price:150},
+    {id:'pro', name:'Pro', days:90, price:900},
+    {id:'lifetime', name:'Lifetime', days:36500, price:1800}
+  ];
+})();
+</script>
+
 </body>
 </html>

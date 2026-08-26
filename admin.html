@@ -1523,5 +1523,24 @@ bootAdmin();
 })();
 </script>
 
+
+<script>
+(function(){
+  setTimeout(function(){
+    if(document.getElementById('trialToggleBox')) return;
+    var box=document.createElement('div');
+    box.id='trialToggleBox';
+    box.style.cssText='margin:16px;padding:14px;background:rgba(0,229,255,.08);border-radius:12px;border:1px solid rgba(0,229,255,.2)';
+    var on = localStorage.getItem('a_tuls_trial_off')!=='1';
+    box.innerHTML='<b style="color:#e2e8f0">1 Month Free Trial package</b><br><label style="color:#94a3b8;font-size:.9rem"><input type="checkbox" id="trialEn" '+(on?'checked':'')+'> Enable free trial for new users</label>';
+    var host=document.getElementById('settings')||document.querySelector('main')||document.body;
+    host.appendChild(box);
+    document.getElementById('trialEn').onchange=function(){
+      localStorage.setItem('a_tuls_trial_off', this.checked?'0':'1');
+      alert(this.checked?'Free trial ON':'Free trial OFF');
+    };
+  }, 1000);
+})();
+</script>
 </body>
 </html>
