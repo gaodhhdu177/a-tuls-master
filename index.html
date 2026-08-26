@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00e5ff">
+<meta name="mobile-web-app-capable" content="yes">
+
 <script>
 /* A_TULS_DOMAIN_LOCK — ON */
 (function(){
   try{
     var host=(location.hostname||'').toLowerCase();
     var proto=(location.protocol||'').toLowerCase();
-    var ok=(host==='a-tuls-master-n0k1.onrender.com'||host.endsWith('.onrender.com')||host.endsWith('.pages.dev')||host.endsWith('.netlify.app')||host.endsWith('.vercel.app')||host.endsWith('.workers.dev'));
+    var ok=(host==='a-tuls-master-n0k1.onrender.com'||host.endsWith('.onrender.com')||host.endsWith('.pages.dev')||host.endsWith('.github.io')||host.endsWith('.netlify.app')||h.endsWith('.github.io')||h.endsWith('.gitlab.io')||host.endsWith('.vercel.app')||host.endsWith('.workers.dev'));
     if(proto==='file:'||!host||!ok){
       document.documentElement.innerHTML='<div style="font-family:system-ui;padding:48px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center"><h1>Access Denied</h1></div>';
       throw new Error('domain-lock');
@@ -608,5 +612,9 @@ button.tcard:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0
 .pkg-card.trial{border-color:rgba(34,197,94,.4)}
 </style>
 
+
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+</script>
 </body>
 </html>
