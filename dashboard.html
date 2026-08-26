@@ -2541,5 +2541,56 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+
+<script>
+(function(){
+  var st=document.createElement('style');
+  st.textContent = `
+    /* Ring ONLY around photo edge — photo never rotates */
+    .story-card img, .story-profile-card img, .sc-av img, .profile-pic, .avatar img,
+    .welcome img, .sc-head img, .story-wrap img {
+      animation: none !important;
+      transform: none !important;
+    }
+    .story-profile-card .ring,
+    .profile-pic-wrap,
+    .sc-av-ring,
+    .story-card .sc-av {
+      position: relative !important;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      overflow: visible !important;
+    }
+    /* thin ring border outside photo */
+    .story-profile-card .ring::before,
+    .profile-pic-wrap::before,
+    .sc-av-ring::before,
+    .story-card .sc-av::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: -5px !important;
+      border-radius: 50% !important;
+      background: conic-gradient(from 0deg, #00e5ff 0deg, transparent 90deg, #00e5ff 180deg, transparent 270deg, #00e5ff 360deg) !important;
+      animation: edgeRingSpin 2.8s linear infinite !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+    }
+    @keyframes edgeRingSpin { to { transform: rotate(360deg); } }
+    /* photo above ring */
+    .story-profile-card .ring img,
+    .profile-pic-wrap img,
+    .sc-av img {
+      position: relative;
+      z-index: 1;
+      border-radius: 50%;
+    }
+  `;
+  document.head.appendChild(st);
+})();
+</script>
+
 </body>
 </html>

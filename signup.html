@@ -292,6 +292,18 @@ body{background:#030b16!important;position:relative}
 
 @keyframes loginFade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .signup-card,.card,form{animation:loginFade .55s ease both}
+
+.get-api-box{display:none;margin-top:12px;padding:14px;border-radius:14px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.25)}
+.get-api-box.show{display:block}
+.get-api-box h4{margin:0 0 8px;color:#00e5ff;font-size:.95rem}
+.pkg-list{display:grid;gap:8px;margin:10px 0}
+.pkg-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(5,15,29,.9);border:1px solid rgba(255,255,255,.08);font-size:.88rem}
+.pkg-item b{color:#fff}
+.pkg-item span{color:#00e5ff;font-weight:700}
+.btn-wa{display:inline-block;margin-top:8px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:800;text-decoration:none;text-align:center;width:100%;box-sizing:border-box}
+.btn-get-api{display:none;margin-top:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,229,255,.4);background:rgba(0,229,255,.12);color:#00e5ff;font-weight:700;cursor:pointer}
+.btn-get-api.show{display:block}
+
 </style>
 <script>
 /* ===== A-Tuls Database: Supabase (primary) =====
@@ -516,7 +528,21 @@ window.A_TULS_DB = {
           <button type="button" class="eye" onclick="togglePass('confirm',this)"><i class="fas fa-eye"></i></button>
         </div>
       </div>
-      <button type="submit" class="btn">Create account</button>
+      
+<button type="button" class="btn-get-api" id="btnGetApi">Get API / View packages</button>
+<div class="get-api-box" id="getApiBox">
+  <h4>Packages (message Admin to buy)</h4>
+  <div class="pkg-list">
+    <div class="pkg-item"><b>1 Month Free Trial</b><span>৳0</span></div>
+    <div class="pkg-item"><b>Basic · 30 days</b><span>৳150</span></div>
+    <div class="pkg-item"><b>Pro · 90 days</b><span>৳900</span></div>
+    <div class="pkg-item"><b>Lifetime</b><span>৳1800</span></div>
+  </div>
+  <p style="font-size:.8rem;color:#94a3b8;margin:0 0 8px">ভুল API হলে Admin-কে মেসেজ করে কোড নিন। প্যাকেজ কিনলে Admin API দিবে।</p>
+  <a class="btn-wa" href="https://wa.me/8801336489062?text=A-Tuls%20API%20code%20%26%20package%20please" target="_blank" rel="noopener">WhatsApp Admin · Get API</a>
+</div>
+
+<button type="submit" class="btn">Create account</button>
     </form>
     <div class="foot">Already registered? <a href="login.html">Sign in</a></div>
   </div>
@@ -691,5 +717,37 @@ function togglePass(id, btn){
   }
 })();
 </script>
+
+<script>
+(function(){
+  var box=document.getElementById('getApiBox');
+  var btn=document.getElementById('btnGetApi');
+  function showPkg(){ if(btn) btn.classList.add('show'); if(box) box.classList.add('show'); }
+  if(btn){ btn.onclick=function(){ if(box) box.classList.toggle('show'); }; btn.classList.add('show'); }
+  // show Get API when API field invalid / error
+  var apiInp=document.querySelector('input[name="api"], #api, input[placeholder*="API"], input[placeholder*="api"]');
+  var form=document.querySelector('form');
+  if(form){
+    form.addEventListener('submit', function(){
+      setTimeout(function(){
+        var err=document.querySelector('.error,.err,[class*="error"]');
+        if(err && /api|code|invalid|required/i.test(err.textContent||'')) showPkg();
+      }, 400);
+    });
+  }
+  if(apiInp){
+    apiInp.addEventListener('blur', function(){
+      if(!apiInp.value.trim()){ showPkg(); }
+    });
+  }
+  // alert override for wrong api
+  var _a=window.alert;
+  window.alert=function(m){
+    if(/api|code|invalid|wrong/i.test(String(m||''))) showPkg();
+    return _a.apply(this, arguments);
+  };
+})();
+</script>
+
 </body>
 </html>
