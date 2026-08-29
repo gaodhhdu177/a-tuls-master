@@ -11,8 +11,8 @@
     var ok=(
       host==='a-tuls-master-n0k1.onrender.com'||
       host.endsWith('.onrender.com')||
-      host.endsWith('.pages.dev')||host.endsWith('.github.io')||
-      host.endsWith('.netlify.app')||h.endsWith('.github.io')||h.endsWith('.gitlab.io')||
+      host.endsWith('.pages.dev')||
+      host.endsWith('.netlify.app')||
       host.endsWith('.vercel.app')||
       host.endsWith('.workers.dev')
     );
@@ -38,19 +38,26 @@
 (function(){
   var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
   var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-  var THEMES={
-    midnight:{bg:'#050816',panel:'#0e1428',a:'#38bdf8',b:'#a78bfa',txt:'#eef2ff'},
-    ocean:{bg:'#02141f',panel:'#0a2433',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
-    forest:{bg:'#06140f',panel:'#0c241c',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
-    sunset:{bg:'#1a0b10',panel:'#2a1218',a:'#fb7185',b:'#fbbf24',txt:'#fff1f2'},
-    royal:{bg:'#0c0a1a',panel:'#16122e',a:'#a78bfa',b:'#e879f9',txt:'#f5f3ff'},
-    slate:{bg:'#0f172a',panel:'#1e293b',a:'#94a3b8',b:'#64748b',txt:'#f8fafc'},
-    crimson:{bg:'#14060a',panel:'#240c12',a:'#f43f5e',b:'#fb7185',txt:'#fff1f2'},
-    amber:{bg:'#140e04',panel:'#241a0a',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb'},
-    mint:{bg:'#041412',panel:'#0a2420',a:'#2dd4bf',b:'#5eead4',txt:'#f0fdfa'},
-    graphite:{bg:'#0a0a0b',panel:'#171717',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
-  };
-  function applyTheme(id){
+  
+var THEMES={
+  midnight:{bg:'#030b16',panel:'#0a1628',a:'#00e5ff',b:'#3a86ff',txt:'#e8f4ff',name:'Midnight'},
+  ocean:{bg:'#021824',panel:'#0a2a3c',a:'#22d3ee',b:'#0ea5e9',txt:'#e0f7ff',name:'Ocean'},
+  forest:{bg:'#06140e',panel:'#0d2418',a:'#34d399',b:'#10b981',txt:'#ecfdf5',name:'Forest'},
+  sunset:{bg:'#1a0b12',panel:'#2a1220',a:'#fb7185',b:'#f97316',txt:'#fff1f2',name:'Sunset'},
+  royal:{bg:'#0c0a1a',panel:'#1a1430',a:'#a78bfa',b:'#8b5cf6',txt:'#f5f3ff',name:'Royal'},
+  slate:{bg:'#0f1419',panel:'#1a222d',a:'#94a3b8',b:'#64748b',txt:'#f1f5f9',name:'Slate'},
+  crimson:{bg:'#140808',panel:'#241010',a:'#f43f5e',b:'#e11d48',txt:'#fff1f2',name:'Crimson'},
+  amber:{bg:'#141008',panel:'#241c10',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb',name:'Amber'},
+  mint:{bg:'#061412',panel:'#0d2420',a:'#2dd4bf',b:'#14b8a6',txt:'#f0fdfa',name:'Mint'},
+  graphite:{bg:'#0a0a0a',panel:'#161616',a:'#e5e5e5',b:'#a3a3a3',txt:'#fafafa',name:'Graphite'},
+  cyber:{bg:'#030712',panel:'#0b1329',a:'#00f0ff',b:'#a855f7',txt:'#f1f5f9',name:'Cyber Neon'},
+  glass:{bg:'#020812',panel:'#061322',a:'#00e5ff',b:'#32c9ff',txt:'#effcff',name:'Glass Cyan'},
+  premium:{bg:'#030712',panel:'#0a1225',a:'#00e5ff',b:'#7c5cff',txt:'#f0f7ff',name:'Premium Aurora'},
+  white:{bg:'#f8fafc',panel:'#ffffff',a:'#0284c7',b:'#0369a1',txt:'#0f172a',name:'White'},
+  gray:{bg:'#1e293b',panel:'#334155',a:'#94a3b8',b:'#cbd5e1',txt:'#f8fafc',name:'Gray'}
+};
+
+function applyTheme(id){
     var t=THEMES[id]||THEMES.midnight;
     var r=document.documentElement;
     r.style.setProperty('--bg',t.bg);
@@ -90,6 +97,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="logo-512.png" type="image/png">
 <title>A-Tuls · Ultra Dashboard</title>
 <meta name="theme-color" content="#0b1020">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -749,7 +757,7 @@ window.A_TULS_DB = {
 <div class="container d-flex justify-content-between align-items-center">
 <div class="d-flex align-items-center gap-2">
 <button class="icon-btn" id="dt"><i class="fas fa-bars"></i></button>
-<a href="#" class="logo" onclick="go('dashboard');return false"><span class="nav-logo"><span class="letter">A</span></span>A-Tuls</a>
+<a href="#" class="logo" onclick="go('dashboard');return false" style="display:flex;align-items:center;gap:8px"><img src="logo.png" alt="A-Tuls" class="logo-img-main" width="40" height="40" style="width:40px;height:40px;border-radius:12px;object-fit:cover;display:block" onerror="this.src='logo-512.png'"><span class="logo-text">A-Tuls</span></a>
 </div>
 <button class="icon-btn"><i class="fas fa-bell"></i></button>
 </div>
@@ -2589,6 +2597,64 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   `;
   document.head.appendChild(st);
+})();
+</script>
+
+
+<script>
+(function(){
+  function canUserTheme(){
+    try{ return localStorage.getItem('a_tuls_allow_user_theme')==='1'; }catch(e){ return false; }
+  }
+  function mountThemePicker(){
+    if(!canUserTheme()) return;
+    if(document.getElementById('userThemePicker')) return;
+    var bar=document.createElement('div');
+    bar.id='userThemePicker';
+    bar.style.cssText='position:fixed;left:12px;bottom:80px;z-index:120;background:rgba(6,20,35,.95);border:1px solid rgba(0,229,255,.25);border-radius:14px;padding:10px 12px;max-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.4)';
+    bar.innerHTML='<div style="font-size:11px;color:#00e5ff;margin-bottom:6px;font-weight:700">My Theme</div><select id="userThemeSelect" style="width:100%;padding:8px;border-radius:8px;background:#0a1628;color:#e8f4ff;border:1px solid rgba(0,229,255,.2)"></select>';
+    document.body.appendChild(bar);
+    var sel=document.getElementById('userThemeSelect');
+    var keys=Object.keys(THEMES||{});
+    var cur=localStorage.getItem('a_tuls_user_theme')||localStorage.getItem('a_tuls_theme')||'midnight';
+    keys.forEach(function(k){
+      var o=document.createElement('option');
+      o.value=k; o.textContent=(THEMES[k].name||k);
+      if(k===cur) o.selected=true;
+      sel.appendChild(o);
+    });
+    sel.onchange=function(){
+      var id=sel.value;
+      localStorage.setItem('a_tuls_user_theme', id);
+      if(typeof applyTheme==='function') applyTheme(id);
+    };
+    if(typeof applyTheme==='function') applyTheme(cur);
+  }
+  // also try load flag from supabase settings
+  try{
+    var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+    var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+    fetch(SB_URL+'a_tuls_settings?key=eq.allow_user_theme&select=value',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}})
+      .then(function(r){return r.json()}).then(function(rows){
+        if(rows&&rows[0]){
+          var v=rows[0].value; if(v&&typeof v==='object'&&'v' in v) v=v.v;
+          localStorage.setItem('a_tuls_allow_user_theme', v?'1':'0');
+        }
+        mountThemePicker();
+      }).catch(function(){ mountThemePicker(); });
+  }catch(e){ setTimeout(mountThemePicker, 600); }
+  setTimeout(mountThemePicker, 1200);
+})();
+</script>
+
+
+<script>
+(function(){
+  try{
+    var id=localStorage.getItem('a_tuls_user_theme')||localStorage.getItem('a_tuls_theme_dashboard')||localStorage.getItem('a_tuls_theme')||'midnight';
+    if(typeof applyTheme==='function') applyTheme(id);
+    else document.documentElement.setAttribute('data-theme', id);
+  }catch(e){}
 })();
 </script>
 

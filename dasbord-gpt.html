@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-Tuls · Dashboard</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,Arial,sans-serif;
+}
+
+body{
+  background:#070b12;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+/* HEADER */
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  background:rgba(7,11,18,.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid #182131;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  object-fit:cover;
+  background:#111827;
+  border:1px solid #263247;
+}
+
+.brand-name{
+  font-size:20px;
+  font-weight:800;
+}
+
+.brand-sub{
+  color:#7f8ba0;
+  font-size:11px;
+  margin-top:2px;
+}
+
+.menu-btn,
+.icon-btn{
+  border:1px solid #202b3d;
+  background:#0d1420;
+  color:white;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:20px;
+}
+
+.menu-btn:hover,
+.icon-btn:hover{
+  background:#151f2e;
+}
+
+/* MAIN */
+.container{
+  width:min(1180px,94%);
+  margin:auto;
+  padding:25px 0 100px;
+}
+
+/* WELCOME */
+.welcome{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:24px;
+}
+
+.welcome h1{
+  font-size:30px;
+  margin-bottom:7px;
+}
+
+.welcome p{
+  color:#8d99aa;
+  font-size:14px;
+}
+
+.package{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-top:10px;
+  padding:7px 12px;
+  border-radius:20px;
+  background:#111b2a;
+  border:1px solid #24334a;
+  color:#b8c7db;
+  font-size:12px;
+}
+
+.package-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#31e981;
+}
+
+/* STORY */
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:25px 0 14px;
+}
+
+.section-title h2{
+  font-size:18px;
+}
+
+.section-title span{
+  color:#718096;
+  font-size:12px;
+}
+
+.stories{
+  display:flex;
+  gap:13px;
+  overflow-x:auto;
+  padding-bottom:7px;
+}
+
+.story{
+  min-width:110px;
+  height:145px;
+  border-radius:18px;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(145deg,#151f31,#0d131e);
+  border:1px solid #202d40;
+  cursor:pointer;
+}
+
+.story.add{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:10px;
+}
+
+.plus{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#1b293b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+}
+
+.story img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.story-info{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:25px 9px 9px;
+  background:linear-gradient(transparent,rgba(0,0,0,.9));
+}
+
+.story-info b{
+  font-size:12px;
+}
+
+.badge{
+  display:inline-block;
+  margin-top:4px;
+  font-size:9px;
+  padding:3px 6px;
+  border-radius:5px;
+  background:#202c40;
+  color:#aebdd1;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+  margin-top:24px;
+}
+
+.stat{
+  background:#0d141f;
+  border:1px solid #1d2939;
+  border-radius:17px;
+  padding:18px;
+}
+
+.stat-label{
+  color:#7e8a9c;
+  font-size:12px;
+}
+
+.stat-value{
+  font-size:25px;
+  font-weight:800;
+  margin-top:7px;
+}
+
+/* TOOLS */
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.tool{
+  position:relative;
+  background:#0d141f;
+  border:1px solid #1d2939;
+  border-radius:19px;
+  padding:20px;
+  transition:.2s;
+  overflow:hidden;
+}
+
+.tool:hover{
+  transform:translateY(-3px);
+  border-color:#34465f;
+}
+
+.tool-icon{
+  width:48px;
+  height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  background:#121e2e;
+  font-size:24px;
+  margin-bottom:15px;
+}
+
+.tool h3{
+  font-size:16px;
+  margin-bottom:7px;
+}
+
+.tool p{
+  color:#7e8b9e;
+  font-size:12px;
+  line-height:1.5;
+  min-height:38px;
+}
+
+.ribbon{
+  position:absolute;
+  top:13px;
+  right:13px;
+  padding:4px 7px;
+  border-radius:6px;
+  font-size:9px;
+  background:#152438;
+  color:#9fb2cb;
+}
+
+.open-btn{
+  display:block;
+  width:100%;
+  margin-top:17px;
+  text-align:center;
+  padding:11px;
+  border-radius:11px;
+  background:#17263a;
+  border:1px solid #263a55;
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.open-btn:hover{
+  background:#20344e;
+}
+
+.coming{
+  opacity:.62;
+}
+
+.coming .open-btn{
+  cursor:not-allowed;
+}
+
+/* AI ROBOT */
+.ai-bot{
+  position:fixed;
+  right:20px;
+  bottom:84px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:#17263a;
+  border:1px solid #334b69;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  box-shadow:0 10px 35px rgba(0,0,0,.45);
+  z-index:80;
+}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  height:66px;
+  background:rgba(7,11,18,.96);
+  backdrop-filter:blur(18px);
+  border-top:1px solid #1b2636;
+  display:none;
+  justify-content:space-around;
+  align-items:center;
+  z-index:90;
+}
+
+.nav-item{
+  color:#78869a;
+  font-size:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.nav-item strong{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
+
+.nav-item.active{
+  color:#fff;
+}
+
+.add-nav{
+  width:43px;
+  height:43px;
+  border-radius:14px;
+  background:#1b2b41;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+}
+
+/* DRAWER */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:none;
+  z-index:150;
+}
+
+.overlay.show{
+  display:block;
+}
+
+.drawer{
+  position:absolute;
+  right:0;
+  top:0;
+  height:100%;
+  width:min(360px,90%);
+  background:#0a1019;
+  border-left:1px solid #202d40;
+  padding:25px;
+  overflow-y:auto;
+}
+
+.drawer-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.drawer h2{
+  font-size:20px;
+}
+
+.close{
+  background:#121c2a;
+  border:1px solid #263247;
+  color:#fff;
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.menu-link{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:13px 12px;
+  border-radius:11px;
+  color:#bdc8d7;
+  font-size:13px;
+  margin-bottom:4px;
+}
+
+.menu-link:hover{
+  background:#111b29;
+  color:#fff;
+}
+
+.menu-icon{
+  width:25px;
+  text-align:center;
+}
+
+.logout{
+  color:#ff7777;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:85px;
+  transform:translate(-50%,20px);
+  background:#111b29;
+  border:1px solid #2a3a51;
+  padding:12px 17px;
+  border-radius:12px;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:300;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* RESPONSIVE */
+@media(max-width:850px){
+  .tools-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:600px){
+  .header{
+    height:64px;
+    padding:0 14px;
+  }
+
+  .container{
+    width:92%;
+    padding-top:20px;
+  }
+
+  .welcome{
+    align-items:flex-start;
+  }
+
+  .welcome h1{
+    font-size:24px;
+  }
+
+  .tools-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stat{
+    padding:14px;
+  }
+
+  .stat-value{
+    font-size:21px;
+  }
+
+  .bottom-nav{
+    display:flex;
+  }
+
+  .ai-bot{
+    bottom:78px;
+    right:15px;
+  }
+
+  .brand-sub{
+    display:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+
+  <div class="brand">
+    <img
+      class="logo"
+      src="https://i.postimg.cc/159Ljzq9/1787754318336.png"
+      alt="A-Tuls Logo"
+    >
+
+    <div>
+      <div class="brand-name">A-Tuls</div>
+      <div class="brand-sub">Smart Tools Workspace</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;">
+    <button class="icon-btn" onclick="showToast('Notifications are up to date')">
+      🔔
+    </button>
+
+    <button class="menu-btn" onclick="openMenu()">
+      ☰
+    </button>
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <!-- WELCOME -->
+  <section class="welcome">
+
+    <div>
+      <h1>Welcome, <span id="username">User</span> 👋</h1>
+
+      <p>
+        Package: <strong id="packageName">Free</strong>
+        · Full Access
+      </p>
+
+      <div class="package">
+        <span class="package-dot"></span>
+        <span id="packageText">Free Package</span>
+      </div>
+    </div>
+
+    <button
+      class="open-btn"
+      style="width:auto;margin:0;padding:12px 17px;"
+      onclick="addStory()"
+    >
+      ＋ Add Story
+    </button>
+
+  </section>
+
+
+  <!-- STORIES -->
+  <div class="section-title">
+    <h2>Stories</h2>
+    <span>View latest updates</span>
+  </div>
+
+  <section class="stories">
+
+    <div class="story add" onclick="addStory()">
+      <div class="plus">＋</div>
+      <small>Add Story</small>
+    </div>
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/300?img=12">
+      <div class="story-info">
+        <b>A-Tuls Admin</b>
+        <div class="badge">VIP ADMIN</div>
+      </div>
+    </div>
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/300?img=33">
+      <div class="story-info">
+        <b>Member</b>
+        <div class="badge">MEMBER</div>
+      </div>
+    </div>
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/300?img=47">
+      <div class="story-info">
+        <b>Creator</b>
+        <div class="badge">VERIFIED</div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- STATS -->
+  <div class="stats">
+
+    <div class="stat">
+      <div class="stat-label">Tools</div>
+      <div class="stat-value">18</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Membership</div>
+      <div class="stat-value" id="membership">Free</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Vault Files</div>
+      <div class="stat-value">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Invested</div>
+      <div class="stat-value">৳0</div>
+    </div>
+
+  </div>
+
+
+  <!-- TOOLS -->
+  <div class="section-title">
+    <h2>My Tools</h2>
+    <span>18 tools available</span>
+  </div>
+
+  <section class="tools-grid">
+
+
+    <!-- TOOL 1 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">📧</div>
+
+      <h3>Gmail Format Fixer Pro</h3>
+
+      <p>
+        Clean and organize email data into structured results.
+      </p>
+
+      <a class="open-btn" href="gmail-format-fixer-pro.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 2 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">📊</div>
+
+      <h3>Email Report</h3>
+
+      <p>
+        Create organized reports from your email lists.
+      </p>
+
+      <a class="open-btn" href="email-report.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 3 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">🗄️</div>
+
+      <h3>Personal Email Vault</h3>
+
+      <p>
+        Store and manage your own email-related data.
+      </p>
+
+      <a class="open-btn" href="personal-email-vault.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 4 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">🛠️</div>
+
+      <h3>Gmail Format Fixer</h3>
+
+      <p>
+        Fix and normalize basic email data formatting.
+      </p>
+
+      <a class="open-btn" href="gmail-format-fixer.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 5 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">✉️</div>
+
+      <h3>Easy Email Validator</h3>
+
+      <p>
+        Validate email address structure and formatting.
+      </p>
+
+      <a class="open-btn" href="easy-email-validator.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 6 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">♻️</div>
+
+      <h3>Duplicate Email Checker</h3>
+
+      <p>
+        Find duplicate email addresses in a list.
+      </p>
+
+      <a class="open-btn" href="duplicate-email-checker.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 7 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">📝</div>
+
+      <h3>Email Data Formatter</h3>
+
+      <p>
+        Format email data into a clean readable structure.
+      </p>
+
+      <a class="open-btn" href="email-data-formatter.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 8 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">🔐</div>
+
+      <h3>Password Generator</h3>
+
+      <p>
+        Generate strong random passwords for your accounts.
+      </p>
+
+      <a class="open-btn" href="password-generator.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 9 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">👤</div>
+
+      <h3>Name Generator</h3>
+
+      <p>
+        Generate creative names quickly.
+      </p>
+
+      <a class="open-btn" href="name-generator.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 10 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">🌍</div>
+
+      <h3>IP Timezone Finder</h3>
+
+      <p>
+        Find timezone information from an IP address.
+      </p>
+
+      <a class="open-btn" href="ip-timezone-finder.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 11 -->
+    <div class="tool coming">
+      <div class="ribbon">SOON</div>
+      <div class="tool-icon">📮</div>
+
+      <h3>Gmail Checker</h3>
+
+      <p>
+        Gmail-related checking tool coming soon.
+      </p>
+
+      <button class="open-btn" onclick="comingSoon()">
+        COMING SOON
+      </button>
+    </div>
+
+
+    <!-- TOOL 12 -->
+    <div class="tool coming">
+      <div class="ribbon">SOON</div>
+      <div class="tool-icon">🔑</div>
+
+      <h3>2FA Generator</h3>
+
+      <p>
+        Two-factor authentication utility coming soon.
+      </p>
+
+      <button class="open-btn" onclick="comingSoon()">
+        COMING SOON
+      </button>
+    </div>
+
+
+    <!-- TOOL 13 -->
+    <div class="tool coming">
+      <div class="ribbon">SOON</div>
+      <div class="tool-icon">📨</div>
+
+      <h3>Temp Mail</h3>
+
+      <p>
+        Temporary email utility coming soon.
+      </p>
+
+      <button class="open-btn" onclick="comingSoon()">
+        COMING SOON
+      </button>
+    </div>
+
+
+    <!-- TOOL 14 -->
+    <div class="tool coming">
+      <div class="ribbon">SOON</div>
+      <div class="tool-icon">🛡️</div>
+
+      <h3>IP & VPN Zone</h3>
+
+      <p>
+        IP and VPN information tools coming soon.
+      </p>
+
+      <button class="open-btn" onclick="comingSoon()">
+        COMING SOON
+      </button>
+    </div>
+
+
+    <!-- TOOL 15 -->
+    <div class="tool coming">
+      <div class="ribbon">SOON</div>
+      <div class="tool-icon">🌐</div>
+
+      <h3>Outside Zone</h3>
+
+      <p>
+        Additional zone utilities coming soon.
+      </p>
+
+      <button class="open-btn" onclick="comingSoon()">
+        COMING SOON
+      </button>
+    </div>
+
+
+    <!-- TOOL 16 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">🆔</div>
+
+      <h3>UID Checker</h3>
+
+      <p>
+        Check and manage supported UID information.
+      </p>
+
+      <a class="open-btn" href="uid-checker.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 17 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">🤖</div>
+
+      <h3>AI Website</h3>
+
+      <p>
+        AI chat and image tools from your workspace.
+      </p>
+
+      <a class="open-btn" href="ai-website.html">
+        OPEN
+      </a>
+    </div>
+
+
+    <!-- TOOL 18 -->
+    <div class="tool">
+      <div class="ribbon">FREE</div>
+      <div class="tool-icon">🔗</div>
+
+      <h3>Bio Link Website</h3>
+
+      <p>
+        Create and manage a simple bio link page.
+      </p>
+
+      <a class="open-btn" href="bio-link.html">
+        OPEN
+      </a>
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- AI BUTTON -->
+<a class="ai-bot" href="ai-website.html" title="AI Website">
+  🤖
+</a>
+
+
+<!-- MOBILE NAV -->
+<nav class="bottom-nav">
+
+  <div class="nav-item active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <strong>⌂</strong>
+    Home
+  </div>
+
+  <div class="nav-item" onclick="searchTools()">
+    <strong>⌕</strong>
+    Search
+  </div>
+
+  <div class="nav-item" onclick="addStory()">
+    <div class="add-nav">＋</div>
+  </div>
+
+  <div class="nav-item" onclick="showToast('Messages opened')">
+    <strong>✉</strong>
+    Messages
+  </div>
+
+  <div class="nav-item" onclick="openMenu()">
+    <strong>☰</strong>
+    Menu
+  </div>
+
+</nav>
+
+
+<!-- DRAWER -->
+<div class="overlay" id="overlay" onclick="closeMenu(event)">
+
+  <aside class="drawer">
+
+    <div class="drawer-head">
+      <h2>A-Tuls Menu</h2>
+
+      <button class="close" onclick="closeMenu()">
+        ×
+      </button>
+    </div>
+
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">💬</span>
+      Messages
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">💰</span>
+      Add Money / Packages
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">🛍️</span>
+      Explore Sellers
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">🧰</span>
+      Explore Services
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">➕</span>
+      Create Service
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">📋</span>
+      Managed Services
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">⭐</span>
+      Paid Membership
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">🕘</span>
+      Membership History
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">✔️</span>
+      Apply for Badge
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">👤</span>
+      My Profile
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">✏️</span>
+      Edit Profile
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">📖</span>
+      Manage Stories
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">💸</span>
+      Money Transfer
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">📜</span>
+      Withdrawal History
+    </a>
+
+    <a class="menu-link" href="#">
+      <span class="menu-icon">🔒</span>
+      Security
+    </a>
+
+    <a class="menu-link" href="personal-email-vault.html">
+      <span class="menu-icon">🗄️</span>
+      Personal Email Vault
+    </a>
+
+    <a class="menu-link logout" href="login.html" onclick="logout()">
+      <span class="menu-icon">↪</span>
+      Logout
+    </a>
+
+
+    <div style="
+      margin-top:25px;
+      padding:15px;
+      border-radius:14px;
+      background:#101927;
+      border:1px solid #202e42;
+    ">
+
+      <div style="font-size:12px;color:#8c9aad;">
+        Need help?
+      </div>
+
+      <div style="font-size:13px;margin-top:6px;">
+        Message Admin
+      </div>
+
+      <div style="font-size:12px;color:#8491a4;margin-top:5px;">
+        WhatsApp: +880 1336-489062
+      </div>
+
+    </div>
+
+  </aside>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =========================
+   USER DATA
+========================= */
+
+const userData = JSON.parse(
+  localStorage.getItem("aTulsUser") || "{}"
+);
+
+if(userData.username){
+  document.getElementById("username").textContent =
+    userData.username;
+}
+
+if(userData.package){
+  document.getElementById("packageName").textContent =
+    userData.package;
+
+  document.getElementById("membership").textContent =
+    userData.package;
+
+  document.getElementById("packageText").textContent =
+    userData.package + " Package";
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+function openMenu(){
+  document.getElementById("overlay").classList.add("show");
+}
+
+function closeMenu(event){
+
+  if(event && event.target !== document.getElementById("overlay")){
+    return;
+  }
+
+  document.getElementById("overlay").classList.remove("show");
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2200);
+}
+
+
+/* =========================
+   STORY
+========================= */
+
+function addStory(){
+
+  showToast("Story creator opened");
+
+  /*
+    Later you can replace this with:
+    window.location.href = "add-story.html";
+  */
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchTools(){
+
+  const keyword =
+    prompt("Search tools:");
+
+  if(!keyword) return;
+
+  const tools =
+    document.querySelectorAll(".tool");
+
+  const search =
+    keyword.toLowerCase();
+
+  tools.forEach(tool=>{
+
+    const text =
+      tool.innerText.toLowerCase();
+
+    tool.style.display =
+      text.includes(search)
+      ? ""
+      : "none";
+
+  });
+
+  showToast("Search results updated");
+}
+
+
+/* =========================
+   COMING SOON
+========================= */
+
+function comingSoon(){
+  showToast("This tool is coming soon.");
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+  localStorage.removeItem("aTulsUser");
+
+  showToast("Logging out...");
+
+  setTimeout(()=>{
+    window.location.href =
+      "login.html";
+  },700);
+}
+
+</script>
+
+</body>
+</html>

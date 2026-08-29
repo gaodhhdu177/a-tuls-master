@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login · A-Tuls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyberBg: '#030712',
+                        glassCard: '#0b1329',
+                        neonCyan: '#00f0ff',
+                        neonPurple: '#a855f7',
+                        neonPink: '#ec4899',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        @keyframes cyberPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1); }
+            50% { box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 25px rgba(0, 240, 255, 0.2); }
+        }
+        .cyber-glow { animation: cyberPulse 4s infinite ease-in-out; }
+        
+        .glass-panel {
+            background: rgba(11, 19, 41, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #00f0ff 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .fade-in {
+            animation: fadeInAnim 0.4s ease-in-out forwards;
+        }
+        @keyframes fadeInAnim {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-cyberBg text-slate-100 min-h-screen relative flex flex-col justify-between selection:bg-neonCyan selection:text-cyberBg overflow-x-hidden">
+
+    <!-- Background Glow Orbs & Grid -->
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-neonCyan rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-neonPurple rounded-full blur-[140px]"></div>
+        <div class="absolute bottom-10 left-1/3 w-96 h-96 bg-neonPink/40 rounded-full blur-[150px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#030712_1px,transparent_1px),linear-gradient(to_bottom,#030712_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="relative z-50 glass-panel border-b border-cyan-500/20 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonCyan to-neonPurple flex items-center justify-center text-cyberBg font-extrabold text-xl shadow-lg shadow-cyan-500/30">A</div>
+            <span class="text-2xl font-black tracking-wider text-gradient">A-Tuls</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="signup.html" class="text-xs text-slate-300 hover:text-neonCyan transition-colors font-semibold">Create account</a>
+            <a href="index.html" class="text-xs bg-cyan-950/60 border border-cyan-500/30 px-3 py-1.5 rounded-lg text-neonCyan hover:bg-neonCyan hover:text-cyberBg transition-all">Home</a>
+        </div>
+    </header>
+
+    <!-- Login Container -->
+    <main class="relative z-10 max-w-md w-full mx-auto px-6 py-12 flex-1 flex items-center justify-center">
+        <div class="glass-panel w-full p-8 md:p-10 rounded-3xl cyber-glow relative shadow-2xl border border-cyan-500/30 fade-in">
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-cyan-950/60 border border-cyan-500/30 text-2xl mb-3 shadow-inner">🔐</div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-gradient mb-1">A-Tuls Workspace</h1>
+                <p class="text-slate-400 text-xs md:text-sm">Smart tools workspace · Site access & free tier available</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                
+                <!-- Email Field -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address *</label>
+                    <input type="email" id="email" required placeholder="you@email.com" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                </div>
+
+                <!-- Password Field with Toggle -->
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-xs font-semibold text-slate-300">Password *</label>
+                        <a href="https://wa.me/8801336489062?text=Hello%20Admin,%20I%20forgot%20my%20A-Tuls%20password%20and%20need%20recovery." target="_blank" class="text-[11px] text-neonCyan hover:underline font-semibold">Forgot Password?</a>
+                    </div>
+                    <div class="relative">
+                        <input type="password" id="password" required placeholder="••••••••••••" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-3 pr-12 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-neonCyan text-xs px-2 py-1 font-semibold select-none">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Box -->
+                <div id="loginError" class="hidden text-xs text-rose-400 bg-rose-950/30 border border-rose-500/30 p-3 rounded-xl text-center"></div>
+
+                <!-- Sign In Button -->
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-neonCyan to-neonPurple text-cyberBg font-extrabold py-3.5 rounded-xl shadow-lg shadow-cyan-500/25 hover:opacity-90 transition-all text-sm mt-2">
+                    Sign in
+                </button>
+            </form>
+
+            <div class="mt-6 text-center border-t border-cyan-500/20 pt-5">
+                <p class="text-xs text-slate-400">No account? <a href="signup.html" class="text-neonCyan font-bold hover:underline">Create one</a></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Simple Footer -->
+    <footer class="relative z-10 glass-panel border-t border-cyan-500/20 py-6 px-6 text-center text-xs text-slate-500">
+        Domain Lock Secured v3.0 • <a href="https://wa.me/8801336489062" target="_blank" class="text-neonCyan hover:underline">Admin WhatsApp Support</a>
+    </footer>
+
+    <!-- Script -->
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorBox = document.getElementById('loginError');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Simulating basic validation check
+            if (!email.includes('@') || password.length < 4) {
+                errorBox.innerText = 'Invalid email or password format!';
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            errorBox.classList.add('hidden');
+            
+            // Loading state
+            submitBtn.innerText = 'Signing in…';
+            submitBtn.classList.add('opacity-75', 'animate-pulse');
+
+            setTimeout(() => {
+                alert('Successfully signed in! Loading dashboard...');
+                window.location.href = 'index.html';
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

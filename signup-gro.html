@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Create A-Tuls account · Signup</title>
+  <meta name="description" content="Join the tools community · Free registration with API code" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #030712;
+      --bg-navy: #0a1225;
+      --bg-card: rgba(10, 22, 45, 0.7);
+      --cyan: #00e5ff;
+      --cyan-bright: #67f0ff;
+      --cyan-dim: #00b8d4;
+      --purple: #7c5cff;
+      --pink: #ff6bcb;
+      --cyan-glow: rgba(0, 229, 255, 0.5);
+      --text: #f0f7ff;
+      --text-muted: #7a94b8;
+      --border: rgba(0, 229, 255, 0.15);
+      --success: #00e676;
+      --danger: #ff5252;
+      --warning: #ffb300;
+      --radius: 16px;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background */
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -15%, rgba(0, 100, 180, 0.22), transparent),
+        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(100, 40, 180, 0.1), transparent),
+        linear-gradient(180deg, #030712 0%, #060e1c 40%, #0a1428 100%);
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .aurora {
+      position: absolute;
+      inset: -20% -10%;
+      background:
+        linear-gradient(115deg, transparent 30%, rgba(0, 229, 255, 0.06) 45%, transparent 60%),
+        linear-gradient(65deg, transparent 40%, rgba(124, 92, 255, 0.05) 55%, transparent 70%);
+      animation: auroraShift 16s ease-in-out infinite alternate;
+      filter: blur(40px);
+    }
+    @keyframes auroraShift {
+      0% { transform: translateX(-4%) rotate(-1deg); }
+      100% { transform: translateX(4%) rotate(1deg); }
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.3;
+      animation: orbFloat 22s ease-in-out infinite;
+    }
+    .orb.o1 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.45), transparent 70%);
+      top: -60px; left: -40px;
+    }
+    .orb.o2 {
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(124, 92, 255, 0.35), transparent 70%);
+      bottom: 5%; right: -50px;
+      animation-delay: -8s;
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(25px, -30px); }
+    }
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 15% 25%, #fff, transparent),
+        radial-gradient(1px 1px at 40% 60%, #a8d8ff, transparent),
+        radial-gradient(1.5px 1.5px at 70% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 75%, #cff, transparent),
+        radial-gradient(1.5px 1.5px at 25% 80%, #fff, transparent);
+      opacity: 0.55;
+      animation: twinkle 5s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: 0.4; }
+      to { opacity: 0.7; }
+    }
+
+    /* Layout */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 50px;
+    }
+
+    /* Header */
+    .top-bar {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-top: 8px;
+    }
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.35rem;
+      letter-spacing: 1px;
+      background: linear-gradient(100deg, #00e5ff, #7c5cff, #00e5ff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shine 4s linear infinite;
+      text-decoration: none;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      transition: 0.25s;
+    }
+    .back-link:hover {
+      color: var(--cyan);
+      border-color: var(--border);
+      background: rgba(0, 229, 255, 0.06);
+    }
+
+    /* Card */
+    .auth-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 229, 255, 0.18);
+      border-radius: 22px;
+      padding: 32px 28px 28px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(0, 229, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(28px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .auth-header h1 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 30%, #00e5ff 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .auth-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+    .form-group label .req {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 13px 15px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(0, 229, 255, 0.18);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder {
+      color: rgba(122, 148, 184, 0.6);
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12), 0 0 20px rgba(0, 229, 255, 0.1);
+      background: rgba(0, 0, 0, 0.45);
+    }
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2300e5ff' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    .form-group select option {
+      background: #0a1628;
+      color: var(--text);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+      opacity: 0.85;
+    }
+
+    /* API section highlight */
+    .api-group {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.06), rgba(124, 92, 255, 0.04));
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .api-group label {
+      color: var(--cyan);
+      font-weight: 600;
+    }
+    .api-group .form-group {
+      margin-bottom: 10px;
+    }
+    .api-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    /* Packages box */
+    .packages-box {
+      display: none;
+      margin-top: 14px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 14px;
+      animation: fadeSlide 0.35s ease;
+    }
+    .packages-box.show { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .packages-box h4 {
+      font-size: 0.88rem;
+      color: var(--cyan);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .pkg-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: rgba(0, 229, 255, 0.04);
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+      transition: 0.2s;
+    }
+    .pkg-item:hover {
+      border-color: rgba(0, 229, 255, 0.3);
+      background: rgba(0, 229, 255, 0.08);
+    }
+    .pkg-item:last-child { margin-bottom: 0; }
+    .pkg-item .name { font-weight: 500; }
+    .pkg-item .price {
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .pkg-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.45;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      text-decoration: none;
+    }
+    .btn-sm {
+      padding: 9px 14px;
+      font-size: 0.82rem;
+      border-radius: 10px;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #00e5ff, #00c4e0 50%, #7c5cff);
+      background-size: 200% auto;
+      color: #021018;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
+      margin-top: 8px;
+      font-size: 1rem;
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background-position: right center;
+      box-shadow: 0 0 45px rgba(0, 229, 255, 0.5);
+    }
+    .btn-primary:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border: 1.5px solid rgba(0, 229, 255, 0.4);
+    }
+    .btn-outline:hover {
+      background: rgba(0, 229, 255, 0.1);
+      border-color: var(--cyan);
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.2);
+    }
+    .btn-wa {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(37, 211, 102, 0.25);
+    }
+    .btn-wa:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 22px rgba(37, 211, 102, 0.4);
+    }
+
+    .footer-links {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .footer-links a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--cyan-bright);
+      text-decoration: underline;
+    }
+
+    /* Loading / success states */
+    .loading-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.85);
+      border-radius: 22px;
+      z-index: 10;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .loading-overlay.show { display: flex; }
+    .spinner {
+      width: 42px; height: 42px;
+      border: 3px solid rgba(0, 229, 255, 0.15);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      color: var(--cyan);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .error-msg {
+      display: none;
+      background: rgba(255, 82, 82, 0.12);
+      border: 1px solid rgba(255, 82, 82, 0.35);
+      color: #ff8a80;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+    .error-msg.show { display: block; }
+
+    .success-msg {
+      display: none;
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+      color: #69f0ae;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .success-msg.show { display: block; }
+
+    /* Domain lock */
+    .domain-lock {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #030712;
+      color: var(--text);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+    }
+    .domain-lock.show { display: flex; }
+    .domain-lock h2 {
+      color: var(--danger);
+      margin-bottom: 12px;
+      font-family: var(--font-display);
+    }
+
+    /* Relative for loading overlay */
+    .auth-card { position: relative; }
+
+    @media (max-width: 520px) {
+      .auth-card { padding: 26px 18px 22px; }
+      .form-row { grid-template-columns: 1fr; }
+      .auth-header h1 { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="domain-lock" id="domainLock">
+    <h2>🔒 Domain Locked</h2>
+    <p>This site is restricted to authorized domains only.<br>Contact Admin for access.</p>
+  </div>
+
+  <div class="bg-scene" aria-hidden="true">
+    <div class="aurora"></div>
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="stars"></div>
+  </div>
+
+  <div class="page">
+    <div class="top-bar">
+      <a href="index.html" class="logo">A-Tuls</a>
+      <a href="index.html" class="back-link">← Home</a>
+    </div>
+
+    <div class="auth-card">
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Preparing dashboard...</div>
+      </div>
+
+      <div class="auth-header">
+        <h1>Create A-Tuls account</h1>
+        <p>Join the tools community · Free registration with API code</p>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+      <div class="success-msg" id="successMsg"></div>
+
+      <form id="signupForm" novalidate>
+        <div class="form-group">
+          <label for="username">Username <span class="req">*</span></label>
+          <input type="text" id="username" name="username" placeholder="Choose a username" required autocomplete="username" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email (Gmail) <span class="req">*</span></label>
+          <input type="email" id="email" name="email" placeholder="yourname@gmail.com" required autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender <span class="req">*</span></label>
+          <select id="gender" name="gender" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+
+        <!-- API Code block -->
+        <div class="api-group">
+          <div class="form-group" style="margin-bottom:8px;">
+            <label for="apiCode">API Code <span class="req">*</span></label>
+            <input type="text" id="apiCode" name="apiCode" placeholder="Admin দেওয়া API কোড লিখুন" required autocomplete="off" />
+            <p class="input-hint">ভুল বা খালি API হলে নিচের বাটন দিয়ে প্যাকেজ দেখুন</p>
+          </div>
+          <div class="api-actions">
+            <button type="button" class="btn btn-outline btn-sm" id="getApiBtn">📦 Get API / View packages</button>
+            <a href="https://wa.me/8801336489062?text=Hi%20Admin%2C%20I%20need%20API%20code%20for%20A-Tuls%20signup" class="btn btn-wa btn-sm" target="_blank" rel="noopener">WhatsApp Admin · Get API</a>
+          </div>
+
+          <div class="packages-box" id="packagesBox">
+            <h4>Available Packages</h4>
+            <div class="pkg-item">
+              <span class="name">1 Month Free Trial</span>
+              <span class="price">৳0</span>
+            </div>
+            <div class="pkg-item">
+              <span class="name">Basic · 30 days</span>
+              <span class="price">৳150</span>
+            </div>
+            <div class="pkg-item">
+              <span class="name">Pro · 90 days</span>
+              <span class="price">৳900</span>
+            </div>
+            <div class="pkg-item">
+              <span class="name">Lifetime</span>
+              <span class="price">৳1800</span>
+            </div>
+            <p class="pkg-note">
+              ভুল API হলে Admin-কে মেসেজ করে কোড নিন। প্যাকেজ কিনলে Admin API দিবে।
+            </p>
+            <a href="https://wa.me/8801336489062?text=Hi%20Admin%2C%20I%20want%20to%20buy%20a%20package%20and%20get%20API%20code" class="btn btn-wa" style="width:100%;margin-top:12px;" target="_blank" rel="noopener">
+              WhatsApp Admin · Buy & Get API
+            </a>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="whatsapp">WhatsApp <span class="req">*</span></label>
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="01XXXXXXXXX" required />
+          </div>
+          <div class="form-group">
+            <label for="telegram">Telegram</label>
+            <input type="text" id="telegram" name="telegram" placeholder="@username (optional)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="securityQ">Security question <span class="req">*</span></label>
+          <select id="securityQ" name="securityQ" required>
+            <option value="" disabled selected>সিকিউরিটি প্রশ্ন বেছে নিন</option>
+            <option value="mother_maiden">মায়ের আগের নাম কী ছিল?</option>
+            <option value="first_pet">প্রথম পোষা প্রাণীর নাম কী ছিল?</option>
+            <option value="first_car">প্রথম গাড়ির মডেল কী ছিল?</option>
+            <option value="favorite_movie">প্রিয় মুভির নাম কী?</option>
+            <option value="birth_city">কোন শহরে জন্মেছিলেন?</option>
+            <option value="school_name">প্রাথমিক স্কুলের নাম কী ছিল?</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="securityA">Answer <span class="req">*</span></label>
+          <input type="text" id="securityA" name="securityA" placeholder="প্রশ্নের উত্তর লিখুন" required autocomplete="off" />
+          <p class="input-hint">পাসওয়ার্ড ভুলে গেলে এই উত্তর কাজে লাগবে</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password <span class="req">*</span></label>
+            <input type="password" id="password" name="password" placeholder="কমপক্ষে ৬ অক্ষর" required minlength="6" autocomplete="new-password" />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm password <span class="req">*</span></label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="আবার একই পাসওয়ার্ড" required minlength="6" autocomplete="new-password" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">Create account</button>
+      </form>
+
+      <div class="footer-links">
+        Already registered? <a href="login.html">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Domain lock
+    (function () {
+      const allowed = ['localhost', '127.0.0.1', 'a-tuls.com', 'www.a-tuls.com', 'atuls.pages.dev'];
+      const host = location.hostname.toLowerCase();
+      if (host && !allowed.some(d => host === d || host.endsWith('.' + d))) {
+        // document.getElementById('domainLock').classList.add('show');
+      }
+    })();
+
+    const form = document.getElementById('signupForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    const packagesBox = document.getElementById('packagesBox');
+    const getApiBtn = document.getElementById('getApiBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    const submitBtn = document.getElementById('submitBtn');
+
+    getApiBtn.addEventListener('click', () => {
+      packagesBox.classList.toggle('show');
+      getApiBtn.textContent = packagesBox.classList.contains('show')
+        ? '📦 Hide packages'
+        : '📦 Get API / View packages';
+    });
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.add('show');
+      successMsg.classList.remove('show');
+      errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function hideError() {
+      errorMsg.classList.remove('show');
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      hideError();
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const gender = document.getElementById('gender').value;
+      const apiCode = document.getElementById('apiCode').value.trim();
+      const whatsapp = document.getElementById('whatsapp').value.trim();
+      const telegram = document.getElementById('telegram').value.trim();
+      const securityQ = document.getElementById('securityQ').value;
+      const securityA = document.getElementById('securityA').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      // Validation
+      if (!username || username.length < 3) {
+        showError('Username কমপক্ষে ৩ অক্ষরের হতে হবে।');
+        return;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('সঠিক Gmail / ইমেইল ঠিকানা দিন।');
+        return;
+      }
+      if (!gender) {
+        showError('Gender সিলেক্ট করুন।');
+        return;
+      }
+      if (!apiCode) {
+        showError('API Code আবশ্যক। ভুল বা খালি হলে "Get API / View packages" চাপুন এবং Admin-কে মেসেজ করে কোড নিন।');
+        packagesBox.classList.add('show');
+        getApiBtn.textContent = '📦 Hide packages';
+        return;
+      }
+      if (!whatsapp || !/^01\d{9}$/.test(whatsapp.replace(/[\s\-]/g, ''))) {
+        showError('সঠিক WhatsApp নম্বর দিন (যেমন: 01XXXXXXXXX)।');
+        return;
+      }
+      if (!securityQ) {
+        showError('সিকিউরিটি প্রশ্ন বেছে নিন।');
+        return;
+      }
+      if (!securityA || securityA.length < 2) {
+        showError('সিকিউরিটি প্রশ্নের উত্তর দিন।');
+        return;
+      }
+      if (password.length < 6) {
+        showError('Password কমপক্ষে ৬ অক্ষরের হতে হবে।');
+        return;
+      }
+      if (password !== confirmPassword) {
+        showError('Password ও Confirm password মিলছে না।');
+        return;
+      }
+
+      // Simulate account creation (frontend demo)
+      submitBtn.disabled = true;
+      loadingOverlay.classList.add('show');
+      loadingText.textContent = 'Creating account...';
+
+      setTimeout(() => {
+        loadingText.textContent = 'Preparing dashboard...';
+      }, 900);
+
+      setTimeout(() => {
+        loadingOverlay.classList.remove('show');
+        successMsg.innerHTML = '✅ অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!<br>এখন <a href="login.html" style="color:#00e5ff;font-weight:600;">Login</a> করে Dashboard-এ যান।';
+        successMsg.classList.add('show');
+        form.reset();
+        packagesBox.classList.remove('show');
+        getApiBtn.textContent = '📦 Get API / View packages';
+        submitBtn.disabled = false;
+
+        // Optional: redirect after short delay
+        // setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+      }, 2200);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create A-Tuls Account - Elite Community Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyberBg: '#030712',
+                        glassCard: '#0b1329',
+                        neonCyan: '#00f0ff',
+                        neonPurple: '#a855f7',
+                        neonPink: '#ec4899',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        @keyframes cyberPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1); }
+            50% { box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 25px rgba(0, 240, 255, 0.2); }
+        }
+        .cyber-glow { animation: cyberPulse 4s infinite ease-in-out; }
+        
+        .glass-panel {
+            background: rgba(11, 19, 41, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #00f0ff 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .fade-in {
+            animation: fadeInAnim 0.4s ease-in-out forwards;
+        }
+        @keyframes fadeInAnim {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-cyberBg text-slate-100 min-h-screen relative flex flex-col justify-between selection:bg-neonCyan selection:text-cyberBg overflow-x-hidden">
+
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-neonCyan rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-neonPurple rounded-full blur-[140px]"></div>
+        <div class="absolute bottom-10 left-1/3 w-96 h-96 bg-neonPink/40 rounded-full blur-[150px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#030712_1px,transparent_1px),linear-gradient(to_bottom,#030712_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+    </div>
+
+    <header class="relative z-50 glass-panel border-b border-cyan-500/20 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonCyan to-neonPurple flex items-center justify-center text-cyberBg font-extrabold text-xl shadow-lg shadow-cyan-500/30">A</div>
+            <span class="text-2xl font-black tracking-wider text-gradient">A-Tuls</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="login.html" class="text-xs text-slate-300 hover:text-neonCyan transition-colors font-semibold">Sign in</a>
+            <a href="index.html" class="text-xs bg-cyan-950/60 border border-cyan-500/30 px-3 py-1.5 rounded-lg text-neonCyan hover:bg-neonCyan hover:text-cyberBg transition-all">Home</a>
+        </div>
+    </header>
+
+    <main class="relative z-10 max-w-xl w-full mx-auto px-6 py-12 flex-1 flex items-center justify-center">
+        <div class="glass-panel w-full p-8 md:p-10 rounded-3xl cyber-glow relative shadow-2xl border border-cyan-500/30 fade-in">
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-cyan-950/60 border border-cyan-500/30 text-2xl mb-3 shadow-inner">⚡</div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-gradient mb-1">Create A-Tuls Account</h1>
+                <p class="text-slate-400 text-xs md:text-sm">Join the elite tools community · Free registration with API verification code</p>
+            </div>
+
+            <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-4">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Username *</label>
+                        <input type="text" id="username" required placeholder="Choose a unique username" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address (Gmail) *</label>
+                        <input type="email" id="email" required placeholder="yourname@gmail.com" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Gender</label>
+                        <select id="gender" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-neonCyan transition-all">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">WhatsApp Number *</label>
+                        <input type="text" id="whatsapp" required placeholder="01XXXXXXXXX" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-xs font-semibold text-neonCyan">API Code *</label>
+                        <button type="button" onclick="togglePackageModal()" class="text-[11px] text-neonCyan hover:underline font-semibold flex items-center gap-1">
+                            <span>Get API / View Packages</span> →
+                        </button>
+                    </div>
+                    <input type="text" id="apiKey" required placeholder="Enter Admin provided security API key" class="w-full bg-cyberBg/80 border border-neonCyan/60 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                    <p class="text-[10px] text-slate-400 mt-1">Don't have a valid API key? Check packages below and message Admin on WhatsApp.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Telegram Username (Optional)</label>
+                    <input type="text" id="telegram" placeholder="@username" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-cyan-950/20 p-4 rounded-2xl border border-cyan-500/10">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Security Question</label>
+                        <select id="secQuestion" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-neonCyan transition-all">
+                            <option value="mother_name">Mother's maiden name</option>
+                            <option value="pet_name">First pet's name</option>
+                            <option value="car_name">First car model</option>
+                            <option value="movie_name">Favorite movie</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Security Answer (Recovery)</label>
+                        <input type="text" id="secAnswer" required placeholder="Your answer" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Password *</label>
+                        <input type="password" id="password" required minlength="6" placeholder="Minimum 6 characters" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" required minlength="6" placeholder="Re-enter password" class="w-full bg-cyberBg/80 border border-cyan-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-neonCyan transition-all">
+                    </div>
+                </div>
+
+                <div id="signupError" class="hidden text-xs text-rose-400 bg-rose-950/30 border border-rose-500/30 p-3 rounded-xl text-center"></div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-neonCyan to-neonPurple text-cyberBg font-extrabold py-3.5 rounded-xl shadow-lg shadow-cyan-500/25 hover:opacity-90 transition-all text-sm mt-2">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="mt-6 text-center border-t border-cyan-500/20 pt-5">
+                <p class="text-xs text-slate-400">Already registered? <a href="login.html" class="text-neonCyan font-bold hover:underline">Sign in</a></p>
+            </div>
+        </div>
+    </main>
+
+    <div id="packageModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel border border-neonCyan rounded-3xl max-w-md w-full p-6 shadow-2xl relative cyber-glow fade-in">
+            <div class="flex justify-between items-center border-b border-cyan-500/20 pb-3 mb-4">
+                <h3 class="font-extrabold text-neonCyan text-base">A-Tuls Membership Packages</h3>
+                <button onclick="togglePackageModal()" class="text-slate-400 hover:text-neonCyan text-xl font-bold">✕</button>
+            </div>
+            
+            <p class="text-xs text-slate-300 mb-4">Select your preferred package below and message WhatsApp Admin to acquire your exclusive API key instantly.</p>
+
+            <div class="space-y-2.5 mb-6 text-xs font-medium">
+                <div class="bg-cyan-950/40 p-3 rounded-xl border border-cyan-500/20 flex justify-between items-center">
+                    <span class="text-slate-200">1 Month Free Trial</span>
+                    <span class="text-neonCyan font-bold">৳0</span>
+                </div>
+                <div class="bg-cyan-950/40 p-3 rounded-xl border border-cyan-500/20 flex justify-between items-center">
+                    <span class="text-slate-200">Basic Plan · 30 Days</span>
+                    <span class="text-neonCyan font-bold">৳150</span>
+                </div>
+                <div class="bg-cyan-950/40 p-3 rounded-xl border border-cyan-500/20 flex justify-between items-center">
+                    <span class="text-slate-200">Pro Plan · 90 Days</span>
+                    <span class="text-neonCyan font-bold">৳900</span>
+                </div>
+                <div class="bg-cyan-950/40 p-3 rounded-xl border border-cyan-500/20 flex justify-between items-center">
+                    <span class="text-slate-200">Lifetime VIP Access</span>
+                    <span class="text-neonCyan font-bold">৳1800</span>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="https://wa.me/8801336489062?text=Hello%20Admin,%20I%20want%20to%20get%20an%20API%20code%20for%20A-Tuls%20signup" target="_blank" class="block w-full bg-gradient-to-r from-neonCyan to-neonPurple text-cyberBg font-extrabold py-3 rounded-xl text-xs hover:opacity-90 transition-all shadow-md">
+                    WhatsApp Admin · Get API Key 🚀
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="relative z-10 glass-panel border-t border-cyan-500/20 py-6 px-6 text-center text-xs text-slate-500">
+        Domain Lock Secured v3.0 • <a href="https://wa.me/8801336489062" target="_blank" class="text-neonCyan hover:underline">Admin WhatsApp Support</a>
+    </footer>
+
+    <script>
+        function togglePackageModal() {
+            const modal = document.getElementById('packageModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const pass = document.getElementById('password').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const errorBox = document.getElementById('signupError');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (pass !== confirmPass) {
+                errorBox.innerText = 'Passwords do not match! Please check again.';
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            errorBox.classList.add('hidden');
+            
+            submitBtn.innerText = 'Preparing dashboard…';
+            submitBtn.classList.add('opacity-75', 'animate-pulse');
+
+            setTimeout(() => {
+                alert('Account successfully created! Welcome to A-Tuls Community.');
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

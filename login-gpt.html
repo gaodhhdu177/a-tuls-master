@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#020812">
 <meta name="description" content="A-Tuls Smart Tools Workspace Login">
-<link rel="icon" href="logo-512.png" type="image/png">
 <title>Login · A-Tuls</title>
 
 <style>
@@ -606,7 +605,7 @@ label{
 <header class="header">
 
   <a href="index.html" class="brand">
-    <div class="logo" style="padding:0;overflow:hidden;background:transparent;border:none"><img src="logo.png" alt="A-Tuls" width="42" height="42" style="width:42px;height:42px;border-radius:12px;object-fit:cover;display:block;" onerror="this.src='logo-512.png'"></div>
+    <div class="logo">A</div>
 
     <div class="brand-text">
       <strong>A-Tuls</strong>
@@ -699,7 +698,7 @@ label{
           Remember me
         </label>
 
-        <a href="#" class="forgot" id="forgotPassword" href="https://wa.me/8801336489062?text=Hello%20Admin%2C%20I%20forgot%20my%20password" target="_blank">
+        <a href="#" class="forgot" id="forgotPassword">
           Forgot password?
         </a>
 
@@ -760,77 +759,383 @@ label{
 </main>
 
 
-
-
 <script>
 
-const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+/* ==========================================
+   A-TULS LOGIN
+   ========================================== */
 
-(function domainLock(){
-  try{
-    var host=(location.hostname||'').toLowerCase();
-    if(!host || host==='localhost' || host==='127.0.0.1') return;
-    var ok=['a-tuls.com','www.a-tuls.com','atuls.pages.dev'];
-    var ends=['.onrender.com','.pages.dev','.netlify.app','.vercel.app','.workers.dev'];
-    if(ok.indexOf(host)>=0) return;
-    if(ends.some(function(e){return host.endsWith(e);})) return;
-    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Authorized domains only. Contact Admin.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
-  }catch(e){}
-})();
+const form = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const togglePassword = document.getElementById("togglePassword");
+const signBtn = document.getElementById("signBtn");
+const loading = document.getElementById("loading");
+const statusBox = document.getElementById("status");
+const remember = document.getElementById("remember");
 
-function togglePassword(){
-  var p=document.getElementById('password');
-  if(!p) return;
-  p.type = p.type==='password'?'text':'password';
-}
-document.getElementById('togglePassword') && document.getElementById('togglePassword').addEventListener('click', togglePassword);
 
-async function pushLoginLog(userObj, email){
-  try{
-    var ua=navigator.userAgent||'';
-    var row={user_id:String(userObj.id||''),username:userObj.username||'',email:userObj.email||email,device:(/Mobile|Android|iPhone|iPad/i.test(ua)?'Mobile':'Desktop'),ua:ua.slice(0,180),time:new Date().toISOString()};
-    try{ var logs=JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]'); logs.unshift(row); localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200))); }catch(_e){}
-    await fetch(SB_URL+'a_tuls_login_logs',{method:'POST',headers:Object.assign({},SB_H,{'Prefer':'return=minimal'}),body:JSON.stringify(row)}).catch(function(){});
-  }catch(e){}
-}
+/* Show / Hide password */
 
-document.getElementById('loginForm').addEventListener('submit', async function(event){
-  event.preventDefault();
-  var email=document.getElementById('email').value.trim().toLowerCase();
-  var password=document.getElementById('password').value;
-  var statusBox=document.getElementById('status');
-  var signBtn=document.getElementById('signBtn');
-  var loading=document.getElementById('loading');
-  function showStatus(msg,type){ if(!statusBox) return; statusBox.textContent=msg; statusBox.className='status '+type; }
-  if(!email || !email.includes('@')){ showStatus('Please enter a valid email.','error'); return; }
-  if(!password || password.length<6){ showStatus('Password must be at least 6 characters.','error'); return; }
-  if(signBtn){ signBtn.disabled=true; signBtn.textContent='Signing in…'; }
-  if(loading) loading.classList.add('show');
-  var u=null;
-  try{
-    var r=await fetch(SB_URL+'a_tuls_users?or=(email.eq.'+encodeURIComponent(email)+',username.eq.'+encodeURIComponent(email)+')&select=*',{headers:SB_H});
-    if(r.ok){ var rows=await r.json(); u=(rows||[]).find(function(x){return x.password===password;})||null; }
-  }catch(ex){}
-  if(!u){
-    try{ var users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); u=users.find(function(x){return (x.email===email||x.username===email)&&x.password===password;}); }catch(ex){}
-  }
-  if(!u){
-    if(loading) loading.classList.remove('show');
-    if(signBtn){ signBtn.disabled=false; signBtn.textContent='Sign in →'; }
-    showStatus('Invalid email or password.','error');
-    return;
-  }
-  var sess={id:u.id,username:u.username,email:u.email,role:u.role||'user',package:u.package||'Free',profile_pic:u.profile_pic||'',package_expires:u.package_expires||'',whatsapp:u.whatsapp||'',telegram:u.telegram||''};
-  localStorage.setItem('a_tuls_session', JSON.stringify(sess));
-  localStorage.setItem('a_tuls_role', sess.role);
-  localStorage.setItem('a_tuls_last_active', String(Date.now()));
-  try{ await pushLoginLog(sess, email); }catch(e){}
-  showStatus('Login successful. Opening dashboard…','success');
-  setTimeout(function(){ window.location.href = (sess.role==='admin')?'admin.html':'dashboard.html'; }, 500);
+togglePassword.addEventListener("click", () => {
+
+  const isPassword =
+    passwordInput.type === "password";
+
+  passwordInput.type =
+    isPassword ? "text" : "password";
+
+  togglePassword.textContent =
+    isPassword ? "🙈" : "👁";
+
+  togglePassword.setAttribute(
+    "aria-label",
+    isPassword ? "Hide password" : "Show password"
+  );
+
 });
 
+
+/* Status message */
+
+function showStatus(message,type){
+
+  statusBox.textContent = message;
+
+  statusBox.className =
+    "status " + type;
+
+}
+
+
+function clearStatus(){
+
+  statusBox.textContent = "";
+
+  statusBox.className = "status";
+
+}
+
+
+/* Get registered account */
+
+function getStoredAccount(){
+
+  try{
+
+    const account =
+      localStorage.getItem("aTulsAccount");
+
+    if(!account) return null;
+
+    return JSON.parse(account);
+
+  }catch(error){
+
+    console.error("Account data error:",error);
+
+    return null;
+
+  }
+
+}
+
+
+/* Login */
+
+form.addEventListener("submit",async function(event){
+
+  event.preventDefault();
+
+  clearStatus();
+
+  const email =
+    emailInput.value.trim().toLowerCase();
+
+  const password =
+    passwordInput.value;
+
+  /* Basic validation */
+
+  if(!email){
+
+    showStatus(
+      "Please enter your email address.",
+      "error"
+    );
+
+    emailInput.focus();
+
+    return;
+  }
+
+  if(!email.includes("@")){
+
+    showStatus(
+      "Please enter a valid email address.",
+      "error"
+    );
+
+    emailInput.focus();
+
+    return;
+  }
+
+  if(!password){
+
+    showStatus(
+      "Please enter your password.",
+      "error"
+    );
+
+    passwordInput.focus();
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    showStatus(
+      "Password must be at least 6 characters.",
+      "error"
+    );
+
+    passwordInput.focus();
+
+    return;
+  }
+
+
+  /* Loading state */
+
+  signBtn.disabled = true;
+
+  signBtn.textContent = "Signing in…";
+
+  loading.classList.add("show");
+
+
+  /*
+    Small delay to create a proper UI loading state.
+    Real production authentication should happen on a server.
+  */
+
+  await new Promise(resolve =>
+    setTimeout(resolve,700)
+  );
+
+
+  const account = getStoredAccount();
+
+
+  /* No account */
+
+  if(!account){
+
+    signBtn.disabled = false;
+
+    signBtn.textContent = "Sign in →";
+
+    loading.classList.remove("show");
+
+    showStatus(
+      "No A-Tuls account was found on this browser. Please create an account first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* Check credentials */
+
+  const savedEmail =
+    String(account.email || "").trim().toLowerCase();
+
+  const savedPassword =
+    String(account.password || "");
+
+
+  if(
+    email !== savedEmail ||
+    password !== savedPassword
+  ){
+
+    signBtn.disabled = false;
+
+    signBtn.textContent = "Sign in →";
+
+    loading.classList.remove("show");
+
+    showStatus(
+      "Invalid email or password.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* Successful login */
+
+  const session = {
+
+    loggedIn:true,
+
+    email:savedEmail,
+
+    username:account.username || "",
+
+    loginAt:new Date().toISOString()
+
+  };
+
+
+  sessionStorage.setItem(
+    "aTulsSession",
+    JSON.stringify(session)
+  );
+
+
+  if(remember.checked){
+
+    localStorage.setItem(
+      "aTulsRemember",
+      "true"
+    );
+
+  }
+
+
+  showStatus(
+    "Login successful. Preparing dashboard…",
+    "success"
+  );
+
+
+  signBtn.textContent = "Opening Dashboard…";
+
+
+  setTimeout(()=>{
+
+    window.location.href = "dashboard.html";
+
+  },700);
+
+});
+
+
+/* Forgot password */
+
+document
+.getElementById("forgotPassword")
+.addEventListener("click",function(event){
+
+  event.preventDefault();
+
+  const account = getStoredAccount();
+
+  if(!account){
+
+    showStatus(
+      "No saved account was found. Please create an account first.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  showStatus(
+    "Password recovery should be connected to your secure backend. Please use your account recovery or contact the A-Tuls Admin.",
+    "error"
+  );
+
+});
+
+
+/* Restore remembered email */
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+  const remembered =
+    localStorage.getItem("aTulsRemember");
+
+  const account =
+    getStoredAccount();
+
+  if(remembered === "true" && account){
+
+    emailInput.value =
+      account.email || "";
+
+    remember.checked = true;
+
+  }
+
+});
+
+
+/* ==========================================
+   BACKGROUND PARTICLES
+   ========================================== */
+
+const particleBox =
+  document.getElementById("particles");
+
+for(let i=0;i<32;i++){
+
+  const particle =
+    document.createElement("span");
+
+  particle.className = "particle";
+
+  particle.style.left =
+    Math.random()*100 + "%";
+
+  particle.style.animationDuration =
+    (8 + Math.random()*14) + "s";
+
+  particle.style.animationDelay =
+    (-Math.random()*18) + "s";
+
+  particleBox.appendChild(particle);
+
+}
+
+
+/* ==========================================
+   DOMAIN NOTICE
+   ========================================== */
+
+(function(){
+
+  const allowedHosts = [
+
+    "localhost",
+    "127.0.0.1",
+    "yourdomain.com",
+    "www.yourdomain.com"
+
+  ];
+
+  const currentHost =
+    location.hostname;
+
+  if(
+    currentHost &&
+    !allowedHosts.includes(currentHost)
+  ){
+
+    console.info(
+      "A-Tuls: add your production domain to the allowed host list."
+    );
+
+  }
+
+})();
+
 </script>
+
 </body>
 </html>

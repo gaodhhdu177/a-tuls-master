@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#020812">
 
-<link rel="icon" href="logo-512.png" type="image/png">
 <title>A-Tuls — Registration</title>
 
 <style>
@@ -634,7 +633,7 @@ footer{
 <header class="topbar">
 
   <a href="index.html" class="brand">
-    <div class="logo" style="padding:0;overflow:hidden;background:transparent;border:none;box-shadow:none"><img src="logo.png" alt="A-Tuls" width="42" height="42" style="width:42px;height:42px;border-radius:12px;object-fit:cover;display:block;" onerror="this.src='logo-512.png'"></div>
+    <div class="logo">A</div>
 
     <div>
       <span class="brand-name">A-Tuls</span>
@@ -1139,104 +1138,297 @@ footer{
 </div>
 
 
-
-
 <script>
 
-const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
-
-(function domainLock(){
-  try{
-    var host=(location.hostname||'').toLowerCase();
-    if(!host || host==='localhost' || host==='127.0.0.1') return;
-    var ok=['a-tuls.com','www.a-tuls.com','atuls.pages.dev'];
-    var ends=['.onrender.com','.pages.dev','.netlify.app','.vercel.app','.workers.dev'];
-    if(ok.indexOf(host)>=0) return;
-    if(ends.some(function(e){return host.endsWith(e);})) return;
-    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Authorized domains only. Contact Admin.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
-  }catch(e){}
-})();
+/* =========================
+   A-Tuls Configuration
+========================= */
 
 const ADMIN_PHONE = "8801336489062";
-function openPackages(){ var m=document.getElementById("packageModal"); if(m) m.classList.add("show"); }
-function closePackages(event){ var modal=document.getElementById("packageModal"); if(!event || event.target===modal){ if(modal) modal.classList.remove("show"); } }
-function contactAdmin(){ window.open("https://wa.me/"+ADMIN_PHONE+"?text="+encodeURIComponent("Hello A-Tuls Admin, I want an API code for registration."), "_blank"); }
-function showStatus(message,type){ var box=document.getElementById("status"); if(!box) return; box.className="status show "+type; box.innerHTML=message; }
 
-document.getElementById("signupForm").addEventListener("submit", async function(e){
-  e.preventDefault();
-  var username=document.getElementById("username").value.trim();
-  var email=document.getElementById("email").value.trim().toLowerCase();
-  var gender=document.getElementById("gender").value;
-  var apiCode=document.getElementById("apiCode").value.trim().replace(/\s+/g,'');
-  var whatsapp=document.getElementById("whatsapp").value.trim();
-  var telegram=(document.getElementById("telegram")||{}).value||'';
-  var question=document.getElementById("question").value;
-  var answer=document.getElementById("answer").value.trim();
-  var password=document.getElementById("password").value;
-  var confirmPassword=document.getElementById("confirmPassword").value;
-  var terms=document.getElementById("terms").checked;
-  if(username.length<3){ showStatus("Username min 3 characters.","error"); return; }
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showStatus("Valid email required.","error"); return; }
-  if(!gender){ showStatus("Select gender.","error"); return; }
-  if(!apiCode){ showStatus("API Code required. Click Get API.","error"); openPackages(); return; }
-  if(!/^01[3-9]\d{8}$/.test(whatsapp.replace(/[\s\-]/g,''))){ showStatus("Valid BD WhatsApp (01XXXXXXXXX).","error"); return; }
-  if(!question || answer.length<2){ showStatus("Security question + answer required.","error"); return; }
-  if(password.length<6){ showStatus("Password min 6 characters.","error"); return; }
-  if(password!==confirmPassword){ showStatus("Passwords do not match.","error"); return; }
-  if(!terms){ showStatus("Accept account rules.","error"); return; }
 
-  var btn=document.getElementById("createBtn");
-  if(btn){ btn.disabled=true; btn.textContent="Creating account…"; }
+/* =========================
+   PACKAGE MODAL
+========================= */
 
-  var validKey=null;
-  try{
-    var r=await fetch(SB_URL+"a_tuls_api_keys?key=eq."+encodeURIComponent(apiCode)+"&select=*",{headers:Object.assign({},SB_H,{"Prefer":"return=representation"})});
-    if(r.ok){ var rows=await r.json(); if(rows&&rows[0]){ var k=rows[0]; if(!k.expires||new Date(k.expires)>new Date()) validKey={key:k.key,type:k.type||"free",id:k.id,used:k.used}; } }
-  }catch(err){}
-  if(!validKey){
-    try{ var keys=JSON.parse(localStorage.getItem("a_tuls_api_keys")||"[]"); validKey=keys.find(function(k){return (k.key||"").trim().replace(/\s+/g,"")===apiCode && (!k.expires||new Date(k.expires)>new Date());})||null; }catch(e){}
+function openPackages(){
+
+  document
+    .getElementById("packageModal")
+    .classList.add("show");
+
+}
+
+
+function closePackages(event){
+
+  const modal =
+    document.getElementById("packageModal");
+
+  if(
+    !event ||
+    event.target === modal
+  ){
+
+    modal.classList.remove("show");
+
   }
-  if(!validKey){ if(btn){btn.disabled=false;btn.textContent="Create account →";} showStatus("Wrong API Code. Contact Admin / View packages.","error"); openPackages(); return; }
-  if(validKey.used){ if(btn){btn.disabled=false;btn.textContent="Create account →";} showStatus("This API code was already used.","error"); return; }
 
-  // duplicate check
-  try{
-    var d=await fetch(SB_URL+"a_tuls_users?or=(email.eq."+encodeURIComponent(email)+",username.eq."+encodeURIComponent(username)+")&select=id",{headers:SB_H});
-    if(d.ok){ var exist=await d.json(); if(exist&&exist.length){ if(btn){btn.disabled=false;btn.textContent="Create account →";} showStatus("Email or username already registered.","error"); return; } }
-  }catch(e){}
+}
 
-  var pkg = (validKey.type==="paid"||validKey.type==="pro") ? "Pro" : (validKey.type==="lifetime"?"Lifetime":"Basic");
-  var user={
-    id: "u_"+Date.now()+"_"+Math.random().toString(36).slice(2,8),
-    username: username, email: email, password: password, gender: gender,
-    whatsapp: whatsapp, telegram: telegram, role: "user", package: pkg,
-    api_key: apiCode, security_q: question, security_a: answer,
-    created_at: new Date().toISOString()
-  };
 
-  var okCloud=false;
-  try{
-    var pr=await fetch(SB_URL+"a_tuls_users",{method:"POST",headers:Object.assign({},SB_H,{"Prefer":"return=representation"}),body:JSON.stringify(user)});
-    okCloud=pr.ok;
-  }catch(e){}
-  try{
-    var users=JSON.parse(localStorage.getItem("a_tuls_users")||"[]");
-    users.push(user);
-    localStorage.setItem("a_tuls_users", JSON.stringify(users));
-  }catch(e){}
-  // mark API used
-  try{
-    await fetch(SB_URL+"a_tuls_api_keys?key=eq."+encodeURIComponent(apiCode),{method:"PATCH",headers:Object.assign({},SB_H,{"Prefer":"return=minimal"}),body:JSON.stringify({used:true,user_id:user.id,username:username})});
-  }catch(e){}
+/* =========================
+   WHATSAPP
+========================= */
 
-  if(btn){ btn.disabled=false; btn.textContent="Create account →"; }
-  showStatus("✓ Account created! Redirecting to Login…","success");
-  setTimeout(function(){ window.location.href="login.html"; }, 1200);
+function contactAdmin(){
+
+  const message =
+    "Hello A-Tuls Admin, I want an API code for registration. Please send me the available packages and payment details.";
+
+  const url =
+    "https://wa.me/" +
+    ADMIN_PHONE +
+    "?text=" +
+    encodeURIComponent(message);
+
+  window.open(url,"_blank");
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function showStatus(message,type){
+
+  const box =
+    document.getElementById("status");
+
+  box.className =
+    "status show " + type;
+
+  box.innerHTML =
+    message;
+
+}
+
+
+/* =========================
+   FORM VALIDATION
+========================= */
+
+document
+.getElementById("signupForm")
+.addEventListener("submit",function(e){
+
+  e.preventDefault();
+
+
+  const username =
+    document.getElementById("username")
+    .value.trim();
+
+  const email =
+    document.getElementById("email")
+    .value.trim()
+    .toLowerCase();
+
+  const gender =
+    document.getElementById("gender")
+    .value;
+
+  const apiCode =
+    document.getElementById("apiCode")
+    .value.trim();
+
+  const whatsapp =
+    document.getElementById("whatsapp")
+    .value.trim();
+
+  const question =
+    document.getElementById("question")
+    .value;
+
+  const answer =
+    document.getElementById("answer")
+    .value.trim();
+
+  const password =
+    document.getElementById("password")
+    .value;
+
+  const confirmPassword =
+    document.getElementById("confirmPassword")
+    .value;
+
+  const terms =
+    document.getElementById("terms")
+    .checked;
+
+
+  /* USERNAME */
+
+  if(username.length < 3){
+
+    showStatus(
+      "⚠️ Username must contain at least 3 characters.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* GMAIL */
+
+  if(!/^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email)){
+
+    showStatus(
+      "⚠️ Please enter a valid Gmail address.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* GENDER */
+
+  if(!gender){
+
+    showStatus(
+      "⚠️ Please select your gender.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* API */
+
+  if(!apiCode){
+
+    showStatus(
+      "⚠️ API Code is required. Click Get API to contact Admin.",
+      "error"
+    );
+
+    openPackages();
+
+    return;
+  }
+
+
+  /* WHATSAPP */
+
+  if(!/^01[3-9]\d{8}$/.test(whatsapp)){
+
+    showStatus(
+      "⚠️ Enter a valid Bangladesh WhatsApp number.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* SECURITY QUESTION */
+
+  if(!question){
+
+    showStatus(
+      "⚠️ Please select a security question.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* ANSWER */
+
+  if(answer.length < 2){
+
+    showStatus(
+      "⚠️ Please enter your security answer.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* PASSWORD */
+
+  if(password.length < 6){
+
+    showStatus(
+      "⚠️ Password must contain at least 6 characters.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* CONFIRM */
+
+  if(password !== confirmPassword){
+
+    showStatus(
+      "⚠️ Passwords do not match.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* TERMS */
+
+  if(!terms){
+
+    showStatus(
+      "⚠️ Please accept the A-Tuls account rules.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /* SUCCESS DEMO */
+
+  const button =
+    document.getElementById("createBtn");
+
+  button.disabled = true;
+
+  button.textContent =
+    "Preparing dashboard…";
+
+
+  setTimeout(function(){
+
+    button.disabled = false;
+
+    button.textContent =
+      "Create account →";
+
+
+    showStatus(
+      "✓ Registration details validated successfully. Connect your secure backend here to verify the API code and create the real account.",
+      "success"
+    );
+
+  },1000);
+
 });
 
 </script>
+
 </body>
 </html>

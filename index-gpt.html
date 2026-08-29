@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#020812">
 <meta name="description" content="A-Tuls — Smart Tools Community">
-<link rel="icon" href="logo-512.png" type="image/png">
 <title>A-Tuls — Smart Tools Community</title>
 
 <style>
@@ -646,7 +645,7 @@ footer{
   <button class="btn icon-btn" onclick="openDrawer()" aria-label="Open menu">☰</button>
 
   <a href="#" class="brand">
-    <div class="logo" style="padding:0;overflow:hidden;background:transparent;border:none;box-shadow:none"><img src="logo.png" alt="A-Tuls" width="42" height="42" style="width:42px;height:42px;border-radius:12px;object-fit:cover;display:block;" onerror="this.src='logo-512.png'"></div>
+    <div class="logo">A</div>
     <div>
       <span class="brand-name">A-Tuls</span>
       <small class="brand-sub">SMART TOOLS COMMUNITY</small>
@@ -887,7 +886,7 @@ footer{
 
     <div class="drawer-head">
       <div class="brand">
-        <div class="logo" style="padding:0;overflow:hidden;background:transparent;border:none;box-shadow:none"><img src="logo.png" alt="A-Tuls" width="42" height="42" style="width:42px;height:42px;border-radius:12px;object-fit:cover;display:block;" onerror="this.src='logo-512.png'"></div>
+        <div class="logo">A</div>
         <span class="brand-name">A-Tuls</span>
       </div>
       <button class="btn icon-btn" onclick="closeDrawer()">×</button>
@@ -973,39 +972,6 @@ footer{
 <div class="toast" id="toast"></div>
 
 <script>
-
-(function domainLock(){
-  try{
-    var host=(location.hostname||'').toLowerCase();
-    if(!host || host==='localhost' || host==='127.0.0.1') return;
-    var ok=['a-tuls.com','www.a-tuls.com','atuls.pages.dev'];
-    var ends=['.onrender.com','.pages.dev','.netlify.app','.vercel.app','.workers.dev'];
-    if(ok.indexOf(host)>=0) return;
-    if(ends.some(function(e){return host.endsWith(e);})) return;
-    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Authorized domains only. Contact Admin.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
-  }catch(e){}
-})();
-
-
-const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
-
-(function pullTheme(){
-  try{
-    var page='index';
-    var local=localStorage.getItem('a_tuls_theme_index')||localStorage.getItem('a_tuls_theme')||'midnight';
-    document.documentElement.setAttribute('data-theme', local);
-    fetch(SB_URL+'a_tuls_settings?or=(key.eq.site_theme,key.eq.theme_index)&select=key,value',{headers:SB_H})
-      .then(function(r){return r.json()}).then(function(rows){
-        (rows||[]).forEach(function(row){
-          var v=row.value; if(v&&typeof v==='object'&&'v' in v) v=v.v;
-          if(row.key==='theme_index'||row.key==='site_theme'){ localStorage.setItem('a_tuls_theme', String(v||local)); }
-        });
-      }).catch(function(){});
-  }catch(e){}
-})();
-
 const ADMIN_PHONE = "8801336489062";
 
 const tools = [

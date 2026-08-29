@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Tuls - Elite Smart Tools Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyberBg: '#030712',
+                        glassCard: '#0b1329',
+                        neonCyan: '#00f0ff',
+                        neonPurple: '#a855f7',
+                        neonPink: '#ec4899',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        @keyframes cyberPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1); }
+            50% { box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 25px rgba(0, 240, 255, 0.2); }
+        }
+        .cyber-glow { animation: cyberPulse 4s infinite ease-in-out; }
+        
+        @keyframes floatRobot {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+        .robot-float { animation: floatRobot 3.5s ease-in-out infinite; }
+
+        .glass-panel {
+            background: rgba(11, 19, 41, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #00f0ff 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .chat-glow { box-shadow: 0 0 25px rgba(0, 240, 255, 0.25); }
+    </style>
+</head>
+<body class="bg-cyberBg text-slate-100 min-h-screen relative selection:bg-neonCyan selection:text-cyberBg overflow-x-hidden">
+
+    <!-- Dynamic Neon Background Grids & Orbs -->
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-neonCyan rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/3 -right-40 w-96 h-96 bg-neonPurple rounded-full blur-[140px]"></div>
+        <div class="absolute bottom-10 left-1/3 w-96 h-96 bg-neonPink/50 rounded-full blur-[150px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#030712_1px,transparent_1px),linear-gradient(to_bottom,#030712_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-cyan-500/20 px-6 py-4 flex justify-between items-center transition-all">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonCyan to-neonPurple flex items-center justify-center text-cyberBg font-extrabold text-xl shadow-lg shadow-cyan-500/30">A</div>
+            <span class="text-2xl font-black tracking-wider text-gradient">A-Tuls</span>
+        </div>
+        
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="#tools" class="hover:text-neonCyan transition-colors">Tools (18)</a>
+            <a href="#packages" class="hover:text-neonCyan transition-colors">Packages</a>
+            <a href="login.html" class="hover:text-neonCyan transition-colors">Login</a>
+            <a href="signup.html" class="bg-neonCyan/10 border border-neonCyan text-neonCyan px-5 py-2 rounded-full font-bold hover:bg-neonCyan hover:text-cyberBg transition-all">Get Started</a>
+        </div>
+
+        <button onclick="toggleMenu()" class="md:hidden text-neonCyan text-3xl focus:outline-none">☰</button>
+    </header>
+
+    <!-- Slide-in Cyber Drawer -->
+    <div id="sideDrawer" class="fixed inset-y-0 right-0 w-80 glass-panel z-50 transform translate-x-full transition-transform duration-300 shadow-2xl border-l border-cyan-500/30 p-6 flex flex-col justify-between">
+        <div>
+            <div class="flex justify-between items-center mb-8 border-b border-cyan-900/50 pb-4">
+                <span class="text-xl font-extrabold text-gradient">Navigation</span>
+                <button onclick="toggleMenu()" class="text-slate-400 hover:text-neonCyan text-2xl font-bold">✕</button>
+            </div>
+            <div id="menuLoader" class="hidden text-neonCyan text-xs mb-3 animate-pulse bg-cyan-950/40 p-2 rounded text-center border border-cyan-500/20">Establishing secure link...</div>
+            <ul class="space-y-4 text-base font-semibold">
+                <li><a href="login.html" class="block py-2.5 px-4 rounded-xl hover:bg-cyan-950/60 text-neonCyan">Dashboard Login</a></li>
+                <li><a href="signup.html" class="block py-2.5 px-4 rounded-xl hover:bg-cyan-950/60 text-neonCyan">Signup with API</a></li>
+                <li><a href="#tools" onclick="toggleMenu()" class="block py-2.5 px-4 rounded-xl hover:bg-cyan-950/60 text-slate-300">All 18 Tools</a></li>
+                <li><a href="#packages" onclick="toggleMenu()" class="block py-2.5 px-4 rounded-xl hover:bg-cyan-950/60 text-slate-300">Membership Packages</a></li>
+                <li><a href="https://wa.me/8801336489062" target="_blank" class="block py-2.5 px-4 rounded-xl hover:bg-cyan-950/60 text-slate-300">Admin WhatsApp</a></li>
+                <li><button onclick="openRobotChatModal()" class="w-full text-left py-2.5 px-4 rounded-xl hover:bg-cyan-950/60 text-neonCyan">Helper AI Assistant</button></li>
+            </ul>
+        </div>
+        <div class="text-[11px] text-slate-500 text-center border-t border-cyan-900/30 pt-4 font-mono">SECURE DOMAIN LOCK v3.0</div>
+    </div>
+
+    <!-- Futuristic Hero Section -->
+    <main class="relative z-10 max-w-5xl mx-auto px-6 pt-20 pb-16 text-center">
+        <div class="inline-flex items-center gap-2 bg-cyan-950/50 border border-cyan-500/30 px-4 py-1.5 rounded-full text-xs font-semibold text-neonCyan mb-6 cyber-glow">
+            <span class="w-2 h-2 rounded-full bg-neonCyan animate-ping"></span> Next-Gen Smart Tools Community
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
+            Empower Your Workflow With <span class="text-gradient">A-Tuls</span>
+        </h1>
+        <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+            Advanced email cleaners, secure personal vaults, intelligent generators, and automated utility modules in one hub.
+        </p>
+        <div class="flex flex-wrap justify-center gap-5">
+            <a href="signup.html" class="bg-gradient-to-r from-neonCyan to-neonPurple text-cyberBg font-extrabold py-4 px-10 rounded-xl shadow-lg shadow-cyan-500/25 hover:opacity-90 transition-all transform hover:-translate-y-0.5">Create Free Account</a>
+            <a href="login.html" class="glass-panel border border-cyan-500/30 text-slate-200 font-bold py-4 px-8 rounded-xl hover:border-neonCyan transition-all">Dashboard Login</a>
+        </div>
+        
+        <div class="mt-12 text-slate-500 text-xs tracking-widest uppercase animate-bounce">↓ Explore 18 Professional Tools Below</div>
+    </main>
+
+    <!-- Floating Emotional AI Robot Assistant -->
+    <div onclick="openRobotChatModal()" class="fixed bottom-6 right-6 z-40 glass-panel border border-neonCyan p-3.5 rounded-2xl shadow-2xl cursor-pointer robot-float cyber-glow flex items-center justify-center w-14 h-14 group">
+        <span class="text-2xl group-hover:scale-125 transition-transform" id="floatingRobotIcon">🤖✨</span>
+    </div>
+
+    <!-- Interactive AI Assistant Modal (Emotional Responses) -->
+    <div id="robotModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel border border-neonCyan rounded-3xl max-w-lg w-full p-6 shadow-2xl chat-glow relative flex flex-col h-[450px]">
+            <!-- Header -->
+            <div class="flex justify-between items-center border-b border-cyan-500/20 pb-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl" id="modalRobotAvatar">🤖✨</span>
+                    <div>
+                        <h3 class="font-extrabold text-neonCyan text-base">A-Tuls Helper AI</h3>
+                        <p class="text-[11px] text-slate-400" id="robotMoodStatus">Mood: Happy & Ready to Help!</p>
+                    </div>
+                </div>
+                <button onclick="closeRobotChatModal()" class="text-slate-400 hover:text-neonCyan text-xl font-bold">✕</button>
+            </div>
+
+            <!-- Chat Message Box -->
+            <div id="chatHistory" class="flex-1 overflow-y-auto space-y-3 pr-2 text-sm text-slate-300 custom-scrollbar mb-4">
+                <div class="bg-cyan-950/40 p-3 rounded-2xl border border-cyan-500/20 max-w-[85%]">
+                    Hello! I'm your AI assistant. Choose a mood below or ask me about tools and packages!
+                </div>
+            </div>
+
+            <!-- Emotion Selector Buttons -->
+            <div class="grid grid-cols-4 gap-2 mb-3">
+                <button onclick="setRobotMood('happy')" class="bg-cyan-950/60 border border-cyan-500/30 hover:border-neonCyan py-1.5 rounded-xl text-xs font-semibold text-neonCyan transition-all">😄 Happy</button>
+                <button onclick="setRobotMood('think')" class="bg-cyan-950/60 border border-cyan-500/30 hover:border-neonCyan py-1.5 rounded-xl text-xs font-semibold text-neonCyan transition-all">🤔 Think</button>
+                <button onclick="setRobotMood('mad')" class="bg-cyan-950/60 border border-cyan-500/30 hover:border-neonCyan py-1.5 rounded-xl text-xs font-semibold text-neonCyan transition-all">😤 Strict</button>
+                <button onclick="setRobotMood('sad')" class="bg-cyan-950/60 border border-cyan-500/30 hover:border-neonCyan py-1.5 rounded-xl text-xs font-semibold text-neonCyan transition-all">💧 Sad</button>
+            </div>
+
+            <!-- Quick Action Footer -->
+            <div class="text-center pt-2 border-t border-cyan-500/20">
+                <a href="https://wa.me/8801336489062?text=Hello%20Admin,%20I%20need%20help%20with%20API%20code" target="_blank" class="text-xs text-neonCyan font-bold hover:underline">Need immediate API code? Chat with Admin on WhatsApp →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 18 Tools Showcase Grid -->
+    <section id="tools" class="relative z-10 max-w-6xl mx-auto px-6 py-16">
+        <div class="mb-12 text-center">
+            <h2 class="text-3xl font-extrabold text-gradient mb-2">Elite Tools Suite (18)</h2>
+            <p class="text-slate-400 text-sm">Click cards to view details. Login to dashboard for full access.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Tool Items -->
+            <div onclick="openToolModal('1. Gmail Format Fixer Pro', 'Instantly cleans email & password lists and separates Good, Bad, and Duplicate entries.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 01</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Gmail Format Fixer Pro</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Advanced list cleaning and professional sorting tool.</p>
+            </div>
+
+            <div onclick="openToolModal('2. Email Report', 'Generates neat and organized reports from large email lists (Google Sheets style output).')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 02</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Email Report</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Sheets-style formatted data report generator.</p>
+            </div>
+
+            <div onclick="openToolModal('3. Personal Email Vault', 'Securely save, manage, and view your confidential emails and data in an encrypted system.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 03</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Personal Email Vault</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Encrypted cloud vault storage for personal data.</p>
+            </div>
+
+            <div onclick="openToolModal('4. Gmail Format Fixer', 'Automatically corrects standard email formatting errors and extra spaces.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 04</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Gmail Format Fixer</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Quick and reliable basic format cleaner.</p>
+            </div>
+
+            <div onclick="openToolModal('5. Easy Email Validator', 'Instantly checks whether email addresses are valid and active.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 05</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Easy Email Validator</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Accurate email validation and status checker.</p>
+            </div>
+
+            <div onclick="openToolModal('6. Duplicate Email Checker', 'Finds and removes duplicate or repeated email entries from bulk lists.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 06</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Duplicate Email Checker</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Duplicate detection and filtering utility.</p>
+            </div>
+
+            <div onclick="openToolModal('7. Email Data Formatter', 'Customizes and arranges email and password data into structured formats.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 07</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Email Data Formatter</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Custom data structuring utility.</p>
+            </div>
+
+            <div onclick="openToolModal('8. Password Generator', 'Generates high-security complex passwords to ensure account safety.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 08</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Password Generator</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">High-security password builder.</p>
+            </div>
+
+            <div onclick="openToolModal('9. Name Generator', 'Generates unique and professional names or usernames for your projects.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 09</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Name Generator</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Unique name and username idea generator.</p>
+            </div>
+
+            <div onclick="openToolModal('10. IP Timezone Finder', 'Analyzes IP addresses to find precise timezones and geographic locations.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 10</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">IP Timezone Finder</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">IP-based timezone and geolocation tracker.</p>
+            </div>
+
+            <div onclick="openToolModal('11. Gmail Checker', 'Verifies live status and properties related to Gmail accounts.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 11</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Gmail Checker</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Gmail status and property testing tool.</p>
+            </div>
+
+            <div onclick="openToolModal('12. 2FA Generator', 'Generates and manages two-factor authentication (2FA) security codes.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 12</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">2FA Generator</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Two-step verification security token maker.</p>
+            </div>
+
+            <div onclick="openToolModal('13. Temp Mail', 'Instant disposable mailbox for temporary tasks and quick registrations.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 13</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Temp Mail</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Instant temporary email receiving service.</p>
+            </div>
+
+            <div onclick="openToolModal('14. IP & VPN Zone', 'Identifies and checks IP addresses alongside VPN network zones.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 14</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">IP & VPN Zone</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">VPN proxy and IP zone checker.</p>
+            </div>
+
+            <div onclick="openToolModal('15. Outside Zone', 'Detects external proxy or network zones outside designated geographic limits.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 15</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Outside Zone</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">External network and zone tracking utility.</p>
+            </div>
+
+            <div onclick="openToolModal('16. UID Checker', 'Scans and verifies the accuracy of unique user IDs (UID).')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 16</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">UID Checker</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">User ID verification and status checker.</p>
+            </div>
+
+            <div onclick="openToolModal('17. AI Website', 'Dedicated feature for AI chat assistance, prompts, and content generation.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 17</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">AI Website</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Smart AI chat and creative generator.</p>
+            </div>
+
+            <div onclick="openToolModal('18. Bio Link Website', 'Creates beautiful all-in-one link hub pages for your social media bios.')" class="glass-panel p-6 rounded-2xl cursor-pointer hover:border-neonCyan transition-all group">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-mono bg-cyan-950/80 text-neonCyan px-2.5 py-1 rounded-md border border-cyan-500/20">MODULE 18</span>
+                    <span class="text-neonCyan group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100 group-hover:text-neonCyan transition-colors mb-2">Bio Link Website</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Social media profile link page creator.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages & Pricing Section -->
+    <section id="packages" class="relative z-10 max-w-6xl mx-auto px-6 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold text-gradient mb-2">Membership Packages</h2>
+            <p class="text-slate-400 text-sm">Message Admin directly on WhatsApp to purchase packages and acquire API codes.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Free Trial -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between border border-cyan-500/20">
+                <div>
+                    <h3 class="font-bold text-neonCyan mb-1">Free Trial</h3>
+                    <div class="text-3xl font-extrabold text-slate-100 mb-2">৳0</div>
+                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">Duration: 30 Days<br>(Can be toggled by Admin)</p>
+                </div>
+                <a href="https://wa.me/8801336489062?text=I%20want%20Free%20Trial%20API" target="_blank" class="block text-center bg-cyan-950/60 border border-cyan-500/30 text-neonCyan py-2.5 rounded-xl text-xs font-bold hover:bg-neonCyan hover:text-cyberBg transition-all">Get via WhatsApp</a>
+            </div>
+
+            <!-- Basic -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between border border-cyan-500/20">
+                <div>
+                    <h3 class="font-bold text-neonCyan mb-1">Basic</h3>
+                    <div class="text-3xl font-extrabold text-slate-100 mb-2">৳150</div>
+                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">Duration: ~30 Days</p>
+                </div>
+                <a href="https://wa.me/8801336489062?text=I%20want%20Basic%20Package%20(150tk)" target="_blank" class="block text-center bg-cyan-950/60 border border-cyan-500/30 text-neonCyan py-2.5 rounded-xl text-xs font-bold hover:bg-neonCyan hover:text-cyberBg transition-all">Buy Package</a>
+            </div>
+
+            <!-- Pro (Featured) -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between border-2 border-neonCyan relative cyber-glow">
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neonCyan text-cyberBg text-[10px] font-extrabold px-3 py-0.5 rounded-full uppercase tracking-wider">Most Popular</span>
+                <div>
+                    <h3 class="font-bold text-neonCyan mb-1">Pro</h3>
+                    <div class="text-3xl font-extrabold text-slate-100 mb-2">৳900</div>
+                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">Duration: ~90 Days<br>Full API Access</p>
+                </div>
+                <a href="https://wa.me/8801336489062?text=I%20want%20Pro%20Package%20(900tk)" target="_blank" class="block text-center bg-gradient-to-r from-neonCyan to-neonPurple text-cyberBg py-2.5 rounded-xl text-xs font-extrabold hover:opacity-90 transition-all">Buy Package</a>
+            </div>
+
+            <!-- Lifetime -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between border border-cyan-500/20">
+                <div>
+                    <h3 class="font-bold text-neonCyan mb-1">Lifetime</h3>
+                    <div class="text-3xl font-extrabold text-slate-100 mb-2">৳1800</div>
+                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">Duration: Lifetime VIP Access</p>
+                </div>
+                <a href="https://wa.me/8801336489062?text=I%20want%20Lifetime%20Package%20(1800tk)" target="_blank" class="block text-center bg-cyan-950/60 border border-cyan-500/30 text-neonCyan py-2.5 rounded-xl text-xs font-bold hover:bg-neonCyan hover:text-cyberBg transition-all">Buy Package</a>
+            </div>
+        </div>
+
+        <!-- How It Works Card -->
+        <div class="mt-12 glass-panel p-8 rounded-2xl border border-cyan-500/30">
+            <h3 class="text-lg font-bold text-neonCyan mb-6 text-center">Package Purchase & Account Activation Steps:</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
+                <div class="bg-cyberBg/60 p-5 rounded-xl border border-cyan-500/10">
+                    <span class="text-neonCyan font-bold block mb-1">Step 1: Choose & Pay</span> Select your desired package and message WhatsApp Admin.
+                </div>
+                <div class="bg-cyberBg/60 p-5 rounded-xl border border-cyan-500/10">
+                    <span class="text-neonCyan font-bold block mb-1">Step 2: Get API Key</span> Admin will verify your payment and provide a secret API code.
+                </div>
+                <div class="bg-cyberBg/60 p-5 rounded-xl border border-cyan-500/10">
+                    <span class="text-neonCyan font-bold block mb-1">Step 3: Login & Access</span> Register on the signup page using your API key and access tools via Dashboard.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Futuristic Footer -->
+    <footer class="relative z-10 glass-panel border-t border-cyan-500/20 mt-16 py-8 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3 text-xs border border-cyan-500/20">
+                <span>📍 Dhaka, Partly Cloudy</span>
+                <span class="text-neonCyan font-bold">29°C</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 text-xs text-slate-400 font-medium">
+                <a href="#" class="hover:text-neonCyan transition-colors">Facebook (Gourab Mondal)</a>
+                <a href="#" class="hover:text-neonCyan transition-colors">Instagram</a>
+                <a href="https://wa.me/8801336489062" target="_blank" class="hover:text-neonCyan transition-colors">WhatsApp (+880 1336-489062)</a>
+                <a href="#" class="hover:text-neonCyan transition-colors">Telegram</a>
+            </div>
+            <div>
+                <a href="signup.html" class="text-neonCyan font-bold hover:underline text-xs">Register Secure Account →</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tool Detail Modal Popup -->
+    <div id="toolModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel border border-neonCyan rounded-3xl max-w-md w-full p-8 text-center shadow-2xl relative cyber-glow">
+            <h3 id="modalTitle" class="text-xl font-extrabold text-neonCyan mb-3"></h3>
+            <p id="modalDesc" class="text-slate-300 text-sm mb-6 leading-relaxed"></p>
+            <div class="bg-cyberBg/80 p-4 rounded-xl border border-cyan-500/30 text-xs text-neonCyan mb-6 leading-relaxed">
+                Security Notice: To use this tool, you must register with a valid API code and log in through the Dashboard.
+            </div>
+            <div class="flex justify-center gap-4">
+                <a href="login.html" class="bg-neonCyan text-cyberBg font-extrabold px-6 py-2.5 rounded-xl text-xs hover:opacity-90 transition-all">Login Dashboard</a>
+                <button onclick="closeToolModal()" class="bg-slate-800 text-slate-300 px-6 py-2.5 rounded-xl text-xs hover:bg-slate-700 transition-all">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Interactions & Emotional AI Bot -->
+    <script>
+        function toggleMenu() {
+            const drawer = document.getElementById('sideDrawer');
+            const loader = document.getElementById('menuLoader');
+            if (drawer.classList.contains('translate-x-full')) {
+                loader.classList.remove('hidden');
+                setTimeout(() => loader.classList.add('hidden'), 500);
+                drawer.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('translate-x-full');
+            }
+        }
+
+        function openToolModal(title, desc) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('toolModal').classList.remove('hidden');
+        }
+
+        function closeToolModal() {
+            document.getElementById('toolModal').classList.add('hidden');
+        }
+
+        // Emotional AI Bot System
+        function openRobotChatModal() {
+            document.getElementById('robotModal').classList.remove('hidden');
+            setRobotMood('happy');
+        }
+
+        function closeRobotChatModal() {
+            document.getElementById('robotModal').classList.add('hidden');
+        }
+
+        function setRobotMood(mood) {
+            const avatarElem = document.getElementById('modalRobotAvatar');
+            const floatingElem = document.getElementById('floatingRobotIcon');
+            const statusElem = document.getElementById('robotMoodStatus');
+            const historyElem = document.getElementById('chatHistory');
+
+            let emoji = '🤖✨';
+            let moodText = 'Happy & Ready to Help!';
+            let botReply = '';
+
+            switch(mood) {
+                case 'happy':
+                    emoji = '🤖✨';
+                    moodText = 'Happy & Excited!';
+                    botReply = 'Yay! Welcome to A-Tuls! Feel free to explore our 18 smart tools or grab a Pro package via WhatsApp!';
+                    break;
+                case 'think':
+                    emoji = '🤖💭';
+                    moodText = 'Analyzing & Thinking...';
+                    botReply = 'Hmm... Are you looking for a specific API code or trying to decide between Basic and Pro packages? Let me know!';
+                    break;
+                case 'mad':
+                    emoji = '🤖💢';
+                    moodText = 'Strict & Secure Mode!';
+                    botReply = 'Warning! Make sure you use a valid API code during signup. Unauthorized access attempts are blocked!';
+                    break;
+                case 'sad':
+                    emoji = '🤖💧';
+                    moodText = 'Missing You / Concerned';
+                    botReply = 'Oh no! Is something not working? Don\'t worry, you can always contact Admin on WhatsApp for instant assistance.';
+                    break;
+            }
+
+            avatarElem.innerText = emoji;
+            floatingElem.innerText = emoji;
+            statusElem.innerText = `Mood: ${moodText}`;
+
+            // Append bot message to chat history
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'bg-cyan-950/40 p-3 rounded-2xl border border-cyan-500/20 max-w-[85%] animate-pulse';
+            messageDiv.innerText = botReply;
+            historyElem.appendChild(messageDiv);
+            historyElem.scrollTop = historyElem.scrollHeight;
+        }
+    </script>
+</body>
+</html>

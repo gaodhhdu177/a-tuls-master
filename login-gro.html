@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Login · A-Tuls</title>
+  <meta name="description" content="Smart tools workspace · Site access · Free tier available" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #030712;
+      --bg-navy: #0a1225;
+      --bg-card: rgba(10, 22, 45, 0.72);
+      --cyan: #00e5ff;
+      --cyan-bright: #67f0ff;
+      --cyan-dim: #00b8d4;
+      --purple: #7c5cff;
+      --cyan-glow: rgba(0, 229, 255, 0.5);
+      --text: #f0f7ff;
+      --text-muted: #7a94b8;
+      --border: rgba(0, 229, 255, 0.15);
+      --success: #00e676;
+      --danger: #ff5252;
+      --radius: 16px;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background */
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -15%, rgba(0, 100, 180, 0.22), transparent),
+        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(100, 40, 180, 0.1), transparent),
+        linear-gradient(180deg, #030712 0%, #060e1c 40%, #0a1428 100%);
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .aurora {
+      position: absolute;
+      inset: -20% -10%;
+      background:
+        linear-gradient(115deg, transparent 30%, rgba(0, 229, 255, 0.06) 45%, transparent 60%),
+        linear-gradient(65deg, transparent 40%, rgba(124, 92, 255, 0.05) 55%, transparent 70%);
+      animation: auroraShift 16s ease-in-out infinite alternate;
+      filter: blur(40px);
+    }
+    @keyframes auroraShift {
+      0% { transform: translateX(-4%) rotate(-1deg); }
+      100% { transform: translateX(4%) rotate(1deg); }
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.3;
+      animation: orbFloat 22s ease-in-out infinite;
+    }
+    .orb.o1 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.45), transparent 70%);
+      top: -60px; left: -40px;
+    }
+    .orb.o2 {
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(124, 92, 255, 0.35), transparent 70%);
+      bottom: 5%; right: -50px;
+      animation-delay: -8s;
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(25px, -30px); }
+    }
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 15% 25%, #fff, transparent),
+        radial-gradient(1px 1px at 40% 60%, #a8d8ff, transparent),
+        radial-gradient(1.5px 1.5px at 70% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 75%, #cff, transparent),
+        radial-gradient(1.5px 1.5px at 25% 80%, #fff, transparent);
+      opacity: 0.55;
+      animation: twinkle 5s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: 0.4; }
+      to { opacity: 0.7; }
+    }
+
+    /* Layout */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px 40px;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.35rem;
+      letter-spacing: 1px;
+      background: linear-gradient(100deg, #00e5ff, #7c5cff, #00e5ff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shine 4s linear infinite;
+      text-decoration: none;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      transition: 0.25s;
+    }
+    .back-link:hover {
+      color: var(--cyan);
+      border-color: var(--border);
+      background: rgba(0, 229, 255, 0.06);
+    }
+
+    /* Card */
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 229, 255, 0.18);
+      border-radius: 22px;
+      padding: 36px 30px 30px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(0, 229, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      position: relative;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(28px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .auth-header .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+      color: var(--cyan);
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .auth-header h1 {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 30%, #00e5ff 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .auth-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .auth-header .sub {
+      font-size: 0.8rem;
+      margin-top: 4px;
+      opacity: 0.85;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(0, 229, 255, 0.18);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s;
+    }
+    .form-group input::placeholder {
+      color: rgba(122, 148, 184, 0.55);
+    }
+    .form-group input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12), 0 0 20px rgba(0, 229, 255, 0.1);
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    /* Password toggle */
+    .form-group input[type="password"],
+    .form-group input.has-toggle {
+      padding-right: 48px;
+    }
+    .toggle-pass {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.15rem;
+      padding: 4px;
+      line-height: 1;
+      transition: 0.2s;
+    }
+    .toggle-pass:hover { color: var(--cyan); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      text-decoration: none;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #00e5ff, #00c4e0 50%, #7c5cff);
+      background-size: 200% auto;
+      color: #021018;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
+      margin-top: 6px;
+      font-size: 1rem;
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background-position: right center;
+      box-shadow: 0 0 45px rgba(0, 229, 255, 0.5);
+    }
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .footer-links {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .footer-links a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--cyan-bright);
+      text-decoration: underline;
+    }
+
+    /* Error / success */
+    .error-msg {
+      display: none;
+      background: rgba(255, 82, 82, 0.12);
+      border: 1px solid rgba(255, 82, 82, 0.35);
+      color: #ff8a80;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      line-height: 1.45;
+      text-align: center;
+    }
+    .error-msg.show { display: block; animation: shake 0.4s ease; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    .success-msg {
+      display: none;
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+      color: #69f0ae;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .success-msg.show { display: block; }
+
+    /* Loading overlay */
+    .loading-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.88);
+      border-radius: 22px;
+      z-index: 10;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .loading-overlay.show { display: flex; }
+    .spinner {
+      width: 42px; height: 42px;
+      border: 3px solid rgba(0, 229, 255, 0.15);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      color: var(--cyan);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Domain lock */
+    .domain-lock {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #030712;
+      color: var(--text);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+    }
+    .domain-lock.show { display: flex; }
+    .domain-lock h2 {
+      color: var(--danger);
+      margin-bottom: 12px;
+      font-family: var(--font-display);
+    }
+
+    /* Extra hint */
+    .hint {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      opacity: 0.8;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 28px 20px 24px; }
+      .auth-header h1 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="domain-lock" id="domainLock">
+    <h2>🔒 Domain Locked</h2>
+    <p>This site is restricted to authorized domains only.<br>Contact Admin for access.</p>
+  </div>
+
+  <div class="bg-scene" aria-hidden="true">
+    <div class="aurora"></div>
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="stars"></div>
+  </div>
+
+  <div class="page">
+    <div class="top-bar">
+      <a href="index.html" class="logo">A-Tuls</a>
+      <a href="index.html" class="back-link">← Home</a>
+    </div>
+
+    <div class="auth-card">
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Signing in…</div>
+      </div>
+
+      <div class="auth-header">
+        <div class="badge">Site access · Free tier available</div>
+        <h1>A-Tuls</h1>
+        <p>Smart tools workspace</p>
+        <p class="sub">Login to open Dashboard & tools</p>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+      <div class="success-msg" id="successMsg"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" class="has-toggle" placeholder="••••••••" required autocomplete="current-password" />
+            <button type="button" class="toggle-pass" id="togglePass" aria-label="Show password" title="Show / Hide">👁</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">Sign in</button>
+      </form>
+
+      <div class="footer-links">
+        No account? <a href="signup.html">Create one</a>
+      </div>
+
+      <p class="hint">
+        পাসওয়ার্ড ভুলে গেলে Signup-এর সিকিউরিটি প্রশ্ন ব্যবহার করুন<br>
+        বা Admin WhatsApp: +880 1336-489062
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Domain lock
+    (function () {
+      const allowed = ['localhost', '127.0.0.1', 'a-tuls.com', 'www.a-tuls.com', 'atuls.pages.dev'];
+      const host = location.hostname.toLowerCase();
+      if (host && !allowed.some(d => host === d || host.endsWith('.' + d))) {
+        // document.getElementById('domainLock').classList.add('show');
+      }
+    })();
+
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    const submitBtn = document.getElementById('submitBtn');
+    const passwordInput = document.getElementById('password');
+    const togglePass = document.getElementById('togglePass');
+
+    // Show / hide password
+    togglePass.addEventListener('click', () => {
+      const isHidden = passwordInput.type === 'password';
+      passwordInput.type = isHidden ? 'text' : 'password';
+      togglePass.textContent = isHidden ? '🙈' : '👁';
+      togglePass.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    });
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.add('show');
+      successMsg.classList.remove('show');
+    }
+    function hideError() {
+      errorMsg.classList.remove('show');
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      hideError();
+
+      const email = document.getElementById('email').value.trim();
+      const password = passwordInput.value;
+
+      // Basic validation
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('সঠিক ইমেইল ঠিকানা দিন।');
+        return;
+      }
+      if (!password || password.length < 6) {
+        showError('Password কমপক্ষে ৬ অক্ষরের হতে হবে।');
+        return;
+      }
+
+      // Demo login simulation (frontend only)
+      // In real app: call your API / backend
+      submitBtn.disabled = true;
+      loadingOverlay.classList.add('show');
+      loadingText.textContent = 'Signing in…';
+
+      // Simulate network delay
+      setTimeout(() => {
+        // Demo: accept any valid-looking email + password length >= 6
+        // You can later replace this with real API check
+        const isValidDemo = email.includes('@') && password.length >= 6;
+
+        if (isValidDemo) {
+          loadingText.textContent = 'Loading Dashboard…';
+          setTimeout(() => {
+            loadingOverlay.classList.remove('show');
+            successMsg.innerHTML = '✅ Login successful!<br>Redirecting to Dashboard…';
+            successMsg.classList.add('show');
+            // Redirect to dashboard (create dashboard.html later)
+            setTimeout(() => {
+              // window.location.href = 'dashboard.html';
+              // For now stay and show message
+              successMsg.innerHTML = '✅ Login successful!<br>Dashboard পেজ এখনো তৈরি হয়নি — শীঘ্রই আসবে।';
+              submitBtn.disabled = false;
+            }, 1200);
+          }, 800);
+        } else {
+          loadingOverlay.classList.remove('show');
+          showError('Invalid email or password');
+          submitBtn.disabled = false;
+        }
+      }, 1100);
+    });
+  </script>
+</body>
+</html>
