@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Email Validator - A-Tuls</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#1f2937}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.app{display:flex;min-height:100vh}
+.sidebar{width:230px;background:#202735;color:#fff;padding:20px 14px;flex-shrink:0}
+.logo{font-size:24px;font-weight:700;padding:10px 12px 25px}
+.nav button{width:100%;padding:12px;text-align:left;background:transparent;color:#d8dee9;border-radius:7px;margin:3px 0}
+.nav button:hover,.nav button.active{background:#303a4d;color:#fff}
+.main{flex:1;padding:20px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+h1{font-size:22px;margin:0 0 6px}
+.sub{color:#6b7280;margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:#fff;border-radius:10px;padding:18px;box-shadow:0 2px 10px #00000010}
+label.title{display:block;font-weight:700;margin-bottom:8px}
+textarea{width:100%;resize:vertical;border:1px solid #d5d9e0;border-radius:7px;padding:12px;outline:none}
+textarea:focus{border-color:#667eea}
+.actions,.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{padding:10px 15px;border-radius:7px;background:#293241;color:#fff}
+.btn.secondary{background:#e9edf2;color:#202735}
+.btn.success{background:#198754}
+.btn.danger{background:#dc3545}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.file{display:none}
+.option{margin-top:18px}
+.option label{display:block;margin:9px 0}
+.progress{height:12px;background:#e8ebef;border-radius:20px;overflow:hidden;margin:10px 0 16px}
+.bar{height:100%;width:0;background:#198754;transition:width .2s}
+.tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:10px;overflow:auto}
+.tab{background:#fff;padding:10px 13px;white-space:nowrap;color:#555}
+.tab.active{font-weight:700;border-bottom:2px solid #293241;color:#111}
+.result{display:none}
+.result.active{display:block}
+.count{font-weight:700}
+.status{margin:8px 0;color:#667085;min-height:20px}
+.small{font-size:12px;color:#6b7280}
+.notice{background:#fff7e6;border:1px solid #ffd591;padding:10px;border-radius:7px;margin-bottom:15px}
+@media(max-width:850px){.sidebar{width:70px;padding:12px 8px}.logo{font-size:0}.logo:after{content:"AT";font-size:22px}.nav button{font-size:0;text-align:center}.nav button:first-letter{font-size:20px}.grid{grid-template-columns:1fr}.main{padding:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">A-Tuls</div>
+  <div class="nav">
+    <button class="active">⌕ Email Validator</button>
+    <button onclick="showInfo('Data Split/Merge')">▣ Data Split/Merge</button>
+    <button onclick="showInfo('Remove Duplicates')">▤ Remove Duplicates</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="top">
+    <div>
+      <h1>Email Validator</h1>
+      <p class="sub">Format and DNS/MX validation — no password required.</p>
+    </div>
+  </div>
+
+  <div class="notice">
+    <b>Important:</b> This version does not check whether a Google/Gmail account exists.
+    Here, <b>Good</b> means the email format is valid and its domain has an MX record. <b>Verify</b> means the format needs attention. This does not determine whether a specific Google/Gmail account exists.
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <label class="title">Email List</label>
+      <textarea id="input" rows="18" placeholder="name1@gmail.com&#10;name2@example.com&#10;name3@yahoo.com"></textarea>
+
+      <div class="actions" style="margin-top:10px">
+        <button class="btn secondary" onclick="document.getElementById('file').click()">Upload TXT / CSV / Excel</button>
+        <input id="file" class="file" type="file" accept=".txt,.csv,.xlsx,.xls">
+        <button class="btn" id="start" onclick="startValidation()">Start Check</button>
+        <button class="btn secondary" onclick="clearAll()">Clear Data</button>
+      </div>
+
+      <div class="option">
+        <label><input type="checkbox" id="duplicate" checked> Stop on duplicate email</label>
+        <label><input type="checkbox" id="ignore" checked> Ignore invalid email-format lines</label>
+        <label><input type="checkbox" id="mx" checked> Check DNS/MX records</label>
+      </div>
+      <p class="small">MX checking uses Google's public DNS-over-HTTPS resolver from the browser.</p>
+    </section>
+
+    <section class="card">
+      <b>Progress</b>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="status" id="status">Ready</div>
+
+      <div class="row" style="margin:12px 0 16px">
+        <div class="card" style="flex:1;min-width:120px;padding:12px;background:#f0fff5">
+          <div class="small">Processed</div><div class="count" id="processedLive">0</div>
+        </div>
+        <div class="card" style="flex:1;min-width:120px;padding:12px;background:#f0fff5">
+          <div class="small">Good</div><div class="count" id="goodLive">0</div>
+        </div>
+        <div class="card" style="flex:1;min-width:120px;padding:12px;background:#fff7ed">
+          <div class="small">Verify</div><div class="count" id="verifyLive">0</div>
+        </div>
+        <div class="card" style="flex:1;min-width:120px;padding:12px;background:#f5f7ff">
+          <div class="small">Remaining</div><div class="count" id="remainingLive">0</div>
+        </div>
+      </div>
+      <div class="status" id="liveReport">Live report: waiting for check...</div>
+      <div class="tabs">
+        <button class="tab active" data-tab="valid">Good <span class="count" id="validCount">0</span></button>
+        <button class="tab" data-tab="invalid">Verify <span class="count" id="invalidCount">0</span></button>
+        <button class="tab" data-tab="nomx">No MX <span class="count" id="nomxCount">0</span></button>
+        <button class="tab" data-tab="remaining">Remaining <span class="count" id="remainingCount">0</span></button>
+      </div>
+
+      <div id="valid" class="result active">
+        <textarea id="validList" rows="18" readonly></textarea>
+        <button class="btn success" onclick="copyResult('validList')">Copy Good</button>
+      </div>
+      <div id="invalid" class="result">
+        <textarea id="invalidList" rows="18" readonly></textarea>
+        <button class="btn danger" onclick="copyResult('invalidList')">Copy Verify</button>
+      </div>
+      <div id="nomx" class="result">
+        <textarea id="nomxList" rows="18" readonly></textarea>
+        <button class="btn secondary" onclick="copyResult('nomxList')">Copy No MX</button>
+      </div>
+      <div id="remaining" class="result">
+        <textarea id="remainingList" rows="18" readonly></textarea>
+        <button class="btn secondary" onclick="copyResult('remainingList')">Copy Remaining</button>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let stopped = false;
+
+function showInfo(name){
+  alert(name + " is not included in this standalone version yet.");
+}
+
+function normalizeEmail(line){
+  return line.trim().replace(/\r/g,'');
+}
+
+function validFormat(email){
+  if(!email || email.length > 254) return false;
+  const parts=email.split('@');
+  if(parts.length!==2) return false;
+  const local=parts[0], domain=parts[1].toLowerCase();
+  if(!local || local.length>64 || !domain || domain.length>253) return false;
+  if(domain.indexOf('.')===-1) return false;
+  return /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(email);
+}
+
+function uniqueLines(lines){
+  const seen=new Set(), out=[];
+  for(const line of lines){
+    const key=line.toLowerCase();
+    if(!seen.has(key)){seen.add(key);out.push(line)}
+  }
+  return out;
+}
+
+async function hasMX(domain){
+  try{
+    const url='https://dns.google/resolve?name='+encodeURIComponent(domain)+'&type=MX';
+    const r=await fetch(url,{headers:{'Accept':'application/dns-json'}});
+    if(!r.ok) return false;
+    const data=await r.json();
+    return Array.isArray(data.Answer) && data.Answer.some(x=>x.type===15);
+  }catch(e){
+    return false;
+  }
+}
+
+function setProgress(n,total){
+  const p=total ? Math.round(n/total*100) : 0;
+  $('bar').style.width=p+'%';
+  $('status').textContent=p+'% — '+n+' / '+total;
+}
+
+function add(id,value){
+  if($(id).value) $(id).value += '\\n'+value;
+  else $(id).value=value;
+}
+
+function setCount(id,n){$(id).textContent=n}
+
+async function startValidation(){
+  stopped=false;
+  const raw=$('input').value.trim();
+  if(!raw){alert('Please enter at least one email.');return}
+
+  let lines=raw.split(/\n+/).map(normalizeEmail).filter(Boolean);
+
+  if($('duplicate').checked){
+    const before=lines.length;
+    lines=uniqueLines(lines);
+    if(lines.length<before) $('status').textContent=(before-lines.length)+' duplicate(s) removed.';
+  }
+
+  $('validList').value='';
+  $('invalidList').value='';
+  $('nomxList').value='';
+  $('remainingList').value=lines.join('\n');
+  setCount('validCount',0);setCount('invalidCount',0);setCount('nomxCount',0);setCount('remainingCount',lines.length);
+  setCount('processedLive',0);setCount('goodLive',0);setCount('verifyLive',0);setCount('remainingLive',lines.length);
+  $('liveReport').textContent='Live report: checking started...';
+  $('start').disabled=true;
+
+  const total=lines.length;
+  let done=0, valid=0, invalid=0, nomx=0;
+
+  for(let i=0;i<lines.length;i++){
+    if(stopped) break;
+    const email=lines[i];
+    const ok=validFormat(email);
+
+    if(!ok){
+      invalid++;
+      add('invalidList',email);
+      if(!$('ignore').checked){
+        $('status').textContent='Stopped: invalid email format.';
+        break;
+      }
+    }else if($('mx').checked){
+      const domain=email.split('@')[1].toLowerCase();
+      const mx=await hasMX(domain);
+      if(mx){
+        valid++; add('validList',email);
+      }else{
+        nomx++; add('nomxList',email);
+      }
+    }else{
+      valid++; add('validList',email);
+    }
+
+    done++;
+    $('remainingList').value=lines.slice(done).join('\n');
+    setCount('validCount',valid);
+    setCount('invalidCount',invalid);
+    setCount('processedLive',done);
+    setCount('goodLive',valid);
+    setCount('verifyLive',invalid);
+    setCount('remainingLive',Math.max(total-done,0));
+    $('liveReport').textContent='Live report: '+done+' checked • '+valid+' Good • '+invalid+' Verify • '+Math.max(total-done,0)+' Remaining';
+    setCount('nomxCount',nomx);
+    setCount('remainingCount',Math.max(total-done,0));
+    setProgress(done,total);
+
+    // Small delay prevents the UI from freezing on large lists.
+    await new Promise(r=>setTimeout(r,80));
+  }
+
+  if(stopped){
+    $('status').textContent='Stopped by user.';
+  }else{
+    $('status').textContent='Completed.';
+    $('remainingList').value='';
+    setCount('remainingCount',0);
+    $('bar').style.width='100%';
+  }
+  $('start').disabled=false;
+}
+
+function clearAll(){
+  stopped=true;
+  $('input').value='';
+  ['validList','invalidList','nomxList','remainingList'].forEach(id=>$(id).value='');
+  ['validCount','invalidCount','nomxCount','remainingCount','processedLive','goodLive','verifyLive','remainingLive'].forEach(id=>setCount(id,0));
+  $('liveReport').textContent='Live report: waiting for check...';
+  $('bar').style.width='0%';
+  $('status').textContent='Ready';
+}
+
+async function copyResult(id){
+  const text=$(id).value;
+  if(!text){alert('No data to copy.');return}
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('Copied successfully.');
+  }catch(e){
+    $(id).select();
+    document.execCommand('copy');
+    alert('Copied successfully.');
+  }
+}
+
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.result').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    $(btn.dataset.tab).classList.add('active');
+  });
+});
+
+$('file').addEventListener('change',async e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='txt'||ext==='csv'){
+    $('input').value=await file.text();
+    return;
+  }
+  alert('Excel (.xlsx/.xls) import needs the XLSX library. For this lightweight standalone version, save the Excel sheet as CSV/TXT and upload it.');
+  e.target.value='';
+});
+</script>
+</body>
+</html>

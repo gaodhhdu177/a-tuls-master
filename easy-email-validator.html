@@ -680,5 +680,23 @@ Paid Package কিনুন।');
             messageBox.classList.remove('show');
         }
     </script>
-</body>
+<script>
+(function domainLock(){
+  try{
+    var host=(location.hostname||'').toLowerCase();
+    if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
+    var ok=[
+      'a-tuls.com','www.a-tuls.com','atuls.pages.dev',
+      'a-tuls-master-n0k1.onrender.com'
+    ];
+    var ends=[
+      '.onrender.com','.pages.dev','.netlify.app','.vercel.app',
+      '.workers.dev','.github.io','.gitlab.io','.surge.sh','.web.app','.firebaseapp.com'
+    ];
+    if(ok.indexOf(host)>=0) return;
+    if(ends.some(function(e){return host.endsWith(e);})) return;
+    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Authorized domains only. Contact Admin.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
+  }catch(e){}
+})();
+</script></body>
 </html>
