@@ -11,8 +11,8 @@
     var ok=(
       host==='a-tuls-master-n0k1.onrender.com'||
       host.endsWith('.onrender.com')||
-      host.endsWith('.pages.dev')||host.endsWith('.github.io')||
-      host.endsWith('.netlify.app')||h.endsWith('.github.io')||h.endsWith('.gitlab.io')||
+      host.endsWith('.pages.dev')||
+      host.endsWith('.netlify.app')||
       host.endsWith('.vercel.app')||
       host.endsWith('.workers.dev')
     );
@@ -46,19 +46,26 @@
 (function(){
   var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
   var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-  var THEMES={
-    midnight:{bg:'#050816',panel:'#0e1428',a:'#38bdf8',b:'#a78bfa',txt:'#eef2ff'},
-    ocean:{bg:'#02141f',panel:'#0a2433',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
-    forest:{bg:'#06140f',panel:'#0c241c',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
-    sunset:{bg:'#1a0b10',panel:'#2a1218',a:'#fb7185',b:'#fbbf24',txt:'#fff1f2'},
-    royal:{bg:'#0c0a1a',panel:'#16122e',a:'#a78bfa',b:'#e879f9',txt:'#f5f3ff'},
-    slate:{bg:'#0f172a',panel:'#1e293b',a:'#94a3b8',b:'#64748b',txt:'#f8fafc'},
-    crimson:{bg:'#14060a',panel:'#240c12',a:'#f43f5e',b:'#fb7185',txt:'#fff1f2'},
-    amber:{bg:'#140e04',panel:'#241a0a',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb'},
-    mint:{bg:'#041412',panel:'#0a2420',a:'#2dd4bf',b:'#5eead4',txt:'#f0fdfa'},
-    graphite:{bg:'#0a0a0b',panel:'#171717',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
-  };
-  function applyTheme(id){
+  
+var THEMES={
+  midnight:{bg:'#030b16',panel:'#0a1628',a:'#00e5ff',b:'#3a86ff',txt:'#e8f4ff',name:'Midnight'},
+  ocean:{bg:'#021824',panel:'#0a2a3c',a:'#22d3ee',b:'#0ea5e9',txt:'#e0f7ff',name:'Ocean'},
+  forest:{bg:'#06140e',panel:'#0d2418',a:'#34d399',b:'#10b981',txt:'#ecfdf5',name:'Forest'},
+  sunset:{bg:'#1a0b12',panel:'#2a1220',a:'#fb7185',b:'#f97316',txt:'#fff1f2',name:'Sunset'},
+  royal:{bg:'#0c0a1a',panel:'#1a1430',a:'#a78bfa',b:'#8b5cf6',txt:'#f5f3ff',name:'Royal'},
+  slate:{bg:'#0f1419',panel:'#1a222d',a:'#94a3b8',b:'#64748b',txt:'#f1f5f9',name:'Slate'},
+  crimson:{bg:'#140808',panel:'#241010',a:'#f43f5e',b:'#e11d48',txt:'#fff1f2',name:'Crimson'},
+  amber:{bg:'#141008',panel:'#241c10',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb',name:'Amber'},
+  mint:{bg:'#061412',panel:'#0d2420',a:'#2dd4bf',b:'#14b8a6',txt:'#f0fdfa',name:'Mint'},
+  graphite:{bg:'#0a0a0a',panel:'#161616',a:'#e5e5e5',b:'#a3a3a3',txt:'#fafafa',name:'Graphite'},
+  cyber:{bg:'#030712',panel:'#0b1329',a:'#00f0ff',b:'#a855f7',txt:'#f1f5f9',name:'Cyber Neon'},
+  glass:{bg:'#020812',panel:'#061322',a:'#00e5ff',b:'#32c9ff',txt:'#effcff',name:'Glass Cyan'},
+  premium:{bg:'#030712',panel:'#0a1225',a:'#00e5ff',b:'#7c5cff',txt:'#f0f7ff',name:'Premium Aurora'},
+  white:{bg:'#f8fafc',panel:'#ffffff',a:'#0284c7',b:'#0369a1',txt:'#0f172a',name:'White'},
+  gray:{bg:'#1e293b',panel:'#334155',a:'#94a3b8',b:'#cbd5e1',txt:'#f8fafc',name:'Gray'}
+};
+
+function applyTheme(id){
     var t=THEMES[id]||THEMES.midnight;
     var r=document.documentElement;
     r.style.setProperty('--bg',t.bg);
@@ -82,7 +89,7 @@
       var rows=await r.json();
       (rows||[]).forEach(function(row){
         var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
-        if(row.key==='site_theme') applyTheme(String(v||'midnight'));
+        if(row.key==='site_theme') applyTheme((String(v||'midnight')==='basic')?'midnight':String(v||'midnight'));
         if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
         if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||'150'));
         if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
@@ -98,6 +105,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="logo-512.png" type="image/png">
 <title>A-Tuls · Ultra Admin</title>
 <meta name="theme-color" content="#0b1020">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -474,6 +482,57 @@ window.A_TULS_DB = {
 </script>
 
 
+
+<script>
+/* A-Tuls page theme binder — syncs from Supabase + localStorage */
+(function(){
+  try{
+    var path=(location.pathname||'').toLowerCase();
+    var key='a_tuls_theme';
+    if(path.indexOf('dashboard')>=0) key='a_tuls_theme_dashboard';
+    else if(path.indexOf('login')>=0 || path.indexOf('signup')>=0 || path.indexOf('register')>=0) key='a_tuls_theme_auth';
+    else if(path.indexOf('admin')>=0) key='a_tuls_theme_admin';
+    else if(path.indexOf('index')>=0 || path.endsWith('/') || path==='') key='a_tuls_theme_index';
+    var id=localStorage.getItem(key)||localStorage.getItem('a_tuls_theme')||'midnight';
+    document.documentElement.setAttribute('data-theme', id);
+    // soft refresh from Supabase settings if available
+    var SB_URL=(window.SB_URL)||'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+    var SB_KEY=(window.SB_KEY)||'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+    fetch(SB_URL+'a_tuls_settings?or=(key.eq.site_theme,key.eq.theme_index,key.eq.theme_dashboard,key.eq.theme_auth,key.eq.theme_admin)&select=key,value',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    }).then(function(r){return r.ok?r.json():[]}).then(function(rows){
+      var map={};
+      (rows||[]).forEach(function(row){
+        var v=row.value; if(v&&typeof v==='object'&&('v' in v)) v=v.v;
+        map[row.key]=String(v||'');
+      });
+      var pick=null;
+      if(key==='a_tuls_theme_index' && map.theme_index) pick=map.theme_index;
+      else if(key==='a_tuls_theme_dashboard' && map.theme_dashboard) pick=map.theme_dashboard;
+      else if(key==='a_tuls_theme_auth' && map.theme_auth) pick=map.theme_auth;
+      else if(key==='a_tuls_theme_admin' && map.theme_admin) pick=map.theme_admin;
+      else if(map.site_theme) pick=map.site_theme;
+      if(pick){
+        localStorage.setItem(key, pick);
+        document.documentElement.setAttribute('data-theme', pick);
+      }
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
+
+
+<script>
+/* ATULS_THEME_BOOT - simple previous themes only */
+(function(){
+  try{
+    var id=localStorage.getItem('a_tuls_theme')||'midnight';
+    if(id==='basic') id='midnight';
+    document.documentElement.setAttribute('data-theme', id);
+  }catch(e){}
+})();
+</script>
+
 </head>
 <body>
 <div class="atuls-live-bg" aria-hidden="true"><div class="grid"></div><div class="orb orb1"></div><div class="orb orb2"></div></div>
@@ -747,9 +806,103 @@ window.A_TULS_DB = {
     <div id="tab-settings" style="display:none">
       <div class="card-box">
         <h5 class="fw-bold mb-2"><i class="fas fa-palette me-2"></i>Site Theme (10)</h5>
-        <p class="small text-muted mb-3">Pick a theme → Save. Index, Login, Register & Dashboard update for everyone (Supabase sync).</p>
+        <p class="small text-muted mb-3">Pick a theme → Save. Applies to: index.html, login.html, signup.html, dashboard.html, admin.html (everyone, Supabase sync).</p>
         <div id="themeGrid" class="row g-2 mb-3"></div>
         <button class="btn btn-p btn-sm" onclick="saveSiteTheme()"><i class="fas fa-save me-1"></i> Save Theme</button>
+
+<div id="pageThemesBox" style="margin:16px 0;padding:14px;border:1px solid rgba(0,229,255,.25);border-radius:14px;background:rgba(0,229,255,.04)">
+  <h5 style="color:#e2e8f0;margin:0 0 10px">🎨 Page Themes (HTML files)</h5>
+  <p style="font-size:11px;opacity:.75;margin:0 0 12px">প্রতিটি HTML ফাইলের থিম আলাদা সেট করুন → Save করলে সেই পেজেই লাগবে।</p>
+  <div style="display:grid;gap:10px">
+    <label style="font-size:12px"><b>index.html</b> — Home / Landing
+      <select id="themeIndexSel" style="width:100%;margin-top:4px;padding:8px;border-radius:8px;background:#0a1628;color:#fff;border:1px solid rgba(0,229,255,.2)"></select>
+    </label>
+    <label style="font-size:12px"><b>dashboard.html</b> — User Dashboard
+      <select id="themeDashSel" style="width:100%;margin-top:4px;padding:8px;border-radius:8px;background:#0a1628;color:#fff;border:1px solid rgba(0,229,255,.2)"></select>
+    </label>
+    <label style="font-size:12px"><b>login.html + signup.html</b> — Auth pages
+      <select id="themeAuthSel" style="width:100%;margin-top:4px;padding:8px;border-radius:8px;background:#0a1628;color:#fff;border:1px solid rgba(0,229,255,.2)"></select>
+    </label>
+    <label style="font-size:12px"><b>admin.html</b> — Admin panel (site default)
+      <select id="themeAdminSel" style="width:100%;margin-top:4px;padding:8px;border-radius:8px;background:#0a1628;color:#fff;border:1px solid rgba(0,229,255,.2)"></select>
+    </label>
+  </div>
+  <p style="font-size:11px;margin:10px 0 0;opacity:.7">Save Theme = সবার জন্য এক থিম · Save Page Themes = ফাইল অনুযায়ী আলাদা</p>
+  <button type="button" class="btn btn-p btn-sm" style="margin-top:12px" onclick="savePageThemes()">Save Page Themes</button>
+</div>
+<script>
+(function(){
+  var ids=['midnight','ocean','forest','sunset','royal','slate','crimson','amber','mint','graphite','cyber','glass','premium','white','gray'];
+  function fill(sel, key){
+    var el=document.getElementById(sel); if(!el) return;
+    var cur=localStorage.getItem(key)||localStorage.getItem('a_tuls_theme')||'midnight';
+    el.innerHTML=ids.map(function(id){return '<option value="'+id+'"'+(id===cur?' selected':'')+'>'+id+'</option>';}).join('');
+  }
+  fill('themeIndexSel','a_tuls_theme_index');
+  fill('themeDashSel','a_tuls_theme_dashboard');
+  fill('themeAuthSel','a_tuls_theme_auth');
+  fill('themeAdminSel','a_tuls_theme_admin');
+})();
+async function savePageThemes(){
+  var map={
+    theme_index: (document.getElementById('themeIndexSel')||{}).value||'midnight',
+    theme_dashboard: (document.getElementById('themeDashSel')||{}).value||'midnight',
+    theme_auth: (document.getElementById('themeAuthSel')||{}).value||'midnight',
+    theme_admin: (document.getElementById('themeAdminSel')||{}).value||'midnight'
+  };
+  localStorage.setItem('a_tuls_theme_index', map.theme_index);
+  localStorage.setItem('a_tuls_theme_dashboard', map.theme_dashboard);
+  localStorage.setItem('a_tuls_theme_auth', map.theme_auth);
+  localStorage.setItem('a_tuls_theme_admin', map.theme_admin);
+  localStorage.setItem('a_tuls_theme', map.theme_index);
+  try{
+    if(typeof SB_URL!=='undefined'){
+      for(var k in map){
+        await fetch(SB_URL+'a_tuls_settings',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates','Content-Type':'application/json'}, typeof SB_H!=='undefined'?SB_H:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}),body:JSON.stringify({key:k,value:{v:map[k]}})}).catch(function(){});
+      }
+    }
+  }catch(e){}
+  alert('Page themes saved:\n• index.html = '+map.theme_index+'\n• dashboard.html = '+map.theme_dashboard+'\n• login.html / signup.html = '+map.theme_auth+'\n• admin.html = '+map.theme_admin+'\n\nRefresh those pages to see the new theme.');
+}
+</script>
+
+
+<div id="userThemeToggleBox" style="margin:12px 0;padding:12px;border:1px solid rgba(0,229,255,.2);border-radius:12px;background:rgba(0,229,255,.04)">
+  <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:#e2e8f0;font-size:13px">
+    <input type="checkbox" id="allowUserTheme" style="width:18px;height:18px;accent-color:#00e5ff">
+    <span>Allow users to change <b>Dashboard theme</b> themselves</span>
+  </label>
+  <p class="small text-muted" style="margin:8px 0 0;font-size:11px;opacity:.8">On = users see theme picker on Dashboard. Off = only Admin site theme applies.</p>
+  <button type="button" class="btn btn-p btn-sm" style="margin-top:10px" onclick="saveUserThemeFlag()"><i class="fas fa-save me-1"></i> Save user-theme setting</button>
+</div>
+<script>
+async function saveUserThemeFlag(){
+  try{
+    var on=!!document.getElementById('allowUserTheme').checked;
+    localStorage.setItem('a_tuls_allow_user_theme', on?'1':'0');
+    if(typeof SB_URL!=='undefined'){
+      await fetch(SB_URL+'a_tuls_settings?key=eq.allow_user_theme',{
+        method:'PATCH',
+        headers:Object.assign({Prefer:'return=minimal','Content-Type':'application/json'}, typeof sbHeaders==='function'?sbHeaders():{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}),
+        body:JSON.stringify({key:'allow_user_theme',value:{v:on}})
+      }).catch(function(){});
+      await fetch(SB_URL+'a_tuls_settings',{
+        method:'POST',
+        headers:Object.assign({Prefer:'resolution=merge-duplicates','Content-Type':'application/json'}, typeof sbHeaders==='function'?sbHeaders():{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}),
+        body:JSON.stringify({key:'allow_user_theme',value:{v:on}})
+      }).catch(function(){});
+    }
+    alert(on?'Users can change Dashboard theme':'Only Admin site theme applies');
+  }catch(e){alert('Saved locally');}
+}
+(function loadUserThemeFlag(){
+  try{
+    var v=localStorage.getItem('a_tuls_allow_user_theme');
+    if(v==='1' && document.getElementById('allowUserTheme')) document.getElementById('allowUserTheme').checked=true;
+  }catch(e){}
+})();
+</script>
+
       </div>
       <div class="card-box">
         <h5 class="fw-bold mb-2"><i class="fas fa-key me-2"></i>Paid API price</h5>
@@ -1333,7 +1486,7 @@ async function savePkgPrices(){
 
 
 
-const ATULS_THEMES=['midnight','ocean','forest','sunset','royal','slate','crimson','amber','mint','graphite'];
+const ATULS_THEMES=['midnight','ocean','forest','sunset','royal','slate','crimson','amber','mint','graphite','cyber','glass','premium','white','gray'];
 let selectedTheme=localStorage.getItem('a_tuls_theme')||'midnight';
 function renderThemeGrid(){
   const box=document.getElementById('themeGrid'); if(!box) return;
@@ -1540,6 +1693,44 @@ bootAdmin();
       alert(this.checked?'Free trial ON':'Free trial OFF');
     };
   }, 1000);
+})();
+</script>
+<script>
+(function domainLock(){
+  try{
+    var host=(location.hostname||'').toLowerCase();
+    if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
+    // Always allow GitHub Pages (project or user site)
+    if(host.indexOf('github.io')>=0 || host.indexOf('githubusercontent.com')>=0) return;
+    var ok=[
+      'a-tuls.com','www.a-tuls.com','atuls.pages.dev',
+      'a-tuls-master-n0k1.onrender.com'
+    ];
+    if(ok.indexOf(host)>=0) return;
+    var ends=[
+      '.onrender.com','.pages.dev','.netlify.app','.vercel.app',
+      '.workers.dev','.github.io','.gitlab.io','.surge.sh',
+      '.web.app','.firebaseapp.com','.cloudflarepages.dev'
+    ];
+    if(ends.some(function(e){return host.endsWith(e);})) return;
+    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Use Render / GitHub Pages / Netlify / Vercel host.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
+  }catch(e){}
+})();
+</script>
+
+
+<div id="copyright" align="center" style="padding:18px 12px;font-size:12px;opacity:.65;color:#94a3b8">© 2016 - <span id="copyYear"></span> A-Tuls · All Rights Reserved.</div>
+<script>
+(function(){
+  var y=document.getElementById("copyYear");
+  if(y) y.textContent=new Date().getFullYear();
+  var c=document.getElementById("copyright");
+  if(c && !y) c.innerHTML="© 2016 - "+new Date().getFullYear()+" A-Tuls · All Rights Reserved.";
+})();
+</script>
+
+</body>';
+  }catch(e){}
 })();
 </script>
 </body>
