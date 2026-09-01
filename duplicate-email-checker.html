@@ -537,26 +537,18 @@
         }
     </style>
 
-
-<script>
-/* A-Tuls API LOCK — tools need valid site API / session */
-(function(){
+<script>(function domainLock(){
   try{
-    var sess=null;
-    try{sess=JSON.parse(localStorage.getItem('a_tuls_session')||'null');}catch(e){}
-    if(!sess || !sess.email){
-      // allow viewing page but block heavy actions later via window.ATULS_API_LOCKED
-      window.ATULS_API_LOCKED=true;
-      window.ATULS_REQUIRE_LOGIN=true;
-    } else {
-      window.ATULS_API_LOCKED=false;
-      window.ATULS_REQUIRE_LOGIN=false;
-    }
-  }catch(e){window.ATULS_API_LOCKED=true;}
-})();
-</script>
-
-</head>
+    var host=(location.hostname||'').toLowerCase();
+    if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
+    if(host.indexOf('github.io')>=0) return;
+    var ok=['a-tuls.com','www.a-tuls.com','atuls.pages.dev','a-tuls-master-n0k1.onrender.com'];
+    if(ok.indexOf(host)>=0) return;
+    var ends=['.onrender.com','.pages.dev','.netlify.app','.vercel.app','.workers.dev','.github.io','.gitlab.io','.surge.sh','.web.app','.firebaseapp.com','.cloudflarepages.dev'];
+    if(ends.some(function(e){return host.endsWith(e);})) return;
+    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Render / GitHub Pages only.</p></div></body>';
+  }catch(e){}
+})();</script></head>
 <body>
 <script>
 (function(){
@@ -912,52 +904,5 @@ Paid Package কিনুন।');
             }
         });
     </script>
-<script>
-(function domainLock(){
-  try{
-    var host=(location.hostname||'').toLowerCase();
-    if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
-    // Always allow GitHub Pages (project or user site)
-    if(host.indexOf('github.io')>=0 || host.indexOf('githubusercontent.com')>=0) return;
-    var ok=[
-      'a-tuls.com','www.a-tuls.com','atuls.pages.dev',
-      'a-tuls-master-n0k1.onrender.com'
-    ];
-    if(ok.indexOf(host)>=0) return;
-    var ends=[
-      '.onrender.com','.pages.dev','.netlify.app','.vercel.app',
-      '.workers.dev','.github.io','.gitlab.io','.surge.sh',
-      '.web.app','.firebaseapp.com','.cloudflarepages.dev'
-    ];
-    if(ends.some(function(e){return host.endsWith(e);})) return;
-    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Use Render / GitHub Pages / Netlify / Vercel host.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
-  }catch(e){}
-})();
-(function atulsApiLock(){
-  try{
-    var path=(location.pathname||'').toLowerCase();
-    var base=path.split('/').pop()||'';
-    var publicPages=['index.html','login.html','signup.html','membership.html','profile.html',''];
-    if(publicPages.indexOf(base)>=0) return;
-    var toolLike=/fixer|report|vault|checker|generator|timezone|vpn|temp-mail|2fa|ai-website|uid|bio-link|tools|email|password|name-gen|outside|gmail/i.test(base);
-    if(!toolLike) return;
-    function hasSession(){
-      try{
-        var s=JSON.parse(localStorage.getItem('a_tuls_session')||'null');
-        return !!(s && (s.id||s.email||s.username));
-      }catch(e){ return false; }
-    }
-    if(hasSession()) return;
-    document.addEventListener('DOMContentLoaded', function(){
-      if(hasSession()) return;
-      // GitHub Pages: still require login, but show clear message with relative login link
-      var bar=document.createElement('div');
-      bar.id='atulsApiLockBar';
-      bar.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(3,7,18,.92);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:system-ui';
-      bar.innerHTML='<div style="max-width:420px;background:#0b1220;border:1px solid rgba(0,229,255,.3);border-radius:16px;padding:28px;color:#e2e8f0"><div style="font-size:28px;margin-bottom:8px">🔐</div><h2 style="margin:0 0 8px;color:#67e8f9">Login required</h2><p style="opacity:.8;font-size:14px;line-height:1.5">GitHub Pages / Render — tools open after login on this same link.</p><a href="login.html" style="display:inline-block;margin-top:14px;padding:12px 20px;border-radius:12px;background:linear-gradient(90deg,#00e5ff,#3b82f6);color:#041018;font-weight:700;text-decoration:none">Go to Login</a></div>';
-      document.body.appendChild(bar);
-    });
-  }catch(e){}
-})();
-</script></body>
+</body>
 </html>

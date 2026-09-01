@@ -46,7 +46,7 @@
 (function(){
   var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
   var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-  var THEMES={ basic:(typeof THEMES!=='undefined'&&THEMES.midnight)||{bg:'#030b16',panel:'rgba(8,20,40,.9)',a:'#00e5ff',b:'#3b82f6',txt:'#e2e8f0'},
+  var THEMES={
     midnight:{bg:'#050816',panel:'#0e1428',a:'#38bdf8',b:'#a78bfa',txt:'#eef2ff'},
     ocean:{bg:'#02141f',panel:'#0a2433',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
     forest:{bg:'#06140f',panel:'#0c241c',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
@@ -59,7 +59,7 @@
     graphite:{bg:'#0a0a0b',panel:'#171717',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
   };
   function applyTheme(id){
-    if(id==='basic')id='midnight'; var t=THEMES[id]||THEMES.midnight||THEMES.cyber;
+    var t=THEMES[id]||THEMES.midnight;
     var r=document.documentElement;
     r.style.setProperty('--bg',t.bg);
     r.style.setProperty('--panel',t.panel);
@@ -82,7 +82,7 @@
       var rows=await r.json();
       (rows||[]).forEach(function(row){
         var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
-        if(row.key==='site_theme') applyTheme((String(v||'midnight')==='basic')?'midnight':String(v||'midnight'));
+        if(row.key==='site_theme') applyTheme(String(v||'midnight'));
         if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
         if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||'150'));
         if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
@@ -111,7 +111,18 @@ p{color:#9aa3c0;font-size:.92rem;margin:0 0 16px;line-height:1.5}
 a.back{display:block;margin-top:16px;color:#9aa3c0;text-decoration:none;font-size:.88rem}
 </style>
 
-</head>
+<script>(function domainLock(){
+  try{
+    var host=(location.hostname||'').toLowerCase();
+    if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
+    if(host.indexOf('github.io')>=0) return;
+    var ok=['a-tuls.com','www.a-tuls.com','atuls.pages.dev','a-tuls-master-n0k1.onrender.com'];
+    if(ok.indexOf(host)>=0) return;
+    var ends=['.onrender.com','.pages.dev','.netlify.app','.vercel.app','.workers.dev','.github.io','.gitlab.io','.surge.sh','.web.app','.firebaseapp.com','.cloudflarepages.dev'];
+    if(ends.some(function(e){return host.endsWith(e);})) return;
+    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Render / GitHub Pages only.</p></div></body>';
+  }catch(e){}
+})();</script></head>
 <body>
 <div class="box">
   <div class="tag">ALL FREE</div>
@@ -121,26 +132,5 @@ a.back{display:block;margin-top:16px;color:#9aa3c0;text-decoration:none;font-siz
   <a class="back" href="dashboard.html">← Dashboard</a>
   <a class="back" href="index.html">Home</a>
 </div>
-<script>
-(function domainLock(){
-  try{
-    var host=(location.hostname||'').toLowerCase();
-    if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
-    // Always allow GitHub Pages (project or user site)
-    if(host.indexOf('github.io')>=0 || host.indexOf('githubusercontent.com')>=0) return;
-    var ok=[
-      'a-tuls.com','www.a-tuls.com','atuls.pages.dev',
-      'a-tuls-master-n0k1.onrender.com'
-    ];
-    if(ok.indexOf(host)>=0) return;
-    var ends=[
-      '.onrender.com','.pages.dev','.netlify.app','.vercel.app',
-      '.workers.dev','.github.io','.gitlab.io','.surge.sh',
-      '.web.app','.firebaseapp.com','.cloudflarepages.dev'
-    ];
-    if(ends.some(function(e){return host.endsWith(e);})) return;
-    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Use Render / GitHub Pages / Netlify / Vercel host.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
-  }catch(e){}
-})();
-</script></body>
+</body>
 </html>

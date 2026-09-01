@@ -594,57 +594,6 @@ label{
   }
 }
 </style>
-
-<script>
-/* A-Tuls page theme binder — syncs from Supabase + localStorage */
-(function(){
-  try{
-    var path=(location.pathname||'').toLowerCase();
-    var key='a_tuls_theme';
-    if(path.indexOf('dashboard')>=0) key='a_tuls_theme_dashboard';
-    else if(path.indexOf('login')>=0 || path.indexOf('signup')>=0 || path.indexOf('register')>=0) key='a_tuls_theme_auth';
-    else if(path.indexOf('admin')>=0) key='a_tuls_theme_admin';
-    else if(path.indexOf('index')>=0 || path.endsWith('/') || path==='') key='a_tuls_theme_index';
-    var id=localStorage.getItem(key)||localStorage.getItem('a_tuls_theme')||'midnight';
-    document.documentElement.setAttribute('data-theme', id);
-    // soft refresh from Supabase settings if available
-    var SB_URL=(window.SB_URL)||'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-    var SB_KEY=(window.SB_KEY)||'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-    fetch(SB_URL+'a_tuls_settings?or=(key.eq.site_theme,key.eq.theme_index,key.eq.theme_dashboard,key.eq.theme_auth,key.eq.theme_admin)&select=key,value',{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
-    }).then(function(r){return r.ok?r.json():[]}).then(function(rows){
-      var map={};
-      (rows||[]).forEach(function(row){
-        var v=row.value; if(v&&typeof v==='object'&&('v' in v)) v=v.v;
-        map[row.key]=String(v||'');
-      });
-      var pick=null;
-      if(key==='a_tuls_theme_index' && map.theme_index) pick=map.theme_index;
-      else if(key==='a_tuls_theme_dashboard' && map.theme_dashboard) pick=map.theme_dashboard;
-      else if(key==='a_tuls_theme_auth' && map.theme_auth) pick=map.theme_auth;
-      else if(key==='a_tuls_theme_admin' && map.theme_admin) pick=map.theme_admin;
-      else if(map.site_theme) pick=map.site_theme;
-      if(pick){
-        localStorage.setItem(key, pick);
-        document.documentElement.setAttribute('data-theme', pick);
-      }
-    }).catch(function(){});
-  }catch(e){}
-})();
-</script>
-
-
-<script>
-/* ATULS_THEME_BOOT - simple previous themes only */
-(function(){
-  try{
-    var id=localStorage.getItem('a_tuls_theme')||'midnight';
-    if(id==='basic') id='midnight';
-    document.documentElement.setAttribute('data-theme', id);
-  }catch(e){}
-})();
-</script>
-
 </head>
 
 <body>
@@ -795,7 +744,7 @@ label{
       <span class="security-icon">●</span>
 
       <span>
-        Secure login connected to A-Tuls database.
+        Your login session is handled locally in this demo.
         For production use, connect this page to a secure backend
         authentication system.
       </span>
@@ -823,36 +772,12 @@ const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'a
   try{
     var host=(location.hostname||'').toLowerCase();
     if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
-    // Always allow GitHub Pages (project or user site)
-    if(host.indexOf('github.io')>=0 || host.indexOf('githubusercontent.com')>=0) return;
-    var ok=[
-      'a-tuls.com','www.a-tuls.com','atuls.pages.dev',
-      'a-tuls-master-n0k1.onrender.com'
-    ];
+    if(host.indexOf('github.io')>=0) return;
+    var ok=['a-tuls.com','www.a-tuls.com','atuls.pages.dev','a-tuls-master-n0k1.onrender.com'];
     if(ok.indexOf(host)>=0) return;
-    var ends=[
-      '.onrender.com','.pages.dev','.netlify.app','.vercel.app',
-      '.workers.dev','.github.io','.gitlab.io','.surge.sh',
-      '.web.app','.firebaseapp.com','.cloudflarepages.dev'
-    ];
+    var ends=['.onrender.com','.pages.dev','.netlify.app','.vercel.app','.workers.dev','.github.io','.gitlab.io','.surge.sh','.web.app','.firebaseapp.com','.cloudflarepages.dev'];
     if(ends.some(function(e){return host.endsWith(e);})) return;
-    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Use Render / GitHub Pages / Netlify / Vercel host.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div></body>';
-  }catch(e){}
-})();
-</script>
-
-
-<div id="copyright" align="center" style="padding:18px 12px;font-size:12px;opacity:.65;color:#94a3b8">© 2016 - <span id="copyYear"></span> A-Tuls · All Rights Reserved.</div>
-<script>
-(function(){
-  var y=document.getElementById("copyYear");
-  if(y) y.textContent=new Date().getFullYear();
-  var c=document.getElementById("copyright");
-  if(c && !y) c.innerHTML="© 2016 - "+new Date().getFullYear()+" A-Tuls · All Rights Reserved.";
-})();
-</script>
-
-</body>';
+    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Render / GitHub Pages only.</p></div></body>';
   }catch(e){}
 })();
 
@@ -887,32 +812,10 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   var u=null;
   try{
     var r=await fetch(SB_URL+'a_tuls_users?or=(email.eq.'+encodeURIComponent(email)+',username.eq.'+encodeURIComponent(email)+')&select=*',{headers:SB_H});
-    if(r.ok){
-      var rows=await r.json();
-      u=(rows||[]).find(function(x){
-        var ep=(x.password==null?'':String(x.password));
-        return ep===password;
-      })||null;
-      // if email matched but password empty/wrong — clearer message
-      if(!u && rows && rows.length){
-        if(loading) loading.classList.remove('show');
-        if(signBtn){ signBtn.disabled=false; signBtn.textContent='Sign in →'; }
-        showStatus('Wrong password. Try again or contact Admin.','error');
-        return;
-      }
-    } else {
-      console.warn('Supabase login HTTP', r.status);
-    }
-  }catch(ex){ console.warn('Supabase login error', ex); }
+    if(r.ok){ var rows=await r.json(); u=(rows||[]).find(function(x){return x.password===password;})||null; }
+  }catch(ex){}
   if(!u){
-    try{
-      var users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
-      u=users.find(function(x){
-        var em=(x.email||'').toLowerCase();
-        var un=(x.username||'').toLowerCase();
-        return (em===email||un===email||un===email.toLowerCase()) && String(x.password||'')===password;
-      })||null;
-    }catch(ex){}
+    try{ var users=JSON.parse(localStorage.getItem('a_tuls_users')||'[]'); u=users.find(function(x){return (x.email===email||x.username===email)&&x.password===password;}); }catch(ex){}
   }
   if(!u){
     if(loading) loading.classList.remove('show');
