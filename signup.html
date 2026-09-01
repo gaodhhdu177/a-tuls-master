@@ -1,1358 +1,753 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- A-Tuls proprietary client · a_tuls namespace only · no third-party tool branding -->
+<html data-theme="basic" lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#020812">
-
-<link rel="icon" href="logo-512.png" type="image/png">
-<title>A-Tuls — Registration</title>
-
-<style>
-:root{
-  --bg:#020812;
-  --card:#061522;
-  --card2:#081c2d;
-  --cyan:#00e5ff;
-  --text:#effcff;
-  --muted:#8ca7b8;
-  --line:rgba(0,229,255,.16);
-  --green:#50f2a0;
-  --red:#ff5878;
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-body{
-  min-height:100vh;
-  color:var(--text);
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(700px 450px at 50% -10%,rgba(0,229,255,.15),transparent 65%),
-    radial-gradient(500px 400px at 100% 80%,rgba(0,100,255,.10),transparent 70%),
-    var(--bg);
-  overflow-x:hidden;
-}
-
-/* BACKGROUND GRID */
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.3;
-  background-image:
-    linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
-  background-size:42px 42px;
-}
-
-/* GLOW ORBS */
-.orb{
-  position:fixed;
-  border-radius:50%;
-  pointer-events:none;
-  filter:blur(2px);
-  opacity:.12;
-  border:1px solid var(--cyan);
-  box-shadow:0 0 100px var(--cyan);
-}
-
-.orb.one{
-  width:300px;
-  height:300px;
-  left:-170px;
-  top:25%;
-}
-
-.orb.two{
-  width:380px;
-  height:380px;
-  right:-220px;
-  bottom:-120px;
-}
-
-button,
-input,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-/* TOP BAR */
-.topbar{
-  height:70px;
-  padding:0 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--line);
-  background:rgba(2,8,18,.75);
-  backdrop-filter:blur(18px);
-  position:relative;
-  z-index:10;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-decoration:none;
-  color:white;
-}
-
-.logo{
-  width:42px;
-  height:42px;
-  border-radius:13px;
-  display:grid;
-  place-items:center;
-  font-size:21px;
-  font-weight:950;
-  color:#001017;
-  background:linear-gradient(135deg,#00e5ff,#69f4ff);
-  box-shadow:0 0 30px rgba(0,229,255,.22);
-}
-
-.brand-name{
-  font-size:20px;
-  font-weight:900;
-}
-
-.brand-sub{
-  display:block;
-  font-size:8px;
-  letter-spacing:2px;
-  color:#708c9e;
-}
-
-.btn{
-  border:1px solid var(--line);
-  background:#071725;
-  color:var(--text);
-  padding:11px 15px;
-  border-radius:12px;
-  transition:.2s;
-}
-
-.btn:hover{
-  transform:translateY(-2px);
-  border-color:rgba(0,229,255,.55);
-  box-shadow:0 8px 25px rgba(0,229,255,.08);
-}
-
-.primary{
-  border:0;
-  color:#001017;
-  font-weight:850;
-  background:linear-gradient(135deg,#00e5ff,#36caff);
-}
-
-/* MAIN */
-.main{
-  width:min(1050px,100%);
-  margin:auto;
-  padding:45px 18px 60px;
-  position:relative;
-  z-index:1;
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:1.08fr .72fr;
-  gap:18px;
-  align-items:start;
-}
-
-.card{
-  border:1px solid var(--line);
-  border-radius:24px;
-  background:
-    linear-gradient(145deg,rgba(7,25,41,.95),rgba(3,13,25,.96));
-  box-shadow:0 30px 100px rgba(0,0,0,.35);
-  backdrop-filter:blur(18px);
-}
-
-.form-card{
-  padding:28px;
-  animation:fadeIn .45s ease;
-}
-
-@keyframes fadeIn{
-  from{
-    opacity:0;
-    transform:translateY(15px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-.kicker{
-  color:var(--cyan);
-  font-size:10px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  font-weight:800;
-}
-
-h1{
-  font-size:clamp(32px,5vw,48px);
-  line-height:1.05;
-  margin:9px 0;
-  letter-spacing:-1.5px;
-}
-
-.subtitle{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.7;
-}
-
-/* FORM */
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-top:25px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-label{
-  display:block;
-  color:#c6e4eb;
-  font-size:11px;
-  font-weight:700;
-  margin-bottom:7px;
-}
-
-.required{
-  color:var(--cyan);
-}
-
-input,
-select{
-  width:100%;
-  height:46px;
-  padding:0 13px;
-  color:var(--text);
-  background:#061522;
-  border:1px solid rgba(0,229,255,.14);
-  border-radius:12px;
-  outline:none;
-  transition:.2s;
-}
-
-input::placeholder{
-  color:#587181;
-}
-
-input:focus,
-select:focus{
-  border-color:rgba(0,229,255,.65);
-  box-shadow:
-    0 0 0 3px rgba(0,229,255,.06),
-    0 0 25px rgba(0,229,255,.05);
-}
-
-select option{
-  background:#061522;
-}
-
-.hint{
-  color:#698594;
-  font-size:10px;
-  margin-top:6px;
-}
-
-/* API */
-.api-row{
-  display:flex;
-  gap:8px;
-}
-
-.api-row input{
-  flex:1;
-}
-
-.api-btn{
-  white-space:nowrap;
-  padding:0 13px;
-}
-
-/* CHECKBOX */
-.check{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:17px;
-  color:#7894a3;
-  font-size:11px;
-}
-
-.check input{
-  width:16px;
-  height:16px;
-  accent-color:var(--cyan);
-}
-
-/* ACTIONS */
-.actions{
-  display:flex;
-  gap:9px;
-  flex-wrap:wrap;
-  margin-top:19px;
-}
-
-.create{
-  flex:1;
-  min-width:180px;
-  border:0;
-  padding:14px 16px;
-  border-radius:12px;
-  color:#001017;
-  font-weight:900;
-  background:linear-gradient(135deg,#00e5ff,#36caff);
-  box-shadow:0 0 30px rgba(0,229,255,.12);
-}
-
-.status{
-  display:none;
-  margin-top:14px;
-  padding:12px;
-  border-radius:12px;
-  font-size:11px;
-  line-height:1.6;
-}
-
-.status.show{
-  display:block;
-}
-
-.status.error{
-  color:#ffb0bd;
-  background:rgba(255,88,120,.06);
-  border:1px solid rgba(255,88,120,.25);
-}
-
-.status.success{
-  color:#a9f8ce;
-  background:rgba(80,242,160,.06);
-  border:1px solid rgba(80,242,160,.25);
-}
-
-.signin{
-  text-align:center;
-  color:#718b9a;
-  font-size:12px;
-  margin-top:20px;
-}
-
-.signin a{
-  color:var(--cyan);
-  font-weight:800;
-  text-decoration:none;
-}
-
-/* SIDE */
-.side-card{
-  padding:23px;
-  position:sticky;
-  top:88px;
-}
-
-.side-title{
-  font-size:21px;
-  margin:6px 0 8px;
-}
-
-.side-text{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.7;
-}
-
-.steps{
-  display:grid;
-  gap:9px;
-  margin-top:18px;
-}
-
-.step{
-  display:flex;
-  gap:11px;
-  padding:13px;
-  border:1px solid var(--line);
-  border-radius:14px;
-  background:rgba(0,229,255,.025);
-}
-
-.number{
-  min-width:30px;
-  height:30px;
-  display:grid;
-  place-items:center;
-  border-radius:9px;
-  color:var(--cyan);
-  background:rgba(0,229,255,.07);
-  border:1px solid rgba(0,229,255,.14);
-  font-size:10px;
-  font-weight:900;
-}
-
-.step b{
-  font-size:12px;
-}
-
-.step p{
-  color:#718b9b;
-  font-size:10px;
-  margin-top:3px;
-  line-height:1.5;
-}
-
-/* PACKAGE */
-.package-box{
-  margin-top:18px;
-  padding:15px;
-  border-radius:16px;
-  border:1px solid rgba(0,229,255,.17);
-  background:rgba(0,229,255,.035);
-}
-
-.package{
-  display:flex;
-  justify-content:space-between;
-  padding:9px 0;
-  border-bottom:1px solid rgba(0,229,255,.07);
-  font-size:11px;
-}
-
-.package:last-child{
-  border-bottom:0;
-}
-
-.package span{
-  color:#91a9b7;
-}
-
-.package strong{
-  color:var(--cyan);
-}
-
-.whatsapp{
-  width:100%;
-  margin-top:14px;
-}
-
-.note{
-  margin-top:15px;
-  padding:13px;
-  border-radius:13px;
-  background:rgba(255,193,7,.035);
-  border:1px dashed rgba(255,193,7,.2);
-  color:#b9aa7e;
-  font-size:10px;
-  line-height:1.6;
-}
-
-/* MODAL */
-.modal-bg{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  display:none;
-  place-items:center;
-  padding:16px;
-  background:rgba(0,0,0,.78);
-  backdrop-filter:blur(7px);
-}
-
-.modal-bg.show{
-  display:grid;
-}
-
-.modal{
-  width:min(500px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:#061522;
-  border:1px solid rgba(0,229,255,.3);
-  border-radius:22px;
-  box-shadow:0 35px 110px #000;
-  animation:modalIn .22s ease;
-}
-
-@keyframes modalIn{
-  from{
-    opacity:0;
-    transform:scale(.96) translateY(10px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-.modal-head{
-  padding:18px 20px;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.modal-head h2{
-  margin-top:4px;
-}
-
-.modal-body{
-  padding:20px;
-}
-
-.modal-body p{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.7;
-}
-
-.modal-packages{
-  margin-top:13px;
-  padding:13px;
-  border:1px solid var(--line);
-  border-radius:14px;
-}
-
-.modal-package{
-  display:flex;
-  justify-content:space-between;
-  padding:10px 0;
-  border-bottom:1px solid rgba(0,229,255,.07);
-  font-size:12px;
-}
-
-.modal-package:last-child{
-  border-bottom:0;
-}
-
-.modal-package b{
-  color:var(--cyan);
-}
-
-.close{
-  width:38px;
-  height:38px;
-  padding:0;
-}
-
-footer{
-  text-align:center;
-  color:#526d7d;
-  font-size:10px;
-  padding:0 15px 30px;
-}
-
-/* RESPONSIVE */
-@media(max-width:800px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-
-  .side-card{
-    position:static;
-  }
-}
-
-@media(max-width:560px){
-  .topbar{
-    height:64px;
-    padding:0 12px;
-  }
-
-  .brand-name{
-    font-size:18px;
-  }
-
-  .brand-sub{
-    display:none;
-  }
-
-  .main{
-    padding:27px 12px 45px;
-  }
-
-  .form-card,
-  .side-card{
-    padding:20px;
-    border-radius:20px;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-  .full{
-    grid-column:auto;
-  }
-
-  .api-row{
-    flex-direction:column;
-  }
-
-  .api-btn{
-    height:44px;
-  }
-
-  .actions{
-    flex-direction:column;
-  }
-
-  .actions button{
-    width:100%;
-  }
-}
-</style>
-
 <script>
-/* A-Tuls page theme binder — syncs from Supabase + localStorage */
+/* A_TULS_DOMAIN_LOCK — ON */
 (function(){
   try{
-    var path=(location.pathname||'').toLowerCase();
-    var key='a_tuls_theme';
-    if(path.indexOf('dashboard')>=0) key='a_tuls_theme_dashboard';
-    else if(path.indexOf('login')>=0 || path.indexOf('signup')>=0 || path.indexOf('register')>=0) key='a_tuls_theme_auth';
-    else if(path.indexOf('admin')>=0) key='a_tuls_theme_admin';
-    else if(path.indexOf('index')>=0 || path.endsWith('/') || path==='') key='a_tuls_theme_index';
-    var id=localStorage.getItem(key)||localStorage.getItem('a_tuls_theme')||'midnight';
-    document.documentElement.setAttribute('data-theme', id);
-    // soft refresh from Supabase settings if available
-    var SB_URL=(window.SB_URL)||'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-    var SB_KEY=(window.SB_KEY)||'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-    fetch(SB_URL+'a_tuls_settings?or=(key.eq.site_theme,key.eq.theme_index,key.eq.theme_dashboard,key.eq.theme_auth,key.eq.theme_admin)&select=key,value',{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
-    }).then(function(r){return r.ok?r.json():[]}).then(function(rows){
-      var map={};
-      (rows||[]).forEach(function(row){
-        var v=row.value; if(v&&typeof v==='object'&&('v' in v)) v=v.v;
-        map[row.key]=String(v||'');
-      });
-      var pick=null;
-      if(key==='a_tuls_theme_index' && map.theme_index) pick=map.theme_index;
-      else if(key==='a_tuls_theme_dashboard' && map.theme_dashboard) pick=map.theme_dashboard;
-      else if(key==='a_tuls_theme_auth' && map.theme_auth) pick=map.theme_auth;
-      else if(key==='a_tuls_theme_admin' && map.theme_admin) pick=map.theme_admin;
-      else if(map.site_theme) pick=map.site_theme;
-      if(pick){
-        localStorage.setItem(key, pick);
-        document.documentElement.setAttribute('data-theme', pick);
-      }
-    }).catch(function(){});
-  }catch(e){}
+    var host=(location.hostname||'').toLowerCase();
+    var proto=(location.protocol||'').toLowerCase();
+    var ok=(
+      host==='a-tuls-master-n0k1.onrender.com'||
+      host.endsWith('.onrender.com')||
+      host.endsWith('.pages.dev')||host.endsWith('.github.io')||
+      host.endsWith('.netlify.app')||h.endsWith('.github.io')||h.endsWith('.gitlab.io')||
+      host.endsWith('.vercel.app')||
+      host.endsWith('.workers.dev')
+    );
+    if(proto==='file:'||!host||!ok){
+      document.documentElement.innerHTML='<div style="font-family:system-ui,sans-serif;padding:48px 24px;text-align:center;background:#000;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center"><h1 style="margin:0;font-size:1.75rem">Access Denied</h1></div>';
+      throw new Error('domain-lock');
+    }
+  }catch(e){ if(String(e.message||e)==='domain-lock') throw e; }
+  try{
+    document.addEventListener('contextmenu',function(e){e.preventDefault();return false},true);
+    document.addEventListener('keydown',function(e){
+      var k=e.key||'';
+      if(k==='F12'){e.preventDefault();return false}
+      if(e.ctrlKey&&e.shiftKey&&/^[ijcIJC]$/.test(k)){e.preventDefault();return false}
+      if(e.ctrlKey&&/^[usUS]$/.test(k)){e.preventDefault();return false}
+    },true);
+    document.addEventListener('copy',function(e){
+      try{
+        var t=e.target,ok=t&&(/^(TEXTAREA|INPUT)$/.test(t.tagName)||(t.closest&&t.closest('textarea,input,pre,.api-key,#apiNewKey,[data-copy="1"]')));
+        if(ok) return;
+        var s=window.getSelection?String(window.getSelection()):'';
+        if(s&&s.length>4000) e.preventDefault();
+      }catch(err){}
+    },true);
+  }catch(err){}
 })();
 </script>
 
-</head>
-
-<body>
-
-<div class="orb one"></div>
-<div class="orb two"></div>
-
-<!-- HEADER -->
-<header class="topbar">
-
-  <a href="index.html" class="brand">
-    <div class="logo" style="padding:0;overflow:hidden;background:transparent;border:none;box-shadow:none"><img src="logo.png" alt="A-Tuls" width="42" height="42" style="width:42px;height:42px;border-radius:12px;object-fit:cover;display:block;" onerror="this.src='logo-512.png'"></div>
-
-    <div>
-      <span class="brand-name">A-Tuls</span>
-      <small class="brand-sub">
-        SMART TOOLS COMMUNITY
-      </small>
-    </div>
-  </a>
-
-  <a href="login.html" class="btn">
-    Sign in
-  </a>
-
-</header>
-
-
-<main class="main">
-
-<div class="layout">
-
-<!-- SIGNUP FORM -->
-<section class="card form-card">
-
-  <div class="kicker">
-    Registration
-  </div>
-
-  <h1>
-    Create A-Tuls account
-  </h1>
-
-  <p class="subtitle">
-    Join the tools community · Free registration with API code
-  </p>
-
-
-  <form id="signupForm">
-
-    <div class="form-grid">
-
-      <!-- USERNAME -->
-      <div>
-        <label>
-          Username <span class="required">*</span>
-        </label>
-
-        <input
-          id="username"
-          type="text"
-          placeholder="Choose a username"
-          autocomplete="username"
-        >
-      </div>
-
-
-      <!-- EMAIL -->
-      <div>
-        <label>
-          Email (Gmail) <span class="required">*</span>
-        </label>
-
-        <input
-          id="email"
-          type="email"
-          placeholder="yourname@gmail.com"
-          autocomplete="email"
-        >
-      </div>
-
-
-      <!-- GENDER -->
-      <div>
-        <label>
-          Gender <span class="required">*</span>
-        </label>
-
-        <select id="gender">
-          <option value="">Select gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-          <option>Prefer not to say</option>
-        </select>
-      </div>
-
-
-      <!-- API -->
-      <div>
-        <label>
-          API Code <span class="required">*</span>
-        </label>
-
-        <div class="api-row">
-
-          <input
-            id="apiCode"
-            type="text"
-            placeholder="Enter API code"
-            autocomplete="off"
-          >
-
-          <button
-            type="button"
-            class="btn api-btn"
-            onclick="openPackages()"
-          >
-            Get API
-          </button>
-
-        </div>
-
-        <div class="hint">
-          Admin-provided code is required.
-        </div>
-      </div>
-
-
-      <!-- WHATSAPP -->
-      <div>
-        <label>
-          WhatsApp <span class="required">*</span>
-        </label>
-
-        <input
-          id="whatsapp"
-          type="tel"
-          placeholder="01XXXXXXXXX"
-          autocomplete="tel"
-        >
-      </div>
-
-
-      <!-- TELEGRAM -->
-      <div>
-        <label>
-          Telegram
-          <span style="color:#607c8d">
-            (Optional)
-          </span>
-        </label>
-
-        <input
-          id="telegram"
-          type="text"
-          placeholder="@username"
-        >
-      </div>
-
-
-      <!-- SECURITY QUESTION -->
-      <div class="full">
-
-        <label>
-          Security question <span class="required">*</span>
-        </label>
-
-        <select id="question">
-
-          <option value="">
-            Choose a security question
-          </option>
-
-          <option>
-            What was your mother's maiden name?
-          </option>
-
-          <option>
-            What was your first pet's name?
-          </option>
-
-          <option>
-            What was your first car?
-          </option>
-
-          <option>
-            What is your favorite movie?
-          </option>
-
-          <option>
-            What city were you born in?
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <!-- ANSWER -->
-      <div class="full">
-
-        <label>
-          Answer <span class="required">*</span>
-        </label>
-
-        <input
-          id="answer"
-          type="text"
-          placeholder="Enter your answer"
-        >
-
-      </div>
-
-
-      <!-- PASSWORD -->
-      <div>
-
-        <label>
-          Password <span class="required">*</span>
-        </label>
-
-        <input
-          id="password"
-          type="password"
-          placeholder="Minimum 6 characters"
-          autocomplete="new-password"
-        >
-
-      </div>
-
-
-      <!-- CONFIRM -->
-      <div>
-
-        <label>
-          Confirm password <span class="required">*</span>
-        </label>
-
-        <input
-          id="confirmPassword"
-          type="password"
-          placeholder="Repeat your password"
-          autocomplete="new-password"
-        >
-
-      </div>
-
-    </div>
-
-
-    <!-- TERMS -->
-    <label class="check">
-
-      <input id="terms" type="checkbox">
-
-      <span>
-        I agree to the A-Tuls account and package rules.
-      </span>
-
-    </label>
-
-
-    <!-- BUTTONS -->
-    <div class="actions">
-
-      <button
-        type="submit"
-        class="create"
-        id="createBtn"
-      >
-        Create account →
-      </button>
-
-      <button
-        type="button"
-        class="btn"
-        onclick="openPackages()"
-      >
-        View packages
-      </button>
-
-    </div>
-
-
-    <div id="status" class="status"></div>
-
-    <div class="signin">
-      Already registered?
-      <a href="login.html">
-        Sign in
-      </a>
-    </div>
-
-  </form>
-
-</section>
-
-
-<!-- SIDE INFORMATION -->
-<aside class="card side-card">
-
-  <div class="kicker">
-    Access setup
-  </div>
-
-  <h2 class="side-title">
-    How registration works
-  </h2>
-
-  <p class="side-text">
-    Get an API code from the A-Tuls Admin, complete your registration,
-    then sign in to access your dashboard.
-  </p>
-
-
-  <div class="steps">
-
-    <div class="step">
-      <div class="number">01</div>
-
-      <div>
-        <b>Get API Code</b>
-        <p>
-          Choose a package and contact Admin on WhatsApp.
-        </p>
-      </div>
-    </div>
-
-
-    <div class="step">
-      <div class="number">02</div>
-
-      <div>
-        <b>Complete Signup</b>
-        <p>
-          Fill in your profile and API code.
-        </p>
-      </div>
-    </div>
-
-
-    <div class="step">
-      <div class="number">03</div>
-
-      <div>
-        <b>Create Account</b>
-        <p>
-          Submit your registration information.
-        </p>
-      </div>
-    </div>
-
-
-    <div class="step">
-      <div class="number">04</div>
-
-      <div>
-        <b>Dashboard</b>
-        <p>
-          Sign in and access tools according to your package.
-        </p>
-      </div>
-    </div>
-
-  </div>
-
-
-  <!-- PACKAGES -->
-  <div class="package-box">
-
-    <div class="package">
-      <span>1 Month Free Trial</span>
-      <strong>৳0</strong>
-    </div>
-
-    <div class="package">
-      <span>Basic · 30 days</span>
-      <strong>৳150</strong>
-    </div>
-
-    <div class="package">
-      <span>Pro · 90 days</span>
-      <strong>৳900</strong>
-    </div>
-
-    <div class="package">
-      <span>Lifetime</span>
-      <strong>৳1800</strong>
-    </div>
-
-  </div>
-
-
-  <button
-    type="button"
-    class="btn primary whatsapp"
-    onclick="contactAdmin()"
-  >
-    WhatsApp Admin · Get API
-  </button>
-
-
-  <div class="note">
-    <b>Important:</b>
-    API codes should be verified by your real backend/Admin system.
-    Never store passwords or API codes directly in frontend JavaScript.
-  </div>
-
-</aside>
-
-</div>
-
-</main>
-
-
-<footer>
-  © 2026 A-Tuls · Secure Registration · Dashboard Access
-</footer>
-
-
-<!-- PACKAGE MODAL -->
-<div
-  class="modal-bg"
-  id="packageModal"
-  onclick="closePackages(event)"
->
-
-  <div
-    class="modal"
-    onclick="event.stopPropagation()"
-  >
-
-    <div class="modal-head">
-
-      <div>
-        <div class="kicker">
-          A-Tuls Packages
-        </div>
-
-        <h2>
-          Choose your access
-        </h2>
-      </div>
-
-      <button
-        class="btn close"
-        type="button"
-        onclick="closePackages()"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="modal-body">
-
-      <p>
-        Need an API code?
-        Choose a package and contact the A-Tuls Admin on WhatsApp.
-      </p>
-
-
-      <div class="modal-packages">
-
-        <div class="modal-package">
-          <span>1 Month Free Trial · 30 days</span>
-          <b>৳0</b>
-        </div>
-
-        <div class="modal-package">
-          <span>Basic · 30 days</span>
-          <b>৳150</b>
-        </div>
-
-        <div class="modal-package">
-          <span>Pro · 90 days</span>
-          <b>৳900</b>
-        </div>
-
-        <div class="modal-package">
-          <span>Lifetime</span>
-          <b>৳1800</b>
-        </div>
-
-      </div>
-
-
-      <div class="actions">
-
-        <button
-          class="btn primary"
-          type="button"
-          onclick="contactAdmin()"
-        >
-          WhatsApp Admin · Get API
-        </button>
-
-        <button
-          class="btn"
-          type="button"
-          onclick="closePackages()"
-        >
-          Close
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-
-
 <script>
-
-const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
-const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
-
-(function domainLock(){
-  try{
-    var host=(location.hostname||'').toLowerCase();
-    if(!host || host==='localhost' || host==='127.0.0.1' || host==='0.0.0.0') return;
-    var ok=[
-      'a-tuls.com','www.a-tuls.com','atuls.pages.dev',
-      'a-tuls-master-n0k1.onrender.com'
-    ];
-    var ends=[
-      '.onrender.com','.pages.dev','.netlify.app','.vercel.app',
-      '.workers.dev','.github.io','.gitlab.io','.surge.sh','.web.app','.firebaseapp.com'
-    ];
-    if(ok.indexOf(host)>=0) return;
-    if(ends.some(function(e){return host.endsWith(e);})) return;
-    document.documentElement.innerHTML='<body style="background:#030712;color:#e2e8f0;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px"><div><h1 style="color:#ff5577">🔒 Domain Locked</h1><p>Authorized domains only. Contact Admin.</p><p style="opacity:.6;font-size:12px">WhatsApp +880 1336-489062</p></div>
-<script>
-/* A-Tuls live theme loader — reads Admin site_theme / page themes */
+/* A-Tuls live theme + settings from Supabase */
 (function(){
   var SB_URL='https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
   var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
   var THEMES={
-    midnight:{'--bg':'#030712','--bg2':'#0b1020','--panel':'rgba(15,23,42,.9)','--cyan':'#00e5ff','--text':'#e2e8f0','--muted':'#94a3b8'},
-    ocean:{'--bg':'#021a2b','--bg2':'#03304a','--panel':'rgba(8,40,60,.9)','--cyan':'#38bdf8','--text':'#e0f2fe','--muted':'#7dd3fc'},
-    forest:{'--bg':'#052e16','--bg2':'#064e3b','--panel':'rgba(6,50,30,.9)','--cyan':'#34d399','--text':'#d1fae5','--muted':'#6ee7b7'},
-    sunset:{'--bg':'#1c0a0a','--bg2':'#3b1212','--panel':'rgba(60,20,20,.9)','--cyan':'#fb923c','--text':'#ffedd5','--muted':'#fdba74'},
-    royal:{'--bg':'#1e0a3c','--bg2':'#2e1065','--panel':'rgba(40,15,80,.9)','--cyan':'#a78bfa','--text':'#ede9fe','--muted':'#c4b5fd'},
-    slate:{'--bg':'#0f172a','--bg2':'#1e293b','--panel':'rgba(30,41,59,.92)','--cyan':'#94a3b8','--text':'#f1f5f9','--muted':'#cbd5e1'},
-    crimson:{'--bg':'#1a0508','--bg2':'#3b0a12','--panel':'rgba(50,10,20,.9)','--cyan':'#f43f5e','--text':'#ffe4e6','--muted':'#fda4af'},
-    amber:{'--bg':'#1c1408','--bg2':'#3b2a0a','--panel':'rgba(55,40,10,.9)','--cyan':'#fbbf24','--text':'#fef3c7','--muted':'#fcd34d'},
-    mint:{'--bg':'#042f2e','--bg2':'#0d4f4a','--panel':'rgba(10,50,48,.9)','--cyan':'#2dd4bf','--text':'#ccfbf1','--muted':'#5eead4'},
-    graphite:{'--bg':'#111','--bg2':'#1a1a1a','--panel':'rgba(30,30,30,.95)','--cyan':'#a3a3a3','--text':'#fafafa','--muted':'#d4d4d4'},
-    cyber:{'--bg':'#020812','--bg2':'#061322','--panel':'rgba(6,20,35,.88)','--cyan':'#00e5ff','--text':'#effcff','--muted':'#8da8b8'},
-    glass:{'--bg':'#0a0f1a','--bg2':'#121a2b','--panel':'rgba(255,255,255,.06)','--cyan':'#67e8f9','--text':'#f8fafc','--muted':'#94a3b8'},
-    premium:{'--bg':'#0c0a09','--bg2':'#1c1917','--panel':'rgba(40,30,15,.9)','--cyan':'#f59e0b','--text':'#fef3c7','--muted':'#d6d3d1'},
-    white:{'--bg':'#f8fafc','--bg2':'#e2e8f0','--panel':'rgba(255,255,255,.95)','--cyan':'#0284c7','--text':'#0f172a','--muted':'#64748b'},
-    gray:{'--bg':'#1e293b','--bg2':'#334155','--panel':'rgba(51,65,85,.95)','--cyan':'#94a3b8','--text':'#f1f5f9','--muted':'#cbd5e1'},
-    basic:{'--bg':'#030b16','--bg2':'#0a1628','--panel':'rgba(10,22,40,.9)','--cyan':'#00e5ff','--text':'#e2e8f0','--muted':'#94a3b8'}
+    midnight:{bg:'#050816',panel:'#0e1428',a:'#38bdf8',b:'#a78bfa',txt:'#eef2ff'},
+    ocean:{bg:'#02141f',panel:'#0a2433',a:'#22d3ee',b:'#38bdf8',txt:'#e0f2fe'},
+    forest:{bg:'#06140f',panel:'#0c241c',a:'#34d399',b:'#2dd4bf',txt:'#ecfdf5'},
+    sunset:{bg:'#1a0b10',panel:'#2a1218',a:'#fb7185',b:'#fbbf24',txt:'#fff1f2'},
+    royal:{bg:'#0c0a1a',panel:'#16122e',a:'#a78bfa',b:'#e879f9',txt:'#f5f3ff'},
+    slate:{bg:'#0f172a',panel:'#1e293b',a:'#94a3b8',b:'#64748b',txt:'#f8fafc'},
+    crimson:{bg:'#14060a',panel:'#240c12',a:'#f43f5e',b:'#fb7185',txt:'#fff1f2'},
+    amber:{bg:'#140e04',panel:'#241a0a',a:'#fbbf24',b:'#f59e0b',txt:'#fffbeb'},
+    mint:{bg:'#041412',panel:'#0a2420',a:'#2dd4bf',b:'#5eead4',txt:'#f0fdfa'},
+    graphite:{bg:'#0a0a0b',panel:'#171717',a:'#a3a3a3',b:'#737373',txt:'#fafafa'}
   };
   function applyTheme(id){
-    id=id||'cyber';
-    var t=THEMES[id]||THEMES.cyber||THEMES.midnight;
+    var t=THEMES[id]||THEMES.midnight;
     var r=document.documentElement;
-    r.setAttribute('data-theme', id);
-    for(var k in t){ try{ r.style.setProperty(k, t[k]); }catch(e){} }
-    try{ localStorage.setItem('a_tuls_theme', id); }catch(e){}
-    // body bg if white/light
-    if(id==='white'){ document.body && (document.body.style.color='#0f172a'); }
+    r.style.setProperty('--bg',t.bg);
+    r.style.setProperty('--panel',t.panel);
+    r.style.setProperty('--card',t.panel);
+    r.style.setProperty('--a',t.a);
+    r.style.setProperty('--b',t.b);
+    r.style.setProperty('--txt',t.txt);
+    r.style.setProperty('--p',t.a);
+    r.style.setProperty('--pd',t.b);
+    r.style.setProperty('--blue',t.a);
+    r.style.setProperty('--teal',t.b);
+    try{ document.body.style.background=t.bg; document.body.style.color=t.txt; }catch(e){}
+    localStorage.setItem('a_tuls_theme', id);
   }
-  window.applyTheme=applyTheme;
-  var pageKey='theme_index';
-  var path=(location.pathname||'').toLowerCase();
-  if(path.indexOf('dashboard')>=0) pageKey='theme_dashboard';
-  else if(path.indexOf('login')>=0 || path.indexOf('signup')>=0 || path.indexOf('register')>=0) pageKey='theme_auth';
-  else pageKey='theme_index';
-  // local first
-  try{
-    var localPage=localStorage.getItem('a_tuls_'+pageKey) || localStorage.getItem('a_tuls_theme');
-    if(localPage) applyTheme(localPage);
-  }catch(e){}
-  // Supabase
-  fetch(SB_URL+'a_tuls_settings?or=(key.eq.'+pageKey+',key.eq.site_theme)&select=key,value',{
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
-  }).then(function(r){return r.ok?r.json():[]}).then(function(rows){
-    var map={};
-    (rows||[]).forEach(function(row){
-      var v=row.value; if(v && typeof v==='object') v=v.v||v.id||'';
-      map[row.key]=String(v||'');
-    });
-    var id=map[pageKey]||map.site_theme||localStorage.getItem('a_tuls_theme')||'cyber';
-    applyTheme(id);
-  }).catch(function(){});
+  async function loadRemote(){
+    try{
+      var h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+      var r=await fetch(SB_URL+"a_tuls_settings?or=(key.eq.site_theme,key.eq.site_notice,key.eq.paid_api_price,key.eq.site_time_note)&select=key,value",{headers:h});
+      if(!r.ok) return;
+      var rows=await r.json();
+      (rows||[]).forEach(function(row){
+        var v=row.value; if(typeof v==='object'&&v!==null) v=v.v||v.id||JSON.stringify(v);
+        if(row.key==='site_theme') applyTheme(String(v||'midnight'));
+        if(row.key==='site_notice'){ try{ localStorage.setItem('a_tuls_notice', String(v||'')); var el=document.getElementById('atulsSiteNotice'); if(el){ el.textContent=String(v||''); el.style.display=v?'block':'none'; } }catch(e){} }
+        if(row.key==='paid_api_price') localStorage.setItem('a_tuls_paid_api_price', String(v||'150'));
+        if(row.key==='site_time_note') localStorage.setItem('a_tuls_time_note', String(v||''));
+      });
+    }catch(e){}
+  }
+  var local=localStorage.getItem('a_tuls_theme')||'midnight';
+  applyTheme(local);
+  loadRemote();
+  setInterval(loadRemote, 45000);
 })();
 </script>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up · A-Tuls</title>
+<meta name="theme-color" content="#1e1b4b">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg0:#0b1020; --bg1:#12182b; --card:#161d33;
+  --line:rgba(255,255,255,.08); --txt:#e8ecf8; --mut:#8b93b0;
+  --acc:#6366f1; --acc2:#8b5cf6; --ok:#22c55e; --bad:#f43f5e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh; font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  background: radial-gradient(1000px 500px at 90% -5%, #4c1d95 0%, transparent 50%),
+              radial-gradient(800px 480px at 0% 100%, #1e3a8a 0%, transparent 45%),
+              var(--bg0);
+  color:var(--txt); display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20px 14px;
+}
+.shell{width:100%; max-width:460px}
+.brand{text-align:center; margin-bottom:16px}
+.mark{
+  width:64px; height:64px; margin:0 auto 10px; border-radius:18px;
+  background:linear-gradient(145deg,#6366f1,#a855f7);
+  display:grid; place-items:center; font-weight:800; font-size:1.45rem; color:#fff;
+  box-shadow:0 12px 36px rgba(99,102,241,.4);
+}
+.brand h1{font-size:1.25rem; font-weight:800}
+.brand p{color:var(--mut); font-size:.85rem; margin-top:3px}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), transparent), var(--card);
+  border:1px solid var(--line); border-radius:22px; padding:22px 18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+label{display:block; font-size:.78rem; font-weight:600; color:var(--mut); margin:0 0 5px}
+.field{margin-bottom:11px}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.input-wrap{position:relative}
+input, select{
+  width:100%; background:var(--bg1); border:1px solid var(--line); color:var(--txt);
+  border-radius:12px; padding:11px 12px; font-size:.9rem; outline:none; font-family:inherit;
+}
+select{appearance:none; background-image:linear-gradient(45deg,transparent 50%,#8b93b0 50%),linear-gradient(135deg,#8b93b0 50%,transparent 50%); background-position:calc(100% - 16px) 55%,calc(100% - 11px) 55%; background-size:5px 5px,5px 5px; background-repeat:no-repeat; padding-right:28px}
+input:focus, select:focus{border-color:var(--acc); box-shadow:0 0 0 3px rgba(99,102,241,.22)}
+.eye{position:absolute; right:6px; top:50%; transform:translateY(-50%); background:transparent; border:0; color:var(--mut); width:34px; height:34px; cursor:pointer; border-radius:8px}
+.hint{font-size:.72rem; color:var(--bad); margin-top:4px; font-weight:600}
+.btn{
+  width:100%; margin-top:6px; border:0; cursor:pointer; font-family:inherit;
+  background:linear-gradient(135deg, var(--acc), var(--acc2));
+  color:#fff; font-weight:700; font-size:.95rem; padding:13px; border-radius:13px;
+  box-shadow:0 10px 28px rgba(99,102,241,.35);
+}
+.foot{text-align:center; margin-top:14px; font-size:.86rem; color:var(--mut)}
+.foot a{color:#a5b4fc; font-weight:600; text-decoration:none}
+.home{text-align:center; margin-top:14px}
+.home a{color:var(--mut); text-decoration:none; font-size:.84rem}
+.pill{
+  display:inline-flex; align-items:center; gap:6px; margin-top:8px;
+  background:rgba(34,197,94,.12); color:#4ade80; border:1px solid rgba(34,197,94,.25);
+  font-size:.72rem; font-weight:700; padding:4px 10px; border-radius:999px;
+}
 
-<div id="copyright" align="center" style="padding:18px 12px;font-size:12px;opacity:.65;color:#94a3b8">© 2016 - <span id="copyYear"></span> A-Tuls · All Rights Reserved.</div>
+:root{ --bg:#030b16; --a:#00e5ff; --b:#3a86ff; --txt:#f0f6fc; --mut:#8b949e; }
+body{
+  background-color:var(--bg)!important;
+  background-image:
+    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--a) 12%, transparent), transparent 28%),
+    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--b) 12%, transparent), transparent 28%)!important;
+  color:var(--txt);
+}
+.atuls-live-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.atuls-live-bg .orb{
+  position:absolute; border-radius:50%; filter:blur(60px); opacity:.35;
+  animation:orbMove 12s ease-in-out infinite alternate;
+}
+.atuls-live-bg .orb1{ width:420px;height:420px; left:-80px; top:10%; background:var(--a); }
+.atuls-live-bg .orb2{ width:360px;height:360px; right:-60px; bottom:15%; background:var(--b); animation-duration:15s; animation-direction:alternate-reverse; }
+.atuls-live-bg .grid{
+  position:absolute; inset:0; opacity:.12;
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:48px 48px;
+  animation:gridShift 20s linear infinite;
+}
+@keyframes orbMove{ from{ transform:translate(0,0) scale(1);} to{ transform:translate(40px,30px) scale(1.15);} }
+@keyframes gridShift{ from{ background-position:0 0;} to{ background-position:48px 48px;} }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:none;} }
+.logo-img-main{
+  width:48px; height:48px; border-radius:50%; object-fit:cover;
+  border:2px solid color-mix(in srgb, var(--a) 40%, transparent);
+  box-shadow:0 0 16px color-mix(in srgb, var(--a) 35%, transparent);
+}
+
+
+.spooky-house{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
+.content-circle{position:absolute;width:100%;height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,rgba(0,40,80,.4) 0%,transparent 60%)}
+.hill{position:absolute;width:160vw;height:42vh;bottom:-12vh;left:-30vw;border-radius:50% 50% 0 0;background:linear-gradient(to top,#000 60%,#0a0a12);z-index:3;box-shadow:0 -20px 60px rgba(0,0,0,.8)}
+.house{position:absolute;width:140px;height:170px;background:#050508;left:50%;margin-left:-70px;bottom:28vh;transform:rotate(4deg) scale(1.15);transform-origin:bottom center;z-index:2;filter:drop-shadow(0 -8px 25px rgba(0,229,255,.35));animation:pulseDropShadow 2.5s infinite alternate}
+@keyframes pulseDropShadow{0%{filter:drop-shadow(0 -5px 15px rgba(0,229,255,.25))}100%{filter:drop-shadow(0 -8px 30px rgba(0,229,255,.65))}}
+.house:before{content:"";position:absolute;width:0;height:0;border-bottom:35px solid #050508;border-right:55px solid transparent;left:130px;top:75px;transform:rotate(5deg)}
+.house:after{content:"";position:absolute;width:6px;height:70px;background:#050508;left:165px;top:105px}
+.porch{position:absolute;width:35px;height:110px;background:#050508;left:-25px;top:60px;transform:rotate(-9deg)}
+.porch:before{content:"";position:absolute;width:0;height:0;border-bottom:22px solid #050508;border-left:45px solid transparent;left:-40px;top:50px}
+.porch:after{content:"";position:absolute;width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-bottom:32px solid #050508;left:-6px;top:-28px}
+.first-floor{position:absolute;transform:rotate(-9deg);background:#050508;width:6px;height:50px;left:-42px;top:135px}
+.first-floor:before{content:"";position:absolute;background:#050508;width:95px;height:100px;top:-160px;left:55px}
+.first-floor:after{content:"";position:absolute;border-left:58px solid transparent;border-right:58px solid transparent;border-bottom:55px solid #050508;top:-214px;left:45px}
+.second-floor{position:absolute;background:#050508;width:40px;height:110px;transform:rotate(3deg);top:-75px;left:75px}
+.second-floor:before{content:"";position:absolute;background:#050508;width:22px;height:110px;left:38px;top:42px;transform:rotate(-3deg)}
+.second-floor:after{content:"";position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:32px solid #050508;top:10px;left:16px}
+.roof{position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:32px solid #050508;left:72px;top:-105px}
+.door{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);width:32px;height:55px;transform:rotate(-5deg);border-radius:32px 32px 0 0;box-shadow:inset -12px 6px rgba(0,0,0,.5),0 0 20px rgba(0,229,255,.9);top:100px;left:48px}
+.door:before{content:"";position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:32px 32px 0 0;box-shadow:inset -6px 3px rgba(0,0,0,.5),0 0 12px rgba(0,229,255,.8);width:22px;height:32px;left:-45px;transform:rotate(-3deg)}
+.door:after{content:"";position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);box-shadow:inset -6px 3px rgba(0,0,0,.5),0 0 12px rgba(0,229,255,.8);border-radius:32px 32px 0 0;width:22px;height:32px;left:50px;transform:rotate(3deg)}
+.small-windows{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:30px 30px 0 0;width:14px;height:26px;left:110px;top:-22px;box-shadow:-22px -42px #00e5ff,0 0 12px rgba(0,229,255,.6)}
+.big-window{position:absolute;background:linear-gradient(180deg,#00e5ff,#00b8d4);border-radius:30px 30px 0 0;transform:rotate(-6deg);width:34px;height:44px;top:-38px;left:12px;box-shadow:0 0 20px rgba(0,229,255,.7)}
+.moon{position:absolute;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e8f4ff,#a0c4e8 60%,#6a9cc8);z-index:1;right:8vw;top:10vh;box-shadow:0 0 40px rgba(0,229,255,.35)}
+.stars{position:absolute;width:100%;height:100%;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.6;animation:twinkle 3s infinite ease-in-out alternate}
+.star:nth-child(1){left:10%;top:15%}
+.star:nth-child(2){left:25%;top:8%;width:3px;height:3px}
+.star:nth-child(3){left:40%;top:22%}
+.star:nth-child(4){left:60%;top:12%}
+.star:nth-child(5){left:75%;top:18%}
+.star:nth-child(6){left:85%;top:30%}
+.star:nth-child(7){left:5%;top:35%}
+.star:nth-child(8){left:92%;top:8%;width:3px;height:3px}
+@keyframes twinkle{0%{opacity:.3}100%{opacity:1;transform:scale(1.3)}}
+.fireflies{position:absolute;width:100%;height:100%;z-index:5}
+.firefly{position:absolute;width:5px;height:5px;background:#00e5ff;border-radius:50%;box-shadow:0 0 12px #00e5ff;animation:float 7s infinite ease-in-out alternate}
+.firefly:nth-child(1){left:12%;bottom:18vh;animation-duration:5.5s}
+.firefly:nth-child(2){left:30%;bottom:48vh}
+.firefly:nth-child(3){left:70%;bottom:28vh}
+.firefly:nth-child(4){left:82%;bottom:55vh}
+.firefly:nth-child(5){left:50%;bottom:38vh}
+.firefly:nth-child(6){left:20%;bottom:60vh}
+@keyframes float{0%{transform:translate(0,0) scale(.7);opacity:.2}100%{transform:translate(25px,-50px) scale(1.5);opacity:1}}
+.butterfly-fly{position:fixed;z-index:40;pointer-events:none;width:70px;height:70px;animation:bfPath 18s linear infinite;filter:drop-shadow(0 8px 14px rgba(0,229,255,.4))}
+.butterfly-fly svg{height:100%}
+.butterfly-fly svg:nth-child(1){transform-origin:center right;animation:wing 0.45s ease-in-out infinite}
+.butterfly-fly svg:nth-child(2){height:50%}
+.butterfly-fly svg:nth-child(3){transform-origin:center left;animation:wing 0.45s ease-in-out infinite}
+@keyframes wing{0%,100%{transform:rotateY(0)}50%{transform:rotateY(65deg)}}
+@keyframes bfPath{
+  0%{transform:translate(-10vw,20vh) rotate(10deg)}
+  25%{transform:translate(40vw,35vh) rotate(-5deg)}
+  50%{transform:translate(90vw,15vh) rotate(8deg)}
+  75%{transform:translate(50vw,55vh) rotate(-12deg)}
+  100%{transform:translate(-10vw,20vh) rotate(10deg)}
+}
+
+body{background:#030b16!important;position:relative}
+.wrap,.card,.panel{position:relative;z-index:2}
+
+/* Butterfly (menu icon area) */
+.butterfly-loader{--sizeLoader:36px;display:flex;position:relative;width:var(--sizeLoader);height:var(--sizeLoader);filter:drop-shadow(0 0 8px rgba(0,229,255,.45))}
+.butterfly-loader svg:nth-child(1){height:100%;transform-origin:center right;animation:wing .5s ease-in-out infinite;fill:#00e5ff}
+.butterfly-loader svg:nth-child(2){height:50%;fill:#3a86ff}
+.butterfly-loader svg:nth-child(3){height:100%;transform-origin:center left;animation:wing .5s ease-in-out infinite;fill:#00e5ff}
+@keyframes wing{50%{transform:rotateY(60deg)}}
+/* APK shiny mini for ham button */
+.loader-apk-mini{position:relative;width:28px;height:28px;transform:scale(.55);transform-origin:center}
+.loader-apk-mini .p1,.loader-apk-mini .p2{position:absolute;background:#00e5ff;overflow:hidden}
+.loader-apk-mini .p1{width:40px;height:40px;clip-path:polygon(0 10%,70% 90%,40% 90%,0 45%)}
+.loader-apk-mini .p2{width:44px;height:38px;clip-path:polygon(100% 10%,100% 45%,83% 65%,55% 65%)}
+.loader-apk-mini .sh{position:absolute;top:0;left:0;opacity:.7;background:#fff;width:8px;height:40px;animation:shiny-1 1.5s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes shiny-1{0%{transform:translateX(-10px) skewX(-20deg)}100%{transform:translateX(50px) skewX(-20deg)}}
+/* Geometric spinner */
+.loader-yasin{width:48px;aspect-ratio:1.154;position:relative;margin:0 auto;
+  background:conic-gradient(from 120deg at 50% 64%,#0000,#00e5ff 1deg 120deg,#0000 121deg);
+  animation:l27-0 1.5s infinite cubic-bezier(.3,1,0,1);filter:drop-shadow(0 0 12px rgba(0,229,255,.55))}
+.loader-yasin:before,.loader-yasin:after{content:"";position:absolute;inset:0;background:inherit;transform-origin:50% 66%;animation:l27-1 1.5s infinite}
+.loader-yasin:after{--s:-1}
+@keyframes l27-0{0%,30%{transform:rotate(0)}70%{transform:rotate(120deg)}70.01%,100%{transform:rotate(360deg)}}
+@keyframes l27-1{0%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}30%,70%{transform:rotate(calc(var(--s,1)*120deg)) translate(calc(var(--s,1)*-5px),10px)}100%{transform:rotate(calc(var(--s,1)*120deg)) translate(0)}}
+/* Hourglass */
+.hourglassBackground{position:relative;background:rgba(10,25,47,.9);height:110px;width:110px;border-radius:50%;margin:0 auto;border:1px solid rgba(0,229,255,.25)}
+.hourglassContainer{position:absolute;top:24px;left:32px;width:46px;height:62px;animation:hourglassRotate 2s ease-in infinite;transform-style:preserve-3d;perspective:1000px}
+@keyframes hourglassRotate{0%{transform:rotateX(0)}50%,100%{transform:rotateX(180deg)}}
+.hourglassGlass{position:absolute;top:28px;left:18px;width:8px;height:5px;background:#999;opacity:.5}
+.hourglassGlass:before,.hourglassGlass:after{content:'';position:absolute;background:#999;left:-15px;width:38px;height:24px}
+.hourglassGlass:before{top:-24px;border-radius:0 0 22px 22px}
+.hourglassGlass:after{bottom:-24px;border-radius:22px 22px 0 0}
+.hourglassSandStream:before{content:'';position:absolute;left:21px;width:3px;background:#00e5ff;animation:sandStream1 2s ease-in infinite}
+@keyframes sandStream1{0%{height:0;top:30px}50%{height:0;top:40px}60%{height:30px;top:8px}100%{height:0;top:8px}}
+.hourglassSand:before{content:'';position:absolute;left:6px;top:8px;width:34px;background:#00e5ff;border-radius:3px 3px 24px 24px;animation:sandFillup 2s ease-in infinite}
+@keyframes sandFillup{0%{opacity:0;height:0}60%{opacity:1;height:0}100%{opacity:1;height:14px}}
+.full-loader{position:fixed;inset:0;z-index:9999;background:rgba(3,11,22,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:#8b949e;font-size:.9rem}
+.full-loader.show{display:flex}
+
+
+@keyframes loginFade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.signup-card,.card,form{animation:loginFade .55s ease both}
+
+.get-api-box{display:none;margin-top:12px;padding:14px;border-radius:14px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.25)}
+.get-api-box.show{display:block}
+.get-api-box h4{margin:0 0 8px;color:#00e5ff;font-size:.95rem}
+.pkg-list{display:grid;gap:8px;margin:10px 0}
+.pkg-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(5,15,29,.9);border:1px solid rgba(255,255,255,.08);font-size:.88rem}
+.pkg-item b{color:#fff}
+.pkg-item span{color:#00e5ff;font-weight:700}
+.btn-wa{display:inline-block;margin-top:8px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:800;text-decoration:none;text-align:center;width:100%;box-sizing:border-box}
+.btn-get-api{display:none;margin-top:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,229,255,.4);background:rgba(0,229,255,.12);color:#00e5ff;font-weight:700;cursor:pointer}
+.btn-get-api.show{display:block}
+
+</style>
 <script>
+/* ===== A-Tuls Database: Supabase (primary) =====
+   শুধু HTML + Supabase। Mongo ফিল্ড খালি রাখুন — লাগবে না।
+*/
+window.A_TULS_DB = {
+  // DB1 — Supabase (প্রাইমারি)
+  SB_URL: 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/',
+  SB_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs',
+  // DB2 — MongoDB Atlas Data API (ব্যাকআপ / ২য় DB)
+  // Atlas UI → App Services → Data API → Enable → URL + API Key বসান
+  MONGO_API_URL: '', /* e.g. https://ap-south-1.aws.data.mongodb-api.com/app/data-xxxxx/endpoint/data/v1 */
+  MONGO_API_KEY: '', /* Data API Key */
+  MONGO_DATA_SOURCE: 'gourabadmin' /* Atlas cluster / data source name */,
+  MONGO_DATABASE: 'atuls'
+};
 (function(){
-  var y=document.getElementById("copyYear");
-  if(y) y.textContent=new Date().getFullYear();
-  var c=document.getElementById("copyright");
-  if(c && !y) c.innerHTML="© 2016 - "+new Date().getFullYear()+" A-Tuls · All Rights Reserved.";
+  const C = window.A_TULS_DB;
+  const SB_H = () => ({
+    'apikey': C.SB_KEY,
+    'Authorization': 'Bearer ' + C.SB_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=minimal'
+  });
+  function mongoEnabled(){
+    return !!(C.MONGO_API_URL && C.MONGO_API_KEY && C.MONGO_API_URL.indexOf('http')===0);
+  }
+  async function mongoAction(action, body){
+    if(!mongoEnabled()) return null;
+    try{
+      const r = await fetch(C.MONGO_API_URL.replace(/\/$/,'') + '/action/' + action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': C.MONGO_API_KEY
+        },
+        body: JSON.stringify(Object.assign({
+          dataSource: C.MONGO_DATA_SOURCE,
+          database: C.MONGO_DATABASE
+        }, body))
+      });
+      if(!r.ok){ console.warn('Mongo', action, r.status); return null; }
+      return await r.json().catch(()=>({ok:true}));
+    }catch(e){ console.warn('Mongo', e); return null; }
+  }
+  window.A_TULS = {
+    sbHeaders: SB_H,
+    async sbInsert(table, row){
+      try{
+        const r = await fetch(C.SB_URL + table, { method:'POST', headers: SB_H(), body: JSON.stringify(row) });
+        return r.ok;
+      }catch(e){ return false; }
+    },
+    async sbUpsert(table, filter, row){
+      try{
+        await fetch(C.SB_URL + table + '?' + filter, { method:'PATCH', headers: SB_H(), body: JSON.stringify(row) });
+        await fetch(C.SB_URL + table, { method:'POST', headers: Object.assign({}, SB_H(), {'Prefer':'resolution=merge-duplicates,return=minimal'}), body: JSON.stringify(row) });
+        return true;
+      }catch(e){ return false; }
+    },
+    async sbGet(table, qs){
+      try{
+        const r = await fetch(C.SB_URL + table + (qs||''), { headers: SB_H() });
+        if(!r.ok) return null;
+        return await r.json();
+      }catch(e){ return null; }
+    },
+    /** দুই DB-তে একসাথে সেভ */
+    async dualInsert(collection, row){
+      const a = await this.sbInsert(collection, row);
+      const b = await mongoAction('insertOne', { collection: collection, document: row });
+      return { supabase: !!a, mongo: !!b };
+    },
+    async dualUpsert(collection, idField, idVal, row){
+      const a = await this.sbUpsert(collection, idField + '=eq.' + encodeURIComponent(idVal), row);
+      const filter = {}; filter[idField] = idVal;
+      const b = await mongoAction('updateOne', {
+        collection: collection,
+        filter: filter,
+        update: { $set: row },
+        upsert: true
+      });
+      return { supabase: !!a, mongo: !!b };
+    },
+    /** সেশন চেক — লগইন ছাড়া কাজ নয় */
+    requireSession(redirect){
+      try{
+        const s = JSON.parse(localStorage.getItem('a_tuls_session')||'null');
+        if(!s || !s.email){
+          location.replace(redirect || 'index.html');
+          return null;
+        }
+        const last = +localStorage.getItem('a_tuls_last_active') || Date.now();
+        if(Date.now() - last > 30*60*1000){
+          localStorage.removeItem('a_tuls_session');
+          location.replace('login.html');
+          return null;
+        }
+        localStorage.setItem('a_tuls_last_active', String(Date.now()));
+        return s;
+      }catch(e){
+        location.replace(redirect || 'index.html');
+        return null;
+      }
+    },
+    async logLogin(userObj){
+      const ua = navigator.userAgent || '';
+      let browser = 'Unknown', os = 'Unknown';
+      if(/Edg\//.test(ua)) browser='Edge'; else if(/Chrome\//.test(ua)) browser='Chrome'; else if(/Firefox\//.test(ua)) browser='Firefox'; else if(/Safari\//.test(ua)) browser='Safari';
+      if(/Windows/.test(ua)) os='Windows'; else if(/Android/.test(ua)) os='Android'; else if(/iPhone|iPad/.test(ua)) os='iOS'; else if(/Mac OS/.test(ua)) os='Mac'; else if(/Linux/.test(ua)) os='Linux';
+      const row = {
+        user_id: String(userObj.id||''),
+        username: userObj.username||'',
+        email: userObj.email||'',
+        device: /Mobile|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop',
+        browser: browser, os: os, ua: ua.slice(0,180),
+        time: new Date().toISOString()
+      };
+      try{
+        let logs = JSON.parse(localStorage.getItem('a_tuls_login_logs')||'[]');
+        logs.unshift(row);
+        localStorage.setItem('a_tuls_login_logs', JSON.stringify(logs.slice(0,200)));
+      }catch(e){}
+      // দুই DB-তে লগইন লগ
+      await this.dualInsert('a_tuls_login_logs', row);
+      return row;
+    }
+  };
 })();
 </script>
 
-</body>';
-  }catch(e){}
-})();
+<script>
+(function(){ try{ document.documentElement.setAttribute('data-theme', localStorage.getItem('a_tuls_theme')||'basic'); }catch(e){} })();
+</script></head>
+<body>
 
-const ADMIN_PHONE = "8801336489062";
-function openPackages(){ var m=document.getElementById("packageModal"); if(m) m.classList.add("show"); }
-function closePackages(event){ var modal=document.getElementById("packageModal"); if(!event || event.target===modal){ if(modal) modal.classList.remove("show"); } }
-function contactAdmin(){ window.open("https://wa.me/"+ADMIN_PHONE+"?text="+encodeURIComponent("Hello A-Tuls Admin, I want an API code for registration."), "_blank"); }
-function showStatus(message,type){ var box=document.getElementById("status"); if(!box) return; box.className="status show "+type; box.innerHTML=message; }
+<div class="spooky-house" aria-hidden="true">
+  <div class="content-circle">
+    <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+    <div class="moon"></div>
+    <div class="hill"></div>
+    <div class="house">
+      <div class="porch"></div><div class="first-floor"></div><div class="second-floor"></div><div class="roof"></div>
+      <div class="door"></div><div class="small-windows"></div><div class="big-window"></div>
+    </div>
+    <div class="fireflies"><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div></div>
+  </div>
+</div>
 
-document.getElementById("signupForm").addEventListener("submit", async function(e){
+
+<div class="butterfly-fly" aria-hidden="true">
+  <svg viewBox="0 0 50 50" fill="#00e5ff"><path d="M25 5 C15 15, 5 25, 15 35 C20 40, 25 30, 25 25 C25 30, 30 40, 35 35 C45 25, 35 15, 25 5 Z"/></svg>
+  <svg viewBox="0 0 20 40" fill="#00e5ff"><ellipse cx="10" cy="20" rx="4" ry="18"/></svg>
+  <svg viewBox="0 0 50 50" fill="#00e5ff"><path d="M25 5 C35 15, 45 25, 35 35 C30 40, 25 30, 25 25 C25 30, 20 40, 15 35 C5 25, 15 15, 25 5 Z"/></svg>
+</div>
+
+<div class="orb orb1"></div><div class="orb orb2"></div></div>
+<div class="shell">
+  <div class="brand">
+    <img src="logo.png" alt="A-Tuls" style="width:72px;height:72px;border-radius:50%;display:block;margin:0 auto 12px;border:2px solid rgba(0,229,255,.35)">
+    <h1>Create A-Tuls account</h1>
+    <p>Join the tools community</p>
+    <div class="pill"><i class="fas fa-gift"></i> Free registration with API code</div>
+  </div>
+  <div class="card">
+    <form id="signupForm">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Choose a username" required>
+      </div>
+      <div class="field">
+        <label>Email (Gmail)</label>
+        <input type="email" id="email" placeholder="name@gmail.com" required>
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <select id="gender" required>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>API Code *</label>
+        <input type="text" id="apiCode" placeholder="API key from admin" required>
+        <div class="hint">Valid API code required to sign up</div>
+      </div>
+      <div class="field">
+        <label>WhatsApp</label>
+        <input type="text" id="whatsapp" placeholder="01XXXXXXXXX">
+      </div>
+      <div class="field">
+        <label>Telegram</label>
+        <input type="text" id="telegram" placeholder="@username">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Security question</label>
+          <select id="sq" required>
+            <option value="" disabled selected>Select</option>
+            <option>What is your mother's maiden name?</option>
+            <option>What was the name of your first pet?</option>
+            <option>What was your first car?</option>
+            <option>What is your favorite movie?</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Answer</label>
+          <input type="text" id="sa" placeholder="Answer" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input type="password" id="password" placeholder="Min 6 characters" required>
+          <button type="button" class="eye" onclick="togglePass('password',this)"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Confirm password</label>
+        <div class="input-wrap">
+          <input type="password" id="confirm" placeholder="Re-enter password" required>
+          <button type="button" class="eye" onclick="togglePass('confirm',this)"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      
+<button type="button" class="btn-get-api" id="btnGetApi">Get API / View packages</button>
+<div class="get-api-box" id="getApiBox">
+  <h4>Packages (message Admin to buy)</h4>
+  <div class="pkg-list">
+    <div class="pkg-item"><b>1 Month Free Trial</b><span>৳0</span></div>
+    <div class="pkg-item"><b>Basic · 30 days</b><span>৳150</span></div>
+    <div class="pkg-item"><b>Pro · 90 days</b><span>৳900</span></div>
+    <div class="pkg-item"><b>Lifetime</b><span>৳1800</span></div>
+  </div>
+  <p style="font-size:.8rem;color:#94a3b8;margin:0 0 8px">ভুল API হলে Admin-কে মেসেজ করে কোড নিন। প্যাকেজ কিনলে Admin API দিবে।</p>
+  <a class="btn-wa" href="https://wa.me/8801336489062?text=A-Tuls%20API%20code%20%26%20package%20please" target="_blank" rel="noopener">WhatsApp Admin · Get API</a>
+</div>
+
+<button type="submit" class="btn">Create account</button>
+    </form>
+    <div class="foot">Already registered? <a href="login.html">Sign in</a></div>
+  </div>
+  <div class="home"><a href="index.html"><i class="fas fa-arrow-left"></i> Home</a></div>
+</div>
+<script>
+const SB_URL = 'https://phusizsdhsdjpcwijtti.supabase.co/rest/v1/';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodXNpenNkaHNkanBjd2lqdHRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTM5NzIsImV4cCI6MjEwMTk4OTk3Mn0.9Wpq11US4_LXE3RrgWzrF1RLZ0Vg3ouFNLXP0g5cQBs';
+const SB_H = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
+
+document.getElementById('signupForm').onsubmit = async function(e){
   e.preventDefault();
-  var username=document.getElementById("username").value.trim();
-  var email=document.getElementById("email").value.trim().toLowerCase();
-  var gender=document.getElementById("gender").value;
-  var apiCode=document.getElementById("apiCode").value.trim().replace(/\s+/g,'');
-  var whatsapp=document.getElementById("whatsapp").value.trim();
-  var telegram=(document.getElementById("telegram")||{}).value||'';
-  var question=document.getElementById("question").value;
-  var answer=document.getElementById("answer").value.trim();
-  var password=document.getElementById("password").value;
-  var confirmPassword=document.getElementById("confirmPassword").value;
-  var terms=document.getElementById("terms").checked;
-  if(username.length<3){ showStatus("Username min 3 characters.","error"); return; }
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showStatus("Valid email required.","error"); return; }
-  if(!gender){ showStatus("Select gender.","error"); return; }
-  if(!apiCode){ showStatus("API Code required. Click Get API.","error"); openPackages(); return; }
-  if(!/^01[3-9]\d{8}$/.test(whatsapp.replace(/[\s\-]/g,''))){ showStatus("Valid BD WhatsApp (01XXXXXXXXX).","error"); return; }
-  if(!question || answer.length<2){ showStatus("Security question + answer required.","error"); return; }
-  if(password.length<6){ showStatus("Password min 6 characters.","error"); return; }
-  if(password!==confirmPassword){ showStatus("Passwords do not match.","error"); return; }
-  if(!terms){ showStatus("Accept account rules.","error"); return; }
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value;
+  const conf = document.getElementById('confirm').value;
+  const apiCode = document.getElementById('apiCode').value.trim().replace(/\s+/g,'');
+  if(pass !== conf){ alert('Passwords do not match'); return; }
+  if(pass.length < 6){ alert('Password min 6 characters'); return; }
+  if(!apiCode){ alert('API Code required!'); return; }
 
-  var btn=document.getElementById("createBtn");
-  if(btn){ btn.disabled=true; btn.textContent="Creating account…"; }
-
-  var validKey=null;
+  // 1) Cloud API keys (all devices)
+  let validKey = null;
   try{
-    var r=await fetch(SB_URL+"a_tuls_api_keys?key=eq."+encodeURIComponent(apiCode)+"&select=*",{headers:Object.assign({},SB_H,{"Prefer":"return=representation"})});
-    if(r.ok){ var rows=await r.json(); if(rows&&rows[0]){ var k=rows[0]; if(!k.expires||new Date(k.expires)>new Date()) validKey={key:k.key,type:k.type||"free",id:k.id,used:k.used}; } }
+    const r = await fetch(SB_URL+'a_tuls_api_keys?key=eq.'+encodeURIComponent(apiCode)+'&select=*', {headers:SB_H});
+    if(r.ok){
+      const rows = await r.json();
+      if(rows && rows[0]){
+        const k = rows[0];
+        if(!k.expires || new Date(k.expires) > new Date()) validKey = {key:k.key,type:k.type||'free',userId:k.user_id,username:k.username,id:k.id};
+      }
+    }
   }catch(err){}
+
+  // 2) Local fallback
   if(!validKey){
-    try{ var keys=JSON.parse(localStorage.getItem("a_tuls_api_keys")||"[]"); validKey=keys.find(function(k){return (k.key||"").trim().replace(/\s+/g,"")===apiCode && (!k.expires||new Date(k.expires)>new Date());})||null; }catch(e){}
+    const keys = JSON.parse(localStorage.getItem('a_tuls_api_keys')||'[]');
+    validKey = keys.find(k => (k.key||'').trim().replace(/\s+/g,'') === apiCode && (!k.expires || new Date(k.expires) > new Date())) || null;
   }
-  if(!validKey){ if(btn){btn.disabled=false;btn.textContent="Create account →";} showStatus("Wrong API Code. Contact Admin / View packages.","error"); openPackages(); return; }
-  if(validKey.used){ if(btn){btn.disabled=false;btn.textContent="Create account →";} showStatus("This API code was already used.","error"); return; }
 
-  // duplicate check
+  if(!validKey){
+    alert('Wrong API Code!\n\nEnter a valid API Code or buy a package from Membership.\n\n* Copy the key generated from Admin Panel.');
+    return;
+  }
+
+  // One API = one Signup only
+  const linked = validKey.userId || validKey.user_id || '';
+  if(linked && !String(linked).startsWith('invite_')){
+    alert('This API Code is already used.\n\nOne API key allows only one Signup.\nAsk Admin for a new key.');
+    return;
+  }
+
+  // Check existing user (cloud + local)
+  let users = JSON.parse(localStorage.getItem('a_tuls_users')||'[]');
   try{
-    var d=await fetch(SB_URL+"a_tuls_users?or=(email.eq."+encodeURIComponent(email)+",username.eq."+encodeURIComponent(username)+")&select=id",{headers:SB_H});
-    if(d.ok){ var exist=await d.json(); if(exist&&exist.length){ if(btn){btn.disabled=false;btn.textContent="Create account →";} showStatus("Email or username already registered.","error"); return; } }
-  }catch(e){}
+    const r = await fetch(SB_URL+'a_tuls_users?or=(email.eq.'+encodeURIComponent(email)+',username.eq.'+encodeURIComponent(username)+')&select=id', {headers:SB_H});
+    if(r.ok){ const exist=await r.json(); if(exist&&exist.length){ alert('Username or email already exists'); return; } }
+  }catch(err){}
+  if(users.find(u => u.email === email || u.username === username)){
+    alert('Username or email already exists'); return;
+  }
 
-  var pkg = (validKey.type==="paid"||validKey.type==="pro") ? "Pro" : (validKey.type==="lifetime"?"Lifetime":"Basic");
-  var user={
-    id: "u_"+Date.now()+"_"+Math.random().toString(36).slice(2,8),
-    username: username, email: email, password: password, gender: gender,
-    whatsapp: whatsapp, telegram: telegram, role: "user", package: pkg,
-    api_key: apiCode, security_q: question, security_a: answer,
-    created_at: new Date().toISOString()
+  const apiType = validKey.type || 'free';
+  const pkg = apiType === 'paid' ? 'Basic' : 'Free';
+  const user = {
+    id: Date.now().toString(),
+    username, email,
+    gender: document.getElementById('gender').value,
+    api_code: apiCode,
+    api_type: apiType,
+    whatsapp: document.getElementById('whatsapp').value.trim(),
+    telegram: document.getElementById('telegram').value.trim(),
+    security_question: document.getElementById('sq').value,
+    security_answer: document.getElementById('sa').value.trim(),
+    password: pass,
+    package: pkg,
+    role: 'user',
+    fb: '',
+    created: new Date().toISOString()
   };
 
-  var okCloud=false;
+  // Save user to cloud
   try{
-    var pr=await fetch(SB_URL+"a_tuls_users",{method:"POST",headers:Object.assign({},SB_H,{"Prefer":"return=representation"}),body:JSON.stringify(user)});
-    okCloud=pr.ok;
-  }catch(e){}
-  try{
-    var users=JSON.parse(localStorage.getItem("a_tuls_users")||"[]");
-    users.push(user);
-    localStorage.setItem("a_tuls_users", JSON.stringify(users));
-  }catch(e){}
-  // mark API used
-  try{
-    await fetch(SB_URL+"a_tuls_api_keys?key=eq."+encodeURIComponent(apiCode),{method:"PATCH",headers:Object.assign({},SB_H,{"Prefer":"return=minimal"}),body:JSON.stringify({used:true,user_id:user.id,username:username})});
-  }catch(e){}
+    await fetch(SB_URL+'a_tuls_users', {method:'POST', headers:SB_H, body:JSON.stringify(user)});
+  }catch(err){}
 
-  if(btn){ btn.disabled=false; btn.textContent="Create account →"; }
-  showStatus("✓ Account created! Redirecting to Login…","success");
-  setTimeout(function(){ window.location.href="login.html"; }, 1200);
-});
+  // Link API key to user in cloud
+  if(validKey.id){
+    try{
+      await fetch(SB_URL+'a_tuls_api_keys?id=eq.'+validKey.id, {method:'PATCH', headers:SB_H, body:JSON.stringify({user_id:user.id,username:username})});
+    }catch(err){}
+  }
 
+  users.push(user);
+  localStorage.setItem('a_tuls_users', JSON.stringify(users));
+  localStorage.setItem('a_tuls_session', JSON.stringify({id:user.id,username,email,role:'user',package:pkg}));
+  localStorage.setItem('a_tuls_role', 'user');
+  localStorage.setItem('a_tuls_profile', JSON.stringify({name:username,gmail:email,whatsapp:user.whatsapp,telegram:user.telegram,facebook:''}));
+  alert('Account created! Going to dashboard...');
+  window.window.ATulsAfterRegister&&ATulsAfterRegister('dashboard.html');
+};
+
+function togglePass(id, btn){
+  const inp=document.getElementById(id);
+  if(!inp) return;
+  if(inp.type==='password'){ inp.type='text'; if(btn) btn.innerHTML='<i class="fas fa-eye-slash"></i>'; }
+  else { inp.type='password'; if(btn) btn.innerHTML='<i class="fas fa-eye"></i>'; }
+}
 </script>
+
+<div class="full-loader" id="regLoader">
+  <div class="hourglassBackground"><div class="hourglassContainer">
+    <div class="hourglassGlass"></div><div class="hourglassSandStream"></div><div class="hourglassSand"></div>
+  </div></div>
+  <div>Preparing dashboard…</div>
+</div>
+<script>
+(function(){
+  function showHourglassThen(url){
+    var el=document.getElementById('regLoader');
+    if(el) el.classList.add('show');
+    setTimeout(function(){ location.href = url || 'dashboard.html'; }, 2200);
+  }
+  window.ATulsAfterRegister = showHourglassThen;
+  // intercept common redirects
+  var _assign = location.assign.bind(location);
+  // form submit show loader; if existing JS redirects, also hook
+  var form=document.querySelector('form');
+  if(form){
+    form.addEventListener('submit', function(){
+      setTimeout(function(){
+        var el=document.getElementById('regLoader');
+        if(el) el.classList.add('show');
+      }, 50);
+    }, true);
+  }
+  // replace immediate dashboard redirects after success if code sets location
+  var obs = new MutationObserver(function(){});
+  try{
+    var desc = Object.getOwnPropertyDescriptor(Location.prototype, 'href') || Object.getOwnPropertyDescriptor(window.location.__proto__, 'href');
+  }catch(e){}
+  // fallback: if page navigates to dashboard via our known patterns in onclick success
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('[data-go-dashboard]');
+    if(t){ e.preventDefault(); showHourglassThen('dashboard.html'); }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  function hideReg(){ var el=document.getElementById('regLoader'); if(el) el.classList.remove('show'); }
+  var obs=new MutationObserver(function(){
+    var err=document.querySelector('.error,.err,[class*="error"],.text-danger,.alert-danger');
+    if(err && (err.textContent||'').trim().length>2) hideReg();
+  });
+  obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+  var _alert=window.alert;
+  window.alert=function(m){ hideReg(); return _alert.apply(this, arguments); };
+})();
+</script>
+
+
+<script>
+(function(){
+  // show trial package hint if select exists
+  var sel=document.querySelector('select[name="package"], #package, #pkg');
+  if(sel && !sel.querySelector('[value="free_trial"]')){
+    var o=document.createElement('option');
+    o.value='free_trial'; o.textContent='1 Month Free Trial';
+    sel.insertBefore(o, sel.firstChild);
+  }
+})();
+</script>
+
+<script>
+(function(){
+  var box=document.getElementById('getApiBox');
+  var btn=document.getElementById('btnGetApi');
+  function showPkg(){ if(btn) btn.classList.add('show'); if(box) box.classList.add('show'); }
+  if(btn){ btn.onclick=function(){ if(box) box.classList.toggle('show'); }; btn.classList.add('show'); }
+  // show Get API when API field invalid / error
+  var apiInp=document.querySelector('input[name="api"], #api, input[placeholder*="API"], input[placeholder*="api"]');
+  var form=document.querySelector('form');
+  if(form){
+    form.addEventListener('submit', function(){
+      setTimeout(function(){
+        var err=document.querySelector('.error,.err,[class*="error"]');
+        if(err && /api|code|invalid|required/i.test(err.textContent||'')) showPkg();
+      }, 400);
+    });
+  }
+  if(apiInp){
+    apiInp.addEventListener('blur', function(){
+      if(!apiInp.value.trim()){ showPkg(); }
+    });
+  }
+  // alert override for wrong api
+  var _a=window.alert;
+  window.alert=function(m){
+    if(/api|code|invalid|wrong/i.test(String(m||''))) showPkg();
+    return _a.apply(this, arguments);
+  };
+})();
+</script>
+
 </body>
 </html>
